@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { CompanyLabel } from "@/components/auth-provider";
+import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { SiteNav } from "@/components/site-nav";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -22,6 +23,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       {children}
+      <footer className="app-footer">
+        <LegalFooterLinks />
+      </footer>
     </div>
   );
 }

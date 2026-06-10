@@ -40,6 +40,16 @@ export async function LandingPage() {
         </div>
       </section>
 
+      <section className="trust-band shell" aria-label={t("trustTitle")}>
+        <h2 className="trust-band-title">{t("trustTitle")}</h2>
+        <ul className="trust-list">
+          <li>{t("trustGdpr")}</li>
+          <li>{t("trustHttps")}</li>
+          <li>{t("trustHosting")}</li>
+          <li>{t("trustNoTraining")}</li>
+        </ul>
+      </section>
+
       <section className="feature-grid shell">
         {FEATURE_KEYS.map((key) => (
           <article key={key} className="feature-card card">

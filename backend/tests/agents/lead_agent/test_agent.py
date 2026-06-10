@@ -14,7 +14,8 @@ async def test_lead_capture_agent_name_and_prompt() -> None:
     prompt = await agent.build_system_prompt(
         AgentContext(conversation_id="conv-1", agent_name=agent.name),
     )
-    assert "qualify inbound customer inquiries" in prompt.lower()
+    assert "kundenanfragen" in prompt.lower()
+    assert "sie-form" in prompt.lower()
 
 
 @pytest.mark.asyncio
