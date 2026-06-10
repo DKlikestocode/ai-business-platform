@@ -1,13 +1,19 @@
-import { contactableBadgeClass, formatContactable } from "@/lib/lead-qualification";
+"use client";
+
+import { useTranslations } from "next-intl";
+
+import { contactableBadgeClass } from "@/lib/lead-qualification";
 
 interface ContactableBadgeProps {
   contactable: boolean;
 }
 
 export function ContactableBadge({ contactable }: ContactableBadgeProps) {
+  const t = useTranslations("common");
+
   return (
     <span className={`badge ${contactableBadgeClass(contactable)}`}>
-      {formatContactable(contactable)}
+      {contactable ? t("yes") : t("no")}
     </span>
   );
 }

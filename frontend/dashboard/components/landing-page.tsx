@@ -1,80 +1,60 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { MarketingShell } from "@/components/marketing-shell";
+import { Link } from "@/i18n/navigation";
 
-const FEATURES = [
-  {
-    title: "Website widget",
-    description:
-      "Embed a chat widget on your site. Visitors talk naturally while the agent captures lead details.",
-  },
-  {
-    title: "Smart qualification",
-    description:
-      "Leads are scored and marked contactable or qualified before your team is notified.",
-  },
-  {
-    title: "Email alerts",
-    description:
-      "Get Resend-powered notifications with lead summary, score, and a dashboard link.",
-  },
-  {
-    title: "Team dashboard",
-    description:
-      "Review leads, update status, and manage company settings from one place.",
-  },
-];
+const FEATURE_KEYS = [
+  "widget",
+  "qualification",
+  "email",
+  "dashboard",
+] as const;
 
-export function LandingPage() {
+export async function LandingPage() {
+  const t = await getTranslations("landing");
+
   return (
     <MarketingShell>
       <section className="hero shell">
         <div className="hero-copy">
-          <p className="eyebrow">Pilot-ready lead capture</p>
-          <h1>Turn website conversations into qualified leads.</h1>
-          <p className="hero-lead">
-            Deploy an AI lead capture agent on your website, qualify inbound
-            requests automatically, and notify your team when a lead is worth
-            following up.
-          </p>
+          <p className="eyebrow">{t("eyebrow")}</p>
+          <h1>{t("heroTitle")}</h1>
+          <p className="hero-lead">{t("heroLead")}</p>
           <div className="hero-actions">
             <Link href="/onboarding" className="button button-lg">
-              Start your pilot
+              {t("startPilot")}
             </Link>
             <Link href="/login" className="button secondary button-lg">
-              Sign in
+              {t("signIn")}
             </Link>
           </div>
         </div>
         <div className="hero-card card">
-          <h2>What you get on day one</h2>
+          <h2>{t("dayOneTitle")}</h2>
           <ul className="hero-list">
-            <li>Embeddable website widget</li>
-            <li>Lead scoring and qualification</li>
-            <li>Dashboard for your team</li>
-            <li>Email notifications via Resend</li>
+            <li>{t("dayOneWidget")}</li>
+            <li>{t("dayOneScoring")}</li>
+            <li>{t("dayOneDashboard")}</li>
+            <li>{t("dayOneEmail")}</li>
           </ul>
         </div>
       </section>
 
       <section className="feature-grid shell">
-        {FEATURES.map((feature) => (
-          <article key={feature.title} className="feature-card card">
-            <h3>{feature.title}</h3>
-            <p className="muted">{feature.description}</p>
+        {FEATURE_KEYS.map((key) => (
+          <article key={key} className="feature-card card">
+            <h3>{t(`features.${key}Title`)}</h3>
+            <p className="muted">{t(`features.${key}Description`)}</p>
           </article>
         ))}
       </section>
 
       <section className="cta-band shell">
         <div className="cta-card card">
-          <h2>Ready for your first pilot customer?</h2>
-          <p className="muted">
-            Create a company, add your admin user, copy the widget snippet, and
-            send a test message in under ten minutes.
-          </p>
+          <h2>{t("ctaTitle")}</h2>
+          <p className="muted">{t("ctaDescription")}</p>
           <Link href="/onboarding" className="button">
-            Create pilot account
+            {t("createPilotAccount")}
           </Link>
         </div>
       </section>

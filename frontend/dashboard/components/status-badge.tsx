@@ -1,5 +1,8 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import type { LeadStatus } from "@/lib/types";
-import { STATUS_LABELS } from "@/lib/types";
 
 const STATUS_CLASS: Record<LeadStatus, string> = {
   new: "badge-new",
@@ -14,9 +17,11 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {
+  const t = useTranslations("leads.statuses");
+
   return (
     <span className={`badge ${STATUS_CLASS[status]}`}>
-      {STATUS_LABELS[status]}
+      {t(status)}
     </span>
   );
 }

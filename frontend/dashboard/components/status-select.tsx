@@ -1,7 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import type { LeadStatus } from "@/lib/types";
-import { LEAD_STATUSES, STATUS_LABELS } from "@/lib/types";
+import { LEAD_STATUSES } from "@/lib/types";
 
 interface StatusSelectProps {
   value: LeadStatus;
@@ -10,17 +12,20 @@ interface StatusSelectProps {
 }
 
 export function StatusSelect({ value, onChange, disabled }: StatusSelectProps) {
+  const t = useTranslations("leads");
+  const tStatuses = useTranslations("leads.statuses");
+
   return (
     <select
       className="select"
       value={value}
       disabled={disabled}
       onChange={(event) => onChange(event.target.value as LeadStatus)}
-      aria-label="Update lead status"
+      aria-label={t("updateStatusAria")}
     >
       {LEAD_STATUSES.map((status) => (
         <option key={status} value={status}>
-          {STATUS_LABELS[status]}
+          {tStatuses(status)}
         </option>
       ))}
     </select>

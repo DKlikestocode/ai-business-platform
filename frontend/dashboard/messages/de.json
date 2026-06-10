@@ -1,0 +1,283 @@
+{
+  "metadata": {
+    "title": "AI Agent Platform",
+    "description": "Erfassen Sie Website-Leads, qualifizieren Sie sie automatisch und benachrichtigen Sie Ihr Team."
+  },
+  "common": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "yes": "Ja",
+    "no": "Nein",
+    "back": "Zurück",
+    "send": "Senden",
+    "loading": "Laden...",
+    "dash": "—",
+    "complete": "abgeschlossen",
+    "done": "Erledigt",
+    "todo": "Offen",
+    "dev": "Dev",
+    "devMode": "Entwicklungsmodus"
+  },
+  "nav": {
+    "gettingStarted": "Erste Schritte",
+    "leads": "Leads",
+    "demoChat": "Demo-Chat",
+    "settings": "Einstellungen",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "startFreePilot": "Pilot starten",
+    "main": "Hauptnavigation",
+    "marketing": "Marketing-Navigation"
+  },
+  "brand": {
+    "name": "Agent Platform",
+    "mark": "AI",
+    "tagline": "Lead-Erfassung, Qualifizierung und Benachrichtigungen für Dienstleister."
+  },
+  "appShell": {
+    "title": "AI Agent Platform",
+    "subtitle": "Lead-Erfassung, Qualifizierung und Team-Dashboard"
+  },
+  "landing": {
+    "eyebrow": "Pilotbereite Lead-Erfassung",
+    "heroTitle": "Verwandeln Sie Website-Gespräche in qualifizierte Leads.",
+    "heroLead": "Setzen Sie einen KI-Lead-Capture-Agenten auf Ihrer Website ein, qualifizieren Sie Anfragen automatisch und benachrichtigen Sie Ihr Team, wenn ein Lead nachverfolgt werden sollte.",
+    "startPilot": "Pilot starten",
+    "signIn": "Anmelden",
+    "dayOneTitle": "Das erhalten Sie am ersten Tag",
+    "dayOneWidget": "Einbettbares Website-Widget",
+    "dayOneScoring": "Lead-Scoring und Qualifizierung",
+    "dayOneDashboard": "Dashboard für Ihr Team",
+    "dayOneEmail": "E-Mail-Benachrichtigungen über Resend",
+    "features": {
+      "widgetTitle": "Website-Widget",
+      "widgetDescription": "Betten Sie ein Chat-Widget auf Ihrer Website ein. Besucher chatten natürlich, während der Agent Lead-Details erfasst.",
+      "qualificationTitle": "Intelligente Qualifizierung",
+      "qualificationDescription": "Leads werden bewertet und als kontaktierbar oder qualifiziert markiert, bevor Ihr Team benachrichtigt wird.",
+      "emailTitle": "E-Mail-Benachrichtigungen",
+      "emailDescription": "Erhalten Sie Resend-Benachrichtigungen mit Lead-Zusammenfassung, Score und Dashboard-Link.",
+      "dashboardTitle": "Team-Dashboard",
+      "dashboardDescription": "Prüfen Sie Leads, aktualisieren Sie den Status und verwalten Sie Unternehmenseinstellungen an einem Ort."
+    },
+    "ctaTitle": "Bereit für Ihren ersten Pilotkunden?",
+    "ctaDescription": "Erstellen Sie ein Unternehmen, fügen Sie Ihren Admin-Benutzer hinzu, kopieren Sie den Widget-Code und senden Sie in unter zehn Minuten eine Testnachricht.",
+    "createPilotAccount": "Pilotkonto erstellen"
+  },
+  "login": {
+    "title": "Anmelden",
+    "description": "Greifen Sie auf Ihr Lead-Dashboard und Ihren Pilot-Workspace zu.",
+    "newCustomer": "Neuer Kunde?",
+    "startPilot": "Pilot starten",
+    "signingIn": "Anmeldung läuft...",
+    "signIn": "Anmelden",
+    "signInFailed": "Anmeldung fehlgeschlagen. Prüfen Sie E-Mail und Passwort.",
+    "loading": "Laden..."
+  },
+  "onboarding": {
+    "eyebrow": "Onboarding für neue Kunden",
+    "title": "Richten Sie Ihren Pilot-Workspace ein",
+    "stepOf": "Schritt {step} von 2 — {label}",
+    "stepCompany": "Unternehmen erstellen",
+    "stepUser": "Admin-Benutzer erstellen",
+    "companyName": "Unternehmensname",
+    "companyEmail": "Unternehmens-E-Mail",
+    "phoneOptional": "Telefon (optional)",
+    "creatingCompany": "Unternehmen wird erstellt...",
+    "continue": "Weiter",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "workEmail": "Geschäftliche E-Mail",
+    "creatingAccount": "Konto wird erstellt...",
+    "finishSetup": "Einrichtung abschließen",
+    "alreadyHaveAccount": "Bereits ein Konto?",
+    "signIn": "Anmelden",
+    "createCompanyFirst": "Erstellen Sie zuerst Ihr Unternehmensprofil.",
+    "createCompanyFailed": "Unternehmen konnte nicht erstellt werden.",
+    "createUserFailed": "Benutzerkonto konnte nicht erstellt werden.",
+    "steps": {
+      "company": {
+        "title": "Unternehmen erstellen",
+        "description": "Richten Sie Ihr Unternehmensprofil und den Mandanten-Slug ein."
+      },
+      "user": {
+        "title": "Ersten Benutzer erstellen",
+        "description": "Fügen Sie den Eigentümer oder Admin hinzu, der Leads verwaltet."
+      },
+      "notification_email": {
+        "title": "Benachrichtigungs-E-Mail konfigurieren",
+        "description": "Wählen Sie, wohin qualifizierte und kontaktierbare Lead-Benachrichtigungen gesendet werden.",
+        "action": "Einstellungen öffnen"
+      },
+      "copy_widget": {
+        "title": "Widget-Code kopieren",
+        "description": "Kopieren Sie den Einbettungs-Snippet für Ihre Website.",
+        "action": "Einbettungscode anzeigen"
+      },
+      "install_widget": {
+        "title": "Widget installieren",
+        "description": "Fügen Sie den Snippet vor </body> auf Ihrer Website ein.",
+        "action": "Installationsanleitung",
+        "markInstalled": "Als installiert markieren"
+      },
+      "test_widget": {
+        "title": "Widget testen",
+        "description": "Senden Sie eine Testnachricht und bestätigen Sie, dass ein Lead im Dashboard erscheint.",
+        "action": "Demo-Chat öffnen"
+      }
+    }
+  },
+  "gettingStarted": {
+    "title": "Erste Schritte",
+    "description": "Schließen Sie diese Schritte ab, um Ihren Pilotkunden zu starten.",
+    "progress": "{completed}/{total} abgeschlossen",
+    "loadFailed": "Setup-Fortschritt konnte nicht geladen werden.",
+    "loading": "Ihre Setup-Checkliste wird geladen...",
+    "signInRequired": "Melden Sie sich an, um Ihre Erste-Schritte-Checkliste zu sehen.",
+    "allDone": "Ihr Pilot-Workspace ist bereit. Neue Leads erscheinen auf der Leads-Seite.",
+    "companySlug": "Unternehmens-Slug:",
+    "nextStepsTitle": "Nächste Schritte",
+    "nextStepsDescription": "Nachdem das Widget live ist, überwachen Sie eingehende Leads, passen Sie Benachrichtigungsschwellen in den Einstellungen an und teilen Sie das Dashboard mit Ihrem Team.",
+    "openLeads": "Leads öffnen",
+    "companySettings": "Unternehmenseinstellungen"
+  },
+  "settings": {
+    "pageTitle": "Einstellungen",
+    "pageDescription": "Verwalten Sie Unternehmensprofil, Lead-Benachrichtigungen und Website-Widget-Einbettung.",
+    "loading": "Einstellungen werden geladen...",
+    "loadFailed": "Einstellungen konnten nicht geladen werden.",
+    "saveFailed": "Einstellungen konnten nicht gespeichert werden.",
+    "notFound": "Einstellungen nicht gefunden.",
+    "saved": "Einstellungen gespeichert.",
+    "companyProfile": "Unternehmensprofil",
+    "name": "Name",
+    "phone": "Telefon",
+    "slug": "Slug",
+    "created": "Erstellt",
+    "leadNotifications": "Lead-Benachrichtigungen",
+    "notificationEmail": "Benachrichtigungs-E-Mail",
+    "notificationEmailPlaceholder": "Standard ist die Unternehmens-E-Mail",
+    "notifyQualified": "Bei qualifizierten Leads benachrichtigen",
+    "notifyContactable": "Bei kontaktierbaren Leads über Schwellenwert benachrichtigen",
+    "contactableThreshold": "Schwellenwert für kontaktierbare Leads",
+    "saving": "Speichern...",
+    "saveSettings": "Einstellungen speichern",
+    "widgetEmbed": "Website-Widget-Einbettung",
+    "copySnippet": "Snippet kopieren",
+    "widgetDescription": "Fügen Sie diesen Snippet zu Ihrer Website hinzu. Das Widget verwendet den Slug {slug}, um Nachrichten an Ihr Unternehmen zu leiten.",
+    "copied": "In die Zwischenablage kopiert.",
+    "copyFailed": "Kopieren nicht möglich. Markieren Sie den Snippet manuell."
+  },
+  "leads": {
+    "title": "Leads",
+    "description": "Prüfen, qualifizieren und aktualisieren Sie eingehende Kundenanfragen.",
+    "status": "Status",
+    "qualification": "Qualifizierung",
+    "contactable": "Kontaktierbar",
+    "sort": "Sortierung",
+    "allStatuses": "Alle Status",
+    "allQualifications": "Alle Qualifizierungen",
+    "all": "Alle",
+    "creatingDemo": "Demo-Leads werden erstellt...",
+    "createDemo": "Demo-Leads erstellen",
+    "leadCount": "{count, plural, one {# Lead} other {# Leads}}",
+    "loadFailed": "Leads konnten nicht geladen werden.",
+    "updateFailed": "Lead-Status konnte nicht aktualisiert werden.",
+    "seedFailed": "Demo-Leads konnten nicht erstellt werden.",
+    "loading": "Leads werden geladen...",
+    "emptyTitle": "Noch keine Leads",
+    "emptyDescription": "Installieren Sie das Website-Widget oder senden Sie eine Testnachricht im Demo-Chat. Qualifizierte und kontaktierbare Leads erscheinen hier.",
+    "viewChecklist": "Setup-Checkliste anzeigen",
+    "tableName": "Name",
+    "tableScore": "Score",
+    "tableQualification": "Qualifizierung",
+    "tableContactable": "Kontaktierbar",
+    "tableMethod": "Methode",
+    "tablePhone": "Telefon",
+    "tableService": "Service",
+    "tableStatus": "Status",
+    "tableCreated": "Erstellt",
+    "tableUpdate": "Aktualisieren",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "pageOf": "Seite {page} von {total}",
+    "updateStatusAria": "Lead-Status aktualisieren",
+    "sortOptions": {
+      "created_at_desc": "Neueste zuerst",
+      "lead_score_desc": "Höchster Score"
+    },
+    "statuses": {
+      "new": "Neu",
+      "contacted": "Kontaktiert",
+      "qualified": "Qualifiziert",
+      "won": "Gewonnen",
+      "lost": "Verloren"
+    }
+  },
+  "leadDetail": {
+    "loading": "Lead wird geladen...",
+    "loadFailed": "Lead konnte nicht geladen werden.",
+    "updateFailed": "Status konnte nicht aktualisiert werden.",
+    "notFound": "Lead nicht gefunden.",
+    "backToLeads": "← Zurück zu Leads",
+    "leadId": "Lead-ID:",
+    "qualification": "Qualifizierung",
+    "leadScore": "Lead-Score",
+    "qualificationStatus": "Qualifizierungsstatus",
+    "contactable": "Kontaktierbar",
+    "contactMethod": "Kontaktmethode",
+    "notificationSent": "Benachrichtigung gesendet",
+    "details": "Lead-Details",
+    "company": "Unternehmen",
+    "location": "Standort",
+    "serviceRequested": "Angefragter Service",
+    "description": "Beschreibung",
+    "urgency": "Dringlichkeit",
+    "preferredCallback": "Bevorzugter Rückruf",
+    "conversationId": "Konversations-ID",
+    "created": "Erstellt",
+    "summary": "Zusammenfassung",
+    "updateStatus": "Status aktualisieren"
+  },
+  "demoChat": {
+    "title": "Demo-Chat",
+    "description": "Testen Sie den Lead-Capture-Agenten vor oder nach der Installation des Website-Widgets.",
+    "newConversation": "Neue Konversation",
+    "conversationId": "Konversations-ID:",
+    "loadingAccount": "Konto wird geladen...",
+    "emptyState": "Starten Sie ein Gespräch als Kundenanfrage. Der Lead-Agent fragt nach Details wie Name, Telefon, Standort und gewünschtem Service.",
+    "you": "Sie",
+    "leadAgent": "Lead-Agent",
+    "thinking": "Denkt nach...",
+    "sendFailed": "Nachricht konnte nicht gesendet werden.",
+    "leadCaptured": "Lead erfolgreich erfasst.",
+    "viewLead": "Lead-Details anzeigen",
+    "stillNeeded": "Noch benötigt:",
+    "capturedSoFar": "Bisher erfasst:",
+    "placeholderComplete": "Lead abgeschlossen. Starten Sie eine neue Konversation, um fortzufahren.",
+    "placeholderMessage": "Nachricht eingeben..."
+  },
+  "qualification": {
+    "incomplete": "Unvollständig",
+    "contactable": "Kontaktierbar",
+    "qualified": "Qualifiziert"
+  },
+  "contactMethod": {
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "channel": "Kanal",
+    "unknown": "Unbekannt"
+  },
+  "auth": {
+    "loadingAccount": "Konto wird geladen...",
+    "loadUserFailed": "Aktueller Benutzer konnte nicht geladen werden.",
+    "loginFailed": "Anmeldung fehlgeschlagen.",
+    "signedInAs": "Angemeldet als"
+  },
+  "errors": {
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "openai": "Der KI-Assistent ist noch nicht konfiguriert. Bitten Sie Ihren Administrator, OPENAI_API_KEY zu setzen.",
+    "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "network": "Der Server konnte nicht erreicht werden. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "duplicateEmail": "Ein Konto mit dieser E-Mail existiert bereits. Versuchen Sie sich stattdessen anzumelden."
+  }
+}

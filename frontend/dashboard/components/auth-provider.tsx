@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useTranslations } from "next-intl";
 
 import {
   ApiError,
@@ -21,6 +22,7 @@ import {
 } from "@/lib/api";
 import { getAccessToken, setAccessToken } from "@/lib/auth-storage";
 import type { Company, CurrentUser } from "@/lib/types";
+import { useRouter } from "@/i18n/navigation";
 
 interface AuthContextValue {
   user: CurrentUser | null;
@@ -35,6 +37,8 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const tAuth = useTranslations("auth");
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [company, setCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,8 +53,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Session cookie cleanup is best-effort during logout.
     }
-    window.location.assign("/login");
-  }, []);
+    router.replace("/login");
+  }, [router]);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -75,13 +79,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await clearSession();
       } else {
         setError(
-          err instanceof Error ? err.message : "Failed to load current user.",
+          err instanceof Error ? err.message : tAuth("loadUserFailed"),
         );
       }
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [tAuth]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -95,13 +99,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (err) {
         setUser(null);
         setCompany(null);
-        setError(err instanceof Error ? err.message : "Login failed.");
+        setError(err instanceof Error ? err.message : tAuth("loginFailed"));
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [refresh],
+    [refresh, tAuth],
   );
 
   useEffect(() => {
@@ -136,9 +140,10 @@ export function useAuth(): AuthContextValue {
 
 export function CompanyLabel() {
   const { company, user, loading } = useAuth();
+  const t = useTranslations("auth");
 
   if (loading) {
-    return <p className="company-label muted">Loading account...</p>;
+    return <p className="company-label muted">{t("loadingAccount")}</p>;
   }
 
   if (!user || !company) {
@@ -147,7 +152,7 @@ export function CompanyLabel() {
 
   return (
     <p className="company-label">
-      Signed in as <span>{user.first_name} {user.last_name}</span>
+      {t("signedInAs")} <span>{user.first_name} {user.last_name}</span>
       {" · "}
       <span>{company.name}</span>
     </p>

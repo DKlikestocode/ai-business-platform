@@ -1,24 +1,18 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  CONTACT_METHOD_LABELS,
-  QUALIFICATION_LABELS,
+  LEAD_SORT_OPTIONS,
+  QUALIFICATION_STATUSES,
   contactableBadgeClass,
-  formatContactMethod,
-  formatContactable,
   formatLeadScore,
+  isKnownContactMethod,
 } from "@/lib/lead-qualification";
 
 describe("lead qualification display helpers", () => {
-  it("formats contactable as yes/no", () => {
-    expect(formatContactable(true)).toBe("Yes");
-    expect(formatContactable(false)).toBe("No");
-  });
-
-  it("maps contact methods to labels", () => {
-    expect(formatContactMethod("phone")).toBe(CONTACT_METHOD_LABELS.phone);
-    expect(formatContactMethod("email")).toBe(CONTACT_METHOD_LABELS.email);
-    expect(formatContactMethod(null)).toBe("—");
+  it("identifies known contact methods", () => {
+    expect(isKnownContactMethod("phone")).toBe(true);
+    expect(isKnownContactMethod("email")).toBe(true);
+    expect(isKnownContactMethod(null)).toBe(false);
   });
 
   it("formats lead score as a string", () => {
@@ -30,9 +24,18 @@ describe("lead qualification display helpers", () => {
     expect(contactableBadgeClass(false)).toBe("badge-contactable-no");
   });
 
-  it("defines qualification labels for all statuses", () => {
-    expect(QUALIFICATION_LABELS.incomplete).toBe("Incomplete");
-    expect(QUALIFICATION_LABELS.contactable).toBe("Contactable");
-    expect(QUALIFICATION_LABELS.qualified).toBe("Qualified");
+  it("defines qualification statuses for filters", () => {
+    expect(QUALIFICATION_STATUSES).toEqual([
+      "incomplete",
+      "contactable",
+      "qualified",
+    ]);
+  });
+
+  it("defines lead sort options", () => {
+    expect(LEAD_SORT_OPTIONS).toEqual([
+      "created_at_desc",
+      "lead_score_desc",
+    ]);
   });
 });

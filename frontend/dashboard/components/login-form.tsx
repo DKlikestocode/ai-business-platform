@@ -1,17 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, loading, error } = useAuth();
+  const t = useTranslations("login");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
+  const errorMessages = getErrorMessages(tErrors);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
@@ -29,7 +35,9 @@ export function LoginForm() {
         nextPath && nextPath.startsWith("/") ? nextPath : "/getting-started",
       );
     } catch (err) {
-      setFormError(formatUserFacingError(err, "Sign in failed. Check your email and password."));
+      setFormError(
+        formatUserFacingError(err, t("signInFailed"), errorMessages),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -38,15 +46,15 @@ export function LoginForm() {
   return (
     <div className="login-page">
       <div className="login-card card">
-        <h1>Sign in</h1>
-        <p className="muted">Access your lead dashboard and pilot workspace.</p>
+        <h1>{t("title")}</h1>
+        <p className="muted">{t("description")}</p>
         <p className="muted onboarding-footer">
-          New customer? <Link href="/onboarding">Start your pilot</Link>
+          {t("newCustomer")} <Link href="/onboarding">{t("startPilot")}</Link>
         </p>
 
         <form className="login-form" onSubmit={handleSubmit}>
           <label className="field">
-            <span>Email</span>
+            <span>{tCommon("email")}</span>
             <input
               className="input"
               type="email"
@@ -59,7 +67,7 @@ export function LoginForm() {
           </label>
 
           <label className="field">
-            <span>Password</span>
+            <span>{tCommon("password")}</span>
             <input
               className="input"
               type="password"
@@ -80,7 +88,7 @@ export function LoginForm() {
             className="button"
             disabled={loading || submitting || !email || !password}
           >
-            {submitting ? "Signing in..." : "Sign in"}
+            {submitting ? t("signingIn") : t("signIn")}
           </button>
         </form>
       </div>

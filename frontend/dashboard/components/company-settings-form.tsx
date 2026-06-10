@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { fetchCompanySettings, updateCompanySettings } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { markOnboardingStepComplete } from "@/lib/onboarding";
 import type { CompanySettings } from "@/lib/types";
 import {
@@ -14,8 +16,8 @@ import {
   getPublicApiBaseUrl,
 } from "@/lib/widget-embed";
 
-function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+function formatDate(value: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "full",
     timeStyle: "short",
   }).format(new Date(value));
@@ -23,6 +25,11 @@ function formatDate(value: string): string {
 
 export function CompanySettingsForm() {
   const { company } = useAuth();
+  const locale = useLocale();
+  const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
+  const errorMessages = getErrorMessages(tErrors);
   const [settings, setSettings] = useState<CompanySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -37,11 +44,11 @@ export function CompanySettingsForm() {
       const data = await fetchCompanySettings();
       setSettings(data);
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to load settings."));
+      setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t, errorMessages]);
 
   useEffect(() => {
     void loadSettings();
@@ -68,9 +75,9 @@ export function CompanySettingsForm() {
           settings.contactable_lead_notification_threshold,
       });
       setSettings(updated);
-      setSuccess("Settings saved.");
+      setSuccess(t("saved"));
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to save settings."));
+      setError(formatUserFacingError(err, t("saveFailed"), errorMessages));
     } finally {
       setSaving(false);
     }
@@ -91,9 +98,9 @@ export function CompanySettingsForm() {
       if (company) {
         markOnboardingStepComplete(company.id, "copy_widget");
       }
-      setCopyMessage("Copied to clipboard.");
+      setCopyMessage(t("copied"));
     } catch {
-      setCopyMessage("Unable to copy. Select the snippet manually.");
+      setCopyMessage(t("copyFailed"));
     }
 
     window.setTimeout(() => setCopyMessage(null), 2500);
@@ -108,7 +115,7 @@ export function CompanySettingsForm() {
   }
 
   if (loading) {
-    return <LoadingState label="Loading settings..." />;
+    return <LoadingState label={t("loading")} />;
   }
 
   if (error && !settings) {
@@ -116,7 +123,7 @@ export function CompanySettingsForm() {
   }
 
   if (!settings) {
-    return <div className="empty-state">Settings not found.</div>;
+    return <div className="empty-state">{t("notFound")}</div>;
   }
 
   const embedSnippet = buildWidgetEmbedSnippet(
@@ -130,10 +137,10 @@ export function CompanySettingsForm() {
       {success ? <AlertBanner variant="success">{success}</AlertBanner> : null}
 
       <form className="card settings-form" onSubmit={(event) => void handleSubmit(event)}>
-        <h3 className="card-title">Company profile</h3>
+        <h3 className="card-title">{t("companyProfile")}</h3>
         <div className="settings-grid">
           <label className="field">
-            <span>Name</span>
+            <span>{t("name")}</span>
             <input
               className="input"
               value={settings.name}
@@ -142,7 +149,7 @@ export function CompanySettingsForm() {
             />
           </label>
           <label className="field">
-            <span>Email</span>
+            <span>{tCommon("email")}</span>
             <input
               className="input"
               type="email"
@@ -152,7 +159,7 @@ export function CompanySettingsForm() {
             />
           </label>
           <label className="field">
-            <span>Phone</span>
+            <span>{t("phone")}</span>
             <input
               className="input"
               value={settings.phone ?? ""}
@@ -162,23 +169,23 @@ export function CompanySettingsForm() {
             />
           </label>
           <div className="field">
-            <span>Slug</span>
+            <span>{t("slug")}</span>
             <p className="read-only-value">
               <code>{settings.slug}</code>
             </p>
           </div>
           <div className="field">
-            <span>Created</span>
+            <span>{t("created")}</span>
             <p className="read-only-value muted">
-              {formatDate(settings.created_at)}
+              {formatDate(settings.created_at, locale)}
             </p>
           </div>
         </div>
 
-        <h3 className="card-title">Lead notifications</h3>
+        <h3 className="card-title">{t("leadNotifications")}</h3>
         <div className="settings-grid">
           <label className="field">
-            <span>Notification email</span>
+            <span>{t("notificationEmail")}</span>
             <input
               className="input"
               type="email"
@@ -189,7 +196,7 @@ export function CompanySettingsForm() {
                   event.target.value || null,
                 )
               }
-              placeholder="Defaults to company email"
+              placeholder={t("notificationEmailPlaceholder")}
             />
           </label>
           <label className="field checkbox-field">
@@ -200,7 +207,7 @@ export function CompanySettingsForm() {
                 updateField("notify_on_new_lead", event.target.checked)
               }
             />
-            <span>Notify on qualified leads</span>
+            <span>{t("notifyQualified")}</span>
           </label>
           <label className="field checkbox-field">
             <input
@@ -210,10 +217,10 @@ export function CompanySettingsForm() {
                 updateField("notify_on_contactable_lead", event.target.checked)
               }
             />
-            <span>Notify on contactable leads above threshold</span>
+            <span>{t("notifyContactable")}</span>
           </label>
           <label className="field">
-            <span>Contactable lead score threshold</span>
+            <span>{t("contactableThreshold")}</span>
             <input
               className="input"
               type="number"
@@ -232,25 +239,24 @@ export function CompanySettingsForm() {
 
         <div className="form-actions">
           <button type="submit" className="button" disabled={saving}>
-            {saving ? "Saving..." : "Save settings"}
+            {saving ? t("saving") : t("saveSettings")}
           </button>
         </div>
       </form>
 
       <div className="card">
         <div className="embed-header">
-          <h3 className="card-title">Website widget embed</h3>
+          <h3 className="card-title">{t("widgetEmbed")}</h3>
           <button
             type="button"
             className="button secondary"
             onClick={() => void handleCopyEmbed()}
           >
-            Copy snippet
+            {t("copySnippet")}
           </button>
         </div>
         <p className="muted">
-          Add this snippet to your website. The widget uses slug{" "}
-          <code>{settings.slug}</code> to route messages to your company.
+          {t("widgetDescription", { slug: settings.slug })}
         </p>
         {copyMessage ? <div className="notice">{copyMessage}</div> : null}
         <pre className="embed-snippet">

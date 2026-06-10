@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
@@ -9,8 +9,10 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { sendLeadMessage } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { markOnboardingStepComplete } from "@/lib/onboarding";
 import type { LeadExtractedData } from "@/lib/types";
+import { Link } from "@/i18n/navigation";
 
 const DEFAULT_CONVERSATION_ID = "demo-chat-001";
 
@@ -37,6 +39,10 @@ function formatMissingFields(fields: string[]): string {
 
 export function DemoChat() {
   const { company, loading: authLoading, error: authError } = useAuth();
+  const t = useTranslations("demoChat");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
+  const errorMessages = getErrorMessages(tErrors);
   const [conversationId, setConversationId] = useState(DEFAULT_CONVERSATION_ID);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -102,7 +108,7 @@ export function DemoChat() {
         setLeadId(response.lead_id);
       }
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to send message."));
+      setError(formatUserFacingError(err, t("sendFailed"), errorMessages));
     } finally {
       setLoading(false);
     }
@@ -110,35 +116,29 @@ export function DemoChat() {
 
   return (
     <div className="stack">
-      <PageHeader
-        title="Demo Chat"
-        description="Test the lead capture agent before or after installing the website widget."
-      >
+      <PageHeader title={t("title")} description={t("description")}>
         <button
           type="button"
           className="button secondary"
           onClick={handleNewConversation}
           disabled={loading}
         >
-          New conversation
+          {t("newConversation")}
         </button>
       </PageHeader>
 
       <p className="muted">
-        Conversation ID: <code>{conversationId}</code>
+        {t("conversationId")} <code>{conversationId}</code>
       </p>
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
 
-      {authLoading ? <LoadingState label="Loading account..." /> : null}
+      {authLoading ? <LoadingState label={t("loadingAccount")} /> : null}
 
       <div className="chat-panel card">
         <div className="chat-messages" aria-live="polite">
           {messages.length === 0 ? (
-            <div className="chat-empty">
-              Start a conversation as a customer inquiry. The Lead Agent will
-              ask for details like name, phone, location, and service needed.
-            </div>
+            <div className="chat-empty">{t("emptyState")}</div>
           ) : null}
 
           {messages.map((message) => (
@@ -147,7 +147,7 @@ export function DemoChat() {
               className={`chat-message chat-message-${message.role}`}
             >
               <span className="chat-message-label">
-                {message.role === "user" ? "You" : "Lead Agent"}
+                {message.role === "user" ? t("you") : t("leadAgent")}
               </span>
               <p>{message.content}</p>
             </div>
@@ -155,8 +155,8 @@ export function DemoChat() {
 
           {loading ? (
             <div className="chat-message chat-message-assistant">
-              <span className="chat-message-label">Lead Agent</span>
-              <p className="muted">Thinking...</p>
+              <span className="chat-message-label">{t("leadAgent")}</span>
+              <p className="muted">{t("thinking")}</p>
             </div>
           ) : null}
 
@@ -167,22 +167,22 @@ export function DemoChat() {
 
         {leadComplete && leadId ? (
           <div className="notice chat-success">
-            Lead captured successfully.{" "}
+            {t("leadCaptured")}{" "}
             <Link href={`/leads/${leadId}`} className="link">
-              View lead details
+              {t("viewLead")}
             </Link>
           </div>
         ) : null}
 
         {!leadComplete && missingFields.length > 0 ? (
           <p className="muted chat-hint">
-            Still needed: {formatMissingFields(missingFields)}
+            {t("stillNeeded")} {formatMissingFields(missingFields)}
           </p>
         ) : null}
 
         {!leadComplete && extractedData?.name ? (
           <p className="muted chat-hint">
-            Captured so far: {extractedData.name}
+            {t("capturedSoFar")} {extractedData.name}
             {extractedData.phone ? ` · ${extractedData.phone}` : ""}
             {extractedData.location ? ` · ${extractedData.location}` : ""}
           </p>
@@ -195,8 +195,8 @@ export function DemoChat() {
             value={input}
             placeholder={
               leadComplete
-                ? "Lead complete. Start a new conversation to continue."
-                : "Type your message..."
+                ? t("placeholderComplete")
+                : t("placeholderMessage")
             }
             disabled={loading || leadComplete || authLoading}
             onChange={(event) => setInput(event.target.value)}
@@ -206,7 +206,7 @@ export function DemoChat() {
             className="button"
             disabled={loading || leadComplete || authLoading || !input.trim()}
           >
-            Send
+            {tCommon("send")}
           </button>
         </form>
       </div>
