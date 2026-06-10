@@ -117,11 +117,11 @@ async def test_notification_email_includes_dashboard_link_when_configured(
 
     assert len(provider.messages) == 1
     body = provider.messages[0].body
-    assert "Summary: Jane needs roof repair." in body
-    assert "Qualification status: qualified" in body
-    assert "Lead score:" in body
-    assert "Contact method:" in body
-    assert f"View in dashboard: http://localhost:3000/leads/{lead.id}" in body
+    assert "Zusammenfassung: Jane needs roof repair." in body
+    assert "Qualifizierungsstatus: Qualifiziert" in body
+    assert "Lead-Score:" in body
+    assert "Kontaktmethode:" in body
+    assert f"Im Dashboard anzeigen: http://localhost:3000/leads/{lead.id}" in body
 
 
 @pytest.mark.asyncio

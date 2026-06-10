@@ -1,4 +1,20 @@
 (function initAiAgentWidget() {
+  const COPY = {
+    title: "Chat mit uns",
+    placeholder: "Nachricht eingeben…",
+    send: "Senden",
+    sending: "Wird gesendet…",
+    userLabel: "Sie",
+    assistantLabel: "Assistent",
+    leadComplete:
+      "Vielen Dank, wir haben alle nötigen Angaben. Wir melden uns in Kürze bei Ihnen.",
+    genericError: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    privacyWithLink:
+      'Ihre Angaben werden zur Bearbeitung Ihrer Anfrage verwendet. <a href="{url}" target="_blank" rel="noopener noreferrer" style="color:#2563eb;">Datenschutzerklärung</a>',
+    privacyWithoutLink:
+      "Ihre Angaben werden zur Bearbeitung Ihrer Anfrage verwendet.",
+  };
+
   const script = document.currentScript;
   const container =
     document.querySelector("[data-ai-agent-widget]") ||
@@ -18,18 +34,24 @@
     script?.dataset.apiBase ||
     window.location.origin
   ).replace(/\/$/, "");
-  const title = container.dataset.title || "Chat with us";
+  const title = container.dataset.title || COPY.title;
+  const privacyUrl = container.dataset.privacyUrl || "";
   const conversationId =
     container.dataset.conversationId ||
     `widget-${companySlug}-${Date.now()}`;
+
+  const privacyHint = privacyUrl
+    ? COPY.privacyWithLink.replace("{url}", privacyUrl)
+    : COPY.privacyWithoutLink;
 
   container.innerHTML = `
     <div class="ai-agent-widget" style="font-family:Inter,system-ui,sans-serif;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;max-width:420px;background:#fff;">
       <div style="padding:12px 16px;background:#2563eb;color:#fff;font-weight:600;">${title}</div>
       <div class="ai-agent-widget-messages" style="height:280px;overflow:auto;padding:16px;background:#f9fafb;"></div>
+      <p class="ai-agent-widget-privacy" style="margin:0;padding:8px 12px 0;font-size:11px;line-height:1.4;color:#6b7280;">${privacyHint}</p>
       <form class="ai-agent-widget-form" style="display:flex;gap:8px;padding:12px;border-top:1px solid #e5e7eb;">
-        <input class="ai-agent-widget-input" type="text" placeholder="Type your message..." style="flex:1;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;" />
-        <button type="submit" style="padding:10px 14px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;">Send</button>
+        <input class="ai-agent-widget-input" type="text" placeholder="${COPY.placeholder}" style="flex:1;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;" />
+        <button type="submit" class="ai-agent-widget-submit" style="padding:10px 14px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;">${COPY.send}</button>
       </form>
     </div>
   `;
@@ -37,16 +59,24 @@
   const messagesEl = container.querySelector(".ai-agent-widget-messages");
   const formEl = container.querySelector(".ai-agent-widget-form");
   const inputEl = container.querySelector(".ai-agent-widget-input");
+  const submitEl = container.querySelector(".ai-agent-widget-submit");
   let loading = false;
 
   function appendMessage(role, content) {
     const bubble = document.createElement("div");
     bubble.style.marginBottom = "10px";
     bubble.innerHTML = `<strong style="display:block;font-size:12px;color:#6b7280;margin-bottom:4px;">${
-      role === "user" ? "You" : "Assistant"
+      role === "user" ? COPY.userLabel : COPY.assistantLabel
     }</strong><div>${content}</div>`;
     messagesEl.appendChild(bubble);
     messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function setLoading(active) {
+    loading = active;
+    inputEl.disabled = active;
+    submitEl.disabled = active;
+    submitEl.textContent = active ? COPY.sending : COPY.send;
   }
 
   async function sendMessage(message) {
@@ -64,7 +94,7 @@
     });
 
     if (!response.ok) {
-      let detail = `Request failed (${response.status})`;
+      let detail = COPY.genericError;
       try {
         const payload = await response.json();
         if (typeof payload.detail === "string") {
@@ -86,7 +116,7 @@
       return;
     }
 
-    loading = true;
+    setLoading(true);
     inputEl.value = "";
     appendMessage("user", message);
 
@@ -94,20 +124,19 @@
       const result = await sendMessage(message);
       appendMessage("assistant", result.reply);
       if (result.lead_complete) {
-        appendMessage(
-          "assistant",
-          "Thanks, we have everything we need. Someone will follow up soon.",
-        );
+        appendMessage("assistant", COPY.leadComplete);
         inputEl.disabled = true;
-        formEl.querySelector("button").disabled = true;
+        submitEl.disabled = true;
       }
     } catch (error) {
       appendMessage(
         "assistant",
-        error instanceof Error ? error.message : "Something went wrong.",
+        error instanceof Error ? error.message : COPY.genericError,
       );
     } finally {
-      loading = false;
+      if (!inputEl.disabled) {
+        setLoading(false);
+      }
     }
   });
 })();

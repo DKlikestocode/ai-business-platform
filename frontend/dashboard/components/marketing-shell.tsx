@@ -10,6 +10,7 @@ interface MarketingShellProps {
 export async function MarketingShell({ children }: MarketingShellProps) {
   const brand = await getTranslations("brand");
   const nav = await getTranslations("nav");
+  const legal = await getTranslations("legal");
 
   return (
     <div className="marketing-page">
@@ -30,6 +31,10 @@ export async function MarketingShell({ children }: MarketingShellProps) {
       <main>{children}</main>
       <footer className="marketing-footer shell">
         <p className="muted">{brand("tagline")}</p>
+        <nav className="legal-footer-links" aria-label={legal("footerNav")}>
+          <Link href="/impressum">{legal("impressumLink")}</Link>
+          <Link href="/datenschutz">{legal("datenschutzLink")}</Link>
+        </nav>
       </footer>
     </div>
   );

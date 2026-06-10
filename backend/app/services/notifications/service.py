@@ -9,6 +9,19 @@ from app.services.notifications.interface import EmailMessage, EmailProvider
 
 logger = logging.getLogger(__name__)
 
+_QUALIFICATION_LABELS = {
+    QualificationStatus.QUALIFIED.value: "Qualifiziert",
+    QualificationStatus.CONTACTABLE.value: "Kontaktierbar",
+    QualificationStatus.INCOMPLETE.value: "Unvollständig",
+}
+
+_CONTACT_METHOD_LABELS = {
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "channel": "Kanal",
+    "unknown": "Unbekannt",
+}
+
 
 class NotificationService:
     """Coordinates outbound lead notifications."""
@@ -70,10 +83,11 @@ class NotificationService:
             )
             return False
 
+        lead_name = lead.name or "Ohne Namen"
         subject = (
-            f"New qualified lead: {lead.name}"
+            f"Neuer qualifizierter Lead: {lead_name}"
             if lead.qualification_status == QualificationStatus.QUALIFIED.value
-            else f"New contactable lead: {lead.name}"
+            else f"Neuer kontaktierbarer Lead: {lead_name}"
         )
         message = EmailMessage(
             to=recipient,
@@ -99,6 +113,16 @@ class NotificationService:
         return await self.maybe_notify_lead(company, lead, channel=channel)
 
     @staticmethod
+    def _qualification_label(status: str) -> str:
+        return _QUALIFICATION_LABELS.get(status, status)
+
+    @staticmethod
+    def _contact_method_label(method: str | None) -> str:
+        if not method:
+            return _CONTACT_METHOD_LABELS["unknown"]
+        return _CONTACT_METHOD_LABELS.get(method, method)
+
+    @staticmethod
     def _build_lead_email_body(
         *,
         company: Company,
@@ -106,24 +130,30 @@ class NotificationService:
         frontend_base_url: str | None = None,
     ) -> str:
         lines = [
-            f"A new lead was captured for {company.name}.",
+            f"Es wurde ein neuer Lead für {company.name} erfasst.",
             "",
-            f"Summary: {lead.summary or '—'}",
-            f"Qualification status: {lead.qualification_status}",
-            f"Lead score: {lead.lead_score}",
-            f"Contact method: {lead.contact_method or 'unknown'}",
-            f"Contactable: {'yes' if lead.contactable else 'no'}",
+            f"Zusammenfassung: {lead.summary or '—'}",
+            (
+                "Qualifizierungsstatus: "
+                f"{NotificationService._qualification_label(lead.qualification_status)}"
+            ),
+            f"Lead-Score: {lead.lead_score}",
+            (
+                "Kontaktmethode: "
+                f"{NotificationService._contact_method_label(lead.contact_method)}"
+            ),
+            f"Kontaktierbar: {'Ja' if lead.contactable else 'Nein'}",
             "",
-            f"Name: {lead.name}",
-            f"Phone: {lead.phone}",
-            f"Email: {lead.email or '—'}",
-            f"Location: {lead.location}",
-            f"Service requested: {lead.service_requested}",
-            f"Urgency: {lead.urgency}",
-            f"Preferred callback: {lead.preferred_callback_time}",
-            f"Description: {lead.description}",
+            f"Name: {lead.name or '—'}",
+            f"Telefon: {lead.phone or '—'}",
+            f"E-Mail: {lead.email or '—'}",
+            f"Standort: {lead.location or '—'}",
+            f"Angefragter Service: {lead.service_requested or '—'}",
+            f"Dringlichkeit: {lead.urgency or '—'}",
+            f"Bevorzugter Rückruf: {lead.preferred_callback_time or '—'}",
+            f"Beschreibung: {lead.description or '—'}",
         ]
         if frontend_base_url:
             dashboard_url = f"{frontend_base_url.rstrip('/')}/leads/{lead.id}"
-            lines.extend(["", f"View in dashboard: {dashboard_url}"])
+            lines.extend(["", f"Im Dashboard anzeigen: {dashboard_url}"])
         return "\n".join(lines)

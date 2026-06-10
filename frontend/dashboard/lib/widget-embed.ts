@@ -7,7 +7,7 @@ export function buildWidgetEmbedSnippet(
   id="ai-agent-widget"
   data-company-slug="${companySlug}"
   data-api-base="${base}"
-  data-title="Chat with us"
+  data-title="Chat mit uns"
 ></div>
 <script src="${base}/static/widget/widget.js"></script>`;
 }
