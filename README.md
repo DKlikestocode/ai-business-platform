@@ -117,6 +117,7 @@ docker compose -f infrastructure/docker/docker-compose.prod.yml up --build -d
 The production stack:
 
 - Runs backend and frontend in production mode (not dev servers)
+- Terminates TLS with Caddy (`app.example.com` → frontend, `api.example.com` → backend)
 - Runs as a non-root user
 - Uses multi-stage Docker builds
 - Runs database migrations on startup

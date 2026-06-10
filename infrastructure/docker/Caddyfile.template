@@ -1,0 +1,31 @@
+# Production reverse proxy template for Caddy.
+# Copy values into .env: APP_DOMAIN, API_DOMAIN, ACME_EMAIL
+# Caddy substitutes {$VAR} from the container environment at runtime.
+
+{
+	email {$ACME_EMAIL}
+}
+
+{$APP_DOMAIN} {
+	encode gzip
+
+	reverse_proxy frontend:3000 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}
+
+{$API_DOMAIN} {
+	encode gzip
+
+	# Serves API routes and static assets such as:
+	# /static/widget/widget.js
+	reverse_proxy backend:8000 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}
