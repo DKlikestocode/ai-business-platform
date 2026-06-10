@@ -1,20 +1,25 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 
-import { MarketingShell } from "@/components/marketing-shell";
+import { MarketingShellClient } from "@/components/marketing-shell-client";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { useAuth } from "@/components/auth-provider";
 import { registerCompany, registerUser } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
+import { Link, useRouter } from "@/i18n/navigation";
 
 type Step = "company" | "user";
 
 export function OnboardingForm() {
   const router = useRouter();
   const { login } = useAuth();
+  const t = useTranslations("onboarding");
+  const tCommon = useTranslations("common");
+  const tErrors = useTranslations("errors");
+  const errorMessages = getErrorMessages(tErrors);
   const [step, setStep] = useState<Step>("company");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +48,7 @@ export function OnboardingForm() {
       setCompanyId(company.id);
       setStep("user");
     } catch (err) {
-      setError(formatUserFacingError(err, "Could not create company."));
+      setError(formatUserFacingError(err, t("createCompanyFailed"), errorMessages));
     } finally {
       setSubmitting(false);
     }
@@ -52,7 +57,7 @@ export function OnboardingForm() {
   async function handleUserSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!companyId) {
-      setError("Create your company profile first.");
+      setError(t("createCompanyFirst"));
       return;
     }
 
@@ -71,23 +76,25 @@ export function OnboardingForm() {
       await login(userEmail.trim(), password);
       router.replace("/getting-started");
     } catch (err) {
-      setError(formatUserFacingError(err, "Could not create your user account."));
+      setError(formatUserFacingError(err, t("createUserFailed"), errorMessages));
     } finally {
       setSubmitting(false);
     }
   }
 
+  const stepLabel = step === "company" ? t("stepCompany") : t("stepUser");
+
   return (
-    <MarketingShell>
+    <MarketingShellClient>
       <section className="onboarding-section shell">
         <div className="onboarding-card card">
-          <p className="eyebrow">New customer onboarding</p>
-          <h1>Set up your pilot workspace</h1>
+          <p className="eyebrow">{t("eyebrow")}</p>
+          <h1>{t("title")}</h1>
           <p className="muted">
-            Step {step === "company" ? "1" : "2"} of 2 —{" "}
-            {step === "company"
-              ? "Create your company"
-              : "Create your admin user"}
+            {t("stepOf", {
+              step: step === "company" ? "1" : "2",
+              label: stepLabel,
+            })}
           </p>
 
           <div className="step-indicator" aria-hidden="true">
@@ -100,7 +107,7 @@ export function OnboardingForm() {
           {step === "company" ? (
             <form className="onboarding-form" onSubmit={handleCompanySubmit}>
               <label className="field">
-                <span>Company name</span>
+                <span>{t("companyName")}</span>
                 <input
                   className="input"
                   value={companyName}
@@ -110,7 +117,7 @@ export function OnboardingForm() {
                 />
               </label>
               <label className="field">
-                <span>Company email</span>
+                <span>{t("companyEmail")}</span>
                 <input
                   className="input"
                   type="email"
@@ -121,7 +128,7 @@ export function OnboardingForm() {
                 />
               </label>
               <label className="field">
-                <span>Phone (optional)</span>
+                <span>{t("phoneOptional")}</span>
                 <input
                   className="input"
                   value={companyPhone}
@@ -134,13 +141,13 @@ export function OnboardingForm() {
                 className="button"
                 disabled={submitting || !companyName || !companyEmail}
               >
-                {submitting ? "Creating company..." : "Continue"}
+                {submitting ? t("creatingCompany") : t("continue")}
               </button>
             </form>
           ) : (
             <form className="onboarding-form" onSubmit={handleUserSubmit}>
               <label className="field">
-                <span>First name</span>
+                <span>{t("firstName")}</span>
                 <input
                   className="input"
                   value={firstName}
@@ -150,7 +157,7 @@ export function OnboardingForm() {
                 />
               </label>
               <label className="field">
-                <span>Last name</span>
+                <span>{t("lastName")}</span>
                 <input
                   className="input"
                   value={lastName}
@@ -160,7 +167,7 @@ export function OnboardingForm() {
                 />
               </label>
               <label className="field">
-                <span>Work email</span>
+                <span>{t("workEmail")}</span>
                 <input
                   className="input"
                   type="email"
@@ -171,7 +178,7 @@ export function OnboardingForm() {
                 />
               </label>
               <label className="field">
-                <span>Password</span>
+                <span>{tCommon("password")}</span>
                 <input
                   className="input"
                   type="password"
@@ -189,7 +196,7 @@ export function OnboardingForm() {
                   disabled={submitting}
                   onClick={() => setStep("company")}
                 >
-                  Back
+                  {tCommon("back")}
                 </button>
                 <button
                   type="submit"
@@ -202,17 +209,17 @@ export function OnboardingForm() {
                     password.length < 8
                   }
                 >
-                  {submitting ? "Creating account..." : "Finish setup"}
+                  {submitting ? t("creatingAccount") : t("finishSetup")}
                 </button>
               </div>
             </form>
           )}
 
           <p className="muted onboarding-footer">
-            Already have an account? <Link href="/login">Sign in</Link>
+            {t("alreadyHaveAccount")} <Link href="/login">{t("signIn")}</Link>
           </p>
         </div>
       </section>
-    </MarketingShell>
+    </MarketingShellClient>
   );
 }

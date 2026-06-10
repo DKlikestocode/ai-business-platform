@@ -8,53 +8,18 @@ export type OnboardingStepId =
   | "install_widget"
   | "test_widget";
 
-export interface OnboardingStep {
+export interface OnboardingStepConfig {
   id: OnboardingStepId;
-  title: string;
-  description: string;
   href?: string;
-  actionLabel?: string;
 }
 
-export const ONBOARDING_STEPS: OnboardingStep[] = [
-  {
-    id: "company",
-    title: "Create company",
-    description: "Set up your business profile and tenant slug.",
-  },
-  {
-    id: "user",
-    title: "Create first user",
-    description: "Add the owner or admin who will manage leads.",
-  },
-  {
-    id: "notification_email",
-    title: "Configure notification email",
-    description: "Choose where qualified and contactable lead alerts are sent.",
-    href: "/settings",
-    actionLabel: "Open settings",
-  },
-  {
-    id: "copy_widget",
-    title: "Copy widget code",
-    description: "Copy the embed snippet for your website.",
-    href: "/settings",
-    actionLabel: "View embed code",
-  },
-  {
-    id: "install_widget",
-    title: "Install widget",
-    description: "Paste the snippet before </body> on your site.",
-    href: "/settings",
-    actionLabel: "Installation guide",
-  },
-  {
-    id: "test_widget",
-    title: "Test widget",
-    description: "Send a test message and confirm a lead appears in the dashboard.",
-    href: "/demo-chat",
-    actionLabel: "Open demo chat",
-  },
+export const ONBOARDING_STEPS: OnboardingStepConfig[] = [
+  { id: "company" },
+  { id: "user" },
+  { id: "notification_email", href: "/settings" },
+  { id: "copy_widget", href: "/settings" },
+  { id: "install_widget", href: "/settings" },
+  { id: "test_widget", href: "/demo-chat" },
 ];
 
 const STORAGE_PREFIX = "ai-agent-onboarding";

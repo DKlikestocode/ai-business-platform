@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
@@ -9,6 +9,7 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { fetchCompanySettings } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
 import {
   ONBOARDING_STEPS,
   countCompletedSteps,
@@ -18,9 +19,15 @@ import {
   type OnboardingStepId,
 } from "@/lib/onboarding";
 import type { CompanySettings } from "@/lib/types";
+import { Link } from "@/i18n/navigation";
 
 export function GettingStartedChecklist() {
   const { user, company, loading: authLoading } = useAuth();
+  const t = useTranslations("gettingStarted");
+  const tCommon = useTranslations("common");
+  const tOnboarding = useTranslations("onboarding.steps");
+  const tErrors = useTranslations("errors");
+  const errorMessages = getErrorMessages(tErrors);
   const [settings, setSettings] = useState<CompanySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,11 +43,11 @@ export function GettingStartedChecklist() {
       const data = await fetchCompanySettings();
       setSettings(data);
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to load setup progress."));
+      setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, t, errorMessages]);
 
   useEffect(() => {
     if (authLoading) {
@@ -50,15 +57,11 @@ export function GettingStartedChecklist() {
   }, [authLoading, load, refreshKey]);
 
   if (authLoading || (loading && !settings)) {
-    return <LoadingState label="Loading your setup checklist..." />;
+    return <LoadingState label={t("loading")} />;
   }
 
   if (!user || !company) {
-    return (
-      <AlertBanner>
-        Sign in to view your getting started checklist.
-      </AlertBanner>
-    );
+    return <AlertBanner>{t("signInRequired")}</AlertBanner>;
   }
 
   const activeCompany = company;
@@ -74,25 +77,24 @@ export function GettingStartedChecklist() {
 
   return (
     <div className="stack">
-      <PageHeader
-        title="Getting started"
-        description="Complete these steps to launch your pilot customer."
-      >
+      <PageHeader title={t("title")} description={t("description")}>
         <div className="progress-pill">
-          {completed}/{ONBOARDING_STEPS.length} complete
+          {t("progress", {
+            completed,
+            total: ONBOARDING_STEPS.length,
+          })}
         </div>
       </PageHeader>
 
       {error ? <AlertBanner>{error}</AlertBanner> : null}
       {allDone ? (
-        <AlertBanner variant="success">
-          Your pilot workspace is ready. New leads will appear on the Leads page.
-        </AlertBanner>
+        <AlertBanner variant="success">{t("allDone")}</AlertBanner>
       ) : null}
 
       <div className="checklist">
         {ONBOARDING_STEPS.map((step, index) => {
           const done = progress[step.id];
+          const stepKey = step.id;
           return (
             <article
               key={step.id}
@@ -101,21 +103,21 @@ export function GettingStartedChecklist() {
               <div className="checklist-index">{index + 1}</div>
               <div className="checklist-body">
                 <div className="checklist-title-row">
-                  <h3>{step.title}</h3>
+                  <h3>{tOnboarding(`${stepKey}.title`)}</h3>
                   <span className={`checklist-status ${done ? "done" : ""}`}>
-                    {done ? "Done" : "To do"}
+                    {done ? tCommon("done") : tCommon("todo")}
                   </span>
                 </div>
-                <p className="muted">{step.description}</p>
+                <p className="muted">{tOnboarding(`${stepKey}.description`)}</p>
                 {activeCompany.slug && step.id === "copy_widget" ? (
                   <p className="muted">
-                    Company slug: <code>{activeCompany.slug}</code>
+                    {t("companySlug")} <code>{activeCompany.slug}</code>
                   </p>
                 ) : null}
                 <div className="checklist-actions">
-                  {step.href && step.actionLabel ? (
+                  {step.href ? (
                     <Link href={step.href} className="button secondary">
-                      {step.actionLabel}
+                      {tOnboarding(`${stepKey}.action`)}
                     </Link>
                   ) : null}
                   {step.id === "install_widget" && !done ? (
@@ -124,7 +126,7 @@ export function GettingStartedChecklist() {
                       className="button secondary"
                       onClick={() => handleManualComplete("install_widget")}
                     >
-                      Mark installed
+                      {tOnboarding("install_widget.markInstalled")}
                     </button>
                   ) : null}
                 </div>
@@ -135,17 +137,14 @@ export function GettingStartedChecklist() {
       </div>
 
       <div className="card">
-        <h3 className="card-title">Next steps</h3>
-        <p className="muted">
-          After the widget is live, monitor incoming leads, tune notification
-          thresholds in Settings, and share the dashboard with your team.
-        </p>
+        <h3 className="card-title">{t("nextStepsTitle")}</h3>
+        <p className="muted">{t("nextStepsDescription")}</p>
         <div className="checklist-actions">
           <Link href="/leads" className="button">
-            Open leads
+            {t("openLeads")}
           </Link>
           <Link href="/settings" className="button secondary">
-            Company settings
+            {t("companySettings")}
           </Link>
         </div>
       </div>

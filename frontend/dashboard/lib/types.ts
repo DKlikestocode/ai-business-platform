@@ -155,11 +155,3 @@ export const LEAD_STATUSES: LeadStatus[] = [
   "won",
   "lost",
 ];
-
-export const STATUS_LABELS: Record<LeadStatus, string> = {
-  new: "New",
-  contacted: "Contacted",
-  qualified: "Qualified",
-  won: "Won",
-  lost: "Lost",
-};

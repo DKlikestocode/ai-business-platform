@@ -1,15 +1,17 @@
-import { getTranslations } from "next-intl/server";
+"use client";
+
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 
-interface MarketingShellProps {
+interface MarketingShellClientProps {
   children: ReactNode;
 }
 
-export async function MarketingShell({ children }: MarketingShellProps) {
-  const brand = await getTranslations("brand");
-  const nav = await getTranslations("nav");
+export function MarketingShellClient({ children }: MarketingShellClientProps) {
+  const brand = useTranslations("brand");
+  const nav = useTranslations("nav");
 
   return (
     <div className="marketing-page">

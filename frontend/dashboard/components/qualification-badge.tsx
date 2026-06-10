@@ -1,7 +1,8 @@
-import {
-  QUALIFICATION_BADGE_CLASS,
-  QUALIFICATION_LABELS,
-} from "@/lib/lead-qualification";
+"use client";
+
+import { useTranslations } from "next-intl";
+
+import { QUALIFICATION_BADGE_CLASS } from "@/lib/lead-qualification";
 import type { QualificationStatus } from "@/lib/types";
 
 interface QualificationBadgeProps {
@@ -9,9 +10,11 @@ interface QualificationBadgeProps {
 }
 
 export function QualificationBadge({ status }: QualificationBadgeProps) {
+  const t = useTranslations("qualification");
+
   return (
     <span className={`badge ${QUALIFICATION_BADGE_CLASS[status]}`}>
-      {QUALIFICATION_LABELS[status]}
+      {t(status)}
     </span>
   );
 }

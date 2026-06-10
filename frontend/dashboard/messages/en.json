@@ -1,0 +1,283 @@
+{
+  "metadata": {
+    "title": "AI Agent Platform",
+    "description": "Capture website leads, qualify them automatically, and notify your team."
+  },
+  "common": {
+    "email": "Email",
+    "password": "Password",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "send": "Send",
+    "loading": "Loading...",
+    "dash": "—",
+    "complete": "complete",
+    "done": "Done",
+    "todo": "To do",
+    "dev": "Dev",
+    "devMode": "Development mode"
+  },
+  "nav": {
+    "gettingStarted": "Getting Started",
+    "leads": "Leads",
+    "demoChat": "Demo Chat",
+    "settings": "Settings",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "startFreePilot": "Start free pilot",
+    "main": "Main navigation",
+    "marketing": "Marketing navigation"
+  },
+  "brand": {
+    "name": "Agent Platform",
+    "mark": "AI",
+    "tagline": "Lead capture, qualification, and notifications for service businesses."
+  },
+  "appShell": {
+    "title": "AI Agent Platform",
+    "subtitle": "Lead capture, qualification, and team dashboard"
+  },
+  "landing": {
+    "eyebrow": "Pilot-ready lead capture",
+    "heroTitle": "Turn website conversations into qualified leads.",
+    "heroLead": "Deploy an AI lead capture agent on your website, qualify inbound requests automatically, and notify your team when a lead is worth following up.",
+    "startPilot": "Start your pilot",
+    "signIn": "Sign in",
+    "dayOneTitle": "What you get on day one",
+    "dayOneWidget": "Embeddable website widget",
+    "dayOneScoring": "Lead scoring and qualification",
+    "dayOneDashboard": "Dashboard for your team",
+    "dayOneEmail": "Email notifications via Resend",
+    "features": {
+      "widgetTitle": "Website widget",
+      "widgetDescription": "Embed a chat widget on your site. Visitors talk naturally while the agent captures lead details.",
+      "qualificationTitle": "Smart qualification",
+      "qualificationDescription": "Leads are scored and marked contactable or qualified before your team is notified.",
+      "emailTitle": "Email alerts",
+      "emailDescription": "Get Resend-powered notifications with lead summary, score, and a dashboard link.",
+      "dashboardTitle": "Team dashboard",
+      "dashboardDescription": "Review leads, update status, and manage company settings from one place."
+    },
+    "ctaTitle": "Ready for your first pilot customer?",
+    "ctaDescription": "Create a company, add your admin user, copy the widget snippet, and send a test message in under ten minutes.",
+    "createPilotAccount": "Create pilot account"
+  },
+  "login": {
+    "title": "Sign in",
+    "description": "Access your lead dashboard and pilot workspace.",
+    "newCustomer": "New customer?",
+    "startPilot": "Start your pilot",
+    "signingIn": "Signing in...",
+    "signIn": "Sign in",
+    "signInFailed": "Sign in failed. Check your email and password.",
+    "loading": "Loading..."
+  },
+  "onboarding": {
+    "eyebrow": "New customer onboarding",
+    "title": "Set up your pilot workspace",
+    "stepOf": "Step {step} of 2 — {label}",
+    "stepCompany": "Create your company",
+    "stepUser": "Create your admin user",
+    "companyName": "Company name",
+    "companyEmail": "Company email",
+    "phoneOptional": "Phone (optional)",
+    "creatingCompany": "Creating company...",
+    "continue": "Continue",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "workEmail": "Work email",
+    "creatingAccount": "Creating account...",
+    "finishSetup": "Finish setup",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "createCompanyFirst": "Create your company profile first.",
+    "createCompanyFailed": "Could not create company.",
+    "createUserFailed": "Could not create your user account.",
+    "steps": {
+      "company": {
+        "title": "Create company",
+        "description": "Set up your business profile and tenant slug."
+      },
+      "user": {
+        "title": "Create first user",
+        "description": "Add the owner or admin who will manage leads."
+      },
+      "notification_email": {
+        "title": "Configure notification email",
+        "description": "Choose where qualified and contactable lead alerts are sent.",
+        "action": "Open settings"
+      },
+      "copy_widget": {
+        "title": "Copy widget code",
+        "description": "Copy the embed snippet for your website.",
+        "action": "View embed code"
+      },
+      "install_widget": {
+        "title": "Install widget",
+        "description": "Paste the snippet before </body> on your site.",
+        "action": "Installation guide",
+        "markInstalled": "Mark installed"
+      },
+      "test_widget": {
+        "title": "Test widget",
+        "description": "Send a test message and confirm a lead appears in the dashboard.",
+        "action": "Open demo chat"
+      }
+    }
+  },
+  "gettingStarted": {
+    "title": "Getting started",
+    "description": "Complete these steps to launch your pilot customer.",
+    "progress": "{completed}/{total} complete",
+    "loadFailed": "Failed to load setup progress.",
+    "loading": "Loading your setup checklist...",
+    "signInRequired": "Sign in to view your getting started checklist.",
+    "allDone": "Your pilot workspace is ready. New leads will appear on the Leads page.",
+    "companySlug": "Company slug:",
+    "nextStepsTitle": "Next steps",
+    "nextStepsDescription": "After the widget is live, monitor incoming leads, tune notification thresholds in Settings, and share the dashboard with your team.",
+    "openLeads": "Open leads",
+    "companySettings": "Company settings"
+  },
+  "settings": {
+    "pageTitle": "Settings",
+    "pageDescription": "Manage company profile, lead notifications, and website widget embed.",
+    "loading": "Loading settings...",
+    "loadFailed": "Failed to load settings.",
+    "saveFailed": "Failed to save settings.",
+    "notFound": "Settings not found.",
+    "saved": "Settings saved.",
+    "companyProfile": "Company profile",
+    "name": "Name",
+    "phone": "Phone",
+    "slug": "Slug",
+    "created": "Created",
+    "leadNotifications": "Lead notifications",
+    "notificationEmail": "Notification email",
+    "notificationEmailPlaceholder": "Defaults to company email",
+    "notifyQualified": "Notify on qualified leads",
+    "notifyContactable": "Notify on contactable leads above threshold",
+    "contactableThreshold": "Contactable lead score threshold",
+    "saving": "Saving...",
+    "saveSettings": "Save settings",
+    "widgetEmbed": "Website widget embed",
+    "copySnippet": "Copy snippet",
+    "widgetDescription": "Add this snippet to your website. The widget uses slug {slug} to route messages to your company.",
+    "copied": "Copied to clipboard.",
+    "copyFailed": "Unable to copy. Select the snippet manually."
+  },
+  "leads": {
+    "title": "Leads",
+    "description": "Review, qualify, and update inbound customer leads.",
+    "status": "Status",
+    "qualification": "Qualification",
+    "contactable": "Contactable",
+    "sort": "Sort",
+    "allStatuses": "All statuses",
+    "allQualifications": "All qualifications",
+    "all": "All",
+    "creatingDemo": "Creating demo leads...",
+    "createDemo": "Create demo leads",
+    "leadCount": "{count, plural, one {# lead} other {# leads}}",
+    "loadFailed": "Failed to load leads.",
+    "updateFailed": "Failed to update lead status.",
+    "seedFailed": "Failed to create demo leads.",
+    "loading": "Loading leads...",
+    "emptyTitle": "No leads yet",
+    "emptyDescription": "Install the website widget or send a test message from Demo Chat. Qualified and contactable leads will appear here.",
+    "viewChecklist": "View setup checklist",
+    "tableName": "Name",
+    "tableScore": "Score",
+    "tableQualification": "Qualification",
+    "tableContactable": "Contactable",
+    "tableMethod": "Method",
+    "tablePhone": "Phone",
+    "tableService": "Service",
+    "tableCreated": "Created",
+    "tableStatus": "Status",
+    "tableUpdate": "Update",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "updateStatusAria": "Update lead status",
+    "sortOptions": {
+      "created_at_desc": "Newest first",
+      "lead_score_desc": "Highest score"
+    },
+    "statuses": {
+      "new": "New",
+      "contacted": "Contacted",
+      "qualified": "Qualified",
+      "won": "Won",
+      "lost": "Lost"
+    }
+  },
+  "leadDetail": {
+    "loading": "Loading lead...",
+    "loadFailed": "Failed to load lead.",
+    "updateFailed": "Failed to update status.",
+    "notFound": "Lead not found.",
+    "backToLeads": "← Back to leads",
+    "leadId": "Lead ID:",
+    "qualification": "Qualification",
+    "leadScore": "Lead score",
+    "qualificationStatus": "Qualification status",
+    "contactable": "Contactable",
+    "contactMethod": "Contact method",
+    "notificationSent": "Notification sent",
+    "details": "Lead details",
+    "company": "Company",
+    "location": "Location",
+    "serviceRequested": "Service requested",
+    "description": "Description",
+    "urgency": "Urgency",
+    "preferredCallback": "Preferred callback",
+    "conversationId": "Conversation ID",
+    "created": "Created",
+    "summary": "Summary",
+    "updateStatus": "Update status"
+  },
+  "demoChat": {
+    "title": "Demo Chat",
+    "description": "Test the lead capture agent before or after installing the website widget.",
+    "newConversation": "New conversation",
+    "conversationId": "Conversation ID:",
+    "loadingAccount": "Loading account...",
+    "emptyState": "Start a conversation as a customer inquiry. The Lead Agent will ask for details like name, phone, location, and service needed.",
+    "you": "You",
+    "leadAgent": "Lead Agent",
+    "thinking": "Thinking...",
+    "sendFailed": "Failed to send message.",
+    "leadCaptured": "Lead captured successfully.",
+    "viewLead": "View lead details",
+    "stillNeeded": "Still needed:",
+    "capturedSoFar": "Captured so far:",
+    "placeholderComplete": "Lead complete. Start a new conversation to continue.",
+    "placeholderMessage": "Type your message..."
+  },
+  "qualification": {
+    "incomplete": "Incomplete",
+    "contactable": "Contactable",
+    "qualified": "Qualified"
+  },
+  "contactMethod": {
+    "phone": "Phone",
+    "email": "Email",
+    "channel": "Channel",
+    "unknown": "Unknown"
+  },
+  "auth": {
+    "loadingAccount": "Loading account...",
+    "loadUserFailed": "Failed to load current user.",
+    "loginFailed": "Login failed.",
+    "signedInAs": "Signed in as"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "openai": "The AI assistant is not configured yet. Ask your administrator to set OPENAI_API_KEY.",
+    "sessionExpired": "Your session expired. Please sign in again.",
+    "network": "We could not reach the server. Check your connection and try again.",
+    "duplicateEmail": "An account with this email already exists. Try signing in instead."
+  }
+}

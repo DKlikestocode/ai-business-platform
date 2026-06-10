@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { ContactableBadge } from "@/components/contactable-badge";
@@ -14,27 +14,35 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { fetchLeads, seedDemoData, updateLeadStatus } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { isDevelopment } from "@/lib/env";
 import {
   LEAD_SORT_OPTIONS,
   QUALIFICATION_STATUSES,
-  QUALIFICATION_LABELS,
-  formatContactMethod,
   formatLeadScore,
+  isKnownContactMethod,
 } from "@/lib/lead-qualification";
 import type { LeadSort } from "@/lib/lead-qualification";
 import type { Lead, LeadStatus, QualificationStatus } from "@/lib/types";
-import { LEAD_STATUSES, STATUS_LABELS } from "@/lib/types";
+import { LEAD_STATUSES } from "@/lib/types";
+import { Link } from "@/i18n/navigation";
 
-function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+function formatDate(value: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
 }
 
 export function LeadsDashboard() {
+  const locale = useLocale();
   const { loading: authLoading, error: authError } = useAuth();
+  const t = useTranslations("leads");
+  const tCommon = useTranslations("common");
+  const tQualification = useTranslations("qualification");
+  const tContactMethod = useTranslations("contactMethod");
+  const tErrors = useTranslations("errors");
+  const errorMessages = getErrorMessages(tErrors);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "">("");
   const [qualificationFilter, setQualificationFilter] = useState<
@@ -72,11 +80,19 @@ export function LeadsDashboard() {
       setTotalPages(data.total_pages);
       setTotal(data.total);
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to load leads."));
+      setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {
       setLoading(false);
     }
-  }, [page, statusFilter, qualificationFilter, contactableFilter, sort]);
+  }, [
+    page,
+    statusFilter,
+    qualificationFilter,
+    contactableFilter,
+    sort,
+    t,
+    errorMessages,
+  ]);
 
   useEffect(() => {
     if (authLoading) {
@@ -94,7 +110,7 @@ export function LeadsDashboard() {
         current.map((lead) => (lead.id === leadId ? updated : lead)),
       );
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to update lead status."));
+      setError(formatUserFacingError(err, t("updateFailed"), errorMessages));
     } finally {
       setUpdatingId(null);
     }
@@ -110,22 +126,28 @@ export function LeadsDashboard() {
       setPage(1);
       await loadLeads();
     } catch (err) {
-      setError(formatUserFacingError(err, "Failed to create demo leads."));
+      setError(formatUserFacingError(err, t("seedFailed"), errorMessages));
     } finally {
       setSeeding(false);
     }
   }
 
+  function formatMethod(
+    value: Lead["contact_method"],
+  ): string {
+    if (!isKnownContactMethod(value)) {
+      return tCommon("dash");
+    }
+    return tContactMethod(value);
+  }
+
   return (
     <div className="stack">
-      <PageHeader
-        title="Leads"
-        description="Review, qualify, and update inbound customer leads."
-      />
+      <PageHeader title={t("title")} description={t("description")} />
       <div className="toolbar">
         <div className="toolbar-filters">
           <label className="field-inline">
-            <span>Status</span>
+            <span>{t("status")}</span>
             <select
               className="select"
               value={statusFilter}
@@ -134,16 +156,16 @@ export function LeadsDashboard() {
                 setStatusFilter(event.target.value as LeadStatus | "");
               }}
             >
-              <option value="">All statuses</option>
+              <option value="">{t("allStatuses")}</option>
               {LEAD_STATUSES.map((status) => (
                 <option key={status} value={status}>
-                  {STATUS_LABELS[status]}
+                  {t(`statuses.${status}`)}
                 </option>
               ))}
             </select>
           </label>
           <label className="field-inline">
-            <span>Qualification</span>
+            <span>{t("qualification")}</span>
             <select
               className="select"
               value={qualificationFilter}
@@ -154,16 +176,16 @@ export function LeadsDashboard() {
                 );
               }}
             >
-              <option value="">All qualifications</option>
+              <option value="">{t("allQualifications")}</option>
               {QUALIFICATION_STATUSES.map((status) => (
                 <option key={status} value={status}>
-                  {QUALIFICATION_LABELS[status]}
+                  {tQualification(status)}
                 </option>
               ))}
             </select>
           </label>
           <label className="field-inline">
-            <span>Contactable</span>
+            <span>{t("contactable")}</span>
             <select
               className="select"
               value={contactableFilter}
@@ -174,13 +196,13 @@ export function LeadsDashboard() {
                 );
               }}
             >
-              <option value="">All</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+              <option value="">{t("all")}</option>
+              <option value="true">{tCommon("yes")}</option>
+              <option value="false">{tCommon("no")}</option>
             </select>
           </label>
           <label className="field-inline">
-            <span>Sort</span>
+            <span>{t("sort")}</span>
             <select
               className="select"
               value={sort}
@@ -190,8 +212,8 @@ export function LeadsDashboard() {
               }}
             >
               {LEAD_SORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+                <option key={option} value={option}>
+                  {t(`sortOptions.${option}`)}
                 </option>
               ))}
             </select>
@@ -205,10 +227,10 @@ export function LeadsDashboard() {
               disabled={seeding || authLoading}
               onClick={() => void handleSeedDemoData()}
             >
-              {seeding ? "Creating demo leads..." : "Create demo leads"}
+              {seeding ? t("creatingDemo") : t("createDemo")}
             </button>
           ) : null}
-          <p className="muted">{total} lead{total === 1 ? "" : "s"}</p>
+          <p className="muted">{t("leadCount", { count: total })}</p>
         </div>
       </div>
 
@@ -216,14 +238,14 @@ export function LeadsDashboard() {
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
       {error ? <AlertBanner>{error}</AlertBanner> : null}
-      {authLoading || loading ? <LoadingState label="Loading leads..." /> : null}
+      {authLoading || loading ? <LoadingState label={t("loading")} /> : null}
 
       {!authLoading && !loading && leads.length === 0 ? (
         <EmptyState
-          title="No leads yet"
-          description="Install the website widget or send a test message from Demo Chat. Qualified and contactable leads will appear here."
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
           actionHref="/getting-started"
-          actionLabel="View setup checklist"
+          actionLabel={t("viewChecklist")}
         />
       ) : null}
 
@@ -232,16 +254,16 @@ export function LeadsDashboard() {
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Score</th>
-                <th>Qualification</th>
-                <th>Contactable</th>
-                <th>Method</th>
-                <th>Phone</th>
-                <th>Service</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Update</th>
+                <th>{t("tableName")}</th>
+                <th>{t("tableScore")}</th>
+                <th>{t("tableQualification")}</th>
+                <th>{t("tableContactable")}</th>
+                <th>{t("tableMethod")}</th>
+                <th>{t("tablePhone")}</th>
+                <th>{t("tableService")}</th>
+                <th>{t("tableStatus")}</th>
+                <th>{t("tableCreated")}</th>
+                <th>{t("tableUpdate")}</th>
               </tr>
             </thead>
             <tbody>
@@ -261,13 +283,13 @@ export function LeadsDashboard() {
                   <td>
                     <ContactableBadge contactable={lead.contactable} />
                   </td>
-                  <td>{formatContactMethod(lead.contact_method)}</td>
+                  <td>{formatMethod(lead.contact_method)}</td>
                   <td>{lead.phone}</td>
                   <td>{lead.service_requested}</td>
                   <td>
                     <StatusBadge status={lead.status} />
                   </td>
-                  <td>{formatDate(lead.created_at)}</td>
+                  <td>{formatDate(lead.created_at, locale)}</td>
                   <td>
                     <StatusSelect
                       value={lead.status}
@@ -290,10 +312,10 @@ export function LeadsDashboard() {
             disabled={page <= 1}
             onClick={() => setPage((current) => current - 1)}
           >
-            Previous
+            {t("previous")}
           </button>
           <span className="muted">
-            Page {page} of {totalPages}
+            {t("pageOf", { page, total: totalPages })}
           </span>
           <button
             type="button"
@@ -301,7 +323,7 @@ export function LeadsDashboard() {
             disabled={page >= totalPages}
             onClick={() => setPage((current) => current + 1)}
           >
-            Next
+            {t("next")}
           </button>
         </div>
       ) : null}
