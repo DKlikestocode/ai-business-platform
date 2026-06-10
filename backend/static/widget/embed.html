@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Agent Widget Prototype</title>
+    <style>
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        margin: 0;
+        padding: 32px;
+        background: #f3f4f6;
+        color: #111827;
+      }
+
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      code {
+        background: #e5e7eb;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Embeddable Website Widget</h1>
+      <p>
+        This page demonstrates the public widget prototype. Configure the company
+        slug and API base URL below.
+      </p>
+
+      <div
+        id="ai-agent-widget"
+        data-company-slug="demo-company"
+        data-api-base="http://localhost:8000"
+        data-title="Website Chat"
+      ></div>
+
+      <h2>Embed snippet</h2>
+      <pre><code>&lt;div
+  id="ai-agent-widget"
+  data-company-slug="your-company-slug"
+  data-api-base="https://api.example.com"
+  data-title="Chat with us"
+&gt;&lt;/div&gt;
+&lt;script src="https://api.example.com/static/widget/widget.js"&gt;&lt;/script&gt;</code></pre>
+    </main>
+
+    <script src="/static/widget/widget.js"></script>
+  </body>
+</html>

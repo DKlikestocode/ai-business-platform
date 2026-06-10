@@ -1,0 +1,42 @@
+# Environment
+.env
+.env.*
+!.env.example
+!.env.production.example
+.env.save
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+.yarn/
+.pnpm-store/

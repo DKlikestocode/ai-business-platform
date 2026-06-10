@@ -1,0 +1,58 @@
+import uuid
+from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Boolean, DateTime, Integer, String, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.db.models.agent import Agent
+    from app.db.models.conversation import Conversation
+    from app.db.models.lead import Lead
+    from app.db.models.user import User
+
+
+class Company(Base):
+    __tablename__ = "companies"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    slug: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+    email: Mapped[str] = mapped_column(String(255), nullable=False)
+    phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    notification_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    notify_on_new_lead: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    notify_on_contactable_lead: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    contactable_lead_notification_threshold: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=50,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    users: Mapped[list["User"]] = relationship(
+        "User",
+        back_populates="company",
+        cascade="all, delete-orphan",
+    )
+    leads: Mapped[list["Lead"]] = relationship(
+        "Lead",
+        back_populates="tenant",
+        cascade="all, delete-orphan",
+    )
+    conversations: Mapped[list["Conversation"]] = relationship(
+        "Conversation",
+        back_populates="company",
+        cascade="all, delete-orphan",
+    )
+    agents: Mapped[list["Agent"]] = relationship(
+        "Agent",
+        back_populates="company",
+        cascade="all, delete-orphan",
+    )

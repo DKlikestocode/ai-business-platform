@@ -1,0 +1,165 @@
+export type LeadStatus = "new" | "contacted" | "qualified" | "won" | "lost";
+
+export type QualificationStatus = "incomplete" | "contactable" | "qualified";
+
+export type ContactMethod = "phone" | "email" | "channel" | "unknown";
+
+export type UserRole = "owner" | "admin" | "member";
+
+export interface Company {
+  id: string;
+  name: string;
+  slug: string;
+  email: string;
+  phone: string | null;
+  created_at: string;
+}
+
+export interface CompanyCreateRequest {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+export interface UserCreateRequest {
+  company_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  role?: UserRole;
+}
+
+export interface UserCreateResponse {
+  id: string;
+  company_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: UserRole;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface CompanySettings {
+  name: string;
+  slug: string;
+  email: string;
+  phone: string | null;
+  notification_email: string | null;
+  notify_on_new_lead: boolean;
+  notify_on_contactable_lead: boolean;
+  contactable_lead_notification_threshold: number;
+  created_at: string;
+}
+
+export interface CompanySettingsUpdate {
+  name?: string;
+  email?: string;
+  phone?: string | null;
+  notification_email?: string | null;
+  notify_on_new_lead?: boolean;
+  notify_on_contactable_lead?: boolean;
+  contactable_lead_notification_threshold?: number;
+}
+
+export interface CurrentUser {
+  id: string;
+  company_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: UserRole;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+}
+
+export interface Lead {
+  id: string;
+  company_id: string;
+  conversation_id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  company: string | null;
+  location: string;
+  service_requested: string;
+  description: string;
+  urgency: string;
+  preferred_callback_time: string;
+  status: LeadStatus;
+  summary: string | null;
+  contactable: boolean;
+  contact_method: ContactMethod | null;
+  lead_score: number;
+  qualification_status: QualificationStatus;
+  notification_sent_at: string | null;
+  created_at: string;
+}
+
+export interface PaginatedLeads {
+  items: Lead[];
+  page: number;
+  page_size: number;
+  total: number;
+  total_pages: number;
+}
+
+export interface SeedDemoDataResponse {
+  created: number;
+  skipped: number;
+  lead_ids: string[];
+  message: string;
+}
+
+export interface LeadExtractedData {
+  name: string | null;
+  phone: string | null;
+  email: string | null;
+  company: string | null;
+  location: string | null;
+  service_requested: string | null;
+  description: string | null;
+  urgency: string | null;
+  preferred_callback_time: string | null;
+}
+
+export interface LeadMessageRequest {
+  conversation_id: string;
+  message: string;
+}
+
+export interface LeadMessageResponse {
+  reply: string;
+  lead_complete: boolean;
+  missing_fields: string[];
+  extracted_data: LeadExtractedData;
+  lead_id: string | null;
+}
+
+export const LEAD_STATUSES: LeadStatus[] = [
+  "new",
+  "contacted",
+  "qualified",
+  "won",
+  "lost",
+];
+
+export const STATUS_LABELS: Record<LeadStatus, string> = {
+  new: "New",
+  contacted: "Contacted",
+  qualified: "Qualified",
+  won: "Won",
+  lost: "Lost",
+};
