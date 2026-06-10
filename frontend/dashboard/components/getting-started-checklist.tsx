@@ -61,12 +61,14 @@ export function GettingStartedChecklist() {
     );
   }
 
-  const progress = evaluateOnboardingProgress(company.id, settings);
+  const activeCompany = company;
+
+  const progress = evaluateOnboardingProgress(activeCompany.id, settings);
   const completed = countCompletedSteps(progress);
   const allDone = isOnboardingComplete(progress);
 
   function handleManualComplete(step: OnboardingStepId) {
-    markOnboardingStepComplete(company.id, step);
+    markOnboardingStepComplete(activeCompany.id, step);
     setRefreshKey((value) => value + 1);
   }
 
@@ -105,9 +107,9 @@ export function GettingStartedChecklist() {
                   </span>
                 </div>
                 <p className="muted">{step.description}</p>
-                {company.slug && step.id === "copy_widget" ? (
+                {activeCompany.slug && step.id === "copy_widget" ? (
                   <p className="muted">
-                    Company slug: <code>{company.slug}</code>
+                    Company slug: <code>{activeCompany.slug}</code>
                   </p>
                 ) : null}
                 <div className="checklist-actions">
