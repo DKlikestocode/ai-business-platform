@@ -292,20 +292,32 @@
   },
   "demoChat": {
     "title": "Demo-Chat",
-    "description": "Testen Sie den Lead-Capture-Agenten vor oder nach der Installation des Website-Widgets.",
+    "description": "Testen Sie, wie Website-Anfragen automatisch qualifiziert und erfasst werden.",
     "newConversation": "Neue Konversation",
-    "conversationId": "Konversations-ID:",
     "loadingAccount": "Konto wird geladen...",
-    "emptyState": "Starten Sie ein Gespräch als Kundenanfrage. Der Lead-Agent fragt nach Details wie Name, Telefon, Standort und gewünschtem Service.",
-    "you": "Sie",
-    "leadAgent": "Lead-Agent",
+    "welcomeTitle": "So erleben Ihre Kunden den Chat",
+    "welcomeBody": "Schreiben Sie eine Anfrage — wie ein Besucher auf Ihrer Website. Der Assistent fragt gezielt nach und erfasst alles für Ihr Team.",
+    "examplePromptsLabel": "Beispiel ausprobieren:",
+    "examplePrompts": {
+      "plumber": "Sanitär-Notfall Berlin",
+      "roofer": "Dach nach Sturm",
+      "electrician": "Elektro Smart Home"
+    },
+    "exampleMessages": {
+      "plumber": "Guten Tag, ich brauche dringend einen Klempner in Berlin. Meine Küchenspüle läuft aus. Erreichbar unter +49 170 1234567.",
+      "roofer": "Hallo, nach dem Sturm sind mehrere Dachziegel weg und es tropft in den Dachboden. Standort München. Bitte zeitnahe Begutachtung.",
+      "electrician": "Ich suche einen Elektriker in Berlin für Smart-Home-Nachrüstung in einer 3-Zimmer-Wohnung. Donnerstag vormittags wäre gut für einen Rückruf."
+    },
+    "customer": "Kunde",
+    "assistant": "Assistent",
     "thinking": "Denkt nach...",
     "sendFailed": "Nachricht konnte nicht gesendet werden.",
-    "leadCaptured": "Lead erfolgreich erfasst.",
-    "viewLead": "Lead-Details anzeigen",
-    "stillNeeded": "Noch benötigt:",
-    "capturedSoFar": "Bisher erfasst:",
-    "placeholderComplete": "Lead abgeschlossen. Starten Sie eine neue Konversation, um fortzufahren.",
+    "progressHint": "Der Assistent sammelt noch ein paar Angaben — antworten Sie einfach weiter.",
+    "successTitle": "Anfrage vollständig erfasst",
+    "successBody": "So landet eine qualifizierte Kundenanfrage in Ihrem Dashboard — mit Kontakt, Anliegen und Dringlichkeit.",
+    "viewLead": "Anfrage im Dashboard ansehen",
+    "tryAnother": "Weitere Anfrage testen",
+    "placeholderComplete": "Anfrage abgeschlossen. Starten Sie eine neue Konversation, um fortzufahren.",
     "placeholderMessage": "Nachricht eingeben..."
   },
   "qualification": {

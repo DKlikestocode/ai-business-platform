@@ -292,20 +292,32 @@
   },
   "demoChat": {
     "title": "Demo Chat",
-    "description": "Test the lead capture agent before or after installing the website widget.",
+    "description": "See how website inquiries are automatically qualified and captured.",
     "newConversation": "New conversation",
-    "conversationId": "Conversation ID:",
     "loadingAccount": "Loading account...",
-    "emptyState": "Start a conversation as a customer inquiry. The Lead Agent will ask for details like name, phone, location, and service needed.",
-    "you": "You",
-    "leadAgent": "Lead Agent",
+    "welcomeTitle": "This is what your customers experience",
+    "welcomeBody": "Write an inquiry as if you were a website visitor. The assistant asks targeted questions and captures everything for your team.",
+    "examplePromptsLabel": "Try an example:",
+    "examplePrompts": {
+      "plumber": "Plumbing emergency Berlin",
+      "roofer": "Roof damage after storm",
+      "electrician": "Smart home electrical"
+    },
+    "exampleMessages": {
+      "plumber": "Hello, I urgently need a plumber in Berlin. My kitchen sink is leaking badly. You can reach me at +49 170 1234567.",
+      "roofer": "Hi, after the storm several roof tiles are missing and water is dripping into the attic. Location Munich. Please inspect soon.",
+      "electrician": "I'm looking for an electrician in Berlin for smart home retrofit in a 3-bedroom flat. Thursday morning would work for a callback."
+    },
+    "customer": "Customer",
+    "assistant": "Assistant",
     "thinking": "Thinking...",
     "sendFailed": "Failed to send message.",
-    "leadCaptured": "Lead captured successfully.",
-    "viewLead": "View lead details",
-    "stillNeeded": "Still needed:",
-    "capturedSoFar": "Captured so far:",
-    "placeholderComplete": "Lead complete. Start a new conversation to continue.",
+    "progressHint": "The assistant is still gathering a few details — just keep replying.",
+    "successTitle": "Inquiry fully captured",
+    "successBody": "This is how a qualified customer inquiry appears in your dashboard — with contact details, request, and urgency.",
+    "viewLead": "View inquiry in dashboard",
+    "tryAnother": "Try another inquiry",
+    "placeholderComplete": "Inquiry complete. Start a new conversation to continue.",
     "placeholderMessage": "Type your message..."
   },
   "qualification": {

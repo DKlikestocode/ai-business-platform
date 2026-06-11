@@ -11,10 +11,11 @@ import { sendLeadMessage } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { markOnboardingStepComplete } from "@/lib/onboarding";
-import type { LeadExtractedData } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
 const DEFAULT_CONVERSATION_ID = "demo-chat-001";
+
+const EXAMPLE_PROMPT_KEYS = ["plumber", "roofer", "electrician"] as const;
 
 interface ChatMessage {
   id: string;
@@ -30,13 +31,6 @@ function createMessageId(): string {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function formatMissingFields(fields: string[]): string {
-  if (fields.length === 0) {
-    return "";
-  }
-  return fields.join(", ");
-}
-
 export function DemoChat() {
   const { company, loading: authLoading, error: authError } = useAuth();
   const t = useTranslations("demoChat");
@@ -50,11 +44,12 @@ export function DemoChat() {
   const [error, setError] = useState<string | null>(null);
   const [leadComplete, setLeadComplete] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
-  const [missingFields, setMissingFields] = useState<string[]>([]);
-  const [extractedData, setExtractedData] = useState<LeadExtractedData | null>(
-    null,
-  );
+  const [hasOpenFields, setHasOpenFields] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const assistantLabel = company?.name?.trim() || t("assistant");
+  const showExampleChips =
+    messages.length === 0 && !loading && !leadComplete && !authLoading;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -67,37 +62,33 @@ export function DemoChat() {
     setError(null);
     setLeadComplete(false);
     setLeadId(null);
-    setMissingFields([]);
-    setExtractedData(null);
+    setHasOpenFields(false);
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const message = input.trim();
-    if (!message || loading || leadComplete || authLoading) {
+  async function sendMessage(message: string) {
+    const trimmed = message.trim();
+    if (!trimmed || loading || leadComplete || authLoading) {
       return;
     }
 
-    setInput("");
     setError(null);
     setMessages((current) => [
       ...current,
-      { id: createMessageId(), role: "user", content: message },
+      { id: createMessageId(), role: "user", content: trimmed },
     ]);
     setLoading(true);
 
     try {
       const response = await sendLeadMessage({
         conversation_id: conversationId,
-        message,
+        message: trimmed,
       });
 
       setMessages((current) => [
         ...current,
         { id: createMessageId(), role: "assistant", content: response.reply },
       ]);
-      setMissingFields(response.missing_fields);
-      setExtractedData(response.extracted_data);
+      setHasOpenFields(response.missing_fields.length > 0);
 
       if (company) {
         markOnboardingStepComplete(company.id, "test_widget");
@@ -106,12 +97,28 @@ export function DemoChat() {
       if (response.lead_complete) {
         setLeadComplete(true);
         setLeadId(response.lead_id);
+        setHasOpenFields(false);
       }
     } catch (err) {
       setError(formatUserFacingError(err, t("sendFailed"), errorMessages));
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const message = input.trim();
+    if (!message) {
+      return;
+    }
+
+    setInput("");
+    await sendMessage(message);
+  }
+
+  function handleExamplePrompt(key: (typeof EXAMPLE_PROMPT_KEYS)[number]) {
+    void sendMessage(t(`exampleMessages.${key}`));
   }
 
   return (
@@ -127,10 +134,6 @@ export function DemoChat() {
         </button>
       </PageHeader>
 
-      <p className="muted">
-        {t("conversationId")} <code>{conversationId}</code>
-      </p>
-
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
 
       {authLoading ? <LoadingState label={t("loadingAccount")} /> : null}
@@ -138,7 +141,28 @@ export function DemoChat() {
       <div className="chat-panel card">
         <div className="chat-messages" aria-live="polite">
           {messages.length === 0 ? (
-            <div className="chat-empty">{t("emptyState")}</div>
+            <div className="chat-empty">
+              <h3 className="chat-empty-title">{t("welcomeTitle")}</h3>
+              <p>{t("welcomeBody")}</p>
+              {showExampleChips ? (
+                <>
+                  <p className="chat-prompts-label">{t("examplePromptsLabel")}</p>
+                  <div className="chat-prompt-chips">
+                    {EXAMPLE_PROMPT_KEYS.map((key) => (
+                      <button
+                        key={key}
+                        type="button"
+                        className="button secondary"
+                        disabled={loading}
+                        onClick={() => handleExamplePrompt(key)}
+                      >
+                        {t(`examplePrompts.${key}`)}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
           ) : null}
 
           {messages.map((message) => (
@@ -147,7 +171,7 @@ export function DemoChat() {
               className={`chat-message chat-message-${message.role}`}
             >
               <span className="chat-message-label">
-                {message.role === "user" ? t("you") : t("leadAgent")}
+                {message.role === "user" ? t("customer") : assistantLabel}
               </span>
               <p>{message.content}</p>
             </div>
@@ -155,7 +179,7 @@ export function DemoChat() {
 
           {loading ? (
             <div className="chat-message chat-message-assistant">
-              <span className="chat-message-label">{t("leadAgent")}</span>
+              <span className="chat-message-label">{assistantLabel}</span>
               <p className="muted">{t("thinking")}</p>
             </div>
           ) : null}
@@ -166,26 +190,26 @@ export function DemoChat() {
         {error ? <AlertBanner>{error}</AlertBanner> : null}
 
         {leadComplete && leadId ? (
-          <div className="notice chat-success">
-            {t("leadCaptured")}{" "}
-            <Link href={`/leads/${leadId}`} className="link">
-              {t("viewLead")}
-            </Link>
+          <div className="chat-success-panel">
+            <h3 className="chat-success-title">{t("successTitle")}</h3>
+            <p className="muted">{t("successBody")}</p>
+            <div className="chat-success-actions">
+              <Link href={`/leads/${leadId}`} className="button">
+                {t("viewLead")}
+              </Link>
+              <button
+                type="button"
+                className="button secondary"
+                onClick={handleNewConversation}
+              >
+                {t("tryAnother")}
+              </button>
+            </div>
           </div>
         ) : null}
 
-        {!leadComplete && missingFields.length > 0 ? (
-          <p className="muted chat-hint">
-            {t("stillNeeded")} {formatMissingFields(missingFields)}
-          </p>
-        ) : null}
-
-        {!leadComplete && extractedData?.name ? (
-          <p className="muted chat-hint">
-            {t("capturedSoFar")} {extractedData.name}
-            {extractedData.phone ? ` · ${extractedData.phone}` : ""}
-            {extractedData.location ? ` · ${extractedData.location}` : ""}
-          </p>
+        {!leadComplete && hasOpenFields ? (
+          <p className="muted chat-hint">{t("progressHint")}</p>
         ) : null}
 
         <form className="chat-form" onSubmit={handleSubmit}>
