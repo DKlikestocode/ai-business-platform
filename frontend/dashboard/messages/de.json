@@ -25,7 +25,7 @@
     "settings": "Einstellungen",
     "signIn": "Anmelden",
     "signOut": "Abmelden",
-    "startFreePilot": "Pilot starten",
+    "startFreePilot": "Kostenlos starten",
     "main": "Hauptnavigation",
     "marketing": "Marketing-Navigation"
   },
@@ -118,34 +118,42 @@
     "loading": "Laden..."
   },
   "onboarding": {
-    "eyebrow": "Onboarding für neue Kunden",
-    "title": "Richten Sie Ihren Pilot-Workspace ein",
+    "eyebrow": "Konto einrichten",
+    "title": "Starten Sie in zwei Schritten",
+    "subtitle": "Erst Ihr Unternehmen, dann Ihr Zugang zum Dashboard.",
     "stepOf": "Schritt {step} von 2 — {label}",
-    "stepCompany": "Unternehmen erstellen",
-    "stepUser": "Admin-Benutzer erstellen",
+    "stepCompany": "Unternehmensdaten",
+    "stepUser": "Ihr Zugang",
     "companyName": "Unternehmensname",
-    "companyEmail": "Unternehmens-E-Mail",
+    "companyEmail": "E-Mail für Benachrichtigungen",
+    "companyEmailHint": "Hier erhalten Sie Mitteilungen zu neuen Website-Anfragen.",
     "phoneOptional": "Telefon (optional)",
-    "creatingCompany": "Unternehmen wird erstellt...",
+    "creatingCompany": "Wird gespeichert...",
     "continue": "Weiter",
     "firstName": "Vorname",
     "lastName": "Nachname",
-    "workEmail": "Geschäftliche E-Mail",
+    "workEmail": "E-Mail für die Anmeldung",
+    "workEmailHint": "Mit dieser Adresse melden Sie sich später im Dashboard an.",
+    "passwordHint": "Mindestens 8 Zeichen.",
+    "privacyConsentPrefix": "Ich habe die ",
+    "privacyConsentLink": "Datenschutzerklärung",
+    "privacyConsentSuffix": " gelesen.",
+    "privacyConsentRequired": "Bitte bestätigen Sie die Datenschutzerklärung.",
     "creatingAccount": "Konto wird erstellt...",
-    "finishSetup": "Einrichtung abschließen",
+    "finishSetup": "Konto erstellen",
     "alreadyHaveAccount": "Bereits ein Konto?",
     "signIn": "Anmelden",
     "createCompanyFirst": "Erstellen Sie zuerst Ihr Unternehmensprofil.",
     "createCompanyFailed": "Unternehmen konnte nicht erstellt werden.",
-    "createUserFailed": "Benutzerkonto konnte nicht erstellt werden.",
+    "createUserFailed": "Konto konnte nicht erstellt werden.",
     "steps": {
       "company": {
-        "title": "Unternehmen erstellen",
-        "description": "Richten Sie Ihr Unternehmensprofil und den Mandanten-Slug ein."
+        "title": "Unternehmensdaten",
+        "description": "Tragen Sie die Grunddaten Ihres Unternehmens ein."
       },
       "user": {
-        "title": "Ersten Benutzer erstellen",
-        "description": "Fügen Sie den Eigentümer oder Admin hinzu, der Leads verwaltet."
+        "title": "Ihr Zugang",
+        "description": "Legen Sie den Zugang an, mit dem Sie Anfragen verwalten."
       },
       "notification_email": {
         "title": "Benachrichtigungs-E-Mail konfigurieren",
@@ -154,12 +162,12 @@
       },
       "copy_widget": {
         "title": "Widget-Code kopieren",
-        "description": "Kopieren Sie den Einbettungs-Snippet für Ihre Website.",
+        "description": "Kopieren Sie den Code für Ihre Website.",
         "action": "Einbettungscode anzeigen"
       },
       "install_widget": {
         "title": "Widget installieren",
-        "description": "Fügen Sie den Snippet vor </body> auf Ihrer Website ein.",
+        "description": "Fügen Sie den Code in Ihre Website ein — am besten vor dem Ende der Seite.",
         "action": "Installationsanleitung",
         "markInstalled": "Als installiert markieren"
       },
@@ -172,13 +180,13 @@
   },
   "gettingStarted": {
     "title": "Erste Schritte",
-    "description": "Schließen Sie diese Schritte ab, um Ihren Pilotkunden zu starten.",
+    "description": "So richten Sie die Anfrage-Erfassung auf Ihrer Website ein.",
     "progress": "{completed}/{total} abgeschlossen",
     "loadFailed": "Setup-Fortschritt konnte nicht geladen werden.",
     "loading": "Ihre Setup-Checkliste wird geladen...",
     "signInRequired": "Melden Sie sich an, um Ihre Erste-Schritte-Checkliste zu sehen.",
-    "allDone": "Ihr Pilot-Workspace ist bereit. Neue Leads erscheinen auf der Leads-Seite.",
-    "companySlug": "Unternehmens-Slug:",
+    "allDone": "Alles eingerichtet. Neue Anfragen erscheinen unter Leads.",
+    "companySlug": "Ihre Kennung:",
     "nextStepsTitle": "Nächste Schritte",
     "nextStepsDescription": "Nachdem das Widget live ist, überwachen Sie eingehende Leads, passen Sie Benachrichtigungsschwellen in den Einstellungen an und teilen Sie das Dashboard mit Ihrem Team.",
     "openLeads": "Leads öffnen",
