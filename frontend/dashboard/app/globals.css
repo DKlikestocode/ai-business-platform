@@ -524,6 +524,13 @@ code {
   padding: 24px;
 }
 
+.login-layout {
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  width: min(100%, 420px);
+}
+
 .login-card {
   width: min(100%, 420px);
   padding: 28px;
