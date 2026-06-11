@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
+import { HeroWebsiteChatPreview } from "@/components/hero-website-chat-preview";
 import { MarketingShell } from "@/components/marketing-shell";
 import { Link } from "@/i18n/navigation";
 
@@ -29,15 +30,7 @@ export async function LandingPage() {
             </Link>
           </div>
         </div>
-        <div className="hero-card card">
-          <h2>{t("dayOneTitle")}</h2>
-          <ul className="hero-list">
-            <li>{t("dayOneWidget")}</li>
-            <li>{t("dayOneScoring")}</li>
-            <li>{t("dayOneDashboard")}</li>
-            <li>{t("dayOneEmail")}</li>
-          </ul>
-        </div>
+        <HeroWebsiteChatPreview />
       </section>
 
       <section className="trust-band shell" aria-label={t("trustTitle")}>
