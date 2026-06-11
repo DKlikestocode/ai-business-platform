@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { HeroWebsiteChatPreview } from "@/components/hero-website-chat-preview";
+import { LandingHowItWorks } from "@/components/landing-how-it-works";
 import { MarketingShell } from "@/components/marketing-shell";
 import { Link } from "@/i18n/navigation";
 
@@ -42,6 +43,8 @@ export async function LandingPage() {
           <li>{t("trustNoTraining")}</li>
         </ul>
       </section>
+
+      <LandingHowItWorks />
 
       <section className="feature-grid shell">
         {FEATURE_KEYS.map((key) => (

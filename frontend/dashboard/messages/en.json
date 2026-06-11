@@ -77,6 +77,24 @@
     "ctaTitle": "Set up in minutes",
     "ctaDescription": "Add your business, put chat on your website, send a test message — see how it works for you.",
     "createPilotAccount": "Start free",
+    "howItWorks": {
+      "title": "How it works",
+      "lead": "Three steps from sign-up to your first inquiry — no technical skills required.",
+      "steps": {
+        "start": {
+          "title": "Get started free",
+          "description": "Set up your business and create your login. It only takes a few minutes."
+        },
+        "embed": {
+          "title": "Add chat to your website",
+          "description": "Copy the embed code and paste it on your website — like a contact form, but as chat."
+        },
+        "inquiries": {
+          "title": "Receive inquiries directly",
+          "description": "Visitors ask their question in chat. You get the key details by email and every inquiry in your dashboard."
+        }
+      }
+    },
     "trustTitle": "Trust and privacy",
     "trustGdpr": "GDPR-oriented",
     "trustHttps": "HTTPS encrypted",

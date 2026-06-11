@@ -973,6 +973,57 @@ code {
   margin: 0 0 8px;
 }
 
+.how-it-works {
+  padding-bottom: 32px;
+}
+
+.how-it-works-title {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.how-it-works-lead {
+  margin: 0 0 20px;
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.how-it-works-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how-it-works-step {
+  display: grid;
+  gap: 12px;
+}
+
+.how-it-works-step h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.how-it-works-step p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.how-it-works-index {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #dbeafe;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
 .trust-band {
   padding-bottom: 32px;
 }
@@ -1200,6 +1251,7 @@ code {
 @media (max-width: 900px) {
   .hero,
   .feature-grid,
+  .how-it-works-steps,
   .trust-list {
     grid-template-columns: 1fr;
   }

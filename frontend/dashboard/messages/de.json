@@ -77,6 +77,24 @@
     "ctaTitle": "In wenigen Minuten eingerichtet",
     "ctaDescription": "Firma anlegen, Chat auf die Website setzen, Testnachricht senden — so sehen Sie, wie es für Sie funktioniert.",
     "createPilotAccount": "Kostenlos starten",
+    "howItWorks": {
+      "title": "So funktioniert's",
+      "lead": "In drei Schritten von der Anmeldung bis zur ersten Anfrage — ohne IT-Kenntnisse.",
+      "steps": {
+        "start": {
+          "title": "Kostenlos starten",
+          "description": "Legen Sie Ihr Unternehmen an und richten Sie Ihren Zugang ein. Dauert nur wenige Minuten."
+        },
+        "embed": {
+          "title": "Chat auf Ihre Website setzen",
+          "description": "Kopieren Sie den Einbettungscode und fügen Sie ihn auf Ihrer Website ein — wie ein Kontaktformular, nur als Chat."
+        },
+        "inquiries": {
+          "title": "Anfragen direkt erhalten",
+          "description": "Besucher stellen ihre Frage im Chat. Sie bekommen die wichtigsten Angaben per E-Mail und sehen jede Anfrage im Dashboard."
+        }
+      }
+    },
     "trustTitle": "Vertrauen und Datenschutz",
     "trustGdpr": "DSGVO-orientiert",
     "trustHttps": "HTTPS-verschlüsselt",
