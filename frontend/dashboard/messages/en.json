@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "AI Agent Platform",
-    "description": "Capture website leads, qualify them automatically, and notify your team."
+    "title": "Inquiry assistant for small businesses",
+    "description": "Capture website inquiries automatically, prioritize important customers, and notify your team by email."
   },
   "common": {
     "email": "Email",
@@ -32,36 +32,36 @@
   "brand": {
     "name": "Agent Platform",
     "mark": "AI",
-    "tagline": "Lead capture, qualification, and notifications for service businesses."
+    "tagline": "AI assistance for website inquiries — for trades and service businesses."
   },
   "appShell": {
     "title": "AI Agent Platform",
     "subtitle": "Lead capture, qualification, and team dashboard"
   },
   "landing": {
-    "eyebrow": "Pilot-ready lead capture",
-    "heroTitle": "Turn website conversations into qualified leads.",
-    "heroLead": "Deploy an AI lead capture agent on your website, qualify inbound requests automatically, and notify your team when a lead is worth following up.",
-    "startPilot": "Start your pilot",
+    "eyebrow": "For trades and service businesses",
+    "heroTitle": "More inquiries from your website — without more admin.",
+    "heroLead": "An AI assistant on your website answers first questions, captures contact details and the request, and notifies you when an inquiry matters.",
+    "startPilot": "Start free",
     "signIn": "Sign in",
-    "dayOneTitle": "What you get on day one",
-    "dayOneWidget": "Embeddable website widget",
-    "dayOneScoring": "Lead scoring and qualification",
-    "dayOneDashboard": "Dashboard for your team",
-    "dayOneEmail": "Email notifications via Resend",
+    "dayOneTitle": "What you have from day one",
+    "dayOneWidget": "Chat on your website",
+    "dayOneScoring": "Important inquiries are recognized",
+    "dayOneDashboard": "All inquiries in one place",
+    "dayOneEmail": "Email when an inquiry comes in",
     "features": {
-      "widgetTitle": "Website widget",
-      "widgetDescription": "Embed a chat widget on your site. Visitors talk naturally while the agent captures lead details.",
-      "qualificationTitle": "Smart qualification",
-      "qualificationDescription": "Leads are scored and marked contactable or qualified before your team is notified.",
-      "emailTitle": "Email alerts",
-      "emailDescription": "Get Resend-powered notifications with lead summary, score, and a dashboard link.",
-      "dashboardTitle": "Team dashboard",
-      "dashboardDescription": "Review leads, update status, and manage company settings from one place."
+      "widgetTitle": "Inquiries directly on your website",
+      "widgetDescription": "Visitors ask their question in chat. You get name, phone, and details — no form required.",
+      "qualificationTitle": "Important inquiries first",
+      "qualificationDescription": "The system recognizes whether an inquiry is reachable and urgent before your team is notified.",
+      "emailTitle": "Instant email alerts",
+      "emailDescription": "You receive an email with the key details and a link to the inquiry.",
+      "dashboardTitle": "Overview for your team",
+      "dashboardDescription": "View all inquiries, update status, and manage settings."
     },
-    "ctaTitle": "Ready for your first pilot customer?",
-    "ctaDescription": "Create a company, add your admin user, copy the widget snippet, and send a test message in under ten minutes.",
-    "createPilotAccount": "Create pilot account",
+    "ctaTitle": "Set up in minutes",
+    "ctaDescription": "Add your business, put chat on your website, send a test message — see how it works for you.",
+    "createPilotAccount": "Start free",
     "trustTitle": "Trust and privacy",
     "trustGdpr": "GDPR-oriented",
     "trustHttps": "HTTPS encrypted",
@@ -109,9 +109,9 @@
   },
   "login": {
     "title": "Sign in",
-    "description": "Access your lead dashboard and pilot workspace.",
-    "newCustomer": "New customer?",
-    "startPilot": "Start your pilot",
+    "description": "Sign in to manage your customer inquiries.",
+    "newCustomer": "Don't have an account yet?",
+    "startPilot": "Start free",
     "signingIn": "Signing in...",
     "signIn": "Sign in",
     "signInFailed": "Sign in failed. Check your email and password.",
