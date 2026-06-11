@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "AI Agent Platform",
-    "description": "Erfassen Sie Website-Leads, qualifizieren Sie sie automatisch und benachrichtigen Sie Ihr Team."
+    "title": "Anfragen-Assistent für Unternehmen",
+    "description": "Erfassen Sie Website-Anfragen automatisch, priorisieren Sie wichtige Kunden und informieren Sie Ihr Team per E-Mail."
   },
   "common": {
     "email": "E-Mail",
@@ -32,36 +32,36 @@
   "brand": {
     "name": "Agent Platform",
     "mark": "AI",
-    "tagline": "Lead-Erfassung, Qualifizierung und Benachrichtigungen für Dienstleister."
+    "tagline": "KI-Assistenz für Website-Anfragen — für Handwerk und Dienstleistung."
   },
   "appShell": {
     "title": "AI Agent Platform",
     "subtitle": "Lead-Erfassung, Qualifizierung und Team-Dashboard"
   },
   "landing": {
-    "eyebrow": "Pilotbereite Lead-Erfassung",
-    "heroTitle": "Verwandeln Sie Website-Gespräche in qualifizierte Leads.",
-    "heroLead": "Setzen Sie einen KI-Lead-Capture-Agenten auf Ihrer Website ein, qualifizieren Sie Anfragen automatisch und benachrichtigen Sie Ihr Team, wenn ein Lead nachverfolgt werden sollte.",
-    "startPilot": "Pilot starten",
+    "eyebrow": "Für Handwerks- und Dienstleistungsbetriebe",
+    "heroTitle": "Mehr Anfragen von Ihrer Website — ohne mehr Aufwand.",
+    "heroLead": "Ein KI-Assistent auf Ihrer Website beantwortet erste Fragen, erfasst Kontakt und Anliegen und informiert Sie, wenn eine Anfrage wichtig ist.",
+    "startPilot": "Kostenlos starten",
     "signIn": "Anmelden",
-    "dayOneTitle": "Das erhalten Sie am ersten Tag",
-    "dayOneWidget": "Einbettbares Website-Widget",
-    "dayOneScoring": "Lead-Scoring und Qualifizierung",
-    "dayOneDashboard": "Dashboard für Ihr Team",
-    "dayOneEmail": "E-Mail-Benachrichtigungen über Resend",
+    "dayOneTitle": "Das haben Sie vom ersten Tag an",
+    "dayOneWidget": "Chat auf Ihrer Website",
+    "dayOneScoring": "Wichtige Anfragen werden erkannt",
+    "dayOneDashboard": "Alle Anfragen an einem Ort",
+    "dayOneEmail": "E-Mail, sobald eine Anfrage ansteht",
     "features": {
-      "widgetTitle": "Website-Widget",
-      "widgetDescription": "Betten Sie ein Chat-Widget auf Ihrer Website ein. Besucher chatten natürlich, während der Agent Lead-Details erfasst.",
-      "qualificationTitle": "Intelligente Qualifizierung",
-      "qualificationDescription": "Leads werden bewertet und als kontaktierbar oder qualifiziert markiert, bevor Ihr Team benachrichtigt wird.",
-      "emailTitle": "E-Mail-Benachrichtigungen",
-      "emailDescription": "Erhalten Sie Resend-Benachrichtigungen mit Lead-Zusammenfassung, Score und Dashboard-Link.",
-      "dashboardTitle": "Team-Dashboard",
-      "dashboardDescription": "Prüfen Sie Leads, aktualisieren Sie den Status und verwalten Sie Unternehmenseinstellungen an einem Ort."
+      "widgetTitle": "Anfragen direkt auf der Website",
+      "widgetDescription": "Besucher stellen ihre Frage im Chat. Sie erhalten Name, Telefon und Anliegen — ohne Formular.",
+      "qualificationTitle": "Wichtige Anfragen zuerst",
+      "qualificationDescription": "Das System erkennt, ob eine Anfrage kontaktierbar und dringend ist, bevor Ihr Team benachrichtigt wird.",
+      "emailTitle": "Sofort per E-Mail informiert",
+      "emailDescription": "Sie erhalten eine E-Mail mit den wichtigsten Angaben und einem Link zur Anfrage.",
+      "dashboardTitle": "Übersicht für Ihr Team",
+      "dashboardDescription": "Alle Anfragen einsehen, den Bearbeitungsstand setzen und Einstellungen verwalten."
     },
-    "ctaTitle": "Bereit für Ihren ersten Pilotkunden?",
-    "ctaDescription": "Erstellen Sie ein Unternehmen, fügen Sie Ihren Admin-Benutzer hinzu, kopieren Sie den Widget-Code und senden Sie in unter zehn Minuten eine Testnachricht.",
-    "createPilotAccount": "Pilotkonto erstellen",
+    "ctaTitle": "In wenigen Minuten eingerichtet",
+    "ctaDescription": "Firma anlegen, Chat auf die Website setzen, Testnachricht senden — so sehen Sie, wie es für Sie funktioniert.",
+    "createPilotAccount": "Kostenlos starten",
     "trustTitle": "Vertrauen und Datenschutz",
     "trustGdpr": "DSGVO-orientiert",
     "trustHttps": "HTTPS-verschlüsselt",
@@ -109,9 +109,9 @@
   },
   "login": {
     "title": "Anmelden",
-    "description": "Greifen Sie auf Ihr Lead-Dashboard und Ihren Pilot-Workspace zu.",
-    "newCustomer": "Neuer Kunde?",
-    "startPilot": "Pilot starten",
+    "description": "Melden Sie sich an, um Ihre Kundenanfragen zu verwalten.",
+    "newCustomer": "Noch kein Konto?",
+    "startPilot": "Kostenlos starten",
     "signingIn": "Anmeldung läuft...",
     "signIn": "Anmelden",
     "signInFailed": "Anmeldung fehlgeschlagen. Prüfen Sie E-Mail und Passwort.",
