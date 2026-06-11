@@ -1113,6 +1113,46 @@ code {
   color: var(--muted);
 }
 
+.public-demo {
+  padding-bottom: 32px;
+}
+
+.public-demo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.public-demo-title {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.public-demo-lead {
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+
+.public-demo-disclaimer {
+  margin: 0 0 20px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.public-demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.public-demo-chat .chat-messages {
+  min-height: 280px;
+  max-height: none;
+}
+
 .cta-band {
   padding-bottom: 48px;
 }
@@ -1252,6 +1292,7 @@ code {
   .hero,
   .feature-grid,
   .how-it-works-steps,
+  .public-demo-layout,
   .trust-list {
     grid-template-columns: 1fr;
   }
