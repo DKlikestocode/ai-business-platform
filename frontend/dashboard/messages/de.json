@@ -77,6 +77,57 @@
     "ctaTitle": "In wenigen Minuten eingerichtet",
     "ctaDescription": "Firma anlegen, Chat auf die Website setzen, Testnachricht senden — so sehen Sie, wie es für Sie funktioniert.",
     "createPilotAccount": "Kostenlos starten",
+    "howItWorks": {
+      "title": "So funktioniert's",
+      "lead": "In drei Schritten von der Anmeldung bis zur ersten Anfrage — ohne IT-Kenntnisse.",
+      "steps": {
+        "start": {
+          "title": "Kostenlos starten",
+          "description": "Legen Sie Ihr Unternehmen an und richten Sie Ihren Zugang ein. Dauert nur wenige Minuten."
+        },
+        "embed": {
+          "title": "Chat auf Ihre Website setzen",
+          "description": "Kopieren Sie den Einbettungscode und fügen Sie ihn auf Ihrer Website ein — wie ein Kontaktformular, nur als Chat."
+        },
+        "inquiries": {
+          "title": "Anfragen direkt erhalten",
+          "description": "Besucher stellen ihre Frage im Chat. Sie bekommen die wichtigsten Angaben per E-Mail und sehen jede Anfrage im Dashboard."
+        }
+      }
+    },
+    "publicDemo": {
+      "title": "Probieren Sie den Chat selbst aus",
+      "lead": "Klicken Sie auf eine Beispiel-Anfrage — so erleben Ihre Website-Besucher den Assistenten.",
+      "disclaimer": "Beispiel-Demo — die Antworten sind zur Veranschaulichung vorbereitet.",
+      "chipsLabel": "Beispiel-Anfrage wählen:",
+      "emptyState": "Wählen Sie eine Beispiel-Anfrage, um den Chat zu sehen.",
+      "customerLabel": "Kunde",
+      "assistantLabel": "Assistent",
+      "chips": {
+        "plumber": "Sanitär-Notfall",
+        "roofer": "Dach nach Sturm",
+        "electrician": "Elektro-Anfrage"
+      },
+      "scenarios": {
+        "plumber": {
+          "customer": "Unsere Spüle läuft aus. Können Sie heute noch helfen?",
+          "assistant1": "Das klingt dringend. Ich erfasse die Anfrage und frage nach Kontakt und Adresse.",
+          "assistant2": "Ihr Team erhält die wichtigsten Angaben direkt per E-Mail."
+        },
+        "roofer": {
+          "customer": "Nach dem Sturm fehlen Dachziegel. Es tropft in den Dachboden.",
+          "assistant1": "Der Assistent erkennt die Dringlichkeit und sammelt die wichtigsten Informationen.",
+          "assistant2": "So sehen Sie sofort, welche Anfrage zuerst bearbeitet werden sollte."
+        },
+        "electrician": {
+          "customer": "Ich möchte eine Wallbox installieren lassen. Können Sie ein Angebot machen?",
+          "assistant1": "Der Assistent fragt nach Fahrzeug, Standort und Rückrufnummer.",
+          "assistant2": "Aus der Website-Nachricht wird eine konkrete Anfrage für Ihr Team."
+        }
+      },
+      "startCta": "Kostenlos für meinen Betrieb starten",
+      "resetCta": "Andere Anfrage testen"
+    },
     "trustTitle": "Vertrauen und Datenschutz",
     "trustGdpr": "DSGVO-orientiert",
     "trustHttps": "HTTPS-verschlüsselt",

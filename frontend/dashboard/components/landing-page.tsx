@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
 
 import { HeroWebsiteChatPreview } from "@/components/hero-website-chat-preview";
+import { LandingHowItWorks } from "@/components/landing-how-it-works";
+import { LandingPublicDemo } from "@/components/landing-public-demo";
 import { MarketingShell } from "@/components/marketing-shell";
 import { Link } from "@/i18n/navigation";
 
@@ -43,6 +45,8 @@ export async function LandingPage() {
         </ul>
       </section>
 
+      <LandingHowItWorks />
+
       <section className="feature-grid shell">
         {FEATURE_KEYS.map((key) => (
           <article key={key} className="feature-card card">
@@ -51,6 +55,8 @@ export async function LandingPage() {
           </article>
         ))}
       </section>
+
+      <LandingPublicDemo />
 
       <section className="cta-band shell">
         <div className="cta-card card">

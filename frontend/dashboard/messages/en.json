@@ -77,6 +77,57 @@
     "ctaTitle": "Set up in minutes",
     "ctaDescription": "Add your business, put chat on your website, send a test message — see how it works for you.",
     "createPilotAccount": "Start free",
+    "howItWorks": {
+      "title": "How it works",
+      "lead": "Three steps from sign-up to your first inquiry — no technical skills required.",
+      "steps": {
+        "start": {
+          "title": "Get started free",
+          "description": "Set up your business and create your login. It only takes a few minutes."
+        },
+        "embed": {
+          "title": "Add chat to your website",
+          "description": "Copy the embed code and paste it on your website — like a contact form, but as chat."
+        },
+        "inquiries": {
+          "title": "Receive inquiries directly",
+          "description": "Visitors ask their question in chat. You get the key details by email and every inquiry in your dashboard."
+        }
+      }
+    },
+    "publicDemo": {
+      "title": "Try the chat yourself",
+      "lead": "Click an example inquiry — this is how visitors experience the assistant on your website.",
+      "disclaimer": "Example demo — responses are prepared for illustration.",
+      "chipsLabel": "Choose an example inquiry:",
+      "emptyState": "Select an example inquiry to see the chat.",
+      "customerLabel": "Customer",
+      "assistantLabel": "Assistant",
+      "chips": {
+        "plumber": "Plumbing emergency",
+        "roofer": "Roof after storm",
+        "electrician": "Electrical inquiry"
+      },
+      "scenarios": {
+        "plumber": {
+          "customer": "Our sink is leaking. Can you help today?",
+          "assistant1": "That sounds urgent. I'll capture the inquiry and ask for contact details and address.",
+          "assistant2": "Your team receives the key details directly by email."
+        },
+        "roofer": {
+          "customer": "After the storm, roof tiles are missing. Water is dripping into the attic.",
+          "assistant1": "The assistant recognizes urgency and collects the most important information.",
+          "assistant2": "This way you can see immediately which inquiry should be handled first."
+        },
+        "electrician": {
+          "customer": "I'd like to have a wallbox installed. Can you provide a quote?",
+          "assistant1": "The assistant asks about the vehicle, location, and callback number.",
+          "assistant2": "A concrete inquiry for your team is created from the website message."
+        }
+      },
+      "startCta": "Get started free for my business",
+      "resetCta": "Try another inquiry"
+    },
     "trustTitle": "Trust and privacy",
     "trustGdpr": "GDPR-oriented",
     "trustHttps": "HTTPS encrypted",
