@@ -5,6 +5,10 @@ interface EmptyStateProps {
   description: string;
   actionHref?: string;
   actionLabel?: string;
+  secondaryActionHref?: string;
+  secondaryActionLabel?: string;
+  linkHref?: string;
+  linkLabel?: string;
 }
 
 export function EmptyState({
@@ -12,14 +16,35 @@ export function EmptyState({
   description,
   actionHref,
   actionLabel,
+  secondaryActionHref,
+  secondaryActionLabel,
+  linkHref,
+  linkLabel,
 }: EmptyStateProps) {
+  const hasActions = actionHref && actionLabel;
+  const hasSecondary = secondaryActionHref && secondaryActionLabel;
+
   return (
     <div className="empty-state-panel">
       <h3>{title}</h3>
       <p className="muted">{description}</p>
-      {actionHref && actionLabel ? (
-        <Link href={actionHref} className="button">
-          {actionLabel}
+      {hasActions || hasSecondary ? (
+        <div className="empty-state-actions">
+          {hasActions ? (
+            <Link href={actionHref} className="button">
+              {actionLabel}
+            </Link>
+          ) : null}
+          {hasSecondary ? (
+            <Link href={secondaryActionHref} className="button secondary">
+              {secondaryActionLabel}
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
+      {linkHref && linkLabel ? (
+        <Link href={linkHref} className="empty-state-link">
+          {linkLabel}
         </Link>
       ) : null}
     </div>

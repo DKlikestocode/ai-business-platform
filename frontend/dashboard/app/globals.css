@@ -654,6 +654,59 @@ code {
   margin: 0;
 }
 
+.empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.empty-state-link {
+  font-size: 0.9rem;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.empty-state-link:hover {
+  text-decoration: underline;
+}
+
+.welcome-banner {
+  display: grid;
+  gap: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.welcome-banner-title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.welcome-banner-lead {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.welcome-banner-next {
+  display: grid;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.welcome-banner-next-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.welcome-banner-next-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .info-banner {
   padding: 12px 14px;
   border-radius: 8px;
