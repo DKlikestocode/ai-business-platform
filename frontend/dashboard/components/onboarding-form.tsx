@@ -23,6 +23,7 @@ export function OnboardingForm() {
   const [step, setStep] = useState<Step>("company");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
@@ -61,6 +62,11 @@ export function OnboardingForm() {
       return;
     }
 
+    if (!privacyAccepted) {
+      setError(t("privacyConsentRequired"));
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
 
@@ -90,6 +96,7 @@ export function OnboardingForm() {
         <div className="onboarding-card card">
           <p className="eyebrow">{t("eyebrow")}</p>
           <h1>{t("title")}</h1>
+          <p className="muted">{t("subtitle")}</p>
           <p className="muted">
             {t("stepOf", {
               step: step === "company" ? "1" : "2",
@@ -126,6 +133,7 @@ export function OnboardingForm() {
                   required
                   disabled={submitting}
                 />
+                <p className="muted field-hint">{t("companyEmailHint")}</p>
               </label>
               <label className="field">
                 <span>{t("phoneOptional")}</span>
@@ -176,6 +184,7 @@ export function OnboardingForm() {
                   required
                   disabled={submitting}
                 />
+                <p className="muted field-hint">{t("workEmailHint")}</p>
               </label>
               <label className="field">
                 <span>{tCommon("password")}</span>
@@ -188,6 +197,27 @@ export function OnboardingForm() {
                   required
                   disabled={submitting}
                 />
+                <p className="muted field-hint">{t("passwordHint")}</p>
+              </label>
+              <label className="field checkbox-field">
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(event) => {
+                    setPrivacyAccepted(event.target.checked);
+                    if (event.target.checked) {
+                      setError(null);
+                    }
+                  }}
+                  disabled={submitting}
+                />
+                <span>
+                  {t("privacyConsentPrefix")}
+                  <Link href="/datenschutz" className="link">
+                    {t("privacyConsentLink")}
+                  </Link>
+                  {t("privacyConsentSuffix")}
+                </span>
               </label>
               <div className="form-actions spread">
                 <button
@@ -206,7 +236,8 @@ export function OnboardingForm() {
                     !firstName ||
                     !lastName ||
                     !userEmail ||
-                    password.length < 8
+                    password.length < 8 ||
+                    !privacyAccepted
                   }
                 >
                   {submitting ? t("creatingAccount") : t("finishSetup")}

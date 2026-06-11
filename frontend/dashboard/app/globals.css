@@ -327,6 +327,12 @@ a {
   height: 16px;
 }
 
+.field-hint {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
 .read-only-value {
   margin: 0;
   padding: 10px 0;

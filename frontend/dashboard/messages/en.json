@@ -25,7 +25,7 @@
     "settings": "Settings",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "startFreePilot": "Start free pilot",
+    "startFreePilot": "Start free",
     "main": "Main navigation",
     "marketing": "Marketing navigation"
   },
@@ -118,34 +118,42 @@
     "loading": "Loading..."
   },
   "onboarding": {
-    "eyebrow": "New customer onboarding",
-    "title": "Set up your pilot workspace",
+    "eyebrow": "Create your account",
+    "title": "Get started in two steps",
+    "subtitle": "First your company, then your dashboard login.",
     "stepOf": "Step {step} of 2 — {label}",
-    "stepCompany": "Create your company",
-    "stepUser": "Create your admin user",
+    "stepCompany": "Company details",
+    "stepUser": "Your login",
     "companyName": "Company name",
-    "companyEmail": "Company email",
+    "companyEmail": "Email for notifications",
+    "companyEmailHint": "New website inquiries will be sent to this address.",
     "phoneOptional": "Phone (optional)",
-    "creatingCompany": "Creating company...",
+    "creatingCompany": "Saving...",
     "continue": "Continue",
     "firstName": "First name",
     "lastName": "Last name",
-    "workEmail": "Work email",
+    "workEmail": "Email for sign-in",
+    "workEmailHint": "You will use this address to sign in to the dashboard.",
+    "passwordHint": "At least 8 characters.",
+    "privacyConsentPrefix": "I have read the ",
+    "privacyConsentLink": "privacy policy",
+    "privacyConsentSuffix": ".",
+    "privacyConsentRequired": "Please confirm the privacy policy.",
     "creatingAccount": "Creating account...",
-    "finishSetup": "Finish setup",
+    "finishSetup": "Create account",
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign in",
     "createCompanyFirst": "Create your company profile first.",
     "createCompanyFailed": "Could not create company.",
-    "createUserFailed": "Could not create your user account.",
+    "createUserFailed": "Could not create your account.",
     "steps": {
       "company": {
-        "title": "Create company",
-        "description": "Set up your business profile and tenant slug."
+        "title": "Company details",
+        "description": "Enter your company's basic details."
       },
       "user": {
-        "title": "Create first user",
-        "description": "Add the owner or admin who will manage leads."
+        "title": "Your login",
+        "description": "Create the login you will use to manage inquiries."
       },
       "notification_email": {
         "title": "Configure notification email",
@@ -154,12 +162,12 @@
       },
       "copy_widget": {
         "title": "Copy widget code",
-        "description": "Copy the embed snippet for your website.",
+        "description": "Copy the code for your website.",
         "action": "View embed code"
       },
       "install_widget": {
         "title": "Install widget",
-        "description": "Paste the snippet before </body> on your site.",
+        "description": "Add the code to your website — ideally before the end of the page.",
         "action": "Installation guide",
         "markInstalled": "Mark installed"
       },
@@ -172,13 +180,13 @@
   },
   "gettingStarted": {
     "title": "Getting started",
-    "description": "Complete these steps to launch your pilot customer.",
+    "description": "Set up inquiry capture on your website.",
     "progress": "{completed}/{total} complete",
     "loadFailed": "Failed to load setup progress.",
     "loading": "Loading your setup checklist...",
     "signInRequired": "Sign in to view your getting started checklist.",
-    "allDone": "Your pilot workspace is ready. New leads will appear on the Leads page.",
-    "companySlug": "Company slug:",
+    "allDone": "You're all set. New inquiries will appear under Leads.",
+    "companySlug": "Your identifier:",
     "nextStepsTitle": "Next steps",
     "nextStepsDescription": "After the widget is live, monitor incoming leads, tune notification thresholds in Settings, and share the dashboard with your team.",
     "openLeads": "Open leads",
