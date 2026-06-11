@@ -459,6 +459,45 @@ a {
   line-height: 1.5;
 }
 
+.chat-empty-title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  color: var(--foreground);
+}
+
+.chat-prompts-label {
+  margin: 16px 0 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.chat-prompt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chat-success-panel {
+  margin: 0 20px;
+  padding: 16px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.chat-success-title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.chat-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 .chat-message {
   max-width: 80%;
   padding: 12px 14px;
