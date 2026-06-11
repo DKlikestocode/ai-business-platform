@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
+import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
@@ -45,6 +46,7 @@ export function LoginForm() {
 
   return (
     <div className="login-page">
+      <div className="login-layout">
       <div className="login-card card">
         <h1>{t("title")}</h1>
         <p className="muted">{t("description")}</p>
@@ -91,6 +93,8 @@ export function LoginForm() {
             {submitting ? t("signingIn") : t("signIn")}
           </button>
         </form>
+      </div>
+      <LegalFooterLinks />
       </div>
     </div>
   );

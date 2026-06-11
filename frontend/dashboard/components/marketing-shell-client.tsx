@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
+import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { Link } from "@/i18n/navigation";
 
 interface MarketingShellClientProps {
@@ -32,6 +33,7 @@ export function MarketingShellClient({ children }: MarketingShellClientProps) {
       <main>{children}</main>
       <footer className="marketing-footer shell">
         <p className="muted">{brand("tagline")}</p>
+        <LegalFooterLinks />
       </footer>
     </div>
   );

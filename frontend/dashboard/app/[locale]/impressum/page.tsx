@@ -7,14 +7,7 @@ type ImpressumPageProps = {
   params: Promise<{ locale: string }>;
 };
 
-const SECTION_KEYS = [
-  "operator",
-  "contact",
-  "register",
-  "vat",
-  "responsible",
-  "dispute",
-] as const;
+const SECTION_KEYS = ["operator", "contact", "dispute"] as const;
 
 export default async function ImpressumPage({ params }: ImpressumPageProps) {
   const { locale } = await params;
