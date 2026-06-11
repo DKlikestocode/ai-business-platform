@@ -69,6 +69,8 @@ export function GettingStartedChecklist() {
   const progress = evaluateOnboardingProgress(activeCompany.id, settings);
   const completed = countCompletedSteps(progress);
   const allDone = isOnboardingComplete(progress);
+  const nextStep = ONBOARDING_STEPS.find((step) => !progress[step.id]);
+  const welcomeName = activeCompany.name?.trim() || user.first_name;
 
   function handleManualComplete(step: OnboardingStepId) {
     markOnboardingStepComplete(activeCompany.id, step);
@@ -90,6 +92,28 @@ export function GettingStartedChecklist() {
       {allDone ? (
         <AlertBanner variant="success">{t("allDone")}</AlertBanner>
       ) : null}
+
+      <section className="welcome-banner card" aria-labelledby="welcome-banner-title">
+        <h3 id="welcome-banner-title" className="welcome-banner-title">
+          {t("welcomeTitle", { name: welcomeName })}
+        </h3>
+        <p className="welcome-banner-lead muted">{t("welcomeLead")}</p>
+        {nextStep ? (
+          <div className="welcome-banner-next">
+            <p className="welcome-banner-next-label">{t("welcomeNextStepLabel")}</p>
+            <p className="welcome-banner-next-title">
+              {tOnboarding(`${nextStep.id}.title`)}
+            </p>
+            {nextStep.href ? (
+              <Link href={nextStep.href} className="button">
+                {tOnboarding(`${nextStep.id}.action`)}
+              </Link>
+            ) : null}
+          </div>
+        ) : (
+          <p className="muted">{t("welcomeAllDone")}</p>
+        )}
+      </section>
 
       <div className="checklist">
         {ONBOARDING_STEPS.map((step, index) => {

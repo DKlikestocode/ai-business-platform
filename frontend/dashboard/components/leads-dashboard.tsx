@@ -141,9 +141,18 @@ export function LeadsDashboard() {
     return tContactMethod(value);
   }
 
+  const hasActiveFilters = Boolean(
+    statusFilter || qualificationFilter || contactableFilter,
+  );
+  const showToolbar =
+    !authLoading && !loading && (leads.length > 0 || hasActiveFilters);
+  const showFirstRunEmpty =
+    !authLoading && !loading && leads.length === 0 && !hasActiveFilters;
+
   return (
     <div className="stack">
       <PageHeader title={t("title")} description={t("description")} />
+      {showToolbar ? (
       <div className="toolbar">
         <div className="toolbar-filters">
           <label className="field-inline">
@@ -233,6 +242,7 @@ export function LeadsDashboard() {
           <p className="muted">{t("leadCount", { count: total })}</p>
         </div>
       </div>
+      ) : null}
 
       {seedMessage ? <AlertBanner variant="success">{seedMessage}</AlertBanner> : null}
 
@@ -240,13 +250,21 @@ export function LeadsDashboard() {
       {error ? <AlertBanner>{error}</AlertBanner> : null}
       {authLoading || loading ? <LoadingState label={t("loading")} /> : null}
 
-      {!authLoading && !loading && leads.length === 0 ? (
+      {showFirstRunEmpty ? (
         <EmptyState
           title={t("emptyTitle")}
           description={t("emptyDescription")}
-          actionHref="/getting-started"
-          actionLabel={t("viewChecklist")}
+          actionHref="/settings"
+          actionLabel={t("emptySetupCta")}
+          secondaryActionHref="/demo-chat"
+          secondaryActionLabel={t("emptyDemoCta")}
+          linkHref="/getting-started"
+          linkLabel={t("emptyChecklistLink")}
         />
+      ) : null}
+
+      {!authLoading && !loading && leads.length === 0 && hasActiveFilters ? (
+        <p className="muted">{t("filterEmptyDescription")}</p>
       ) : null}
 
       {!authLoading && !loading && leads.length > 0 ? (
