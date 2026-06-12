@@ -114,28 +114,32 @@ export function CompanySettingsForm() {
     setSuccess(null);
   }
 
-  if (loading) {
-    return <LoadingState label={t("loading")} />;
-  }
-
-  if (error && !settings) {
-    return <AlertBanner>{error}</AlertBanner>;
-  }
-
-  if (!settings) {
-    return <div className="empty-state">{t("notFound")}</div>;
-  }
-
-  const embedSnippet = buildWidgetEmbedSnippet(
-    settings.slug,
-    getPublicApiBaseUrl(),
-  );
+  const embedSnippet = settings
+    ? buildWidgetEmbedSnippet(settings.slug, getPublicApiBaseUrl())
+    : "";
 
   return (
     <div className="stack">
       {error ? <AlertBanner>{error}</AlertBanner> : null}
       {success ? <AlertBanner variant="success">{success}</AlertBanner> : null}
 
+      {loading && !settings ? (
+        <>
+          <div className="card content-loading-panel">
+            <LoadingState label={t("loading")} />
+          </div>
+          <div className="card content-loading-panel">
+            <LoadingState label={t("loading")} />
+          </div>
+        </>
+      ) : null}
+
+      {!loading && !settings ? (
+        <div className="empty-state">{t("notFound")}</div>
+      ) : null}
+
+      {settings ? (
+      <>
       <form className="card settings-form" onSubmit={(event) => void handleSubmit(event)}>
         <h3 className="card-title">{t("companyProfile")}</h3>
         <div className="settings-grid">
@@ -263,6 +267,8 @@ export function CompanySettingsForm() {
           <code>{embedSnippet}</code>
         </pre>
       </div>
+      </>
+      ) : null}
     </div>
   );
 }

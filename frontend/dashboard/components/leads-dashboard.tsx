@@ -144,15 +144,13 @@ export function LeadsDashboard() {
   const hasActiveFilters = Boolean(
     statusFilter || qualificationFilter || contactableFilter,
   );
-  const showToolbar =
-    !authLoading && !loading && (leads.length > 0 || hasActiveFilters);
+  const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
-    !authLoading && !loading && leads.length === 0 && !hasActiveFilters;
+    !isDataLoading && leads.length === 0 && !hasActiveFilters;
 
   return (
     <div className="stack">
       <PageHeader title={t("title")} description={t("description")} />
-      {showToolbar ? (
       <div className="toolbar">
         <div className="toolbar-filters">
           <label className="field-inline">
@@ -160,6 +158,7 @@ export function LeadsDashboard() {
             <select
               className="select"
               value={statusFilter}
+              disabled={isDataLoading}
               onChange={(event) => {
                 setPage(1);
                 setStatusFilter(event.target.value as LeadStatus | "");
@@ -178,6 +177,7 @@ export function LeadsDashboard() {
             <select
               className="select"
               value={qualificationFilter}
+              disabled={isDataLoading}
               onChange={(event) => {
                 setPage(1);
                 setQualificationFilter(
@@ -198,6 +198,7 @@ export function LeadsDashboard() {
             <select
               className="select"
               value={contactableFilter}
+              disabled={isDataLoading}
               onChange={(event) => {
                 setPage(1);
                 setContactableFilter(
@@ -215,6 +216,7 @@ export function LeadsDashboard() {
             <select
               className="select"
               value={sort}
+              disabled={isDataLoading}
               onChange={(event) => {
                 setPage(1);
                 setSort(event.target.value as LeadSort);
@@ -233,22 +235,28 @@ export function LeadsDashboard() {
             <button
               type="button"
               className="button dev"
-              disabled={seeding || authLoading}
+              disabled={seeding || isDataLoading}
               onClick={() => void handleSeedDemoData()}
             >
               {seeding ? t("creatingDemo") : t("createDemo")}
             </button>
           ) : null}
-          <p className="muted">{t("leadCount", { count: total })}</p>
+          <p className="muted">
+            {isDataLoading ? tCommon("dash") : t("leadCount", { count: total })}
+          </p>
         </div>
       </div>
-      ) : null}
 
       {seedMessage ? <AlertBanner variant="success">{seedMessage}</AlertBanner> : null}
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
       {error ? <AlertBanner>{error}</AlertBanner> : null}
-      {authLoading || loading ? <LoadingState label={t("loading")} /> : null}
+
+      {isDataLoading ? (
+        <div className="card content-loading-panel">
+          <LoadingState label={t("loading")} />
+        </div>
+      ) : null}
 
       {showFirstRunEmpty ? (
         <EmptyState
@@ -263,11 +271,11 @@ export function LeadsDashboard() {
         />
       ) : null}
 
-      {!authLoading && !loading && leads.length === 0 && hasActiveFilters ? (
+      {!isDataLoading && leads.length === 0 && hasActiveFilters ? (
         <p className="muted">{t("filterEmptyDescription")}</p>
       ) : null}
 
-      {!authLoading && !loading && leads.length > 0 ? (
+      {!isDataLoading && leads.length > 0 ? (
         <div className="table-wrap">
           <table className="table">
             <thead>

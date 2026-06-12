@@ -8,6 +8,7 @@ import { ContactableBadge } from "@/components/contactable-badge";
 import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
+import { LoadingState } from "@/components/ui/loading-state";
 import { fetchLead, updateLeadStatus } from "@/lib/api";
 import {
   formatLeadScore,
@@ -84,105 +85,122 @@ export function LeadDetailView() {
     return tContactMethod(value);
   }
 
-  if (loading) {
-    return <p className="muted">{t("loading")}</p>;
-  }
-
-  if (error && !lead) {
-    return <div className="alert">{error}</div>;
-  }
-
-  if (!lead) {
-    return <div className="empty-state">{t("notFound")}</div>;
-  }
-
   return (
     <div className="stack">
       <Link href="/leads" className="back-link">
         {t("backToLeads")}
       </Link>
 
-      <div className="detail-header">
-        <div>
-          <h2>{lead.name}</h2>
-          <p className="muted">
-            {t("leadId")} {lead.id}
-          </p>
-        </div>
-        <StatusBadge status={lead.status} />
-      </div>
-
-      {error ? <div className="alert">{error}</div> : null}
-
-      <div className="card">
-        <h3 className="card-title">{t("qualification")}</h3>
-        <dl className="detail-list">
-          <div className="detail-row">
-            <dt>{t("leadScore")}</dt>
-            <dd>
-              <span className="score-pill">{formatLeadScore(lead.lead_score)}</span>
-            </dd>
+      {loading ? (
+        <>
+          <div className="card content-loading-panel">
+            <LoadingState label={t("loading")} />
           </div>
-          <div className="detail-row">
-            <dt>{t("qualificationStatus")}</dt>
-            <dd>
-              <QualificationBadge status={lead.qualification_status} />
-            </dd>
-          </div>
-          <div className="detail-row">
-            <dt>{t("contactable")}</dt>
-            <dd>
-              <ContactableBadge contactable={lead.contactable} />
-            </dd>
-          </div>
-          <DetailRow
-            label={t("contactMethod")}
-            value={formatMethod(lead.contact_method)}
-          />
-          <DetailRow
-            label={t("notificationSent")}
-            value={
-              lead.notification_sent_at
-                ? formatDate(lead.notification_sent_at, locale)
-                : null
-            }
-          />
-        </dl>
-      </div>
+          <div className="card content-loading-panel" aria-hidden="true" />
+        </>
+      ) : null}
 
-      <div className="card">
-        <h3 className="card-title">{t("details")}</h3>
-        <dl className="detail-list">
-          <DetailRow label={tLeads("tablePhone")} value={lead.phone} />
-          <DetailRow label={tCommon("email")} value={lead.email} />
-          <DetailRow label={t("company")} value={lead.company} />
-          <DetailRow label={t("location")} value={lead.location} />
-          <DetailRow label={t("serviceRequested")} value={lead.service_requested} />
-          <DetailRow label={t("description")} value={lead.description} />
-          <DetailRow label={t("urgency")} value={lead.urgency} />
-          <DetailRow
-            label={t("preferredCallback")}
-            value={lead.preferred_callback_time}
-          />
-          <DetailRow label={t("conversationId")} value={lead.conversation_id} />
-          <DetailRow
-            label={t("created")}
-            value={formatDate(lead.created_at, locale)}
-          />
-          <DetailRow label={t("summary")} value={lead.summary} />
-        </dl>
-      </div>
+      {!loading && error && !lead ? (
+        <div className="alert">{error}</div>
+      ) : null}
 
-      <div className="card">
-        <label className="field-block">
-          <span>{t("updateStatus")}</span>
-          <StatusSelect
-            value={lead.status}
-            disabled={updating}
-            onChange={(status) => void handleStatusChange(status)}
-          />
-        </label>
-      </div>
+      {!loading && !lead ? (
+        <div className="empty-state">{t("notFound")}</div>
+      ) : null}
+
+      {!loading && lead ? (
+        <>
+          <div className="detail-header">
+            <div>
+              <h2>{lead.name}</h2>
+              <p className="muted">
+                {t("leadId")} {lead.id}
+              </p>
+            </div>
+            <StatusBadge status={lead.status} />
+          </div>
+
+          {error ? <div className="alert">{error}</div> : null}
+
+          <div className="card">
+            <h3 className="card-title">{t("qualification")}</h3>
+            <dl className="detail-list">
+              <div className="detail-row">
+                <dt>{t("leadScore")}</dt>
+                <dd>
+                  <span className="score-pill">
+                    {formatLeadScore(lead.lead_score)}
+                  </span>
+                </dd>
+              </div>
+              <div className="detail-row">
+                <dt>{t("qualificationStatus")}</dt>
+                <dd>
+                  <QualificationBadge status={lead.qualification_status} />
+                </dd>
+              </div>
+              <div className="detail-row">
+                <dt>{t("contactable")}</dt>
+                <dd>
+                  <ContactableBadge contactable={lead.contactable} />
+                </dd>
+              </div>
+              <DetailRow
+                label={t("contactMethod")}
+                value={formatMethod(lead.contact_method)}
+              />
+              <DetailRow
+                label={t("notificationSent")}
+                value={
+                  lead.notification_sent_at
+                    ? formatDate(lead.notification_sent_at, locale)
+                    : null
+                }
+              />
+            </dl>
+          </div>
+
+          <div className="card">
+            <h3 className="card-title">{t("details")}</h3>
+            <dl className="detail-list">
+              <DetailRow label={tLeads("tablePhone")} value={lead.phone} />
+              <DetailRow label={tCommon("email")} value={lead.email} />
+              <DetailRow label={t("company")} value={lead.company} />
+              <DetailRow label={t("location")} value={lead.location} />
+              <DetailRow
+                label={t("serviceRequested")}
+                value={lead.service_requested}
+              />
+              <DetailRow label={t("description")} value={lead.description} />
+              <DetailRow label={t("urgency")} value={lead.urgency} />
+              <DetailRow
+                label={t("preferredCallback")}
+                value={lead.preferred_callback_time}
+              />
+              <DetailRow
+                label={t("conversationId")}
+                value={lead.conversation_id}
+              />
+              <DetailRow
+                label={t("created")}
+                value={formatDate(lead.created_at, locale)}
+              />
+              <DetailRow label={t("summary")} value={lead.summary} />
+            </dl>
+          </div>
+
+          <div className="card">
+            <label className="field-block">
+              <span>{t("updateStatus")}</span>
+              <StatusSelect
+                value={lead.status}
+                disabled={updating}
+                onChange={(status) => void handleStatusChange(status)}
+              />
+            </label>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
