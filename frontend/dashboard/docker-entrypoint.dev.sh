@@ -7,4 +7,8 @@ else
   npm install
 fi
 
+if [ "$1" = "npm" ] && [ "$2" = "run" ] && [ "$3" = "dev" ]; then
+  rm -rf .next
+fi
+
 exec "$@"
