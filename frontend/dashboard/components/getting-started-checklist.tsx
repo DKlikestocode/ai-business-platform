@@ -56,122 +56,160 @@ export function GettingStartedChecklist() {
     void load();
   }, [authLoading, load, refreshKey]);
 
-  if (authLoading || (loading && !settings)) {
-    return <LoadingState label={t("loading")} />;
-  }
-
-  if (!user || !company) {
-    return <AlertBanner>{t("signInRequired")}</AlertBanner>;
-  }
-
-  const activeCompany = company;
-
-  const progress = evaluateOnboardingProgress(activeCompany.id, settings);
-  const completed = countCompletedSteps(progress);
-  const allDone = isOnboardingComplete(progress);
-  const nextStep = ONBOARDING_STEPS.find((step) => !progress[step.id]);
-  const welcomeName = activeCompany.name?.trim() || user.first_name;
+  const isContentLoading = authLoading || (loading && !settings);
+  const isReady = Boolean(!authLoading && user && company && settings);
 
   function handleManualComplete(step: OnboardingStepId) {
-    markOnboardingStepComplete(activeCompany.id, step);
+    if (!company) {
+      return;
+    }
+    markOnboardingStepComplete(company.id, step);
     setRefreshKey((value) => value + 1);
   }
+
+  const progress = isReady
+    ? evaluateOnboardingProgress(company!.id, settings!)
+    : null;
+  const completed = progress ? countCompletedSteps(progress) : 0;
+  const allDone = progress ? isOnboardingComplete(progress) : false;
+  const nextStep = progress
+    ? ONBOARDING_STEPS.find((step) => !progress[step.id])
+    : undefined;
+  const welcomeName =
+    isReady && company
+      ? company.name?.trim() || user!.first_name
+      : "";
 
   return (
     <div className="stack">
       <PageHeader title={t("title")} description={t("description")}>
-        <div className="progress-pill">
-          {t("progress", {
-            completed,
-            total: ONBOARDING_STEPS.length,
-          })}
-        </div>
+        {isReady ? (
+          <div className="progress-pill">
+            {t("progress", {
+              completed,
+              total: ONBOARDING_STEPS.length,
+            })}
+          </div>
+        ) : null}
       </PageHeader>
 
+      {!authLoading && (!user || !company) ? (
+        <AlertBanner>{t("signInRequired")}</AlertBanner>
+      ) : null}
       {error ? <AlertBanner>{error}</AlertBanner> : null}
-      {allDone ? (
-        <AlertBanner variant="success">{t("allDone")}</AlertBanner>
+
+      {isContentLoading ? (
+        <>
+          <section className="welcome-banner card content-loading-panel">
+            <LoadingState label={t("loading")} />
+          </section>
+          <div className="checklist">
+            {ONBOARDING_STEPS.map((step, index) => (
+              <article key={step.id} className="checklist-item card">
+                <div className="checklist-index">{index + 1}</div>
+                <div className="checklist-body content-loading-panel">
+                  <LoadingState label={t("loading")} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </>
       ) : null}
 
-      <section className="welcome-banner card" aria-labelledby="welcome-banner-title">
-        <h3 id="welcome-banner-title" className="welcome-banner-title">
-          {t("welcomeTitle", { name: welcomeName })}
-        </h3>
-        <p className="welcome-banner-lead muted">{t("welcomeLead")}</p>
-        {nextStep ? (
-          <div className="welcome-banner-next">
-            <p className="welcome-banner-next-label">{t("welcomeNextStepLabel")}</p>
-            <p className="welcome-banner-next-title">
-              {tOnboarding(`${nextStep.id}.title`)}
-            </p>
-            {nextStep.href ? (
-              <Link href={nextStep.href} className="button">
-                {tOnboarding(`${nextStep.id}.action`)}
-              </Link>
-            ) : null}
-          </div>
-        ) : (
-          <p className="muted">{t("welcomeAllDone")}</p>
-        )}
-      </section>
+      {isReady && progress && company && user ? (
+        <>
+          {allDone ? (
+            <AlertBanner variant="success">{t("allDone")}</AlertBanner>
+          ) : null}
 
-      <div className="checklist">
-        {ONBOARDING_STEPS.map((step, index) => {
-          const done = progress[step.id];
-          const stepKey = step.id;
-          return (
-            <article
-              key={step.id}
-              className={`checklist-item card ${done ? "done" : ""}`}
-            >
-              <div className="checklist-index">{index + 1}</div>
-              <div className="checklist-body">
-                <div className="checklist-title-row">
-                  <h3>{tOnboarding(`${stepKey}.title`)}</h3>
-                  <span className={`checklist-status ${done ? "done" : ""}`}>
-                    {done ? tCommon("done") : tCommon("todo")}
-                  </span>
-                </div>
-                <p className="muted">{tOnboarding(`${stepKey}.description`)}</p>
-                {activeCompany.slug && step.id === "copy_widget" ? (
-                  <p className="muted">
-                    {t("companySlug")} <code>{activeCompany.slug}</code>
-                  </p>
+          <section
+            className="welcome-banner card"
+            aria-labelledby="welcome-banner-title"
+          >
+            <h3 id="welcome-banner-title" className="welcome-banner-title">
+              {t("welcomeTitle", { name: welcomeName })}
+            </h3>
+            <p className="welcome-banner-lead muted">{t("welcomeLead")}</p>
+            {nextStep ? (
+              <div className="welcome-banner-next">
+                <p className="welcome-banner-next-label">
+                  {t("welcomeNextStepLabel")}
+                </p>
+                <p className="welcome-banner-next-title">
+                  {tOnboarding(`${nextStep.id}.title`)}
+                </p>
+                {nextStep.href ? (
+                  <Link href={nextStep.href} className="button">
+                    {tOnboarding(`${nextStep.id}.action`)}
+                  </Link>
                 ) : null}
-                <div className="checklist-actions">
-                  {step.href ? (
-                    <Link href={step.href} className="button secondary">
-                      {tOnboarding(`${stepKey}.action`)}
-                    </Link>
-                  ) : null}
-                  {step.id === "install_widget" && !done ? (
-                    <button
-                      type="button"
-                      className="button secondary"
-                      onClick={() => handleManualComplete("install_widget")}
-                    >
-                      {tOnboarding("install_widget.markInstalled")}
-                    </button>
-                  ) : null}
-                </div>
               </div>
-            </article>
-          );
-        })}
-      </div>
+            ) : (
+              <p className="muted">{t("welcomeAllDone")}</p>
+            )}
+          </section>
 
-      <div className="card">
-        <h3 className="card-title">{t("nextStepsTitle")}</h3>
-        <p className="muted">{t("nextStepsDescription")}</p>
-        <div className="checklist-actions">
-          <Link href="/leads" className="button">
-            {t("openLeads")}
-          </Link>
-          <Link href="/settings" className="button secondary">
-            {t("companySettings")}
-          </Link>
-        </div>
-      </div>
+          <div className="checklist">
+            {ONBOARDING_STEPS.map((step, index) => {
+              const done = progress[step.id];
+              const stepKey = step.id;
+              return (
+                <article
+                  key={step.id}
+                  className={`checklist-item card ${done ? "done" : ""}`}
+                >
+                  <div className="checklist-index">{index + 1}</div>
+                  <div className="checklist-body">
+                    <div className="checklist-title-row">
+                      <h3>{tOnboarding(`${stepKey}.title`)}</h3>
+                      <span className={`checklist-status ${done ? "done" : ""}`}>
+                        {done ? tCommon("done") : tCommon("todo")}
+                      </span>
+                    </div>
+                    <p className="muted">
+                      {tOnboarding(`${stepKey}.description`)}
+                    </p>
+                    {company.slug && step.id === "copy_widget" ? (
+                      <p className="muted">
+                        {t("companySlug")} <code>{company.slug}</code>
+                      </p>
+                    ) : null}
+                    <div className="checklist-actions">
+                      {step.href ? (
+                        <Link href={step.href} className="button secondary">
+                          {tOnboarding(`${stepKey}.action`)}
+                        </Link>
+                      ) : null}
+                      {step.id === "install_widget" && !done ? (
+                        <button
+                          type="button"
+                          className="button secondary"
+                          onClick={() => handleManualComplete("install_widget")}
+                        >
+                          {tOnboarding("install_widget.markInstalled")}
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="card">
+            <h3 className="card-title">{t("nextStepsTitle")}</h3>
+            <p className="muted">{t("nextStepsDescription")}</p>
+            <div className="checklist-actions">
+              <Link href="/leads" className="button">
+                {t("openLeads")}
+              </Link>
+              <Link href="/settings" className="button secondary">
+                {t("companySettings")}
+              </Link>
+            </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
