@@ -6,7 +6,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { fetchCompanySettings, updateCompanySettings } from "@/lib/api";
+import { updateCompanySettings } from "@/lib/api";
+import {
+  COMPANY_SETTINGS_CACHE_KEY,
+  getDashboardCache,
+  loadCachedCompanySettings,
+  setDashboardCache,
+} from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { markOnboardingStepComplete } from "@/lib/onboarding";
@@ -30,18 +36,27 @@ export function CompanySettingsForm() {
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
   const errorMessages = getErrorMessages(tErrors);
-  const [settings, setSettings] = useState<CompanySettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<CompanySettings | null>(() =>
+    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
+  const [loading, setLoading] = useState(
+    () => !getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
   const loadSettings = useCallback(async () => {
-    setLoading(true);
+    const hasCache = Boolean(
+      getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+    );
+    if (!hasCache) {
+      setLoading(true);
+    }
     setError(null);
     try {
-      const data = await fetchCompanySettings();
+      const data = await loadCachedCompanySettings(setSettings);
       setSettings(data);
     } catch (err) {
       setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
@@ -75,6 +90,7 @@ export function CompanySettingsForm() {
           settings.contactable_lead_notification_threshold,
       });
       setSettings(updated);
+      setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
       setSuccess(t("saved"));
     } catch (err) {
       setError(formatUserFacingError(err, t("saveFailed"), errorMessages));

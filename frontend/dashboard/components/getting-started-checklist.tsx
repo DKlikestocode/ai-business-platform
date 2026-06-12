@@ -7,7 +7,11 @@ import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { fetchCompanySettings } from "@/lib/api";
+import {
+  COMPANY_SETTINGS_CACHE_KEY,
+  getDashboardCache,
+  loadCachedCompanySettings,
+} from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import {
@@ -28,8 +32,12 @@ export function GettingStartedChecklist() {
   const tOnboarding = useTranslations("onboarding.steps");
   const tErrors = useTranslations("errors");
   const errorMessages = getErrorMessages(tErrors);
-  const [settings, setSettings] = useState<CompanySettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<CompanySettings | null>(() =>
+    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
+  const [loading, setLoading] = useState(
+    () => !getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -37,10 +45,15 @@ export function GettingStartedChecklist() {
     if (!user) {
       return;
     }
-    setLoading(true);
+    const hasCache = Boolean(
+      getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+    );
+    if (!hasCache) {
+      setLoading(true);
+    }
     setError(null);
     try {
-      const data = await fetchCompanySettings();
+      const data = await loadCachedCompanySettings(setSettings);
       setSettings(data);
     } catch (err) {
       setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
