@@ -1,4 +1,5 @@
 import secrets
+from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
@@ -50,6 +51,23 @@ class CompanyActivationRepository:
         website_url: str | None,
     ) -> CompanyActivation:
         activation.website_url = website_url
+        self._session.commit()
+        self._session.refresh(activation)
+        return activation
+
+    def record_heartbeat(
+        self,
+        activation: CompanyActivation,
+        *,
+        page_origin: str,
+        seen_at: datetime | None = None,
+    ) -> CompanyActivation:
+        timestamp = seen_at or datetime.now(UTC)
+        activation.status = ActivationStatus.LIVE.value
+        if activation.widget_live_at is None:
+            activation.widget_live_at = timestamp
+        activation.widget_last_seen_at = timestamp
+        activation.widget_last_origin = page_origin
         self._session.commit()
         self._session.refresh(activation)
         return activation

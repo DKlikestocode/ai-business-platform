@@ -15,3 +15,7 @@ class ConflictError(DomainError):
 
 class AuthenticationError(DomainError):
     """Raised when credentials are invalid or the account cannot authenticate."""
+
+
+class InvalidWidgetHeartbeatError(DomainError):
+    """Raised when widget heartbeat credentials or origin are invalid."""

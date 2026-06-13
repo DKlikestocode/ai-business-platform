@@ -133,6 +133,8 @@ def get_activation_service(
         company_repository,
         activation_repository,
         public_api_base_url=settings.public_api_base_url,
+        frontend_base_url=settings.frontend_base_url,
+        cors_origins=settings.cors_origins_list,
     )
 
 
