@@ -251,16 +251,22 @@
     "loadFailed": "Setup-Fortschritt konnte nicht geladen werden.",
     "loading": "Ihre Setup-Checkliste wird geladen...",
     "signInRequired": "Melden Sie sich an, um Ihre Erste-Schritte-Checkliste zu sehen.",
-    "allDone": "Alles eingerichtet. Neue Anfragen erscheinen unter Anfragen.",
+    "allDone": "Alles eingerichtet. Ihr Chat ist auf Ihrer Website aktiv.",
     "welcomeTitle": "Willkommen, {name}",
     "welcomeLead": "In wenigen Minuten empfangen Sie hier Ihre ersten Website-Anfragen.",
     "welcomeNextStepLabel": "Ihr nächster Schritt",
-    "welcomeAllDone": "Alle Schritte sind erledigt. Senden Sie eine Testnachricht oder warten Sie auf die erste Anfrage.",
+    "welcomeAllDone": "Ihr Chat ist auf Ihrer Website aktiv. Neue Anfragen erscheinen unter Anfragen.",
+    "awaitingWebsiteLive": "Die Checkliste ist erledigt, aber Ihr Chat ist auf der Website noch nicht aktiv. Binden Sie den Code ein und aktualisieren Sie den Status oben.",
     "companySlug": "Chat-Referenz:",
     "nextStepsTitle": "Nächste Schritte",
     "nextStepsDescription": "Sobald der Chat auf Ihrer Website aktiv ist, sehen Sie neue Anfragen hier, passen Benachrichtigungen in den Einstellungen an und teilen das Dashboard mit Ihrem Team.",
     "openLeads": "Anfragen ansehen",
-    "companySettings": "Unternehmenseinstellungen"
+    "companySettings": "Unternehmenseinstellungen",
+    "activationStatusTitle": "Status Ihres Website-Chats",
+    "activationHint": "Den Einbindungscode und weitere Hinweise finden Sie in den Einstellungen unter Chat auf Ihrer Website.",
+    "copyWidgetHint": "Den vollständigen Einbindungscode finden Sie in den Einstellungen. Dort sehen Sie auch, ob Ihr Chat bereits aktiv ist.",
+    "installWidgetLiveHint": "Laut Server ist Ihr Chat auf Ihrer Website aktiv. Sie können den Schritt trotzdem manuell als erledigt markieren.",
+    "testWidgetSandboxHint": "Der Test-Chat läuft nur hier im Dashboard und bedeutet nicht, dass der Chat auf Ihrer Website aktiv ist."
   },
   "settings": {
     "pageTitle": "Einstellungen",
@@ -285,9 +291,33 @@
     "saveSettings": "Einstellungen speichern",
     "widgetEmbed": "Chat auf Ihrer Website",
     "copySnippet": "Einbindungscode kopieren",
-    "widgetDescription": "Fügen Sie diesen Code zu Ihrer Website hinzu. Über die Chat-Referenz {slug} werden Nachrichten Ihrem Betrieb zugeordnet. Optional können Sie data-privacy-url setzen, um Besucher auf Ihre Datenschutzerklärung zu verweisen.",
+    "widgetDescription": "Kopieren Sie den Einbindungscode und fügen Sie ihn auf Ihrer Website ein. Der Status unten zeigt, ob der Chat dort bereits aktiv ist. Optional können Sie im Code einen Link zu Ihrer Datenschutzerklärung ergänzen.",
     "copied": "In die Zwischenablage kopiert.",
-    "copyFailed": "Kopieren nicht möglich. Markieren Sie den Snippet manuell."
+    "copyFailed": "Kopieren nicht möglich. Markieren Sie den Code manuell."
+  },
+  "activation": {
+    "statusTitle": "Chat-Status",
+    "embedTitle": "Einbindungscode",
+    "refresh": "Status aktualisieren",
+    "refreshing": "Wird aktualisiert...",
+    "loading": "Chat-Status wird geladen...",
+    "loadFailed": "Chat-Status konnte nicht geladen werden.",
+    "embedMissingInstallKey": "Der Einbindungscode ist unvollständig. Bitte laden Sie die Seite neu oder wenden Sie sich an den Support.",
+    "lastSeen": "Zuletzt gesehen: {date}",
+    "lastOrigin": "Website: {origin}",
+    "installGuideTitle": "So binden Sie den Chat ein",
+    "installHtmlTitle": "Eigene HTML-Website",
+    "installHtmlBody": "Fügen Sie den Einbindungscode am Ende jeder Seite ein, auf der der Chat erscheinen soll — direkt vor dem Seitenabschluss.",
+    "installWordPressTitle": "WordPress",
+    "installWordPressBody": "Nutzen Sie einen HTML-Block oder die Fußzeile Ihres Themes und fügen Sie dort den Einbindungscode ein. Speichern und veröffentlichen Sie die Seite.",
+    "installAgencyTitle": "An Webagentur oder IT-Dienstleister",
+    "installAgencyBody": "Leiten Sie den Einbindungscode an Ihre Webagentur weiter und bitten Sie darum, ihn auf Ihrer Website einzubinden — idealerweise auf allen Seiten vor dem Seitenabschluss.",
+    "status": {
+      "setup_incomplete": "Bitte hinterlegen Sie zuerst eine Benachrichtigungs-E-Mail, damit Sie neue Anfragen erhalten.",
+      "awaiting_widget": "Noch kein Lebenszeichen von Ihrer Website. Nach dem Einbinden sehen Sie hier, ob der Chat aktiv ist.",
+      "live": "Ihr Chat ist auf Ihrer Website aktiv.",
+      "stale": "Der Chat wurde zuletzt vor längerer Zeit gesehen. Prüfen Sie, ob der Einbindungscode noch auf Ihrer Website steht."
+    }
   },
   "leads": {
     "title": "Anfragen",
@@ -371,7 +401,8 @@
   },
   "demoChat": {
     "title": "Test-Chat",
-    "description": "Testen Sie, wie Website-Anfragen automatisch erfasst und bewertet werden.",
+    "description": "Probieren Sie den Ablauf hier im Dashboard — getrennt von Ihrem Website-Chat.",
+    "sandboxNotice": "Sandbox: Dieser Test-Chat läuft nur hier im Dashboard. Er ersetzt nicht den Chat auf Ihrer Website und bedeutet nicht, dass die Einrichtung abgeschlossen ist.",
     "newConversation": "Neue Konversation",
     "loadingAccount": "Konto wird geladen...",
     "welcomeTitle": "So erleben Ihre Kunden den Chat",

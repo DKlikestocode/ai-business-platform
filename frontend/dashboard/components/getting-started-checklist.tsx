@@ -1,12 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
+import { fetchCompanyActivation } from "@/lib/api";
+import {
+  activationStatusClassName,
+  formatActivationTimestamp,
+  isActivationSetupLive,
+} from "@/lib/activation-display";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
@@ -22,12 +28,14 @@ import {
   markOnboardingStepComplete,
   type OnboardingStepId,
 } from "@/lib/onboarding";
-import type { CompanySettings } from "@/lib/types";
+import type { CompanyActivation, CompanySettings } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
 export function GettingStartedChecklist() {
   const { user, company, loading: authLoading } = useAuth();
+  const locale = useLocale();
   const t = useTranslations("gettingStarted");
+  const tActivation = useTranslations("activation");
   const tCommon = useTranslations("common");
   const tOnboarding = useTranslations("onboarding.steps");
   const tErrors = useTranslations("errors");
@@ -39,6 +47,9 @@ export function GettingStartedChecklist() {
     () => !getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
   const [error, setError] = useState<string | null>(null);
+  const [activation, setActivation] = useState<CompanyActivation | null>(null);
+  const [activationError, setActivationError] = useState<string | null>(null);
+  const [activationRefreshing, setActivationRefreshing] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
   const load = useCallback(async () => {
@@ -62,12 +73,38 @@ export function GettingStartedChecklist() {
     }
   }, [user, t, errorMessages]);
 
+  const loadActivation = useCallback(async () => {
+    if (!user) {
+      return;
+    }
+
+    setActivationRefreshing(true);
+    setActivationError(null);
+    try {
+      const data = await fetchCompanyActivation();
+      setActivation(data);
+    } catch (err) {
+      setActivationError(
+        formatUserFacingError(err, tActivation("loadFailed"), errorMessages),
+      );
+    } finally {
+      setActivationRefreshing(false);
+    }
+  }, [user, tActivation, errorMessages]);
+
   useEffect(() => {
     if (authLoading) {
       return;
     }
     void load();
   }, [authLoading, load, refreshKey]);
+
+  useEffect(() => {
+    if (authLoading || !user) {
+      return;
+    }
+    void loadActivation();
+  }, [authLoading, user, loadActivation, refreshKey]);
 
   const isContentLoading = authLoading || (loading && !settings);
   const isReady = Boolean(!authLoading && user && company && settings);
@@ -84,14 +121,20 @@ export function GettingStartedChecklist() {
     ? evaluateOnboardingProgress(company!.id, settings!)
     : null;
   const completed = progress ? countCompletedSteps(progress) : 0;
-  const allDone = progress ? isOnboardingComplete(progress) : false;
-  const nextStep = progress
-    ? ONBOARDING_STEPS.find((step) => !progress[step.id])
-    : undefined;
+  const checklistComplete = progress ? isOnboardingComplete(progress) : false;
+  const setupLive = isActivationSetupLive(activation?.status);
+  const allDone = checklistComplete && setupLive;
+  const nextStep =
+    progress && !checklistComplete
+      ? ONBOARDING_STEPS.find((step) => !progress[step.id])
+      : undefined;
   const welcomeName =
     isReady && company
       ? company.name?.trim() || user!.first_name
       : "";
+  const activationLastSeen = activation
+    ? formatActivationTimestamp(activation.widget_last_seen_at, locale)
+    : null;
 
   return (
     <div className="stack">
@@ -110,6 +153,7 @@ export function GettingStartedChecklist() {
         <AlertBanner>{t("signInRequired")}</AlertBanner>
       ) : null}
       {error ? <AlertBanner>{error}</AlertBanner> : null}
+      {activationError ? <AlertBanner>{activationError}</AlertBanner> : null}
 
       {isContentLoading ? (
         <>
@@ -157,10 +201,56 @@ export function GettingStartedChecklist() {
                   </Link>
                 ) : null}
               </div>
-            ) : (
+            ) : allDone ? (
               <p className="muted">{t("welcomeAllDone")}</p>
-            )}
+            ) : checklistComplete ? (
+              <p className="muted">{t("awaitingWebsiteLive")}</p>
+            ) : null}
           </section>
+
+          {activation ? (
+            <section className="card" aria-labelledby="getting-started-activation-title">
+              <div className="embed-header">
+                <h3 id="getting-started-activation-title" className="card-title">
+                  {t("activationStatusTitle")}
+                </h3>
+                <button
+                  type="button"
+                  className="button secondary"
+                  onClick={() => void loadActivation()}
+                  disabled={activationRefreshing}
+                >
+                  {activationRefreshing
+                    ? tActivation("refreshing")
+                    : tActivation("refresh")}
+                </button>
+              </div>
+              <div className={activationStatusClassName(activation.status)}>
+                <p className="activation-status-message">
+                  {tActivation(`status.${activation.status}`)}
+                </p>
+                {activation.status === "live" || activation.status === "stale" ? (
+                  <div className="activation-status-meta">
+                    {activation.widget_last_origin ? (
+                      <p className="muted">
+                        {tActivation("lastOrigin", {
+                          origin: activation.widget_last_origin,
+                        })}
+                      </p>
+                    ) : null}
+                    {activationLastSeen ? (
+                      <p className="muted">
+                        {tActivation("lastSeen", { date: activationLastSeen })}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+              <p className="muted getting-started-activation-hint">
+                {t("activationHint")}
+              </p>
+            </section>
+          ) : null}
 
           <div className="checklist">
             {ONBOARDING_STEPS.map((step, index) => {
@@ -182,6 +272,15 @@ export function GettingStartedChecklist() {
                     <p className="muted">
                       {tOnboarding(`${stepKey}.description`)}
                     </p>
+                    {step.id === "copy_widget" ? (
+                      <p className="muted">{t("copyWidgetHint")}</p>
+                    ) : null}
+                    {step.id === "install_widget" && activation?.status === "live" ? (
+                      <p className="muted">{t("installWidgetLiveHint")}</p>
+                    ) : null}
+                    {step.id === "test_widget" ? (
+                      <p className="muted">{t("testWidgetSandboxHint")}</p>
+                    ) : null}
                     {company.slug && step.id === "copy_widget" ? (
                       <p className="muted">
                         {t("companySlug")} <code>{company.slug}</code>

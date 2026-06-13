@@ -10,7 +10,6 @@ import { PageHeader } from "@/components/ui/page-header";
 import { sendLeadMessage } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
-import { markOnboardingStepComplete } from "@/lib/onboarding";
 import { Link } from "@/i18n/navigation";
 
 const DEFAULT_CONVERSATION_ID = "demo-chat-001";
@@ -90,10 +89,6 @@ export function DemoChat() {
       ]);
       setHasOpenFields(response.missing_fields.length > 0);
 
-      if (company) {
-        markOnboardingStepComplete(company.id, "test_widget");
-      }
-
       if (response.lead_complete) {
         setLeadComplete(true);
         setLeadId(response.lead_id);
@@ -133,6 +128,8 @@ export function DemoChat() {
           {t("newConversation")}
         </button>
       </PageHeader>
+
+      <AlertBanner variant="info">{t("sandboxNotice")}</AlertBanner>
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
 

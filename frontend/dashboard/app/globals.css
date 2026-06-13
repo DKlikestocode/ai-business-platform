@@ -351,6 +351,73 @@ a {
   flex-wrap: wrap;
 }
 
+.embed-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.activation-section-title {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.activation-status {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.activation-status-message {
+  margin: 0;
+}
+
+.activation-status-meta {
+  margin-top: 8px;
+}
+
+.activation-status-meta p {
+  margin: 4px 0 0;
+}
+
+.activation-status--setup_incomplete {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.activation-status--awaiting_widget {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.activation-status--live {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.activation-status--stale {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.install-guide {
+  display: grid;
+  gap: 12px;
+}
+
+.install-guide-item h5 {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+
+.install-guide-item p {
+  margin: 0;
+}
+
+.getting-started-activation-hint {
+  margin-top: 12px;
+}
+
 .embed-snippet {
   margin: 12px 0 0;
   padding: 14px;

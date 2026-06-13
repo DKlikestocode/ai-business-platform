@@ -251,16 +251,22 @@
     "loadFailed": "Failed to load setup progress.",
     "loading": "Loading your setup checklist...",
     "signInRequired": "Sign in to view your getting started checklist.",
-    "allDone": "You're all set. New inquiries will appear under Inquiries.",
+    "allDone": "You're all set. Your chat is active on your website.",
     "welcomeTitle": "Welcome, {name}",
     "welcomeLead": "In just a few minutes, you'll receive your first website inquiries here.",
     "welcomeNextStepLabel": "Your next step",
-    "welcomeAllDone": "All steps are complete. Send a test message or wait for your first inquiry.",
+    "welcomeAllDone": "Your chat is active on your website. New inquiries will appear under Inquiries.",
+    "awaitingWebsiteLive": "The checklist is complete, but your chat is not active on your website yet. Install the embed code and refresh the status above.",
     "companySlug": "Chat reference:",
     "nextStepsTitle": "Next steps",
     "nextStepsDescription": "Once chat is live on your website, view new inquiries here, adjust notifications in Settings, and share the dashboard with your team.",
     "openLeads": "View inquiries",
-    "companySettings": "Company settings"
+    "companySettings": "Company settings",
+    "activationStatusTitle": "Your website chat status",
+    "activationHint": "Find the embed code and more guidance in Settings under Chat on your website.",
+    "copyWidgetHint": "Find the full embed code in Settings. You can also see there whether your chat is already active.",
+    "installWidgetLiveHint": "According to the server, your chat is active on your website. You can still mark this step complete manually.",
+    "testWidgetSandboxHint": "The test chat runs only here in the dashboard and does not mean chat is active on your website."
   },
   "settings": {
     "pageTitle": "Settings",
@@ -285,9 +291,33 @@
     "saveSettings": "Save settings",
     "widgetEmbed": "Chat on your website",
     "copySnippet": "Copy embed code",
-    "widgetDescription": "Add this code to your website. Chat reference {slug} routes messages to your business. Optionally set data-privacy-url to link visitors to your privacy policy.",
+    "widgetDescription": "Copy the embed code and add it to your website. The status below shows whether chat is already active there. Optionally add a privacy policy link in the code for visitors.",
     "copied": "Copied to clipboard.",
-    "copyFailed": "Unable to copy. Select the snippet manually."
+    "copyFailed": "Unable to copy. Select the code manually."
+  },
+  "activation": {
+    "statusTitle": "Chat status",
+    "embedTitle": "Embed code",
+    "refresh": "Refresh status",
+    "refreshing": "Refreshing...",
+    "loading": "Loading chat status...",
+    "loadFailed": "Failed to load chat status.",
+    "embedMissingInstallKey": "The embed code is incomplete. Please reload the page or contact support.",
+    "lastSeen": "Last seen: {date}",
+    "lastOrigin": "Website: {origin}",
+    "installGuideTitle": "How to install chat",
+    "installHtmlTitle": "Custom HTML website",
+    "installHtmlBody": "Paste the embed code at the end of every page where chat should appear — just before the page closes.",
+    "installWordPressTitle": "WordPress",
+    "installWordPressBody": "Use an HTML block or your theme footer and paste the embed code there. Save and publish the page.",
+    "installAgencyTitle": "For agency or IT provider",
+    "installAgencyBody": "Send the embed code to your web agency and ask them to add it to your website — ideally on all pages before the page closes.",
+    "status": {
+      "setup_incomplete": "Please add a notification email first so you receive new inquiries.",
+      "awaiting_widget": "No signal from your website yet. After installation, you will see here whether chat is active.",
+      "live": "Your chat is active on your website.",
+      "stale": "Chat was last seen a while ago. Check whether the embed code is still on your website."
+    }
   },
   "leads": {
     "title": "Inquiries",
@@ -371,7 +401,8 @@
   },
   "demoChat": {
     "title": "Test chat",
-    "description": "See how website inquiries are automatically captured and assessed.",
+    "description": "Try the flow here in the dashboard — separate from your website chat.",
+    "sandboxNotice": "Sandbox: This test chat runs only here in the dashboard. It does not replace chat on your website and does not mean setup is complete.",
     "newConversation": "New conversation",
     "loadingAccount": "Loading account...",
     "welcomeTitle": "This is what your customers experience",
