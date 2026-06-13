@@ -55,6 +55,28 @@ class ConversationRepository:
             .one_or_none()
         )
 
+    def get_channels_by_external_ids(
+        self,
+        *,
+        company_id: UUID,
+        external_ids: list[str],
+    ) -> dict[str, ConversationChannel]:
+        if not external_ids:
+            return {}
+
+        conversations = (
+            self._session.query(Conversation)
+            .filter(
+                Conversation.company_id == company_id,
+                Conversation.external_id.in_(external_ids),
+            )
+            .all()
+        )
+        return {
+            conversation.external_id: conversation.channel_enum
+            for conversation in conversations
+        }
+
     def get_or_create_by_external_id(
         self,
         *,
@@ -64,6 +86,10 @@ class ConversationRepository:
     ) -> Conversation:
         existing = self.get_by_external_id(company_id=company_id, external_id=external_id)
         if existing is not None:
+            if existing.channel_enum != channel:
+                existing.channel = channel.value
+                self._session.commit()
+                self._session.refresh(existing)
             return existing
         return self.create(company_id=company_id, external_id=external_id, channel=channel)
 

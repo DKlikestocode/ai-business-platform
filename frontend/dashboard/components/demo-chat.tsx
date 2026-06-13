@@ -12,9 +12,11 @@ import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { Link } from "@/i18n/navigation";
 
-const DEFAULT_CONVERSATION_ID = "demo-chat-001";
-
 const EXAMPLE_PROMPT_KEYS = ["plumber", "roofer", "electrician"] as const;
+
+export function createDemoChatConversationId(): string {
+  return `demo-chat-${Date.now()}`;
+}
 
 interface ChatMessage {
   id: string;
@@ -23,7 +25,7 @@ interface ChatMessage {
 }
 
 function createConversationId(): string {
-  return `demo-chat-${Date.now()}`;
+  return createDemoChatConversationId();
 }
 
 function createMessageId(): string {
@@ -36,7 +38,7 @@ export function DemoChat() {
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
   const errorMessages = getErrorMessages(tErrors);
-  const [conversationId, setConversationId] = useState(DEFAULT_CONVERSATION_ID);
+  const [conversationId, setConversationId] = useState(createDemoChatConversationId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);

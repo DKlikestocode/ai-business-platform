@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { ContactableBadge } from "@/components/contactable-badge";
+import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
@@ -117,7 +118,10 @@ export function LeadDetailView() {
                 {t("leadId")} {lead.id}
               </p>
             </div>
-            <StatusBadge status={lead.status} />
+            <div className="detail-header-badges">
+              <InquirySourceBadge source={lead.source} />
+              <StatusBadge status={lead.status} />
+            </div>
           </div>
 
           {error ? <div className="alert">{error}</div> : null}
@@ -177,6 +181,12 @@ export function LeadDetailView() {
                 label={t("preferredCallback")}
                 value={lead.preferred_callback_time}
               />
+              <div className="detail-row">
+                <dt>{t("source")}</dt>
+                <dd>
+                  <InquirySourceBadge source={lead.source} />
+                </dd>
+              </div>
               <DetailRow
                 label={t("conversationId")}
                 value={lead.conversation_id}

@@ -7,7 +7,8 @@ from app.agents.lead_agent.agent import LeadCaptureAgent
 from app.agents.lead_agent.models import LeadCaptureLLMOutput
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.service import LeadCaptureService
-from app.api.dependencies import get_lead_capture_service
+from app.api.dependencies import get_widget_lead_capture_service
+from app.db.models.enums import ConversationChannel
 from app.main import app
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
@@ -35,8 +36,9 @@ def widget_client(db_session, company) -> TestClient:
         repository=lead_repository,
         company_repository=CompanyRepository(db_session),
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
+        channel=ConversationChannel.WEB,
     )
-    app.dependency_overrides[get_lead_capture_service] = lambda: service
+    app.dependency_overrides[get_widget_lead_capture_service] = lambda: service
     client = TestClient(app)
     yield client
     app.dependency_overrides.clear()
@@ -66,8 +68,9 @@ def complete_widget_client(db_session, company) -> TestClient:
         repository=lead_repository,
         company_repository=CompanyRepository(db_session),
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
+        channel=ConversationChannel.WEB,
     )
-    app.dependency_overrides[get_lead_capture_service] = lambda: service
+    app.dependency_overrides[get_widget_lead_capture_service] = lambda: service
     client = TestClient(app)
     yield client
     app.dependency_overrides.clear()

@@ -17,6 +17,7 @@ from app.config import Settings, get_settings
 from app.core.auth.jwt import decode_access_token
 from app.core.di.container import RuntimeContainer, get_runtime_container
 from app.db.models.user import User
+from app.db.models.enums import ConversationChannel
 from app.db.session import get_db
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
@@ -78,6 +79,34 @@ def get_lead_capture_service(
     settings: Settings = Depends(get_settings),
     notification_service: NotificationService = Depends(get_notification_service),
 ) -> LeadCaptureService:
+    return _build_lead_capture_service(
+        db=db,
+        settings=settings,
+        notification_service=notification_service,
+        channel=ConversationChannel.DASHBOARD,
+    )
+
+
+def get_widget_lead_capture_service(
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+    notification_service: NotificationService = Depends(get_notification_service),
+) -> LeadCaptureService:
+    return _build_lead_capture_service(
+        db=db,
+        settings=settings,
+        notification_service=notification_service,
+        channel=ConversationChannel.WEB,
+    )
+
+
+def _build_lead_capture_service(
+    *,
+    db: Session,
+    settings: Settings,
+    notification_service: NotificationService,
+    channel: ConversationChannel,
+) -> LeadCaptureService:
     return LeadCaptureService(
         agent=LeadCaptureAgent(),
         conversation_repository=ConversationRepository(db),
@@ -91,6 +120,7 @@ def get_lead_capture_service(
         repository=LeadRepository(db),
         company_repository=CompanyRepository(db),
         notification_service=notification_service,
+        channel=channel,
     )
 
 
@@ -104,8 +134,9 @@ def get_conversation_repository(db: Session = Depends(get_db)) -> ConversationRe
 
 def get_lead_dashboard_service(
     repository: LeadRepository = Depends(get_lead_repository),
+    conversation_repository: ConversationRepository = Depends(get_conversation_repository),
 ) -> LeadDashboardService:
-    return LeadDashboardService(repository)
+    return LeadDashboardService(repository, conversation_repository)
 
 
 def get_company_repository(db: Session = Depends(get_db)) -> CompanyRepository:

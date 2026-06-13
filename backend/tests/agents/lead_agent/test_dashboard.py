@@ -4,11 +4,15 @@ from app.agents.lead_agent.dashboard_service import LeadDashboardService
 from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.db.models.company import Company
+from app.repositories.conversation_repository import ConversationRepository
 
 
 @pytest.fixture
-def dashboard_service(lead_repository: LeadRepository) -> LeadDashboardService:
-    return LeadDashboardService(lead_repository)
+def dashboard_service(
+    lead_repository: LeadRepository,
+    conversation_repository: ConversationRepository,
+) -> LeadDashboardService:
+    return LeadDashboardService(lead_repository, conversation_repository)
 
 
 def test_repository_list_leads_paginates(

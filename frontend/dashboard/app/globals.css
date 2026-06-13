@@ -282,6 +282,23 @@ a {
   color: #6b7280;
 }
 
+.badge-source-website {
+  background: #e8f4ec;
+  color: #1f6b3f;
+}
+
+.badge-source-test {
+  background: #f3f0e8;
+  color: #6b5a1f;
+}
+
+.detail-header-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .score-pill {
   display: inline-flex;
   min-width: 2rem;

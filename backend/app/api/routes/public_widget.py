@@ -6,7 +6,7 @@ from app.api.dependencies import (
     RateLimit,
     get_activation_service,
     get_company_repository,
-    get_lead_capture_service,
+    get_widget_lead_capture_service,
 )
 from app.api.schemas.widget import WidgetHeartbeatRequest, WidgetMessageRequest
 from app.domain.exceptions import InvalidWidgetHeartbeatError
@@ -28,7 +28,7 @@ _WIDGET_HEARTBEAT_ERROR = "Invalid widget credentials."
 )
 async def send_widget_message(
     payload: WidgetMessageRequest,
-    service: LeadCaptureService = Depends(get_lead_capture_service),
+    service: LeadCaptureService = Depends(get_widget_lead_capture_service),
     company_repository: CompanyRepository = Depends(get_company_repository),
 ) -> LeadMessageResponse:
     company = company_repository.get_by_slug(payload.company_slug)
