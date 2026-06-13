@@ -13,16 +13,13 @@ import {
 } from "@/lib/activation-display";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
-import { markOnboardingStepComplete } from "@/lib/onboarding";
 import type { CompanyActivation } from "@/lib/types";
 
 interface WidgetActivationPanelProps {
-  companyId: string | undefined;
   reloadKey?: number;
 }
 
 export function WidgetActivationPanel({
-  companyId,
   reloadKey = 0,
 }: WidgetActivationPanelProps) {
   const locale = useLocale();
@@ -70,9 +67,6 @@ export function WidgetActivationPanel({
 
     try {
       await navigator.clipboard.writeText(activation.install.embed_snippet);
-      if (companyId) {
-        markOnboardingStepComplete(companyId, "copy_widget");
-      }
       setCopyMessage(tSettings("copied"));
     } catch {
       setCopyMessage(tSettings("copyFailed"));

@@ -13,13 +13,13 @@ export interface OnboardingStepConfig {
   href?: string;
 }
 
+/** @deprecated Use {@link ACTIVATION_CHECKLIST_STEPS} for Getting Started progress. */
 export const ONBOARDING_STEPS: OnboardingStepConfig[] = [
   { id: "company" },
   { id: "user" },
   { id: "notification_email", href: "/settings" },
   { id: "copy_widget", href: "/settings" },
   { id: "install_widget", href: "/settings" },
-  { id: "test_widget", href: "/demo-chat" },
 ];
 
 const STORAGE_PREFIX = "ai-agent-onboarding";
@@ -48,6 +48,7 @@ export function isOnboardingStepComplete(
   return window.localStorage.getItem(storageKey(companyId, step)) === "1";
 }
 
+/** @deprecated Use {@link evaluateActivationChecklist} for setup progress. */
 export function evaluateOnboardingProgress(
   companyId: string,
   settings: CompanySettings | null,

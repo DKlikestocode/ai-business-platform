@@ -265,8 +265,8 @@
     "activationStatusTitle": "Status Ihres Website-Chats",
     "activationHint": "Den Einbindungscode und weitere Hinweise finden Sie in den Einstellungen unter Chat auf Ihrer Website.",
     "copyWidgetHint": "Den vollständigen Einbindungscode finden Sie in den Einstellungen. Dort sehen Sie auch, ob Ihr Chat bereits aktiv ist.",
-    "installWidgetLiveHint": "Laut Server ist Ihr Chat auf Ihrer Website aktiv. Sie können den Schritt trotzdem manuell als erledigt markieren.",
-    "testWidgetSandboxHint": "Der Test-Chat läuft nur hier im Dashboard und bedeutet nicht, dass der Chat auf Ihrer Website aktiv ist."
+    "installWidgetLiveHint": "Ihr Chat ist auf Ihrer Website aktiv.",
+    "openSandboxChat": "Test-Chat öffnen (Sandbox)"
   },
   "settings": {
     "pageTitle": "Einstellungen",
