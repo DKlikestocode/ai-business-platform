@@ -7,6 +7,13 @@ class UserRole(StrEnum):
     MEMBER = "member"
 
 
+class ActivationStatus(StrEnum):
+    SETUP_INCOMPLETE = "setup_incomplete"
+    AWAITING_WIDGET = "awaiting_widget"
+    LIVE = "live"
+    STALE = "stale"
+
+
 class ConversationChannel(StrEnum):
     WEB = "web"
     WHATSAPP = "whatsapp"

@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     resend_api_key: str = ""
     notification_from_email: str = ""
     frontend_base_url: str | None = None
+    public_api_base_url: str = "http://localhost:8000"
 
     @computed_field
     @property

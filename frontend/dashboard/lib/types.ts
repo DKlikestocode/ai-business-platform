@@ -6,6 +6,32 @@ export type ContactMethod = "phone" | "email" | "channel" | "unknown";
 
 export type UserRole = "owner" | "admin" | "member";
 
+export type ActivationStatus =
+  | "setup_incomplete"
+  | "awaiting_widget"
+  | "live"
+  | "stale";
+
+export interface ActivationInstall {
+  company_slug: string;
+  embed_snippet: string;
+}
+
+export interface CompanyActivation {
+  status: ActivationStatus;
+  notification_configured: boolean;
+  website_url: string | null;
+  widget_live_at: string | null;
+  widget_last_seen_at: string | null;
+  widget_last_origin: string | null;
+  install: ActivationInstall;
+  updated_at: string;
+}
+
+export interface CompanyActivationUpdate {
+  website_url?: string | null;
+}
+
 export interface Company {
   id: string;
   name: string;
