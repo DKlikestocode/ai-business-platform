@@ -7,12 +7,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 COPY package.json package-lock.json* ./
 RUN npm install
 
-COPY docker-entrypoint.dev.sh /usr/local/bin/docker-entrypoint.dev.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.dev.sh
-
 COPY . .
 
 EXPOSE 3000
 
-ENTRYPOINT ["docker-entrypoint.dev.sh"]
+ENTRYPOINT ["/bin/sh", "/app/docker-entrypoint.dev.sh"]
 CMD ["npm", "run", "dev"]
