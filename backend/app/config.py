@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     notification_from_email: str = ""
     frontend_base_url: str | None = None
     public_api_base_url: str = "http://localhost:8000"
+    widget_stale_after_hours: int = 168
 
     @computed_field
     @property

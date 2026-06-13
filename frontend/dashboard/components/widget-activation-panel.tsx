@@ -6,13 +6,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { fetchCompanyActivation } from "@/lib/api";
-import {
-  activationStatusClassName,
-  embedSnippetIncludesInstallToken,
-  formatActivationTimestamp,
-} from "@/lib/activation-display";
+import { embedSnippetIncludesInstallToken } from "@/lib/activation-display";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
+import {
+  ActivationStatusView,
+  activationRefreshLabel,
+} from "@/components/activation-status-view";
 import type { CompanyActivation } from "@/lib/types";
 
 interface WidgetActivationPanelProps {
@@ -75,10 +75,11 @@ export function WidgetActivationPanel({
     window.setTimeout(() => setCopyMessage(null), 2500);
   }
 
-  const lastSeen = activation
-    ? formatActivationTimestamp(activation.widget_last_seen_at, locale)
-    : null;
   const embedSnippet = activation?.install.embed_snippet ?? "";
+  const refreshLabel = activationRefreshLabel(activation?.status, {
+    refresh: t("refresh"),
+    refreshStale: t("refreshStale"),
+  });
 
   return (
     <div className="card stack">
@@ -91,7 +92,7 @@ export function WidgetActivationPanel({
             onClick={() => void loadActivation({ refresh: true })}
             disabled={loading || refreshing}
           >
-            {refreshing ? t("refreshing") : t("refresh")}
+            {refreshing ? t("refreshing") : refreshLabel}
           </button>
           <button
             type="button"
@@ -121,25 +122,7 @@ export function WidgetActivationPanel({
             <h4 id="activation-status-title" className="activation-section-title">
               {t("statusTitle")}
             </h4>
-            <div className={activationStatusClassName(activation.status)}>
-              <p className="activation-status-message">
-                {t(`status.${activation.status}`)}
-              </p>
-              {activation.status === "live" || activation.status === "stale" ? (
-                <div className="activation-status-meta">
-                  {activation.widget_last_origin ? (
-                    <p className="muted">
-                      {t("lastOrigin", {
-                        origin: activation.widget_last_origin,
-                      })}
-                    </p>
-                  ) : null}
-                  {lastSeen ? (
-                    <p className="muted">{t("lastSeen", { date: lastSeen })}</p>
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
+            <ActivationStatusView activation={activation} locale={locale} />
           </section>
 
           <section aria-labelledby="activation-embed-title">

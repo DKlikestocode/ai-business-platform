@@ -9,10 +9,6 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { fetchCompanyActivation } from "@/lib/api";
 import {
-  activationStatusClassName,
-  formatActivationTimestamp,
-} from "@/lib/activation-display";
-import {
   ACTIVATION_CHECKLIST_STEPS,
   countActivationChecklistSteps,
   evaluateActivationChecklist,
@@ -20,6 +16,10 @@ import {
   isAwaitingWebsiteLive,
   type ActivationChecklistStepId,
 } from "@/lib/activation-checklist";
+import {
+  ActivationStatusView,
+  activationRefreshLabel,
+} from "@/components/activation-status-view";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
@@ -130,9 +130,10 @@ export function GettingStartedChecklist() {
     isReady && company
       ? company.name?.trim() || user!.first_name
       : "";
-  const activationLastSeen = activation
-    ? formatActivationTimestamp(activation.widget_last_seen_at, locale)
-    : null;
+  const activationRefreshLabelText = activationRefreshLabel(activation?.status, {
+    refresh: tActivation("refresh"),
+    refreshStale: tActivation("refreshStale"),
+  });
 
   return (
     <div className="stack">
@@ -220,30 +221,10 @@ export function GettingStartedChecklist() {
                 >
                   {activationRefreshing
                     ? tActivation("refreshing")
-                    : tActivation("refresh")}
+                    : activationRefreshLabelText}
                 </button>
               </div>
-              <div className={activationStatusClassName(activation.status)}>
-                <p className="activation-status-message">
-                  {tActivation(`status.${activation.status}`)}
-                </p>
-                {activation.status === "live" || activation.status === "stale" ? (
-                  <div className="activation-status-meta">
-                    {activation.widget_last_origin ? (
-                      <p className="muted">
-                        {tActivation("lastOrigin", {
-                          origin: activation.widget_last_origin,
-                        })}
-                      </p>
-                    ) : null}
-                    {activationLastSeen ? (
-                      <p className="muted">
-                        {tActivation("lastSeen", { date: activationLastSeen })}
-                      </p>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
+              <ActivationStatusView activation={activation} locale={locale} />
               <p className="muted getting-started-activation-hint">
                 {t("activationHint")}
               </p>

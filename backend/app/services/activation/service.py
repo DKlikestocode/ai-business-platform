@@ -1,5 +1,6 @@
 import secrets
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from app.db.models.company import Company
@@ -45,10 +46,12 @@ class ActivationService:
         public_api_base_url: str,
         frontend_base_url: str | None = None,
         cors_origins: list[str] | None = None,
+        widget_stale_after_hours: int = 168,
     ) -> None:
         self._company_repository = company_repository
         self._activation_repository = activation_repository
         self._public_api_base_url = public_api_base_url.rstrip("/")
+        self._widget_stale_after_hours = widget_stale_after_hours
         self._blocked_origins = build_blocked_origins(
             public_api_base_url=public_api_base_url,
             frontend_base_url=frontend_base_url,
@@ -147,7 +150,26 @@ class ActivationService:
     ) -> ActivationStatus:
         if not self._notification_configured(company):
             return ActivationStatus.SETUP_INCOMPLETE
-        return activation.status_enum
+
+        persisted_status = activation.status_enum
+        if persisted_status != ActivationStatus.LIVE:
+            return persisted_status
+
+        if self._widget_heartbeat_is_stale(activation):
+            return ActivationStatus.STALE
+
+        return ActivationStatus.LIVE
+
+    def _widget_heartbeat_is_stale(self, activation: CompanyActivation) -> bool:
+        last_seen = activation.widget_last_seen_at
+        if last_seen is None:
+            return False
+
+        if last_seen.tzinfo is None:
+            last_seen = last_seen.replace(tzinfo=UTC)
+
+        age = datetime.now(UTC) - last_seen
+        return age > timedelta(hours=self._widget_stale_after_hours)
 
     @staticmethod
     def _format_datetime(value: object | None) -> str | None:

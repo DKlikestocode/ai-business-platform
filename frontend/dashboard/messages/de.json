@@ -299,12 +299,14 @@
     "statusTitle": "Chat-Status",
     "embedTitle": "Einbindungscode",
     "refresh": "Status aktualisieren",
+    "refreshStale": "Status erneut prüfen",
     "refreshing": "Wird aktualisiert...",
     "loading": "Chat-Status wird geladen...",
     "loadFailed": "Chat-Status konnte nicht geladen werden.",
     "embedMissingInstallKey": "Der Einbindungscode ist unvollständig. Bitte laden Sie die Seite neu oder wenden Sie sich an den Support.",
     "lastSeen": "Zuletzt gesehen: {date}",
     "lastOrigin": "Website: {origin}",
+    "staleGuidance": "Öffnen Sie Ihre Website einmal im Browser.",
     "installGuideTitle": "So binden Sie den Chat ein",
     "installHtmlTitle": "Eigene HTML-Website",
     "installHtmlBody": "Fügen Sie den Einbindungscode am Ende jeder Seite ein, auf der der Chat erscheinen soll — direkt vor dem Seitenabschluss.",
@@ -316,7 +318,7 @@
       "setup_incomplete": "Bitte hinterlegen Sie zuerst eine Benachrichtigungs-E-Mail, damit Sie neue Anfragen erhalten.",
       "awaiting_widget": "Noch kein Lebenszeichen von Ihrer Website. Nach dem Einbinden sehen Sie hier, ob der Chat aktiv ist.",
       "live": "Ihr Chat ist auf Ihrer Website aktiv.",
-      "stale": "Der Chat wurde zuletzt vor längerer Zeit gesehen. Prüfen Sie, ob der Einbindungscode noch auf Ihrer Website steht."
+      "stale": "Der Chat wurde länger nicht auf Ihrer Website gesehen."
     }
   },
   "leads": {
