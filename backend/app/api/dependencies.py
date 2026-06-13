@@ -135,6 +135,7 @@ def get_activation_service(
         public_api_base_url=settings.public_api_base_url,
         frontend_base_url=settings.frontend_base_url,
         cors_origins=settings.cors_origins_list,
+        widget_stale_after_hours=settings.widget_stale_after_hours,
     )
 
 

@@ -299,12 +299,14 @@
     "statusTitle": "Chat status",
     "embedTitle": "Embed code",
     "refresh": "Refresh status",
+    "refreshStale": "Check status again",
     "refreshing": "Refreshing...",
     "loading": "Loading chat status...",
     "loadFailed": "Failed to load chat status.",
     "embedMissingInstallKey": "The embed code is incomplete. Please reload the page or contact support.",
     "lastSeen": "Last seen: {date}",
     "lastOrigin": "Website: {origin}",
+    "staleGuidance": "Open your website once in your browser.",
     "installGuideTitle": "How to install chat",
     "installHtmlTitle": "Custom HTML website",
     "installHtmlBody": "Paste the embed code at the end of every page where chat should appear — just before the page closes.",
@@ -316,7 +318,7 @@
       "setup_incomplete": "Please add a notification email first so you receive new inquiries.",
       "awaiting_widget": "No signal from your website yet. After installation, you will see here whether chat is active.",
       "live": "Your chat is active on your website.",
-      "stale": "Chat was last seen a while ago. Check whether the embed code is still on your website."
+      "stale": "Your chat has not been seen on your website for a while."
     }
   },
   "leads": {

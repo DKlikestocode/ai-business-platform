@@ -22,7 +22,9 @@ This guide covers deploying the AI Agent Platform with Docker Compose for a pilo
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Database credentials |
 | `CORS_ORIGINS` | Comma-separated allowed frontend origins (`https://app.example.com`) |
 | `NEXT_PUBLIC_API_URL` | Public API URL (`https://api.example.com`) |
+| `PUBLIC_API_BASE_URL` | Public API URL used in customer widget embed code (`https://api.example.com`) |
 | `FRONTEND_BASE_URL` | Public dashboard URL for email links (`https://app.example.com`) |
+| `WIDGET_STALE_AFTER_HOURS` | Hours without widget heartbeat before status shows as stale (default `168`) |
 | `NOTIFICATION_PROVIDER` | Set to `resend` in production |
 | `RESEND_API_KEY` | Resend API key |
 | `NOTIFICATION_FROM_EMAIL` | Verified sender address in Resend |
