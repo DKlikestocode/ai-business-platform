@@ -18,9 +18,11 @@ from app.core.auth.jwt import decode_access_token
 from app.core.di.container import RuntimeContainer, get_runtime_container
 from app.db.models.user import User
 from app.db.session import get_db
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.repositories.user_repository import UserRepository
+from app.services.activation.service import ActivationService
 from app.services.auth_service import AuthService
 from app.services.notifications.factory import build_email_provider
 from app.services.notifications.service import NotificationService
@@ -112,6 +114,26 @@ def get_company_repository(db: Session = Depends(get_db)) -> CompanyRepository:
 
 def get_user_repository(db: Session = Depends(get_db)) -> UserRepository:
     return UserRepository(db)
+
+
+def get_company_activation_repository(
+    db: Session = Depends(get_db),
+) -> CompanyActivationRepository:
+    return CompanyActivationRepository(db)
+
+
+def get_activation_service(
+    company_repository: CompanyRepository = Depends(get_company_repository),
+    activation_repository: CompanyActivationRepository = Depends(
+        get_company_activation_repository,
+    ),
+    settings: Settings = Depends(get_settings),
+) -> ActivationService:
+    return ActivationService(
+        company_repository,
+        activation_repository,
+        public_api_base_url=settings.public_api_base_url,
+    )
 
 
 def get_company_service(

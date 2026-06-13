@@ -4,6 +4,8 @@ import type { LeadSort } from "@/lib/lead-qualification";
 import { formatUserFacingError } from "@/lib/errors";
 import type {
   Company,
+  CompanyActivation,
+  CompanyActivationUpdate,
   CompanyCreateRequest,
   CompanySettings,
   CompanySettingsUpdate,
@@ -236,6 +238,19 @@ export async function updateCompanySettings(
   payload: CompanySettingsUpdate,
 ): Promise<CompanySettings> {
   return request<CompanySettings>("/api/v1/company/settings", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchCompanyActivation(): Promise<CompanyActivation> {
+  return request<CompanyActivation>("/api/v1/company/activation");
+}
+
+export async function updateCompanyActivation(
+  payload: CompanyActivationUpdate,
+): Promise<CompanyActivation> {
+  return request<CompanyActivation>("/api/v1/company/activation", {
     method: "PATCH",
     body: JSON.stringify(payload),
   });

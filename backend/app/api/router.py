@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.routes import (
     auth,
     companies,
+    company_activation,
     company_settings,
     conversations,
     dev,
@@ -22,6 +23,7 @@ api_router.include_router(public_widget.router)
 api_router.include_router(auth.router)
 api_router.include_router(companies.router)
 api_router.include_router(company_settings.router)
+api_router.include_router(company_activation.router)
 api_router.include_router(users.router)
 api_router.include_router(lead_agent.router)
 api_router.include_router(conversations.router)
