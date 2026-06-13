@@ -326,6 +326,11 @@
     "previous": "Zurück",
     "next": "Weiter",
     "pageOf": "Seite {page} von {total}",
+    "call": "Anrufen",
+    "emailAction": "E-Mail",
+    "openDetails": "Details öffnen",
+    "noDescription": "Keine Beschreibung",
+    "urgency": "Dringlichkeit",
     "updateStatusAria": "Anfrage-Status aktualisieren",
     "sortOptions": {
       "created_at_desc": "Neueste zuerst",

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
+import { InquiryCard } from "@/components/inquiry-card";
 import { ContactableBadge } from "@/components/contactable-badge";
 import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
@@ -147,6 +148,7 @@ export function LeadsDashboard() {
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
     !isDataLoading && leads.length === 0 && !hasActiveFilters;
+  const useCardView = !isDataLoading && leads.length > 0 && leads.length <= 10;
 
   return (
     <div className="stack">
@@ -275,7 +277,21 @@ export function LeadsDashboard() {
         <p className="muted">{t("filterEmptyDescription")}</p>
       ) : null}
 
-      {!isDataLoading && leads.length > 0 ? (
+      {useCardView ? (
+        <div className="inquiry-list">
+          {leads.map((lead) => (
+            <InquiryCard
+              key={lead.id}
+              lead={lead}
+              createdLabel={formatDate(lead.created_at, locale)}
+              statusUpdating={updatingId === lead.id}
+              onStatusChange={(status) => void handleStatusChange(lead.id, status)}
+            />
+          ))}
+        </div>
+      ) : null}
+
+      {!isDataLoading && leads.length > 10 ? (
         <div className="table-wrap">
           <table className="table">
             <thead>
