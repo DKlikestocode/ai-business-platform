@@ -1,13 +1,19 @@
+import secrets
 from dataclasses import dataclass
 from uuid import UUID
 
 from app.db.models.company import Company
 from app.db.models.company_activation import CompanyActivation
 from app.db.models.enums import ActivationStatus
-from app.domain.exceptions import NotFoundError
+from app.domain.exceptions import InvalidWidgetHeartbeatError, NotFoundError
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.services.activation.embed import build_widget_embed_snippet
+from app.services.activation.origin import (
+    InvalidPageOriginError,
+    build_blocked_origins,
+    validate_widget_page_origin,
+)
 
 
 @dataclass(frozen=True)
@@ -37,10 +43,17 @@ class ActivationService:
         activation_repository: CompanyActivationRepository,
         *,
         public_api_base_url: str,
+        frontend_base_url: str | None = None,
+        cors_origins: list[str] | None = None,
     ) -> None:
         self._company_repository = company_repository
         self._activation_repository = activation_repository
         self._public_api_base_url = public_api_base_url.rstrip("/")
+        self._blocked_origins = build_blocked_origins(
+            public_api_base_url=public_api_base_url,
+            frontend_base_url=frontend_base_url,
+            cors_origins=cors_origins or [],
+        )
 
     def get_activation(self, company_id: UUID) -> ActivationView:
         company = self._company_repository.get_by_id(company_id)
@@ -66,6 +79,40 @@ class ActivationService:
             website_url=website_url,
         )
         return self._to_view(company, activation)
+
+    def record_widget_heartbeat(
+        self,
+        *,
+        company_slug: str,
+        install_token: str,
+        page_origin: str,
+        widget_version: str | None = None,
+    ) -> None:
+        del widget_version
+
+        try:
+            normalized_origin = validate_widget_page_origin(
+                page_origin,
+                blocked_origins=self._blocked_origins,
+            )
+        except InvalidPageOriginError:
+            raise InvalidWidgetHeartbeatError from None
+
+        company = self._company_repository.get_by_slug(company_slug)
+        if company is None:
+            raise InvalidWidgetHeartbeatError
+
+        activation = self._activation_repository.get_by_company_id(company.id)
+        if activation is None:
+            raise InvalidWidgetHeartbeatError
+
+        if not secrets.compare_digest(install_token, activation.install_token):
+            raise InvalidWidgetHeartbeatError
+
+        self._activation_repository.record_heartbeat(
+            activation,
+            page_origin=normalized_origin,
+        )
 
     def _to_view(self, company: Company, activation: CompanyActivation) -> ActivationView:
         notification_configured = self._notification_configured(company)

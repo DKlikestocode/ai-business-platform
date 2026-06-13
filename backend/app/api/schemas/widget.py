@@ -15,3 +15,10 @@ class WidgetMessageRequest(BaseModel):
         if len(trimmed) > 2000:
             raise ValueError("Message cannot exceed 2000 characters.")
         return trimmed
+
+
+class WidgetHeartbeatRequest(BaseModel):
+    company_slug: str = Field(min_length=1, max_length=255)
+    install_token: str = Field(min_length=1, max_length=255)
+    page_origin: str = Field(min_length=1, max_length=2048)
+    widget_version: str | None = Field(default=None, max_length=64)

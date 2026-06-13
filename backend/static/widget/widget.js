@@ -29,6 +29,10 @@
     container.dataset.companySlug ||
     script?.dataset.companySlug ||
     "demo-company";
+  const installToken =
+    container.dataset.installToken ||
+    script?.dataset.installToken ||
+    "";
   const apiBase = (
     container.dataset.apiBase ||
     script?.dataset.apiBase ||
@@ -43,6 +47,41 @@
   const privacyHint = privacyUrl
     ? COPY.privacyWithLink.replace("{url}", privacyUrl)
     : COPY.privacyWithoutLink;
+
+  function sendHeartbeat() {
+    if (!installToken || !companySlug) {
+      return;
+    }
+
+    const pageOrigin = window.location.origin;
+    const storageKey = `ai-agent-heartbeat:${companySlug}:${pageOrigin}`;
+
+    try {
+      if (sessionStorage.getItem(storageKey)) {
+        return;
+      }
+      sessionStorage.setItem(storageKey, "1");
+    } catch {
+      // sessionStorage may be unavailable; still attempt one heartbeat.
+    }
+
+    fetch(`${apiBase}/api/v1/public/widget/heartbeat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        company_slug: companySlug,
+        install_token: installToken,
+        page_origin: pageOrigin,
+      }),
+    }).catch(() => {
+      // Heartbeat failure must not break chat.
+    });
+  }
+
+  sendHeartbeat();
 
   container.innerHTML = `
     <div class="ai-agent-widget" style="font-family:Inter,system-ui,sans-serif;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;max-width:420px;background:#fff;">
