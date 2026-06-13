@@ -36,6 +36,7 @@ describe("onboarding progress", () => {
     expect(progress.copy_widget).toBe(true);
     expect(progress.install_widget).toBe(false);
     expect(progress.test_widget).toBe(true);
+    expect(isOnboardingComplete(progress)).toBe(false);
   });
 
   it("reports completion only when every step is done", () => {

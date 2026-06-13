@@ -234,10 +234,7 @@ export function CompanySettingsForm() {
         </div>
       </form>
 
-      <WidgetActivationPanel
-        companyId={company?.id}
-        reloadKey={activationReloadKey}
-      />
+      <WidgetActivationPanel reloadKey={activationReloadKey} />
       </>
       ) : null}
     </div>

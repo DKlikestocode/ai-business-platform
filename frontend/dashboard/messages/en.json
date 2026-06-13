@@ -265,8 +265,8 @@
     "activationStatusTitle": "Your website chat status",
     "activationHint": "Find the embed code and more guidance in Settings under Chat on your website.",
     "copyWidgetHint": "Find the full embed code in Settings. You can also see there whether your chat is already active.",
-    "installWidgetLiveHint": "According to the server, your chat is active on your website. You can still mark this step complete manually.",
-    "testWidgetSandboxHint": "The test chat runs only here in the dashboard and does not mean chat is active on your website."
+    "installWidgetLiveHint": "Your chat is active on your website.",
+    "openSandboxChat": "Open test chat (sandbox)"
   },
   "settings": {
     "pageTitle": "Settings",

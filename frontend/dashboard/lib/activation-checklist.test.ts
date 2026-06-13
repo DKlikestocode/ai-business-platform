@@ -1,0 +1,177 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  ACTIVATION_CHECKLIST_STEPS,
+  countActivationChecklistSteps,
+  evaluateActivationChecklist,
+  isActivationChecklistComplete,
+  isAwaitingWebsiteLive,
+} from "@/lib/activation-checklist";
+import {
+  isOnboardingComplete,
+  markOnboardingStepComplete,
+  evaluateOnboardingProgress,
+} from "@/lib/onboarding";
+import type {
+  Company,
+  CompanyActivation,
+  CompanySettings,
+  CurrentUser,
+} from "@/lib/types";
+
+const company: Company = {
+  id: "company-1",
+  name: "Acme",
+  slug: "acme",
+  email: "hello@acme.co",
+  phone: null,
+  created_at: "2026-06-10T12:00:00Z",
+};
+
+const user: CurrentUser = {
+  id: "user-1",
+  company_id: company.id,
+  first_name: "Alex",
+  last_name: "Owner",
+  email: "alex@acme.co",
+  role: "owner",
+  is_active: true,
+  created_at: "2026-06-10T12:00:00Z",
+};
+
+const settings: CompanySettings = {
+  name: "Acme",
+  slug: "acme",
+  email: "hello@acme.co",
+  phone: null,
+  notification_email: "alerts@acme.co",
+  notify_on_new_lead: true,
+  notify_on_contactable_lead: true,
+  contactable_lead_notification_threshold: 50,
+  created_at: "2026-06-10T12:00:00Z",
+};
+
+function buildActivation(
+  overrides: Partial<CompanyActivation> = {},
+): CompanyActivation {
+  return {
+    status: "awaiting_widget",
+    notification_configured: true,
+    website_url: null,
+    widget_live_at: null,
+    widget_last_seen_at: null,
+    widget_last_origin: null,
+    install: {
+      company_slug: "acme",
+      embed_snippet:
+        '<div data-install-token="secret"></div><script src="/widget.js"></script>',
+    },
+    updated_at: "2026-06-10T12:00:00Z",
+    ...overrides,
+  };
+}
+
+describe("activation checklist", () => {
+  it("ignores stale localStorage when activation is awaiting_widget", () => {
+    markOnboardingStepComplete(company.id, "copy_widget");
+    markOnboardingStepComplete(company.id, "install_widget");
+    markOnboardingStepComplete(company.id, "test_widget");
+
+    const legacyProgress = evaluateOnboardingProgress(company.id, settings, {
+      widgetCopied: true,
+      widgetInstalled: true,
+      widgetTested: true,
+    });
+
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({ status: "awaiting_widget" }),
+    });
+
+    expect(isOnboardingComplete(legacyProgress)).toBe(true);
+    expect(isActivationChecklistComplete(progress)).toBe(false);
+    expect(countActivationChecklistSteps(progress)).toBe(4);
+    expect(progress.install_widget).toBe(false);
+  });
+
+  it("reports full progress only when activation is live", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({
+        status: "live",
+        widget_last_seen_at: "2026-06-10T13:00:00Z",
+        widget_last_origin: "https://acme.co",
+      }),
+    });
+
+    expect(isActivationChecklistComplete(progress)).toBe(true);
+    expect(countActivationChecklistSteps(progress)).toBe(
+      ACTIVATION_CHECKLIST_STEPS.length,
+    );
+  });
+
+  it("does not treat stale activation as complete", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({
+        status: "stale",
+        widget_last_seen_at: "2026-06-01T10:00:00Z",
+        widget_last_origin: "https://acme.co",
+      }),
+    });
+
+    expect(progress.install_widget).toBe(false);
+    expect(isActivationChecklistComplete(progress)).toBe(false);
+    expect(countActivationChecklistSteps(progress)).toBe(4);
+  });
+
+  it("marks copy_widget incomplete without a server embed snippet", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({
+        install: {
+          company_slug: "acme",
+          embed_snippet: "",
+        },
+      }),
+    });
+
+    expect(progress.copy_widget).toBe(false);
+    expect(countActivationChecklistSteps(progress)).toBe(3);
+  });
+
+  it("marks notification_email incomplete when missing from settings", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings: { ...settings, notification_email: null },
+      activation: buildActivation({
+        notification_configured: false,
+        status: "setup_incomplete",
+      }),
+    });
+
+    expect(progress.notification_email).toBe(false);
+    expect(progress.copy_widget).toBe(false);
+  });
+
+  it("detects awaiting website live state", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({ status: "awaiting_widget" }),
+    });
+
+    expect(isAwaitingWebsiteLive(progress, "awaiting_widget")).toBe(true);
+    expect(isAwaitingWebsiteLive(progress, "live")).toBe(false);
+  });
+});

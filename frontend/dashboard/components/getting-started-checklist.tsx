@@ -11,8 +11,15 @@ import { fetchCompanyActivation } from "@/lib/api";
 import {
   activationStatusClassName,
   formatActivationTimestamp,
-  isActivationSetupLive,
 } from "@/lib/activation-display";
+import {
+  ACTIVATION_CHECKLIST_STEPS,
+  countActivationChecklistSteps,
+  evaluateActivationChecklist,
+  isActivationChecklistComplete,
+  isAwaitingWebsiteLive,
+  type ActivationChecklistStepId,
+} from "@/lib/activation-checklist";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
@@ -20,14 +27,6 @@ import {
 } from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
-import {
-  ONBOARDING_STEPS,
-  countCompletedSteps,
-  evaluateOnboardingProgress,
-  isOnboardingComplete,
-  markOnboardingStepComplete,
-  type OnboardingStepId,
-} from "@/lib/onboarding";
 import type { CompanyActivation, CompanySettings } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
@@ -109,24 +108,23 @@ export function GettingStartedChecklist() {
   const isContentLoading = authLoading || (loading && !settings);
   const isReady = Boolean(!authLoading && user && company && settings);
 
-  function handleManualComplete(step: OnboardingStepId) {
-    if (!company) {
-      return;
-    }
-    markOnboardingStepComplete(company.id, step);
-    setRefreshKey((value) => value + 1);
-  }
-
   const progress = isReady
-    ? evaluateOnboardingProgress(company!.id, settings!)
+    ? evaluateActivationChecklist({
+        company,
+        user,
+        settings,
+        activation,
+      })
     : null;
-  const completed = progress ? countCompletedSteps(progress) : 0;
-  const checklistComplete = progress ? isOnboardingComplete(progress) : false;
-  const setupLive = isActivationSetupLive(activation?.status);
-  const allDone = checklistComplete && setupLive;
+  const completed = progress ? countActivationChecklistSteps(progress) : 0;
+  const allDone = progress ? isActivationChecklistComplete(progress) : false;
+  const awaitingWebsiteLive =
+    progress && activation
+      ? isAwaitingWebsiteLive(progress, activation.status)
+      : false;
   const nextStep =
-    progress && !checklistComplete
-      ? ONBOARDING_STEPS.find((step) => !progress[step.id])
+    progress && !allDone
+      ? ACTIVATION_CHECKLIST_STEPS.find((step) => !progress[step.id])
       : undefined;
   const welcomeName =
     isReady && company
@@ -143,7 +141,7 @@ export function GettingStartedChecklist() {
           <div className="progress-pill">
             {t("progress", {
               completed,
-              total: ONBOARDING_STEPS.length,
+              total: ACTIVATION_CHECKLIST_STEPS.length,
             })}
           </div>
         ) : null}
@@ -161,7 +159,7 @@ export function GettingStartedChecklist() {
             <LoadingState label={t("loading")} />
           </section>
           <div className="checklist">
-            {ONBOARDING_STEPS.map((step, index) => (
+            {ACTIVATION_CHECKLIST_STEPS.map((step, index) => (
               <article key={step.id} className="checklist-item card">
                 <div className="checklist-index">{index + 1}</div>
                 <div className="checklist-body content-loading-panel">
@@ -203,7 +201,7 @@ export function GettingStartedChecklist() {
               </div>
             ) : allDone ? (
               <p className="muted">{t("welcomeAllDone")}</p>
-            ) : checklistComplete ? (
+            ) : awaitingWebsiteLive ? (
               <p className="muted">{t("awaitingWebsiteLive")}</p>
             ) : null}
           </section>
@@ -253,9 +251,9 @@ export function GettingStartedChecklist() {
           ) : null}
 
           <div className="checklist">
-            {ONBOARDING_STEPS.map((step, index) => {
+            {ACTIVATION_CHECKLIST_STEPS.map((step, index) => {
               const done = progress[step.id];
-              const stepKey = step.id;
+              const stepKey = step.id as ActivationChecklistStepId;
               return (
                 <article
                   key={step.id}
@@ -278,9 +276,6 @@ export function GettingStartedChecklist() {
                     {step.id === "install_widget" && activation?.status === "live" ? (
                       <p className="muted">{t("installWidgetLiveHint")}</p>
                     ) : null}
-                    {step.id === "test_widget" ? (
-                      <p className="muted">{t("testWidgetSandboxHint")}</p>
-                    ) : null}
                     {company.slug && step.id === "copy_widget" ? (
                       <p className="muted">
                         {t("companySlug")} <code>{company.slug}</code>
@@ -291,15 +286,6 @@ export function GettingStartedChecklist() {
                         <Link href={step.href} className="button secondary">
                           {tOnboarding(`${stepKey}.action`)}
                         </Link>
-                      ) : null}
-                      {step.id === "install_widget" && !done ? (
-                        <button
-                          type="button"
-                          className="button secondary"
-                          onClick={() => handleManualComplete("install_widget")}
-                        >
-                          {tOnboarding("install_widget.markInstalled")}
-                        </button>
                       ) : null}
                     </div>
                   </div>
@@ -317,6 +303,9 @@ export function GettingStartedChecklist() {
               </Link>
               <Link href="/settings" className="button secondary">
                 {t("companySettings")}
+              </Link>
+              <Link href="/demo-chat" className="button secondary">
+                {t("openSandboxChat")}
               </Link>
             </div>
           </div>
