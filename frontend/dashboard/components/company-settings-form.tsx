@@ -15,12 +15,8 @@ import {
 } from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
-import { markOnboardingStepComplete } from "@/lib/onboarding";
 import type { CompanySettings } from "@/lib/types";
-import {
-  buildWidgetEmbedSnippet,
-  getPublicApiBaseUrl,
-} from "@/lib/widget-embed";
+import { WidgetActivationPanel } from "@/components/widget-activation-panel";
 
 function formatDate(value: string, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
@@ -45,7 +41,7 @@ export function CompanySettingsForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [copyMessage, setCopyMessage] = useState<string | null>(null);
+  const [activationReloadKey, setActivationReloadKey] = useState(0);
 
   const loadSettings = useCallback(async () => {
     const hasCache = Boolean(
@@ -92,34 +88,12 @@ export function CompanySettingsForm() {
       setSettings(updated);
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
       setSuccess(t("saved"));
+      setActivationReloadKey((value) => value + 1);
     } catch (err) {
       setError(formatUserFacingError(err, t("saveFailed"), errorMessages));
     } finally {
       setSaving(false);
     }
-  }
-
-  async function handleCopyEmbed() {
-    if (!settings) {
-      return;
-    }
-
-    const snippet = buildWidgetEmbedSnippet(
-      settings.slug,
-      getPublicApiBaseUrl(),
-    );
-
-    try {
-      await navigator.clipboard.writeText(snippet);
-      if (company) {
-        markOnboardingStepComplete(company.id, "copy_widget");
-      }
-      setCopyMessage(t("copied"));
-    } catch {
-      setCopyMessage(t("copyFailed"));
-    }
-
-    window.setTimeout(() => setCopyMessage(null), 2500);
   }
 
   function updateField<K extends keyof CompanySettings>(
@@ -129,10 +103,6 @@ export function CompanySettingsForm() {
     setSettings((current) => (current ? { ...current, [key]: value } : current));
     setSuccess(null);
   }
-
-  const embedSnippet = settings
-    ? buildWidgetEmbedSnippet(settings.slug, getPublicApiBaseUrl())
-    : "";
 
   return (
     <div className="stack">
@@ -264,25 +234,10 @@ export function CompanySettingsForm() {
         </div>
       </form>
 
-      <div className="card">
-        <div className="embed-header">
-          <h3 className="card-title">{t("widgetEmbed")}</h3>
-          <button
-            type="button"
-            className="button secondary"
-            onClick={() => void handleCopyEmbed()}
-          >
-            {t("copySnippet")}
-          </button>
-        </div>
-        <p className="muted">
-          {t("widgetDescription", { slug: settings.slug })}
-        </p>
-        {copyMessage ? <div className="notice">{copyMessage}</div> : null}
-        <pre className="embed-snippet">
-          <code>{embedSnippet}</code>
-        </pre>
-      </div>
+      <WidgetActivationPanel
+        companyId={company?.id}
+        reloadKey={activationReloadKey}
+      />
       </>
       ) : null}
     </div>

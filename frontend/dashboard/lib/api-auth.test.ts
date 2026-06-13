@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   ApiError,
+  fetchCompanyActivation,
   fetchCompanySettings,
   fetchCurrentUser,
   fetchLeads,
@@ -168,6 +169,42 @@ describe("api auth client", () => {
     expect(patchCall[1]?.method).toBe("PATCH");
     const patchHeaders = patchCall[1]?.headers as Record<string, string>;
     expect(patchHeaders.Authorization).toBe("Bearer stored-token");
+  });
+
+  it("fetches company activation with bearer auth", async () => {
+    setAccessToken("stored-token");
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({
+          status: "awaiting_widget",
+          notification_configured: false,
+          website_url: null,
+          widget_live_at: null,
+          widget_last_seen_at: null,
+          widget_last_origin: null,
+          install: {
+            company_slug: "acme-co",
+            embed_snippet:
+              '<div data-install-token="secret"></div>',
+          },
+          updated_at: "2026-06-10T12:00:00Z",
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        },
+      ),
+    );
+
+    const activation = await fetchCompanyActivation();
+
+    expect(activation.status).toBe("awaiting_widget");
+    expect(activation.install.embed_snippet).toContain("data-install-token=");
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toContain("/api/v1/company/activation");
+    const headers = init?.headers as Record<string, string>;
+    expect(headers.Authorization).toBe("Bearer stored-token");
   });
 
   it("invokes the unauthorized handler on 401 responses", async () => {
