@@ -326,6 +326,11 @@
     "previous": "Previous",
     "next": "Next",
     "pageOf": "Page {page} of {total}",
+    "call": "Call",
+    "emailAction": "Email",
+    "openDetails": "Open details",
+    "noDescription": "No description",
+    "urgency": "Urgency",
     "updateStatusAria": "Update inquiry status",
     "sortOptions": {
       "created_at_desc": "Newest first",

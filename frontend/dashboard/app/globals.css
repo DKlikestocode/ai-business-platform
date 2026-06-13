@@ -631,6 +631,122 @@ code {
   min-height: 8rem;
 }
 
+.inquiry-list {
+  display: grid;
+  gap: 12px;
+}
+
+.inquiry-card {
+  display: grid;
+  gap: 12px;
+}
+
+.inquiry-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.inquiry-card-intro {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.inquiry-card-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.inquiry-card-service {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.inquiry-card-meta {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+}
+
+.inquiry-card-date {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.inquiry-card-urgency {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.inquiry-card-urgency-label {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+}
+
+.inquiry-card-preview {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.inquiry-card-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+
+.inquiry-card-contact-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.925rem;
+}
+
+.inquiry-card-contact-link:hover {
+  text-decoration: underline;
+}
+
+.inquiry-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inquiry-card-actions .button {
+  text-decoration: none;
+  text-align: center;
+}
+
+.inquiry-card-status {
+  display: grid;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.inquiry-card-status-label {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
 .loading-spinner {
   width: 18px;
   height: 18px;
