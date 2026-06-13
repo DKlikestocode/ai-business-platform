@@ -111,10 +111,13 @@ export interface TokenResponse {
   expires_in: number;
 }
 
+export type LeadSource = "website" | "test";
+
 export interface Lead {
   id: string;
   company_id: string;
   conversation_id: string;
+  source: LeadSource;
   name: string;
   phone: string;
   email: string | null;

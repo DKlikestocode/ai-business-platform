@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth-provider";
 import { InquiryCard } from "@/components/inquiry-card";
 import { ContactableBadge } from "@/components/contactable-badge";
+import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
@@ -297,6 +298,7 @@ export function LeadsDashboard() {
             <thead>
               <tr>
                 <th>{t("tableName")}</th>
+                <th>{t("tableSource")}</th>
                 <th>{t("tableScore")}</th>
                 <th>{t("tableQualification")}</th>
                 <th>{t("tableContactable")}</th>
@@ -315,6 +317,9 @@ export function LeadsDashboard() {
                     <Link href={`/leads/${lead.id}`} className="link">
                       {lead.name}
                     </Link>
+                  </td>
+                  <td>
+                    <InquirySourceBadge source={lead.source} />
                   </td>
                   <td>
                     <span className="score-pill">{formatLeadScore(lead.lead_score)}</span>

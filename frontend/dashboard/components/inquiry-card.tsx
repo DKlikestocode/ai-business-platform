@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 
 import { StatusBadge } from "@/components/status-badge";
+import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { StatusSelect } from "@/components/status-select";
 import { Link } from "@/i18n/navigation";
 import type { Lead, LeadStatus } from "@/lib/types";
@@ -67,6 +68,7 @@ export function InquiryCard({
           ) : null}
         </div>
         <div className="inquiry-card-meta">
+          <InquirySourceBadge source={lead.source} />
           <StatusBadge status={lead.status} />
           <time className="inquiry-card-date muted" dateTime={lead.created_at}>
             {createdLabel}
