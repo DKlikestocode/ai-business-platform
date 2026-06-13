@@ -148,7 +148,7 @@ export function LeadsDashboard() {
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
     !isDataLoading && leads.length === 0 && !hasActiveFilters;
-  const useCardView = !isDataLoading && leads.length > 0 && leads.length <= 10;
+  const useCardView = !isDataLoading && total > 0 && total <= 10;
 
   return (
     <div className="stack">
@@ -291,7 +291,7 @@ export function LeadsDashboard() {
         </div>
       ) : null}
 
-      {!isDataLoading && leads.length > 10 ? (
+      {!isDataLoading && total > 10 ? (
         <div className="table-wrap">
           <table className="table">
             <thead>
