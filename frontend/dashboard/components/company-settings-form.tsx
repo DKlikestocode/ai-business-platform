@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { updateCompanySettings } from "@/lib/api";
+import { updateCompanySettings, sendTestNotification, ApiError } from "@/lib/api";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
@@ -16,6 +16,11 @@ import {
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { formatDateTime } from "@/lib/format-datetime";
+import {
+  canSendTestNotification,
+  isNotificationEmailDirty,
+  normalizeNotificationEmail,
+} from "@/lib/notification-settings";
 import type { CompanySettings } from "@/lib/types";
 import { WidgetActivationPanel } from "@/components/widget-activation-panel";
 
@@ -33,10 +38,18 @@ export function CompanySettingsForm() {
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
+  const [savedNotificationEmail, setSavedNotificationEmail] = useState<
+    string | null
+  >(
+    () =>
+      getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY)
+        ?.notification_email ?? null,
+  );
   const [loading, setLoading] = useState(
     () => !getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
   const [saving, setSaving] = useState(false);
+  const [testingNotification, setTestingNotification] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [activationReloadKey, setActivationReloadKey] = useState(0);
@@ -52,6 +65,7 @@ export function CompanySettingsForm() {
     try {
       const data = await loadCachedCompanySettings(setSettings);
       setSettings(data);
+      setSavedNotificationEmail(data.notification_email);
     } catch (err) {
       setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {
@@ -84,6 +98,7 @@ export function CompanySettingsForm() {
           settings.contactable_lead_notification_threshold,
       });
       setSettings(updated);
+      setSavedNotificationEmail(updated.notification_email);
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
       setSuccess(t("saved"));
       setActivationReloadKey((value) => value + 1);
@@ -100,6 +115,46 @@ export function CompanySettingsForm() {
   ) {
     setSettings((current) => (current ? { ...current, [key]: value } : current));
     setSuccess(null);
+  }
+
+  const notificationsActive = Boolean(
+    normalizeNotificationEmail(savedNotificationEmail),
+  );
+  const notificationEmailDirty = isNotificationEmailDirty(
+    savedNotificationEmail,
+    settings?.notification_email,
+  );
+  const testNotificationEnabled = canSendTestNotification(
+    savedNotificationEmail,
+    settings?.notification_email,
+  );
+
+  async function handleTestNotification() {
+    if (!testNotificationEnabled) {
+      return;
+    }
+
+    setTestingNotification(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      await sendTestNotification();
+      setSuccess(
+        t("testNotificationSuccess", {
+          email: normalizeNotificationEmail(savedNotificationEmail),
+        }),
+      );
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 422) {
+        setError(t("testNotificationMissingEmail"));
+      } else {
+        setError(
+          formatUserFacingError(err, t("testNotificationFailed"), errorMessages),
+        );
+      }
+    } finally {
+      setTestingNotification(false);
+    }
   }
 
   return (
@@ -171,6 +226,34 @@ export function CompanySettingsForm() {
         </div>
 
         <h3 className="card-title">{t("leadNotifications")}</h3>
+        <div className="notification-status-row">
+          <span
+            className={
+              notificationsActive
+                ? "badge badge-contactable-yes"
+                : "badge badge-contactable-no"
+            }
+          >
+            {notificationsActive
+              ? t("notificationsActive")
+              : t("notificationsInactive")}
+          </span>
+          <div className="notification-test-actions">
+            {notificationEmailDirty ? (
+              <p className="muted field-hint">{t("testNotificationSaveFirst")}</p>
+            ) : null}
+            <button
+              type="button"
+              className="button secondary"
+              onClick={() => void handleTestNotification()}
+              disabled={testingNotification || !testNotificationEnabled}
+            >
+              {testingNotification
+                ? t("testNotificationSending")
+                : t("testNotification")}
+            </button>
+          </div>
+        </div>
         <div className="settings-grid">
           <label className="field">
             <span>{t("notificationEmail")}</span>
