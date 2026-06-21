@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { StatusBadge } from "@/components/status-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
+import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { StatusSelect } from "@/components/status-select";
@@ -11,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import {
   displayName,
   handoffPreviewText,
+  hasContactData,
   normalizeEmail,
   normalizePhone,
 } from "@/lib/inquiry-handoff";
@@ -21,21 +23,27 @@ interface InquiryCardProps {
   lead: Lead;
   createdLabel: string;
   statusUpdating: boolean;
+  showContactedSuccess: boolean;
   onStatusChange: (status: LeadStatus) => void;
+  onMarkContacted: () => void;
 }
 
 export function InquiryCard({
   lead,
   createdLabel,
   statusUpdating,
+  showContactedSuccess,
   onStatusChange,
+  onMarkContacted,
 }: InquiryCardProps) {
   const t = useTranslations("leads");
   const phone = normalizePhone(lead);
   const email = normalizeEmail(lead);
   const urgency = lead.urgency?.trim() || null;
+  const preferredCallback = lead.preferred_callback_time?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
   const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
+  const showContactActions = hasContactData(lead);
 
   return (
     <article className="inquiry-card card">
@@ -71,6 +79,13 @@ export function InquiryCard({
         </p>
       ) : null}
 
+      {preferredCallback ? (
+        <p className="inquiry-card-urgency">
+          <span className="inquiry-card-urgency-label">{t("preferredCallback")}</span>
+          <span className="inquiry-card-urgency-value">{preferredCallback}</span>
+        </p>
+      ) : null}
+
       <p className="inquiry-card-preview">{preview}</p>
 
       {phone || email ? (
@@ -88,17 +103,17 @@ export function InquiryCard({
         </div>
       ) : null}
 
+      <InquiryCallbackActions
+        phone={phone}
+        email={email}
+        status={lead.status}
+        hasContact={showContactActions}
+        updating={statusUpdating}
+        showContactedSuccess={showContactedSuccess}
+        onMarkContacted={onMarkContacted}
+      />
+
       <div className="inquiry-card-actions">
-        {phone ? (
-          <a href={`tel:${phone}`} className="button">
-            {t("call")}
-          </a>
-        ) : null}
-        {email ? (
-          <a href={`mailto:${email}`} className="button secondary">
-            {t("emailAction")}
-          </a>
-        ) : null}
         <Link href={`/leads/${lead.id}`} className="button secondary">
           {t("openDetails")}
         </Link>

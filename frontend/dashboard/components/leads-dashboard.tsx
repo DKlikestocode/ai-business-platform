@@ -58,6 +58,7 @@ export function LeadsDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [contactedSuccessId, setContactedSuccessId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [seedMessage, setSeedMessage] = useState<string | null>(null);
 
@@ -104,11 +105,29 @@ export function LeadsDashboard() {
   async function handleStatusChange(leadId: string, status: LeadStatus) {
     setUpdatingId(leadId);
     setError(null);
+    setContactedSuccessId((current) => (current === leadId ? null : current));
     try {
       const updated = await updateLeadStatus(leadId, status);
       setLeads((current) =>
         current.map((lead) => (lead.id === leadId ? updated : lead)),
       );
+    } catch (err) {
+      setError(formatUserFacingError(err, t("updateFailed"), errorMessages));
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
+  async function handleMarkContacted(leadId: string) {
+    setUpdatingId(leadId);
+    setError(null);
+    setContactedSuccessId(null);
+    try {
+      const updated = await updateLeadStatus(leadId, "contacted");
+      setLeads((current) =>
+        current.map((lead) => (lead.id === leadId ? updated : lead)),
+      );
+      setContactedSuccessId(leadId);
     } catch (err) {
       setError(formatUserFacingError(err, t("updateFailed"), errorMessages));
     } finally {
@@ -284,7 +303,9 @@ export function LeadsDashboard() {
               lead={lead}
               createdLabel={formatDate(lead.created_at, locale)}
               statusUpdating={updatingId === lead.id}
+              showContactedSuccess={contactedSuccessId === lead.id}
               onStatusChange={(status) => void handleStatusChange(lead.id, status)}
+              onMarkContacted={() => void handleMarkContacted(lead.id)}
             />
           ))}
         </div>

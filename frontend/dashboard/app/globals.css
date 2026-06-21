@@ -878,6 +878,10 @@ code {
   gap: 8px;
 }
 
+.inquiry-card .inquiry-callback-actions {
+  margin-top: 4px;
+}
+
 .inquiry-card-actions .button {
   text-decoration: none;
   text-align: center;

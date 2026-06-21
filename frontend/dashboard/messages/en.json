@@ -390,6 +390,7 @@
     "noDescription": "No description",
     "unknownContact": "Unknown contact",
     "urgency": "Urgency",
+    "preferredCallback": "Preferred callback",
     "updateStatusAria": "Update inquiry status",
     "sortOptions": {
       "created_at_desc": "Newest first",
