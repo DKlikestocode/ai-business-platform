@@ -17,6 +17,7 @@ class ActivationStatus(StrEnum):
 class ConversationChannel(StrEnum):
     WEB = "web"
     DASHBOARD = "dashboard"
+    LANDING_DEMO = "landing_demo"
     WHATSAPP = "whatsapp"
     EMAIL = "email"
     API = "api"

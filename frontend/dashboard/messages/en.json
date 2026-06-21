@@ -97,36 +97,29 @@
     },
     "publicDemo": {
       "title": "Try the chat yourself",
-      "lead": "Click an example inquiry — this is how visitors experience the assistant on your website.",
-      "disclaimer": "Example demo — responses are prepared for illustration.",
-      "chipsLabel": "Choose an example inquiry:",
-      "emptyState": "Select an example inquiry to see the chat.",
-      "customerLabel": "Customer",
+      "lead": "Write like a website visitor — the assistant replies live with AI.",
+      "disclaimer": "Live demo: replies come from AI. No real inquiry is sent to a business.",
+      "chipsLabel": "Start an example:",
+      "emptyState": "Type a message or choose an example.",
+      "customerLabel": "Visitor",
       "assistantLabel": "Assistant",
+      "thinking": "Generating reply…",
+      "sendFailed": "Failed to send message.",
+      "limitReached": "Demo ended. Start a new demo or sign up your business.",
+      "placeholderMessage": "Your message…",
+      "placeholderLimit": "Demo ended",
       "chips": {
         "plumber": "Plumbing emergency",
         "roofer": "Roof after storm",
         "electrician": "Electrical inquiry"
       },
-      "scenarios": {
-        "plumber": {
-          "customer": "Our sink is leaking. Can you help today?",
-          "assistant1": "That sounds urgent. I'll capture the inquiry and ask for contact details and address.",
-          "assistant2": "Your team receives the key details directly by email."
-        },
-        "roofer": {
-          "customer": "After the storm, roof tiles are missing. Water is dripping into the attic.",
-          "assistant1": "The assistant recognizes urgency and collects the most important information.",
-          "assistant2": "This way you can see immediately which inquiry should be handled first."
-        },
-        "electrician": {
-          "customer": "I'd like to have a wallbox installed. Can you provide a quote?",
-          "assistant1": "The assistant asks about the vehicle, location, and callback number.",
-          "assistant2": "A concrete inquiry for your team is created from the website message."
-        }
+      "starters": {
+        "plumber": "Our sink is leaking. Can you help today?",
+        "roofer": "After the storm, roof tiles are missing. Water is dripping into the attic.",
+        "electrician": "I'd like to have a wallbox installed. Can you provide a quote?"
       },
       "startCta": "Get started free for my business",
-      "resetCta": "Try another inquiry"
+      "resetCta": "Start new demo"
     },
     "trustTitle": "Trust and privacy",
     "trustGdpr": "GDPR-oriented",

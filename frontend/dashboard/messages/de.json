@@ -97,36 +97,29 @@
     },
     "publicDemo": {
       "title": "Probieren Sie den Chat selbst aus",
-      "lead": "Klicken Sie auf eine Beispiel-Anfrage — so erleben Ihre Website-Besucher den Assistenten.",
-      "disclaimer": "Beispiel-Demo — die Antworten sind zur Veranschaulichung vorbereitet.",
-      "chipsLabel": "Beispiel-Anfrage wählen:",
-      "emptyState": "Wählen Sie eine Beispiel-Anfrage, um den Chat zu sehen.",
-      "customerLabel": "Kunde",
+      "lead": "Schreiben Sie wie ein Website-Besucher — der Assistent antwortet live mit KI.",
+      "disclaimer": "Live-Demo: Antworten kommen von der KI. Es wird keine echte Anfrage an ein Unternehmen gesendet.",
+      "chipsLabel": "Beispiel starten:",
+      "emptyState": "Schreiben Sie eine Nachricht oder wählen Sie ein Beispiel.",
+      "customerLabel": "Besucher",
       "assistantLabel": "Assistent",
+      "thinking": "Antwort wird erstellt…",
+      "sendFailed": "Nachricht konnte nicht gesendet werden.",
+      "limitReached": "Demo beendet. Starten Sie eine neue Demo oder registrieren Sie Ihren Betrieb.",
+      "placeholderMessage": "Ihre Nachricht…",
+      "placeholderLimit": "Demo beendet",
       "chips": {
         "plumber": "Sanitär-Notfall",
         "roofer": "Dach nach Sturm",
         "electrician": "Elektro-Anfrage"
       },
-      "scenarios": {
-        "plumber": {
-          "customer": "Unsere Spüle läuft aus. Können Sie heute noch helfen?",
-          "assistant1": "Das klingt dringend. Ich erfasse die Anfrage und frage nach Kontakt und Adresse.",
-          "assistant2": "Ihr Team erhält die wichtigsten Angaben direkt per E-Mail."
-        },
-        "roofer": {
-          "customer": "Nach dem Sturm fehlen Dachziegel. Es tropft in den Dachboden.",
-          "assistant1": "Der Assistent erkennt die Dringlichkeit und sammelt die wichtigsten Informationen.",
-          "assistant2": "So sehen Sie sofort, welche Anfrage zuerst bearbeitet werden sollte."
-        },
-        "electrician": {
-          "customer": "Ich möchte eine Wallbox installieren lassen. Können Sie ein Angebot machen?",
-          "assistant1": "Der Assistent fragt nach Fahrzeug, Standort und Rückrufnummer.",
-          "assistant2": "Aus der Website-Nachricht wird eine konkrete Anfrage für Ihr Team."
-        }
+      "starters": {
+        "plumber": "Unsere Spüle läuft aus. Können Sie heute noch helfen?",
+        "roofer": "Nach dem Sturm fehlen Dachziegel. Es tropft in den Dachboden.",
+        "electrician": "Ich möchte eine Wallbox installieren lassen. Können Sie ein Angebot machen?"
       },
       "startCta": "Kostenlos für meinen Betrieb starten",
-      "resetCta": "Andere Anfrage testen"
+      "resetCta": "Neue Demo starten"
     },
     "trustTitle": "Vertrauen und Datenschutz",
     "trustGdpr": "DSGVO-orientiert",
