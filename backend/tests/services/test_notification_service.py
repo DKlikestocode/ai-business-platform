@@ -57,8 +57,13 @@ async def test_notification_sent_when_lead_created(
 
     assert sent is True
     assert len(provider.messages) == 1
-    assert provider.messages[0].to == company.email
-    assert "Jane Doe" in provider.messages[0].body
+    message = provider.messages[0]
+    assert message.to == company.email
+    assert "Jane Doe" in message.body
+    assert "Anfrage" in message.subject
+    assert "Lead" not in message.subject
+    assert "Anfrage" in message.body
+    assert "Lead" not in message.body
     refreshed = lead_repository.get_by_id(lead.id)
     assert refreshed is not None
     assert refreshed.notification_sent_at is not None
@@ -119,7 +124,8 @@ async def test_notification_email_includes_dashboard_link_when_configured(
     body = provider.messages[0].body
     assert "Zusammenfassung: Jane needs roof repair." in body
     assert "Qualifizierungsstatus: Qualifiziert" in body
-    assert "Lead-Score:" in body
+    assert "Priorität:" in body
+    assert "Lead" not in body
     assert "Kontaktmethode:" in body
     assert f"Im Dashboard anzeigen: http://localhost:3000/leads/{lead.id}" in body
 

@@ -269,6 +269,9 @@ export function CompanySettingsForm() {
               }
               placeholder={t("notificationEmailPlaceholder")}
             />
+            {!normalizeNotificationEmail(savedNotificationEmail) ? (
+              <p className="muted field-hint">{t("notificationEmailFallbackHint")}</p>
+            ) : null}
           </label>
           <label className="field checkbox-field">
             <input

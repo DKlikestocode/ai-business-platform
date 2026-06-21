@@ -85,9 +85,9 @@ class NotificationService:
 
         lead_name = lead.name or "Ohne Namen"
         subject = (
-            f"Neuer qualifizierter Lead: {lead_name}"
+            f"Neue qualifizierte Anfrage: {lead_name}"
             if lead.qualification_status == QualificationStatus.QUALIFIED.value
-            else f"Neuer kontaktierbarer Lead: {lead_name}"
+            else f"Neue kontaktierbare Anfrage: {lead_name}"
         )
         message = EmailMessage(
             to=recipient,
@@ -169,14 +169,14 @@ class NotificationService:
         frontend_base_url: str | None = None,
     ) -> str:
         lines = [
-            f"Es wurde ein neuer Lead für {company.name} erfasst.",
+            f"Es wurde eine neue Anfrage für {company.name} erfasst.",
             "",
             f"Zusammenfassung: {lead.summary or '—'}",
             (
                 "Qualifizierungsstatus: "
                 f"{NotificationService._qualification_label(lead.qualification_status)}"
             ),
-            f"Lead-Score: {lead.lead_score}",
+            f"Priorität: {lead.lead_score}",
             (
                 "Kontaktmethode: "
                 f"{NotificationService._contact_method_label(lead.contact_method)}"
