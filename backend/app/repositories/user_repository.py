@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.db.models.enums import UserRole
@@ -41,7 +42,12 @@ class UserRepository:
         return self._session.get(User, user_id)
 
     def get_by_email(self, email: str) -> User | None:
-        return self._session.query(User).filter(User.email == email).one_or_none()
+        normalized = email.strip().lower()
+        return (
+            self._session.query(User)
+            .filter(func.lower(User.email) == normalized)
+            .one_or_none()
+        )
 
     def email_exists(self, email: str) -> bool:
         return self.get_by_email(email) is not None

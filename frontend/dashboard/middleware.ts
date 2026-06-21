@@ -107,6 +107,8 @@ export const config = {
     "/dashboard",
     "/dashboard/:path*",
     "/login",
+    "/forgot-password",
+    "/reset-password",
     "/onboarding",
     "/leads/:path*",
     "/demo-chat/:path*",

@@ -192,6 +192,9 @@
     "submit": "Link senden",
     "submitting": "Wird gesendet...",
     "success": "Wenn ein Konto mit dieser E-Mail existiert, haben wir einen Link gesendet.",
+    "successDev": "Entwicklungsmodus: Es wird keine E-Mail versendet. Nutzen Sie den Link unten.",
+    "openDevResetLink": "Passwort-Reset-Link öffnen",
+    "devResetHint": "(Nur lokal — in Produktion kommt der Link per E-Mail.)",
     "failed": "Link konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
     "backToLogin": "Zurück zur Anmeldung"
   },

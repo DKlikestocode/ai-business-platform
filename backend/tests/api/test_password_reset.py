@@ -33,13 +33,35 @@ def test_forgot_password_creates_reset_token(
         json={"email": auth_user.email},
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
+    body = response.json()
+    assert body["dev_reset_url"]
+    assert "token=" in body["dev_reset_url"]
     token = (
         db_session.query(PasswordResetToken)
         .filter(PasswordResetToken.user_id == auth_user.id)
         .one()
     )
     assert token.used_at is None
+
+
+def test_forgot_password_is_case_insensitive_for_email(
+    auth_client: TestClient,
+    auth_user,
+    db_session,
+) -> None:
+    response = auth_client.post(
+        "/api/v1/auth/forgot-password",
+        json={"email": auth_user.email.upper()},
+    )
+
+    assert response.status_code == 200
+    assert (
+        db_session.query(PasswordResetToken)
+        .filter(PasswordResetToken.user_id == auth_user.id)
+        .count()
+        == 1
+    )
 
 
 def test_reset_password_updates_password(

@@ -75,6 +75,14 @@ def validate_production_settings(settings: Settings) -> None:
         errors.append("JWT_SECRET_KEY must be a unique secret with at least 32 characters")
     if not settings.openai_api_key:
         errors.append("OPENAI_API_KEY is required when APP_ENV is not development")
+    if settings.notification_provider.lower() != "resend":
+        errors.append("NOTIFICATION_PROVIDER must be 'resend' in production")
+    if not settings.resend_api_key.strip():
+        errors.append("RESEND_API_KEY is required in production")
+    if not settings.notification_from_email.strip():
+        errors.append("NOTIFICATION_FROM_EMAIL is required in production")
+    if not (settings.frontend_base_url or "").strip():
+        errors.append("FRONTEND_BASE_URL is required in production")
 
     if errors:
         message = "Production configuration is invalid:\n" + "\n".join(

@@ -16,6 +16,7 @@ import type {
   LeadStatus,
   LoginRequest,
   ForgotPasswordRequest,
+  ForgotPasswordResponse,
   ResetPasswordRequest,
   PaginatedLeads,
   QualificationStatus,
@@ -153,11 +154,40 @@ export async function login(payload: LoginRequest): Promise<TokenResponse> {
 
 export async function requestPasswordReset(
   payload: ForgotPasswordRequest,
-): Promise<void> {
-  await request("/api/v1/auth/forgot-password", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+): Promise<ForgotPasswordResponse | null> {
+  const url = buildApiUrl("/api/v1/auth/forgot-password");
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: buildAuthHeaders(),
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      credentials: "same-origin",
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Network error while contacting the API.";
+    throw new ApiError(
+      `Unable to reach the API at ${url}. ${message}`,
+      0,
+    );
+  }
+
+  if (!response.ok) {
+    const detail = await readErrorDetail(response);
+    const message = formatErrorDetail(response.status, detail);
+    throw new ApiError(formatUserFacingError(new ApiError(message, response.status)), response.status);
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json() as Promise<ForgotPasswordResponse>;
 }
 
 export async function resetPassword(payload: ResetPasswordRequest): Promise<void> {

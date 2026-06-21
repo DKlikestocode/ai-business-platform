@@ -192,6 +192,9 @@
     "submit": "Send link",
     "submitting": "Sending...",
     "success": "If an account exists for this email, we sent a reset link.",
+    "successDev": "Development mode: no email is sent. Use the link below.",
+    "openDevResetLink": "Open password reset link",
+    "devResetHint": "(Local only — in production the link is sent by email.)",
     "failed": "Could not send the link. Please try again.",
     "backToLogin": "Back to sign in"
   },

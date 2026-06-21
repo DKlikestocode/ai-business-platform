@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from app.api.dependencies import RateLimit, get_auth_service, get_current_user
 from app.api.schemas.auth import (
     CurrentUserResponse,
     ForgotPasswordRequest,
+    ForgotPasswordResponse,
     LoginRequest,
     ResetPasswordRequest,
     TokenResponse,
     current_user_to_response,
 )
 from app.db.models.user import User
-from app.domain.exceptions import AuthenticationError
+from app.domain.exceptions import AuthenticationError, NotificationDeliveryError
 from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -67,15 +68,30 @@ def get_me(current_user: User = Depends(get_current_user)) -> CurrentUserRespons
 
 @router.post(
     "/forgot-password",
-    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"description": "Reset email sent or email not found"},
+        status.HTTP_200_OK: {"model": ForgotPasswordResponse},
+    },
     summary="Request a password reset email",
     dependencies=[Depends(_forgot_password_rate_limit)],
 )
 async def forgot_password(
     payload: ForgotPasswordRequest,
     service: AuthService = Depends(get_auth_service),
-) -> None:
-    await service.request_password_reset(email=str(payload.email))
+) -> Response | ForgotPasswordResponse:
+    try:
+        dev_reset_url = await service.request_password_reset(email=str(payload.email))
+    except NotificationDeliveryError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
+
+    if dev_reset_url:
+        return ForgotPasswordResponse(dev_reset_url=dev_reset_url)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post(

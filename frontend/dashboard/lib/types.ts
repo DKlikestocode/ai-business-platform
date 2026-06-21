@@ -120,6 +120,10 @@ export interface ForgotPasswordRequest {
   email: string;
 }
 
+export interface ForgotPasswordResponse {
+  dev_reset_url?: string | null;
+}
+
 export interface ResetPasswordRequest {
   token: string;
   password: string;

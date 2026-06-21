@@ -11,6 +11,10 @@ class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
 
+class ForgotPasswordResponse(BaseModel):
+    dev_reset_url: str | None = None
+
+
 class ResetPasswordRequest(BaseModel):
     token: str = Field(min_length=10, max_length=256)
     password: str = Field(min_length=8, max_length=128)
