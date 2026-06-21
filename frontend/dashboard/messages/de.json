@@ -390,6 +390,7 @@
     "noDescription": "Keine Beschreibung",
     "unknownContact": "Unbekannter Kontakt",
     "urgency": "Dringlichkeit",
+    "preferredCallback": "Bevorzugter Rückruf",
     "updateStatusAria": "Anfrage-Status aktualisieren",
     "sortOptions": {
       "created_at_desc": "Neueste zuerst",
