@@ -1746,7 +1746,7 @@ code {
 
 .public-demo-chat .chat-messages {
   min-height: 300px;
-  max-height: none;
+  max-height: 400px;
 }
 
 .landing-cta {

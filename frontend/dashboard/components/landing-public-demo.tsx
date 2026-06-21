@@ -10,6 +10,7 @@ import {
   isLandingDemoLimitStatus,
   sendLandingDemoMessage,
 } from "@/lib/landing-demo";
+import { scrollChatContainerToBottom } from "@/lib/chat-scroll";
 
 const STARTER_KEYS = ["plumber", "roofer", "electrician"] as const;
 
@@ -34,7 +35,7 @@ export function LandingPublicDemo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [limitReached, setLimitReached] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const showStarters = messages.length === 0 && !loading && !limitReached;
 
@@ -43,7 +44,7 @@ export function LandingPublicDemo() {
       return;
     }
 
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    scrollChatContainerToBottom(messagesContainerRef.current);
   }, [messages, loading, limitReached]);
 
   function handleReset() {
@@ -154,7 +155,7 @@ export function LandingPublicDemo() {
         </div>
 
         <div className="chat-panel public-demo-chat">
-          <div className="chat-messages" aria-live="polite">
+          <div className="chat-messages" ref={messagesContainerRef} aria-live="polite">
             {messages.length === 0 && !loading ? (
               <div className="chat-empty">
                 <p>{t("emptyState")}</p>
@@ -188,8 +189,6 @@ export function LandingPublicDemo() {
                 <p>{t("limitReached")}</p>
               </div>
             ) : null}
-
-            <div ref={messagesEndRef} />
           </div>
 
           {error ? <p className="alert">{error}</p> : null}
