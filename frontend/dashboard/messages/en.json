@@ -238,6 +238,11 @@
         "action": "Installation guide",
         "markInstalled": "Mark installed"
       },
+      "first_website_inquiry": {
+        "title": "First real website inquiry",
+        "description": "Wait for the first inquiry from a real website visitor.",
+        "action": "Open inquiries"
+      },
       "test_widget": {
         "title": "Test chat",
         "description": "Send a test message and confirm the inquiry appears here.",
@@ -252,7 +257,8 @@
     "loadFailed": "Failed to load setup progress.",
     "loading": "Loading your setup checklist...",
     "signInRequired": "Sign in to view your getting started checklist.",
-    "allDone": "You're all set. Your chat is active on your website.",
+    "allDone": "Success! Your first real website inquiry has arrived.",
+    "widgetLiveAwaitingInquiry": "Your chat is live on your website. Next, wait for a real visitor inquiry — test chat does not count.",
     "welcomeTitle": "Welcome, {name}",
     "welcomeLead": "In just a few minutes, you'll receive your first website inquiries here.",
     "welcomeNextStepLabel": "Your next step",
@@ -266,7 +272,8 @@
     "activationStatusTitle": "Your website chat status",
     "activationHint": "Find the embed code and more guidance in Settings under Chat on your website.",
     "copyWidgetHint": "Find the full embed code in Settings. You can also see there whether your chat is already active.",
-    "installWidgetLiveHint": "Your chat is active on your website.",
+    "installWidgetLiveHint": "Your chat was detected on your website. The next step is your first real inquiry.",
+    "firstWebsiteInquiryHint": "Only inquiries from your website count. Dashboard test chat is for practice only.",
     "awaitingFirstWebsiteInquiry": "Next: wait for the first real inquiry from your website. Test chat inquiries do not count.",
     "firstWebsiteInquiryReached": "Your first real website inquiry has arrived. Find new inquiries under Inquiries.",
     "openSandboxChat": "Open test chat (sandbox)"

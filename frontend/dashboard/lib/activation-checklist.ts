@@ -14,7 +14,8 @@ export type ActivationChecklistStepId =
   | "user"
   | "notification_email"
   | "copy_widget"
-  | "install_widget";
+  | "install_widget"
+  | "first_website_inquiry";
 
 export interface ActivationChecklistStepConfig {
   id: ActivationChecklistStepId;
@@ -27,6 +28,7 @@ export const ACTIVATION_CHECKLIST_STEPS: ActivationChecklistStepConfig[] = [
   { id: "notification_email", href: "/settings" },
   { id: "copy_widget", href: "/settings" },
   { id: "install_widget", href: "/settings" },
+  { id: "first_website_inquiry", href: "/leads" },
 ];
 
 export interface ActivationChecklistInput {
@@ -70,6 +72,7 @@ export function evaluateActivationChecklist(
     notification_email: notificationConfigured,
     copy_widget: notificationConfigured && hasServerEmbedSnippet(input.activation),
     install_widget: isActivationSetupLive(input.activation?.status),
+    first_website_inquiry: Boolean(input.activation?.first_website_inquiry_at),
   };
 }
 
@@ -83,6 +86,12 @@ export function isActivationChecklistComplete(
   progress: Record<ActivationChecklistStepId, boolean>,
 ): boolean {
   return ACTIVATION_CHECKLIST_STEPS.every((step) => progress[step.id]);
+}
+
+export function isAwaitingFirstWebsiteInquiry(
+  progress: Record<ActivationChecklistStepId, boolean>,
+): boolean {
+  return progress.install_widget && !progress.first_website_inquiry;
 }
 
 export function isAwaitingWebsiteLive(

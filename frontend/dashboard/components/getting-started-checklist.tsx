@@ -13,6 +13,7 @@ import {
   countActivationChecklistSteps,
   evaluateActivationChecklist,
   isActivationChecklistComplete,
+  isAwaitingFirstWebsiteInquiry,
   isAwaitingWebsiteLive,
   type ActivationChecklistStepId,
 } from "@/lib/activation-checklist";
@@ -123,16 +124,13 @@ export function GettingStartedChecklist() {
     : null;
   const completed = progress ? countActivationChecklistSteps(progress) : 0;
   const allDone = progress ? isActivationChecklistComplete(progress) : false;
+  const awaitingFirstWebsiteInquiry =
+    progress ? isAwaitingFirstWebsiteInquiry(progress) : false;
+  const widgetLive = progress?.install_widget ?? false;
   const awaitingWebsiteLive =
     progress && activation
       ? isAwaitingWebsiteLive(progress, activation.status)
       : false;
-  const awaitingFirstWebsiteInquiry = Boolean(
-    activation &&
-      (activation.status === "live" || activation.status === "stale") &&
-      !activation.first_website_inquiry_at,
-  );
-  const firstWebsiteInquiryReached = Boolean(activation?.first_website_inquiry_at);
   const nextStep =
     progress && !allDone
       ? ACTIVATION_CHECKLIST_STEPS.find((step) => !progress[step.id])
@@ -187,6 +185,8 @@ export function GettingStartedChecklist() {
         <>
           {allDone ? (
             <AlertBanner variant="success">{t("allDone")}</AlertBanner>
+          ) : widgetLive && awaitingFirstWebsiteInquiry ? (
+            <AlertBanner>{t("widgetLiveAwaitingInquiry")}</AlertBanner>
           ) : null}
 
           <section
@@ -211,12 +211,15 @@ export function GettingStartedChecklist() {
                   </Link>
                 ) : null}
               </div>
-            ) : allDone && firstWebsiteInquiryReached ? (
-              <p className="muted">{t("firstWebsiteInquiryReached")}</p>
-            ) : allDone && awaitingFirstWebsiteInquiry ? (
-              <p className="muted">{t("awaitingFirstWebsiteInquiry")}</p>
             ) : allDone ? (
-              <p className="muted">{t("welcomeAllDone")}</p>
+              <div className="welcome-banner-next">
+                <p className="muted">{t("firstWebsiteInquiryReached")}</p>
+                <Link href="/leads" className="button">
+                  {t("openLeads")}
+                </Link>
+              </div>
+            ) : awaitingFirstWebsiteInquiry ? (
+              <p className="muted">{t("awaitingFirstWebsiteInquiry")}</p>
             ) : awaitingWebsiteLive ? (
               <p className="muted">{t("awaitingWebsiteLive")}</p>
             ) : null}
@@ -271,6 +274,9 @@ export function GettingStartedChecklist() {
                     ) : null}
                     {step.id === "install_widget" && activation?.status === "live" ? (
                       <p className="muted">{t("installWidgetLiveHint")}</p>
+                    ) : null}
+                    {step.id === "first_website_inquiry" ? (
+                      <p className="muted">{t("firstWebsiteInquiryHint")}</p>
                     ) : null}
                     {company.slug && step.id === "copy_widget" ? (
                       <p className="muted">
