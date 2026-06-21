@@ -971,6 +971,38 @@ code {
   flex: 1 1 140px;
 }
 
+.inquiry-callback-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inquiry-callback-followup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.inquiry-callback-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.inquiry-callback-mark {
+  align-self: flex-start;
+  min-height: 44px;
+}
+
+.inquiry-callback-success {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1f6b3f;
+}
+
 .inquiry-handoff-status {
   padding-top: 16px;
   padding-bottom: 16px;
