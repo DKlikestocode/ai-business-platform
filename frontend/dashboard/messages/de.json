@@ -238,6 +238,11 @@
         "action": "Installationsanleitung",
         "markInstalled": "Als installiert markieren"
       },
+      "first_website_inquiry": {
+        "title": "Erste echte Website-Anfrage",
+        "description": "Warten Sie auf die erste Anfrage eines echten Website-Besuchers.",
+        "action": "Anfragen öffnen"
+      },
       "test_widget": {
         "title": "Chat testen",
         "description": "Senden Sie eine Testnachricht und bestätigen Sie, dass die Anfrage hier erscheint.",
@@ -252,7 +257,8 @@
     "loadFailed": "Setup-Fortschritt konnte nicht geladen werden.",
     "loading": "Ihre Setup-Checkliste wird geladen...",
     "signInRequired": "Melden Sie sich an, um Ihre Erste-Schritte-Checkliste zu sehen.",
-    "allDone": "Alles eingerichtet. Ihr Chat ist auf Ihrer Website aktiv.",
+    "allDone": "Geschafft! Ihre erste echte Website-Anfrage ist eingegangen.",
+    "widgetLiveAwaitingInquiry": "Ihr Chat läuft auf der Website. Als Nächstes wartet eine echte Anfrage von einem Besucher — Test-Chat zählt nicht.",
     "welcomeTitle": "Willkommen, {name}",
     "welcomeLead": "In wenigen Minuten empfangen Sie hier Ihre ersten Website-Anfragen.",
     "welcomeNextStepLabel": "Ihr nächster Schritt",
@@ -266,7 +272,8 @@
     "activationStatusTitle": "Status Ihres Website-Chats",
     "activationHint": "Den Einbindungscode und weitere Hinweise finden Sie in den Einstellungen unter Chat auf Ihrer Website.",
     "copyWidgetHint": "Den vollständigen Einbindungscode finden Sie in den Einstellungen. Dort sehen Sie auch, ob Ihr Chat bereits aktiv ist.",
-    "installWidgetLiveHint": "Ihr Chat ist auf Ihrer Website aktiv.",
+    "installWidgetLiveHint": "Ihr Chat wurde auf Ihrer Website erkannt. Der nächste Schritt ist die erste echte Anfrage.",
+    "firstWebsiteInquiryHint": "Nur Anfragen von Ihrer Website zählen. Der Test-Chat im Dashboard dient nur zum Ausprobieren.",
     "awaitingFirstWebsiteInquiry": "Als Nächstes: Warten Sie auf die erste echte Anfrage von Ihrer Website. Test-Anfragen aus dem Test-Chat zählen nicht.",
     "firstWebsiteInquiryReached": "Ihre erste echte Website-Anfrage ist eingegangen. Neue Anfragen finden Sie unter Anfragen.",
     "openSandboxChat": "Test-Chat öffnen (Sandbox)"

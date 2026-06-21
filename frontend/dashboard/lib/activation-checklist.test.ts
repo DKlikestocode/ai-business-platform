@@ -5,6 +5,7 @@ import {
   countActivationChecklistSteps,
   evaluateActivationChecklist,
   isActivationChecklistComplete,
+  isAwaitingFirstWebsiteInquiry,
   isAwaitingWebsiteLive,
 } from "@/lib/activation-checklist";
 import {
@@ -97,7 +98,26 @@ describe("activation checklist", () => {
     expect(progress.install_widget).toBe(false);
   });
 
-  it("reports full progress only when activation is live", () => {
+  it("reports full progress only when activation is live and first inquiry arrived", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({
+        status: "live",
+        widget_last_seen_at: "2026-06-10T13:00:00Z",
+        widget_last_origin: "https://acme.co",
+        first_website_inquiry_at: "2026-06-11T10:00:00Z",
+      }),
+    });
+
+    expect(isActivationChecklistComplete(progress)).toBe(true);
+    expect(countActivationChecklistSteps(progress)).toBe(
+      ACTIVATION_CHECKLIST_STEPS.length,
+    );
+  });
+
+  it("keeps checklist open when widget is live but no website inquiry yet", () => {
     const progress = evaluateActivationChecklist({
       company,
       user,
@@ -109,10 +129,10 @@ describe("activation checklist", () => {
       }),
     });
 
-    expect(isActivationChecklistComplete(progress)).toBe(true);
-    expect(countActivationChecklistSteps(progress)).toBe(
-      ACTIVATION_CHECKLIST_STEPS.length,
-    );
+    expect(progress.install_widget).toBe(true);
+    expect(progress.first_website_inquiry).toBe(false);
+    expect(isActivationChecklistComplete(progress)).toBe(false);
+    expect(countActivationChecklistSteps(progress)).toBe(5);
   });
 
   it("does not treat stale activation as complete", () => {
@@ -189,5 +209,19 @@ describe("activation checklist", () => {
 
     expect(isAwaitingWebsiteLive(progress, "awaiting_widget")).toBe(true);
     expect(isAwaitingWebsiteLive(progress, "live")).toBe(false);
+  });
+
+  it("detects awaiting first website inquiry after widget is live", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({
+        status: "live",
+        widget_last_seen_at: "2026-06-10T13:00:00Z",
+      }),
+    });
+
+    expect(isAwaitingFirstWebsiteInquiry(progress)).toBe(true);
   });
 });
