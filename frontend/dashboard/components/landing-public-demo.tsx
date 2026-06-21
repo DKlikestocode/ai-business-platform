@@ -39,6 +39,10 @@ export function LandingPublicDemo() {
   const showStarters = messages.length === 0 && !loading && !limitReached;
 
   useEffect(() => {
+    if (messages.length === 0) {
+      return;
+    }
+
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading, limitReached]);
 
