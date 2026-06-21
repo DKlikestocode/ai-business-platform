@@ -49,7 +49,7 @@ function hasNotificationEmailConfigured(
 function hasServerEmbedSnippet(
   activation: CompanyActivation | null | undefined,
 ): boolean {
-  const snippet = activation?.install.embed_snippet?.trim();
+  const snippet = activation?.install?.embed_snippet?.trim();
   if (!snippet) {
     return false;
   }

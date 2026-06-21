@@ -6,7 +6,25 @@ import {
   activationStatusClassName,
   formatActivationTimestamp,
 } from "@/lib/activation-display";
-import type { CompanyActivation } from "@/lib/types";
+import type { ActivationStatus, CompanyActivation } from "@/lib/types";
+
+const ACTIVATION_STATUS_KEYS = [
+  "setup_incomplete",
+  "awaiting_widget",
+  "live",
+  "stale",
+] as const satisfies readonly ActivationStatus[];
+
+function activationStatusMessage(
+  status: ActivationStatus,
+  translate: (key: `status.${ActivationStatus}`) => string,
+): string {
+  if (ACTIVATION_STATUS_KEYS.includes(status)) {
+    return translate(`status.${status}`);
+  }
+
+  return translate("status.setup_incomplete");
+}
 
 interface ActivationStatusViewProps {
   activation: CompanyActivation;
@@ -28,7 +46,7 @@ export function ActivationStatusView({
   return (
     <div className={activationStatusClassName(activation.status)}>
       <p className="activation-status-message">
-        {t(`status.${activation.status}`)}
+        {activationStatusMessage(activation.status, t)}
       </p>
       {showMeta ? (
         <div className="activation-status-meta">

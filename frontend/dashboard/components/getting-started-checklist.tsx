@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
@@ -38,7 +38,7 @@ export function GettingStartedChecklist() {
   const tCommon = useTranslations("common");
   const tOnboarding = useTranslations("onboarding.steps");
   const tErrors = useTranslations("errors");
-  const errorMessages = getErrorMessages(tErrors);
+  const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
@@ -72,24 +72,29 @@ export function GettingStartedChecklist() {
     }
   }, [user, t, errorMessages]);
 
-  const loadActivation = useCallback(async () => {
-    if (!user) {
-      return;
-    }
+  const loadActivation = useCallback(
+    async (options?: { showRefreshing?: boolean }) => {
+      if (!user) {
+        return;
+      }
 
-    setActivationRefreshing(true);
-    setActivationError(null);
-    try {
-      const data = await fetchCompanyActivation();
-      setActivation(data);
-    } catch (err) {
-      setActivationError(
-        formatUserFacingError(err, tActivation("loadFailed"), errorMessages),
-      );
-    } finally {
-      setActivationRefreshing(false);
-    }
-  }, [user, tActivation, errorMessages]);
+      if (options?.showRefreshing) {
+        setActivationRefreshing(true);
+      }
+      setActivationError(null);
+      try {
+        const data = await fetchCompanyActivation();
+        setActivation(data);
+      } catch (err) {
+        setActivationError(
+          formatUserFacingError(err, tActivation("loadFailed"), errorMessages),
+        );
+      } finally {
+        setActivationRefreshing(false);
+      }
+    },
+    [user, tActivation, errorMessages],
+  );
 
   useEffect(() => {
     if (authLoading) {
@@ -216,7 +221,7 @@ export function GettingStartedChecklist() {
                 <button
                   type="button"
                   className="button secondary"
-                  onClick={() => void loadActivation()}
+                  onClick={() => void loadActivation({ showRefreshing: true })}
                   disabled={activationRefreshing}
                 >
                   {activationRefreshing

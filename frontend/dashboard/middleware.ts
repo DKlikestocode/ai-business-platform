@@ -65,6 +65,17 @@ export default function middleware(request: NextRequest) {
   const locale = resolveLocale(pathname);
   const pathnameWithoutLocale = getPathnameWithoutLocale(pathname);
   const hasSession = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
+  const isDashboardAlias =
+    pathnameWithoutLocale === "/dashboard" ||
+    pathnameWithoutLocale.startsWith("/dashboard/");
+
+  if (isDashboardAlias) {
+    const target = request.nextUrl.clone();
+    target.pathname = buildLocalizedPath("/getting-started", locale);
+    target.search = "";
+    return NextResponse.redirect(target);
+  }
+
   const isProtected = protectedPaths.some(
     (path) =>
       pathnameWithoutLocale === path ||
@@ -93,6 +104,8 @@ export const config = {
   matcher: [
     "/",
     "/(de|en)/:path*",
+    "/dashboard",
+    "/dashboard/:path*",
     "/login",
     "/onboarding",
     "/leads/:path*",

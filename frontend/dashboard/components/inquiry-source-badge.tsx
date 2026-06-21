@@ -11,10 +11,14 @@ interface InquirySourceBadgeProps {
 
 export function InquirySourceBadge({ source }: InquirySourceBadgeProps) {
   const t = useTranslations("leads");
+  const resolvedSource: LeadSource = source === "test" ? "test" : "website";
+  const badgeClass =
+    INQUIRY_SOURCE_BADGE_CLASS[resolvedSource] ??
+    INQUIRY_SOURCE_BADGE_CLASS.website;
 
   return (
-    <span className={`badge ${INQUIRY_SOURCE_BADGE_CLASS[source]}`}>
-      {source === "website" ? t("sourceWebsite") : t("sourceTest")}
+    <span className={`badge ${badgeClass}`}>
+      {resolvedSource === "website" ? t("sourceWebsite") : t("sourceTest")}
     </span>
   );
 }

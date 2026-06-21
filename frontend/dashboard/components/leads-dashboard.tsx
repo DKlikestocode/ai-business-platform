@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
@@ -24,16 +24,14 @@ import {
   formatLeadScore,
   isKnownContactMethod,
 } from "@/lib/lead-qualification";
+import { formatDateTime } from "@/lib/format-datetime";
 import type { LeadSort } from "@/lib/lead-qualification";
 import type { Lead, LeadStatus, QualificationStatus } from "@/lib/types";
 import { LEAD_STATUSES } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return formatDateTime(value, locale, "medium") ?? "";
 }
 
 export function LeadsDashboard() {
@@ -44,7 +42,7 @@ export function LeadsDashboard() {
   const tQualification = useTranslations("qualification");
   const tContactMethod = useTranslations("contactMethod");
   const tErrors = useTranslations("errors");
-  const errorMessages = getErrorMessages(tErrors);
+  const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "">("");
   const [qualificationFilter, setQualificationFilter] = useState<
@@ -78,9 +76,9 @@ export function LeadsDashboard() {
             : contactableFilter === "true",
         sort,
       });
-      setLeads(data.items);
-      setTotalPages(data.total_pages);
-      setTotal(data.total);
+      setLeads(Array.isArray(data.items) ? data.items : []);
+      setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
+      setTotal(typeof data.total === "number" ? data.total : 0);
     } catch (err) {
       setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
@@ -15,14 +15,12 @@ import {
 } from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
+import { formatDateTime } from "@/lib/format-datetime";
 import type { CompanySettings } from "@/lib/types";
 import { WidgetActivationPanel } from "@/components/widget-activation-panel";
 
 function formatDate(value: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: "full",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return formatDateTime(value, locale, "full") ?? "";
 }
 
 export function CompanySettingsForm() {
@@ -31,7 +29,7 @@ export function CompanySettingsForm() {
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
-  const errorMessages = getErrorMessages(tErrors);
+  const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
