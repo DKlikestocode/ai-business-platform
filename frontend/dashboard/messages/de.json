@@ -365,6 +365,7 @@
     "sourceWebsite": "Website",
     "sourceTest": "Test",
     "noDescription": "Keine Beschreibung",
+    "unknownContact": "Unbekannter Kontakt",
     "urgency": "Dringlichkeit",
     "updateStatusAria": "Anfrage-Status aktualisieren",
     "sortOptions": {
@@ -397,9 +398,6 @@
     "missingContact": "Kontaktdaten fehlen",
     "noDescription": "Keine Nachricht",
     "moreDetails": "Weitere Details",
-    "leadScore": "Priorität",
-    "qualificationStatus": "Einschätzung",
-    "contactable": "Erreichbar",
     "company": "Unternehmen",
     "location": "Standort",
     "serviceRequested": "Angefragter Service",
