@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
+import { INQUIRY_SOURCE_LABEL_KEY } from "@/lib/inquiry-handoff";
 import { INQUIRY_SOURCE_BADGE_CLASS } from "@/lib/inquiry-source";
 import type { LeadSource } from "@/lib/types";
 
@@ -18,7 +19,7 @@ export function InquirySourceBadge({ source }: InquirySourceBadgeProps) {
 
   return (
     <span className={`badge ${badgeClass}`}>
-      {resolvedSource === "website" ? t("sourceWebsite") : t("sourceTest")}
+      {t(INQUIRY_SOURCE_LABEL_KEY[resolvedSource])}
     </span>
   );
 }
