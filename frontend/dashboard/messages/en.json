@@ -425,7 +425,10 @@
     "preferredCallback": "Preferred callback",
     "created": "Created",
     "summary": "Summary",
-    "updateStatus": "Update status"
+    "updateStatus": "Update status",
+    "markContacted": "Mark as contacted",
+    "markContactedHint": "After contacting the customer, you can mark this inquiry as contacted.",
+    "markContactedSuccess": "Marked as contacted"
   },
   "demoChat": {
     "title": "Test chat",

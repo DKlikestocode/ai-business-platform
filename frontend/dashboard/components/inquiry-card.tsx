@@ -90,7 +90,7 @@ export function InquiryCard({
 
       <div className="inquiry-card-actions">
         {phone ? (
-          <a href={`tel:${phone}`} className="button secondary">
+          <a href={`tel:${phone}`} className="button">
             {t("call")}
           </a>
         ) : null}

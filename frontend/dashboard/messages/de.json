@@ -425,7 +425,10 @@
     "preferredCallback": "Bevorzugter Rückruf",
     "created": "Erstellt",
     "summary": "Zusammenfassung",
-    "updateStatus": "Status aktualisieren"
+    "updateStatus": "Status aktualisieren",
+    "markContacted": "Als kontaktiert markieren",
+    "markContactedHint": "Nach dem Kontakt können Sie die Anfrage als kontaktiert markieren.",
+    "markContactedSuccess": "Als kontaktiert markiert"
   },
   "demoChat": {
     "title": "Test-Chat",

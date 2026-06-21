@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
+import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
@@ -48,6 +49,7 @@ export function LeadDetailView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
+  const [showContactedSuccess, setShowContactedSuccess] = useState(false);
 
   const loadLead = useCallback(async () => {
     if (!leadId) {
@@ -73,13 +75,37 @@ export function LeadDetailView() {
     void loadLead();
   }, [loadLead]);
 
+  useEffect(() => {
+    setShowContactedSuccess(false);
+  }, [leadId]);
+
+  async function handleMarkContacted() {
+    if (!lead) return;
+    setUpdating(true);
+    setError(null);
+    setShowContactedSuccess(false);
+    try {
+      const updated = await updateLeadStatus(lead.id, "contacted");
+      setLead(updated);
+      setShowContactedSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("updateFailed"));
+    } finally {
+      setUpdating(false);
+    }
+  }
+
   async function handleStatusChange(status: LeadStatus) {
     if (!lead) return;
     setUpdating(true);
     setError(null);
+    setShowContactedSuccess(false);
     try {
       const updated = await updateLeadStatus(lead.id, status);
       setLead(updated);
+      if (status === "contacted") {
+        setShowContactedSuccess(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("updateFailed"));
     } finally {
@@ -204,26 +230,15 @@ export function LeadDetailView() {
               </div>
             </dl>
 
-            <div className="inquiry-handoff-actions">
-              {phone ? (
-                <a
-                  href={`tel:${phone}`}
-                  className="button inquiry-handoff-call"
-                  aria-label={`${t("call")} ${phone}`}
-                >
-                  {t("call")}
-                </a>
-              ) : null}
-              {email ? (
-                <a
-                  href={`mailto:${email}`}
-                  className="button secondary inquiry-handoff-email"
-                  aria-label={`${t("emailAction")} ${email}`}
-                >
-                  {t("emailAction")}
-                </a>
-              ) : null}
-            </div>
+            <InquiryCallbackActions
+              phone={phone}
+              email={email}
+              status={lead.status}
+              hasContact={showContactActions}
+              updating={updating}
+              showContactedSuccess={showContactedSuccess}
+              onMarkContacted={() => void handleMarkContacted()}
+            />
           </div>
 
           <div className="card inquiry-handoff-status">
