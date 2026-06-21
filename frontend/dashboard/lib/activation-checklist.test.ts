@@ -174,11 +174,11 @@ describe("activation checklist", () => {
     expect(countActivationChecklistSteps(progress)).toBe(3);
   });
 
-  it("marks notification_email incomplete when missing from settings", () => {
+  it("marks notification_email incomplete when no recipient is configured", () => {
     const progress = evaluateActivationChecklist({
       company,
       user,
-      settings: { ...settings, notification_email: null },
+      settings: { ...settings, notification_email: null, email: "" },
       activation: buildActivation({
         notification_configured: false,
         status: "setup_incomplete",
@@ -187,6 +187,20 @@ describe("activation checklist", () => {
 
     expect(progress.notification_email).toBe(false);
     expect(progress.copy_widget).toBe(false);
+  });
+
+  it("marks notification_email complete when company email is set", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings: { ...settings, notification_email: null, email: "office@acme.co" },
+      activation: buildActivation({
+        notification_configured: true,
+        status: "awaiting_widget",
+      }),
+    });
+
+    expect(progress.notification_email).toBe(true);
   });
 
   it("marks copy_widget incomplete when install metadata is missing", () => {

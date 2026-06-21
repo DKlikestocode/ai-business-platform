@@ -3,9 +3,28 @@ import { describe, expect, it } from "vitest";
 import de from "@/messages/de.json";
 import en from "@/messages/en.json";
 import {
+  areNotificationRecipientSettingsDirty,
   canSendTestNotification,
   isNotificationEmailDirty,
 } from "@/lib/notification-settings";
+import type { CompanySettings } from "@/lib/types";
+
+const baseSettings: CompanySettings = {
+  name: "Acme",
+  slug: "acme",
+  email: "office@acme.co",
+  phone: null,
+  notification_email: "alerts@acme.co",
+  notify_on_new_lead: true,
+  notify_on_contactable_lead: true,
+  contactable_lead_notification_threshold: 50,
+  service_area_center: null,
+  service_radius_km: null,
+  email_delivery_provider: "logging",
+  email_delivery_ready: true,
+  email_delivery_sends_real_email: false,
+  created_at: "2026-06-10T12:00:00Z",
+};
 
 describe("notification settings helpers", () => {
   it("treats matching saved and draft emails as clean", () => {
@@ -26,19 +45,37 @@ describe("notification settings helpers", () => {
     expect(isNotificationEmailDirty("alerts@acme.co", "")).toBe(true);
   });
 
-  it("disables test send when notification email is unsaved", () => {
+  it("disables test send when notification settings are unsaved", () => {
     expect(
-      canSendTestNotification("alerts@acme.co", "ops@acme.co"),
+      canSendTestNotification(baseSettings, {
+        ...baseSettings,
+        notification_email: "ops@acme.co",
+      }),
     ).toBe(false);
-    expect(canSendTestNotification(null, "ops@acme.co")).toBe(false);
+    expect(
+      canSendTestNotification(
+        { ...baseSettings, notification_email: null },
+        { ...baseSettings, notification_email: null, email: "ops@acme.co" },
+      ),
+    ).toBe(false);
   });
 
-  it("allows test send when saved email matches draft", () => {
+  it("allows test send when saved recipient matches draft", () => {
+    expect(canSendTestNotification(baseSettings, baseSettings)).toBe(true);
     expect(
-      canSendTestNotification("alerts@acme.co", "alerts@acme.co"),
+      canSendTestNotification(
+        { ...baseSettings, notification_email: null },
+        { ...baseSettings, notification_email: null },
+      ),
     ).toBe(true);
+  });
+
+  it("detects dirty company email changes", () => {
     expect(
-      canSendTestNotification(" alerts@acme.co ", "alerts@acme.co"),
+      areNotificationRecipientSettingsDirty(baseSettings, {
+        ...baseSettings,
+        email: "ops@acme.co",
+      }),
     ).toBe(true);
   });
 

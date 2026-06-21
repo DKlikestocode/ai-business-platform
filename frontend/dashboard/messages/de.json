@@ -250,7 +250,7 @@
       },
       "notification_email": {
         "title": "Benachrichtigungs-E-Mail konfigurieren",
-        "description": "Wählen Sie, wohin E-Mail-Benachrichtigungen zu neuen Anfragen gesendet werden.",
+        "description": "Standardmäßig nutzen wir Ihre Unternehmens-E-Mail. Optional können Sie eine eigene Benachrichtigungs-Adresse hinterlegen.",
         "action": "Einstellungen öffnen"
       },
       "copy_widget": {
@@ -337,7 +337,8 @@
     "notificationsInactive": "Nicht aktiv",
     "notificationEmail": "Benachrichtigungs-E-Mail",
     "notificationEmailPlaceholder": "Leer lassen für Unternehmens-E-Mail",
-    "notificationEmailFallbackHint": "Ohne eigene Adresse erhalten Sie Benachrichtigungen zu echten Anfragen an die Unternehmens-E-Mail. Zum Testen eine Adresse eintragen und speichern.",
+    "notificationEmailFallbackHint": "Tragen Sie oben im Unternehmensprofil eine E-Mail ein — oder hier eine eigene Benachrichtigungs-Adresse.",
+    "notificationEmailUsingCompanyHint": "Benachrichtigungen gehen an Ihre Unternehmens-E-Mail. Für eine andere Adresse hier eintragen und speichern.",
     "notifyQualified": "Bei wichtigen Anfragen benachrichtigen",
     "notifyContactable": "Bei erreichbaren Anfragen ab Prioritätsschwelle benachrichtigen",
     "contactableThreshold": "Prioritätsschwelle für erreichbare Anfragen",

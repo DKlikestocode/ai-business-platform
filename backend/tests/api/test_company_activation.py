@@ -38,8 +38,8 @@ def test_get_activation_lazy_creates_row(
 
     assert response.status_code == 200
     body = response.json()
-    assert body["status"] == "setup_incomplete"
-    assert body["notification_configured"] is False
+    assert body["status"] == "awaiting_widget"
+    assert body["notification_configured"] is True
     assert body["website_url"] is None
     assert body["install"]["company_slug"] == company.slug
     assert "data-install-token=" in body["install"]["embed_snippet"]
@@ -78,7 +78,23 @@ def test_install_token_stable_across_reads(
     assert activation.install_token in first.json()["install"]["embed_snippet"]
 
 
-def test_notification_configured_derived_from_company_email(
+def test_notification_configured_uses_company_email_without_override(
+    activation_client: TestClient,
+    auth_headers: dict[str, str],
+    company,
+) -> None:
+    activation_response = activation_client.get(
+        "/api/v1/company/activation",
+        headers=auth_headers,
+    )
+    assert activation_response.status_code == 200
+    body = activation_response.json()
+    assert body["notification_configured"] is True
+    assert body["status"] == "awaiting_widget"
+    assert company.email
+
+
+def test_notification_configured_derived_from_notification_email_override(
     activation_client: TestClient,
     auth_headers: dict[str, str],
 ) -> None:

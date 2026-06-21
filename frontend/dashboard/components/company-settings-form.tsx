@@ -18,10 +18,13 @@ import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { formatDateTime } from "@/lib/format-datetime";
 import { PRIORITY_SCORE_FACTORS } from "@/lib/lead-priority";
 import {
+  areNotificationRecipientSettingsDirty,
   canSendTestNotification,
-  isNotificationEmailDirty,
-  normalizeNotificationEmail,
 } from "@/lib/notification-settings";
+import {
+  isNotificationRecipientConfigured,
+  resolveNotificationRecipient,
+} from "@/lib/notification-recipient";
 import type { CompanySettings } from "@/lib/types";
 import { WidgetActivationPanel } from "@/components/widget-activation-panel";
 
@@ -39,12 +42,8 @@ export function CompanySettingsForm() {
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
-  const [savedNotificationEmail, setSavedNotificationEmail] = useState<
-    string | null
-  >(
-    () =>
-      getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY)
-        ?.notification_email ?? null,
+  const [savedSettings, setSavedSettings] = useState<CompanySettings | null>(
+    () => getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
   const [loading, setLoading] = useState(
     () => !getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
@@ -66,7 +65,7 @@ export function CompanySettingsForm() {
     try {
       const data = await loadCachedCompanySettings(setSettings);
       setSettings(data);
-      setSavedNotificationEmail(data.notification_email);
+      setSavedSettings(data);
     } catch (err) {
       setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {
@@ -101,7 +100,7 @@ export function CompanySettingsForm() {
         service_radius_km: settings.service_radius_km,
       });
       setSettings(updated);
-      setSavedNotificationEmail(updated.notification_email);
+      setSavedSettings(updated);
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
       await refresh();
       setSuccess(t("saved"));
@@ -121,16 +120,14 @@ export function CompanySettingsForm() {
     setSuccess(null);
   }
 
-  const notificationsActive = Boolean(
-    normalizeNotificationEmail(savedNotificationEmail),
-  );
-  const notificationEmailDirty = isNotificationEmailDirty(
-    savedNotificationEmail,
-    settings?.notification_email,
-  );
+  const notificationsActive = isNotificationRecipientConfigured(savedSettings);
+  const notificationSettingsDirty =
+    savedSettings && settings
+      ? areNotificationRecipientSettingsDirty(savedSettings, settings)
+      : false;
   const testNotificationEnabled = canSendTestNotification(
-    savedNotificationEmail,
-    settings?.notification_email,
+    savedSettings,
+    settings,
   );
 
   async function handleTestNotification() {
@@ -145,7 +142,7 @@ export function CompanySettingsForm() {
       await sendTestNotification();
       setSuccess(
         t("testNotificationSuccess", {
-          email: normalizeNotificationEmail(savedNotificationEmail),
+          email: resolveNotificationRecipient(savedSettings),
         }),
       );
     } catch (err) {
@@ -307,7 +304,7 @@ export function CompanySettingsForm() {
               : t("notificationsInactive")}
           </span>
           <div className="notification-test-actions">
-            {notificationEmailDirty ? (
+            {notificationSettingsDirty ? (
               <p className="muted field-hint">{t("testNotificationSaveFirst")}</p>
             ) : null}
             <button
@@ -337,9 +334,11 @@ export function CompanySettingsForm() {
               }
               placeholder={t("notificationEmailPlaceholder")}
             />
-            {!normalizeNotificationEmail(savedNotificationEmail) ? (
+            {!isNotificationRecipientConfigured(settings) ? (
               <p className="muted field-hint">{t("notificationEmailFallbackHint")}</p>
-            ) : null}
+            ) : settings.notification_email?.trim() ? null : (
+              <p className="muted field-hint">{t("notificationEmailUsingCompanyHint")}</p>
+            )}
           </label>
           <label className="field checkbox-field">
             <input

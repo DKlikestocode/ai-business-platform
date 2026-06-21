@@ -250,7 +250,7 @@
       },
       "notification_email": {
         "title": "Configure notification email",
-        "description": "Choose where email alerts for new inquiries are sent.",
+        "description": "By default we use your company email. You can optionally set a dedicated notification address.",
         "action": "Open settings"
       },
       "copy_widget": {
@@ -337,7 +337,8 @@
     "notificationsInactive": "Not active",
     "notificationEmail": "Notification email",
     "notificationEmailPlaceholder": "Leave empty to use company email",
-    "notificationEmailFallbackHint": "Without a dedicated address, real inquiry notifications go to your company email. Enter and save an address to send a test.",
+    "notificationEmailFallbackHint": "Add an email in your company profile above — or enter a dedicated notification address here.",
+    "notificationEmailUsingCompanyHint": "Notifications go to your company email. Enter a different address here and save to override.",
     "notifyQualified": "Notify on important inquiries",
     "notifyContactable": "Notify on reachable inquiries above priority threshold",
     "contactableThreshold": "Priority threshold for reachable inquiries",

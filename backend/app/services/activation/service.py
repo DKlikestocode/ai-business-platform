@@ -15,6 +15,7 @@ from app.services.activation.origin import (
     build_blocked_origins,
     validate_widget_page_origin,
 )
+from app.services.notifications.recipient import is_notification_configured
 
 
 @dataclass(frozen=True)
@@ -145,7 +146,7 @@ class ActivationService:
 
     @staticmethod
     def _notification_configured(company: Company) -> bool:
-        return bool(company.notification_email and company.notification_email.strip())
+        return is_notification_configured(company)
 
     def _effective_status(
         self,
