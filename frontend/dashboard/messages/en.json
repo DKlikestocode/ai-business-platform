@@ -40,8 +40,9 @@
   },
   "landing": {
     "eyebrow": "For trades and service businesses",
-    "heroTitle": "More inquiries from your website — without more admin.",
-    "heroLead": "An AI assistant on your website answers first questions, captures contact details and the request, and notifies you when an inquiry matters.",
+    "heroTitle": "Your website captures inquiries — you focus on the job.",
+    "heroLead": "A chat on your website answers first questions, captures name, phone, and details — and alerts you when an inquiry matters.",
+    "heroTrustNote": "Start free · Set up in minutes · No credit card",
     "startPilot": "Start free",
     "signIn": "Sign in",
     "preview": {
@@ -65,39 +66,46 @@
       "customer2": "Sabine Wagner"
     },
     "features": {
-      "widgetTitle": "Inquiries directly on your website",
-      "widgetDescription": "Visitors ask their question in chat. You get name, phone, and details — no form required.",
-      "qualificationTitle": "Important inquiries first",
-      "qualificationDescription": "The system recognizes whether an inquiry is reachable and urgent before your team is notified.",
-      "emailTitle": "Instant email alerts",
-      "emailDescription": "You receive an email with the key details and a link to the inquiry.",
-      "dashboardTitle": "Overview for your team",
-      "dashboardDescription": "View all inquiries, update status, and manage settings."
+      "widgetTitle": "Never miss an inquiry — even evenings and weekends",
+      "widgetDescription": "Visitors ask their question in chat. You get name, phone, and details — no form and no back-and-forth by email.",
+      "qualificationTitle": "Urgent cases land on your desk first",
+      "qualificationDescription": "The system recognizes whether someone is reachable and how urgent it is — before your team is notified.",
+      "emailTitle": "Instant email — with everything you need to call back",
+      "emailDescription": "You receive an email with the key details and a link to the full inquiry.",
+      "dashboardTitle": "All inquiries in one place — like an inbox",
+      "dashboardDescription": "View inquiries, update status, and manage settings — clear for you and your team."
     },
-    "ctaTitle": "Set up in minutes",
-    "ctaDescription": "Add your business, put chat on your website, send a test message — see how it works for you.",
-    "createPilotAccount": "Start free",
+    "featuresTitle": "What you get",
+    "featuresLead": "Less phone tag, more clear inquiries with everything you need for the callback.",
+    "ctaTitle": "Ready to let your website work for you?",
+    "ctaDescription": "Add your business, put chat on your website, and test with a message — see how it works for you.",
+    "ctaFootnote": "Free · No credit card · Live in minutes",
+    "createPilotAccount": "Start free now",
     "howItWorks": {
       "title": "How it works",
-      "lead": "Three steps from sign-up to your first inquiry — no technical skills required.",
+      "lead": "Three steps — from sign-up to your first real inquiry. No IT skills required.",
       "steps": {
         "start": {
-          "title": "Get started free",
-          "description": "Set up your business and create your login. It only takes a few minutes."
+          "title": "Set up your business",
+          "description": "Name, trade, done. Your login is ready in a few minutes.",
+          "outcome": "→ You have your own inbox for inquiries."
         },
         "embed": {
           "title": "Add chat to your website",
-          "description": "Copy the embed code and paste it on your website — like a contact form, but as chat."
+          "description": "Copy a snippet of code and paste it in — like embedding Google Maps.",
+          "outcome": "→ Visitors can ask questions right away."
         },
         "inquiries": {
-          "title": "Receive inquiries directly",
-          "description": "Visitors ask their question in chat. You get the key details by email and every inquiry in your dashboard."
+          "title": "Receive inquiries",
+          "description": "Name, phone, details — the chat captures everything that matters automatically.",
+          "outcome": "→ You get an email alert and see every inquiry in your dashboard."
         }
       }
     },
     "publicDemo": {
-      "title": "Try the chat yourself",
-      "lead": "Write like a website visitor — the assistant replies live with AI.",
+      "eyebrow": "Try it live",
+      "title": "See for yourself how it feels",
+      "lead": "Write like a website visitor — the assistant replies live.",
       "disclaimer": "Live demo: replies come from AI. No real inquiry is sent to a business.",
       "chipsLabel": "Start an example:",
       "emptyState": "Type a message or choose an example.",
@@ -122,9 +130,9 @@
       "resetCta": "Start new demo"
     },
     "trustTitle": "Trust and privacy",
-    "trustGdpr": "GDPR-oriented",
-    "trustHttps": "HTTPS encrypted",
-    "trustHosting": "EU hosting",
+    "trustGdpr": "GDPR-oriented — your customer data stays protected",
+    "trustHttps": "HTTPS encrypted — secure transmission",
+    "trustHosting": "EU hosting — data stays in Europe",
     "trustNoTraining": "No customer data in AI training"
   },
   "legal": {

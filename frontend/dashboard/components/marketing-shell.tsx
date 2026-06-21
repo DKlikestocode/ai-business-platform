@@ -30,7 +30,13 @@ export async function MarketingShell({ children }: MarketingShellProps) {
       </header>
       <main>{children}</main>
       <footer className="marketing-footer shell">
-        <p className="muted">{brand("tagline")}</p>
+        <div className="marketing-footer-brand">
+          <Link href="/" className="brand-link brand-link-footer">
+            <span className="brand-mark">{brand("mark")}</span>
+            <span>{brand("name")}</span>
+          </Link>
+          <p className="muted marketing-footer-tagline">{brand("tagline")}</p>
+        </div>
         <nav className="legal-footer-links" aria-label={legal("footerNav")}>
           <Link href="/impressum">{legal("impressumLink")}</Link>
           <Link href="/datenschutz">{legal("datenschutzLink")}</Link>
