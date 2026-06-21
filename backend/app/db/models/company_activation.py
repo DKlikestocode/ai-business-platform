@@ -35,6 +35,14 @@ class CompanyActivation(Base):
         nullable=True,
     )
     widget_last_origin: Mapped[str | None] = mapped_column(String(2048), nullable=True)
+    first_website_inquiry_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    first_website_inquiry_lead_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("leads.id", ondelete="SET NULL"),
+        nullable=True,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

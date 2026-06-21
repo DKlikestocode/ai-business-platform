@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 
 import { StatusBadge } from "@/components/status-badge";
+import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { StatusSelect } from "@/components/status-select";
 import { Link } from "@/i18n/navigation";
@@ -12,6 +13,7 @@ import {
   normalizeEmail,
   normalizePhone,
 } from "@/lib/inquiry-handoff";
+import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
 import type { Lead, LeadStatus } from "@/lib/types";
 
 interface InquiryCardProps {
@@ -32,9 +34,11 @@ export function InquiryCard({
   const email = normalizeEmail(lead);
   const urgency = lead.urgency?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
+  const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
 
   return (
     <article className="inquiry-card card">
+      {showFirstWebsiteMarker ? <FirstWebsiteInquiryMarker /> : null}
       <div className="inquiry-card-header">
         <div className="inquiry-card-intro">
           <h3 className="inquiry-card-name">

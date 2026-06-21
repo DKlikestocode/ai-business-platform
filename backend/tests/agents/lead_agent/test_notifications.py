@@ -4,6 +4,7 @@ from app.agents.lead_agent.agent import LeadCaptureAgent
 from app.agents.lead_agent.models import LeadCaptureLLMOutput, LeadMessageRequest, QualificationStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.service import LeadCaptureService
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
@@ -16,6 +17,7 @@ def build_service(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     notification_service: NotificationService,
     outputs: list[LeadCaptureLLMOutput],
 ) -> LeadCaptureService:
@@ -25,6 +27,7 @@ def build_service(
         extraction_client=MockLeadExtractionClient(outputs),
         repository=lead_repository,
         company_repository=company_repository,
+        activation_repository=company_activation_repository,
         notification_service=notification_service,
     )
 
@@ -34,6 +37,7 @@ async def test_lead_capture_sends_notification_when_lead_becomes_qualified(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -42,6 +46,7 @@ async def test_lead_capture_sends_notification_when_lead_becomes_qualified(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=notification_service,
         outputs=[
             LeadCaptureLLMOutput(
@@ -78,6 +83,7 @@ async def test_lead_capture_does_not_send_notification_for_incomplete_lead(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -86,6 +92,7 @@ async def test_lead_capture_does_not_send_notification_for_incomplete_lead(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=notification_service,
         outputs=[
             LeadCaptureLLMOutput(
@@ -112,6 +119,7 @@ async def test_lead_capture_does_not_duplicate_notification(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -131,6 +139,7 @@ async def test_lead_capture_does_not_duplicate_notification(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=notification_service,
         outputs=[complete_output, complete_output],
     )

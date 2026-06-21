@@ -189,6 +189,13 @@ def lead_repository(db_session):
 
 
 @pytest.fixture
+def company_activation_repository(db_session):
+    from app.repositories.company_activation_repository import CompanyActivationRepository
+
+    return CompanyActivationRepository(db_session)
+
+
+@pytest.fixture
 def dev_client(db_session) -> "TestClient":
     from fastapi.testclient import TestClient
 

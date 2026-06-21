@@ -18,6 +18,7 @@ function makeLead(overrides: Partial<Lead> = {}): Lead {
     company_id: "company-1",
     conversation_id: "conv-1",
     source: "website",
+    is_first_website_inquiry: false,
     name: "Max Mustermann",
     phone: "+49 170 1234567",
     email: "max@example.com",

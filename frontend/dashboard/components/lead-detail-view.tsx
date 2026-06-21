@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
+import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -17,6 +18,7 @@ import {
   normalizeEmail,
   normalizePhone,
 } from "@/lib/inquiry-handoff";
+import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
 import type { Lead, LeadStatus } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
@@ -91,6 +93,9 @@ export function LeadDetailView() {
     : t("noDescription");
   const urgency = lead?.urgency?.trim() || null;
   const showContactActions = lead ? hasContactData(lead) : false;
+  const showFirstWebsiteMarker = lead
+    ? shouldShowFirstWebsiteInquiryMarker(lead)
+    : false;
 
   return (
     <div className="stack">
@@ -125,6 +130,10 @@ export function LeadDetailView() {
           </div>
 
           {error ? <div className="alert">{error}</div> : null}
+
+          {showFirstWebsiteMarker ? (
+            <FirstWebsiteInquiryMarker variant="detail" />
+          ) : null}
 
           <div className="card inquiry-handoff-card">
             <dl className="inquiry-handoff-list">

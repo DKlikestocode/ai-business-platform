@@ -61,6 +61,7 @@ function buildActivation(
     widget_live_at: null,
     widget_last_seen_at: null,
     widget_last_origin: null,
+    first_website_inquiry_at: null,
     install: {
       company_slug: "acme",
       embed_snippet:

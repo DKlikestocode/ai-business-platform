@@ -71,3 +71,21 @@ class CompanyActivationRepository:
         self._session.commit()
         self._session.refresh(activation)
         return activation
+
+    def record_first_website_inquiry(
+        self,
+        company_id: UUID,
+        *,
+        lead_id: UUID,
+        inquired_at: datetime | None = None,
+    ) -> bool:
+        """Persist the first website inquiry milestone when not yet recorded."""
+        activation = self.get_or_create(company_id)
+        if activation.first_website_inquiry_at is not None:
+            return False
+
+        activation.first_website_inquiry_at = inquired_at or datetime.now(UTC)
+        activation.first_website_inquiry_lead_id = lead_id
+        self._session.commit()
+        self._session.refresh(activation)
+        return True

@@ -4,6 +4,7 @@ from app.agents.lead_agent.dashboard_service import LeadDashboardService
 from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.db.models.company import Company
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.conversation_repository import ConversationRepository
 
 
@@ -11,8 +12,13 @@ from app.repositories.conversation_repository import ConversationRepository
 def dashboard_service(
     lead_repository: LeadRepository,
     conversation_repository: ConversationRepository,
+    company_activation_repository: CompanyActivationRepository,
 ) -> LeadDashboardService:
-    return LeadDashboardService(lead_repository, conversation_repository)
+    return LeadDashboardService(
+        lead_repository,
+        conversation_repository,
+        company_activation_repository,
+    )
 
 
 def test_repository_list_leads_paginates(

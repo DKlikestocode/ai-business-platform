@@ -127,6 +127,12 @@ export function GettingStartedChecklist() {
     progress && activation
       ? isAwaitingWebsiteLive(progress, activation.status)
       : false;
+  const awaitingFirstWebsiteInquiry = Boolean(
+    activation &&
+      (activation.status === "live" || activation.status === "stale") &&
+      !activation.first_website_inquiry_at,
+  );
+  const firstWebsiteInquiryReached = Boolean(activation?.first_website_inquiry_at);
   const nextStep =
     progress && !allDone
       ? ACTIVATION_CHECKLIST_STEPS.find((step) => !progress[step.id])
@@ -205,6 +211,10 @@ export function GettingStartedChecklist() {
                   </Link>
                 ) : null}
               </div>
+            ) : allDone && firstWebsiteInquiryReached ? (
+              <p className="muted">{t("firstWebsiteInquiryReached")}</p>
+            ) : allDone && awaitingFirstWebsiteInquiry ? (
+              <p className="muted">{t("awaitingFirstWebsiteInquiry")}</p>
             ) : allDone ? (
               <p className="muted">{t("welcomeAllDone")}</p>
             ) : awaitingWebsiteLive ? (

@@ -18,6 +18,7 @@ class LeadResponse(BaseModel):
     company_id: UUID
     conversation_id: str
     source: InquirySource
+    is_first_website_inquiry: bool
     name: str
     phone: str
     email: str | None
@@ -51,13 +52,36 @@ class LeadStatusUpdateRequest(BaseModel):
     status: LeadStatus
 
 
-def lead_to_response(lead: Lead, *, source: InquirySource) -> LeadResponse:
+def resolve_is_first_website_inquiry(
+    lead: Lead,
+    *,
+    source: InquirySource,
+    first_website_inquiry_lead_id: UUID | None,
+) -> bool:
+    if source != InquirySource.WEBSITE:
+        return False
+    if first_website_inquiry_lead_id is None:
+        return False
+    return lead.id == first_website_inquiry_lead_id
+
+
+def lead_to_response(
+    lead: Lead,
+    *,
+    source: InquirySource,
+    first_website_inquiry_lead_id: UUID | None = None,
+) -> LeadResponse:
     return LeadResponse.model_validate(
         {
             "id": lead.id,
             "company_id": lead.company_id,
             "conversation_id": lead.conversation_id,
             "source": source,
+            "is_first_website_inquiry": resolve_is_first_website_inquiry(
+                lead,
+                source=source,
+                first_website_inquiry_lead_id=first_website_inquiry_lead_id,
+            ),
             "name": lead.name,
             "phone": lead.phone,
             "email": lead.email,
@@ -95,6 +119,7 @@ def build_paginated_response(
     page_size: int,
     total: int,
     channels_by_conversation_id: dict[str, ConversationChannel],
+    first_website_inquiry_lead_id: UUID | None = None,
 ) -> PaginatedLeadResponse:
     total_pages = math.ceil(total / page_size) if total else 0
     return PaginatedLeadResponse(
@@ -102,6 +127,7 @@ def build_paginated_response(
             lead_to_response(
                 lead,
                 source=resolve_lead_source(lead, channels_by_conversation_id),
+                first_website_inquiry_lead_id=first_website_inquiry_lead_id,
             )
             for lead in items
         ],

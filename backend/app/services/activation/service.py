@@ -31,6 +31,7 @@ class ActivationView:
     widget_live_at: str | None
     widget_last_seen_at: str | None
     widget_last_origin: str | None
+    first_website_inquiry_at: str | None
     install: ActivationInstall
     updated_at: str
 
@@ -128,6 +129,9 @@ class ActivationService:
             widget_live_at=self._format_datetime(activation.widget_live_at),
             widget_last_seen_at=self._format_datetime(activation.widget_last_seen_at),
             widget_last_origin=activation.widget_last_origin,
+            first_website_inquiry_at=self._format_datetime(
+                activation.first_website_inquiry_at,
+            ),
             install=ActivationInstall(
                 company_slug=company.slug,
                 embed_snippet=build_widget_embed_snippet(

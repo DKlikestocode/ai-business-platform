@@ -18,6 +18,7 @@ class ActivationResponse(BaseModel):
     widget_live_at: datetime | None
     widget_last_seen_at: datetime | None
     widget_last_origin: str | None
+    first_website_inquiry_at: datetime | None
     install: ActivationInstallResponse
     updated_at: datetime
 
@@ -42,6 +43,11 @@ def activation_to_response(view: ActivationView) -> ActivationResponse:
             else None
         ),
         widget_last_origin=view.widget_last_origin,
+        first_website_inquiry_at=(
+            datetime.fromisoformat(view.first_website_inquiry_at)
+            if view.first_website_inquiry_at
+            else None
+        ),
         install=ActivationInstallResponse(
             company_slug=view.install.company_slug,
             embed_snippet=view.install.embed_snippet,
