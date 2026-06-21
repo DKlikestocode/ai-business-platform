@@ -7,6 +7,7 @@ import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { StatusSelect } from "@/components/status-select";
 import { Link } from "@/i18n/navigation";
 import {
+  displayName,
   handoffPreviewText,
   normalizeEmail,
   normalizePhone,
@@ -38,7 +39,7 @@ export function InquiryCard({
         <div className="inquiry-card-intro">
           <h3 className="inquiry-card-name">
             <Link href={`/leads/${lead.id}`} className="link">
-              {lead.name}
+              {displayName(lead.name, t("unknownContact"))}
             </Link>
           </h3>
           {lead.service_requested ? (

@@ -125,4 +125,9 @@ describe("inquiry handoff helpers", () => {
     expect(en.leads.sourceWebsite).toBe("Website");
     expect(en.leads.sourceTest).toBe("Test");
   });
+
+  it("uses the same unknown contact label in inbox and detail", () => {
+    expect(de.leads.unknownContact).toBe(de.leadDetail.unknownContact);
+    expect(en.leads.unknownContact).toBe(en.leadDetail.unknownContact);
+  });
 });
