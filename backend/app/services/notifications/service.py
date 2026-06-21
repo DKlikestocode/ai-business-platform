@@ -112,6 +112,21 @@ class NotificationService:
     ) -> bool:
         return await self.maybe_notify_lead(company, lead, channel=channel)
 
+    async def send_test_inquiry_notification(self, company: Company) -> None:
+        recipient = (company.notification_email or "").strip()
+        if not recipient:
+            raise ValueError("No notification email configured.")
+
+        subject = "Test: Neue Anfrage über Ihren Website-Chat"
+        body = self._build_test_inquiry_email_body(company=company)
+        message = EmailMessage(to=recipient, subject=subject, body=body)
+        await self._provider.send_email(message)
+        logger.info(
+            "Sent test inquiry notification for company %s to %s",
+            company.id,
+            recipient,
+        )
+
     @staticmethod
     def _qualification_label(status: str) -> str:
         return _QUALIFICATION_LABELS.get(status, status)
@@ -121,6 +136,30 @@ class NotificationService:
         if not method:
             return _CONTACT_METHOD_LABELS["unknown"]
         return _CONTACT_METHOD_LABELS.get(method, method)
+
+    @staticmethod
+    def _build_test_inquiry_email_body(*, company: Company) -> str:
+        return "\n".join(
+            [
+                "Dies ist eine Test-E-Mail von Agent Platform.",
+                "",
+                f"Sie erhalten diese Nachricht, weil Sie einen Test für {company.name} "
+                "ausgelöst haben.",
+                "",
+                "Ihre E-Mail-Benachrichtigungen funktionieren. Bei echten Website-Anfragen "
+                "erhalten Sie eine ähnliche Nachricht mit den Details der Anfrage.",
+                "",
+                "—",
+                "Beispiel einer echten Anfrage (nur zur Veranschaulichung):",
+                "",
+                "Zusammenfassung: Undichtigkeit in der Küche — dringend",
+                "Name: Sabine Wagner",
+                "Telefon: +49 170 1234567",
+                "E-Mail: sabine@example.com",
+                "Angefragter Service: Rohrreparatur",
+                "Dringlichkeit: Hoch",
+            ],
+        )
 
     @staticmethod
     def _build_lead_email_body(

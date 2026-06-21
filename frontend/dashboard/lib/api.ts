@@ -243,6 +243,12 @@ export async function updateCompanySettings(
   });
 }
 
+export async function sendTestNotification(): Promise<void> {
+  await request("/api/v1/company/settings/test-notification", {
+    method: "POST",
+  });
+}
+
 export async function fetchCompanyActivation(): Promise<CompanyActivation> {
   return request<CompanyActivation>("/api/v1/company/activation");
 }
