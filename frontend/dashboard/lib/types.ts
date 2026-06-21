@@ -24,6 +24,7 @@ export interface CompanyActivation {
   widget_live_at: string | null;
   widget_last_seen_at: string | null;
   widget_last_origin: string | null;
+  first_website_inquiry_at: string | null;
   install: ActivationInstall;
   updated_at: string;
 }
@@ -118,6 +119,7 @@ export interface Lead {
   company_id: string;
   conversation_id: string;
   source: LeadSource;
+  is_first_website_inquiry: boolean;
   name: string;
   phone: string;
   email: string | null;

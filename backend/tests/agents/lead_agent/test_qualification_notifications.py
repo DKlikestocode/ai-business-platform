@@ -5,6 +5,7 @@ from app.agents.lead_agent.models import LeadCaptureLLMOutput, LeadMessageReques
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.service import LeadCaptureService
 from app.db.models.enums import ConversationChannel
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
@@ -17,6 +18,7 @@ def build_service(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     notification_service: NotificationService,
     outputs: list[LeadCaptureLLMOutput],
     channel: ConversationChannel = ConversationChannel.WEB,
@@ -27,6 +29,7 @@ def build_service(
         extraction_client=MockLeadExtractionClient(outputs),
         repository=lead_repository,
         company_repository=company_repository,
+        activation_repository=company_activation_repository,
         notification_service=notification_service,
         channel=channel,
     )
@@ -37,6 +40,7 @@ async def test_non_contactable_urgent_message_does_not_notify(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -44,6 +48,7 @@ async def test_non_contactable_urgent_message_does_not_notify(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=NotificationService(provider, lead_repository),
         outputs=[
             LeadCaptureLLMOutput(
@@ -73,6 +78,7 @@ async def test_contactable_partial_lead_notifies_above_threshold(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -80,6 +86,7 @@ async def test_contactable_partial_lead_notifies_above_threshold(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=NotificationService(provider, lead_repository),
         outputs=[
             LeadCaptureLLMOutput(
@@ -113,6 +120,7 @@ async def test_contactable_low_score_lead_does_not_notify(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -120,6 +128,7 @@ async def test_contactable_low_score_lead_does_not_notify(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=NotificationService(provider, lead_repository),
         outputs=[LeadCaptureLLMOutput(reply="Thanks!", phone="555-0100")],
     )
@@ -144,6 +153,7 @@ async def test_complete_lead_notifies(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -151,6 +161,7 @@ async def test_complete_lead_notifies(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=NotificationService(provider, lead_repository),
         outputs=[
             LeadCaptureLLMOutput(
@@ -184,6 +195,7 @@ async def test_whatsapp_channel_notifies_for_contactable_context(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     company,
 ) -> None:
     provider = MockEmailProvider()
@@ -191,6 +203,7 @@ async def test_whatsapp_channel_notifies_for_contactable_context(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         notification_service=NotificationService(provider, lead_repository),
         channel=ConversationChannel.WHATSAPP,
         outputs=[

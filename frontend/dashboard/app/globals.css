@@ -292,6 +292,26 @@ a {
   color: #6b5a1f;
 }
 
+.first-website-inquiry-marker {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid #c7e3d0;
+  border-radius: 8px;
+  background: #f4faf6;
+}
+
+.first-website-inquiry-marker-title {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f6b3f;
+}
+
+.first-website-inquiry-marker-body {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
 .detail-header-badges {
   display: flex;
   flex-wrap: wrap;

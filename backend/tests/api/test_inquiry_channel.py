@@ -8,6 +8,7 @@ from app.agents.lead_agent.service import LeadCaptureService
 from app.api.dependencies import get_lead_capture_service, get_widget_lead_capture_service
 from app.db.models.enums import ConversationChannel
 from app.main import app
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
@@ -32,6 +33,7 @@ def _build_widget_service(db_session) -> LeadCaptureService:
         ),
         repository=lead_repository,
         company_repository=CompanyRepository(db_session),
+        activation_repository=CompanyActivationRepository(db_session),
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
         channel=ConversationChannel.WEB,
     )
@@ -53,6 +55,7 @@ def _build_dashboard_service(db_session) -> LeadCaptureService:
         ),
         repository=lead_repository,
         company_repository=CompanyRepository(db_session),
+        activation_repository=CompanyActivationRepository(db_session),
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
         channel=ConversationChannel.DASHBOARD,
     )
@@ -237,6 +240,7 @@ def test_reused_demo_chat_conversation_upgrades_to_dashboard_channel_and_test_so
         ),
         repository=lead_repository,
         company_repository=CompanyRepository(db_session),
+        activation_repository=CompanyActivationRepository(db_session),
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
         channel=ConversationChannel.DASHBOARD,
     )

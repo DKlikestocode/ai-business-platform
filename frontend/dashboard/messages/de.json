@@ -266,6 +266,8 @@
     "activationHint": "Den Einbindungscode und weitere Hinweise finden Sie in den Einstellungen unter Chat auf Ihrer Website.",
     "copyWidgetHint": "Den vollständigen Einbindungscode finden Sie in den Einstellungen. Dort sehen Sie auch, ob Ihr Chat bereits aktiv ist.",
     "installWidgetLiveHint": "Ihr Chat ist auf Ihrer Website aktiv.",
+    "awaitingFirstWebsiteInquiry": "Als Nächstes: Warten Sie auf die erste echte Anfrage von Ihrer Website. Test-Anfragen aus dem Test-Chat zählen nicht.",
+    "firstWebsiteInquiryReached": "Ihre erste echte Website-Anfrage ist eingegangen. Neue Anfragen finden Sie unter Anfragen.",
     "openSandboxChat": "Test-Chat öffnen (Sandbox)"
   },
   "settings": {
@@ -373,6 +375,8 @@
     "openDetails": "Details öffnen",
     "sourceWebsite": "Website",
     "sourceTest": "Test",
+    "firstWebsiteInquiryTitle": "Erste echte Website-Anfrage",
+    "firstWebsiteInquiryBody": "Diese Anfrage kam von Ihrer Website.",
     "noDescription": "Keine Beschreibung",
     "unknownContact": "Unbekannter Kontakt",
     "urgency": "Dringlichkeit",
@@ -402,6 +406,8 @@
     "howUrgent": "Wie dringend?",
     "howToContact": "Wie kontaktieren?",
     "origin": "Herkunft",
+    "firstWebsiteInquiryTitle": "Erste echte Website-Anfrage",
+    "firstWebsiteInquiryBody": "Diese Anfrage kam von Ihrer Website.",
     "call": "Anrufen",
     "emailAction": "E-Mail",
     "missingContact": "Kontaktdaten fehlen",

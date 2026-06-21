@@ -9,6 +9,7 @@ from app.api.schemas.leads import (
     lead_to_response,
     resolve_lead_source,
 )
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.conversation_repository import ConversationRepository
 
 
@@ -19,9 +20,17 @@ class LeadDashboardService:
         self,
         repository: LeadRepository,
         conversation_repository: ConversationRepository,
+        activation_repository: CompanyActivationRepository,
     ) -> None:
         self._repository = repository
         self._conversation_repository = conversation_repository
+        self._activation_repository = activation_repository
+
+    def _first_website_inquiry_lead_id(self, company_id: UUID) -> UUID | None:
+        activation = self._activation_repository.get_by_company_id(company_id)
+        if activation is None:
+            return None
+        return activation.first_website_inquiry_lead_id
 
     def list_leads(
         self,
@@ -55,6 +64,7 @@ class LeadDashboardService:
             page_size=page_size,
             total=total,
             channels_by_conversation_id=channels,
+            first_website_inquiry_lead_id=self._first_website_inquiry_lead_id(company_id),
         )
 
     def get_lead(self, lead_id: UUID, *, company_id: UUID) -> LeadResponse | None:
@@ -66,7 +76,11 @@ class LeadDashboardService:
             external_ids=[lead.conversation_id],
         )
         source = resolve_lead_source(lead, channels)
-        return lead_to_response(lead, source=source)
+        return lead_to_response(
+            lead,
+            source=source,
+            first_website_inquiry_lead_id=self._first_website_inquiry_lead_id(company_id),
+        )
 
     def update_status(
         self,
@@ -83,4 +97,8 @@ class LeadDashboardService:
             external_ids=[lead.conversation_id],
         )
         source = resolve_lead_source(lead, channels)
-        return lead_to_response(lead, source=source)
+        return lead_to_response(
+            lead,
+            source=source,
+            first_website_inquiry_lead_id=self._first_website_inquiry_lead_id(company_id),
+        )

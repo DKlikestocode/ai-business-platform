@@ -28,6 +28,7 @@ from app.agents.lead_agent.utils import (
 from app.core.agent_engine.context import AgentContext
 from app.core.llm.models import ChatMessage
 from app.db.models.enums import ConversationChannel, MessageRole
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
@@ -46,6 +47,7 @@ class LeadCaptureService:
         extraction_client: LeadExtractionClient,
         repository: LeadRepository,
         company_repository: CompanyRepository,
+        activation_repository: CompanyActivationRepository,
         notification_service: NotificationService,
         channel: ConversationChannel = ConversationChannel.WEB,
     ) -> None:
@@ -54,6 +56,7 @@ class LeadCaptureService:
         self._extraction_client = extraction_client
         self._repository = repository
         self._company_repository = company_repository
+        self._activation_repository = activation_repository
         self._notification_service = notification_service
         self._channel = channel
 
@@ -153,6 +156,13 @@ class LeadCaptureService:
                 request.conversation_id,
                 qualification.qualification_status.value,
             )
+            if self._channel == ConversationChannel.WEB:
+                self._activation_repository.record_first_website_inquiry(
+                    company_id,
+                    lead_id=lead.id,
+                    inquired_at=lead.created_at,
+                )
+
             company = self._company_repository.get_by_id(company_id)
             if company is not None:
                 await self._notification_service.maybe_notify_lead(

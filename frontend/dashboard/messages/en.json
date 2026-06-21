@@ -266,6 +266,8 @@
     "activationHint": "Find the embed code and more guidance in Settings under Chat on your website.",
     "copyWidgetHint": "Find the full embed code in Settings. You can also see there whether your chat is already active.",
     "installWidgetLiveHint": "Your chat is active on your website.",
+    "awaitingFirstWebsiteInquiry": "Next: wait for the first real inquiry from your website. Test chat inquiries do not count.",
+    "firstWebsiteInquiryReached": "Your first real website inquiry has arrived. Find new inquiries under Inquiries.",
     "openSandboxChat": "Open test chat (sandbox)"
   },
   "settings": {
@@ -373,6 +375,8 @@
     "openDetails": "Open details",
     "sourceWebsite": "Website",
     "sourceTest": "Test",
+    "firstWebsiteInquiryTitle": "First real website inquiry",
+    "firstWebsiteInquiryBody": "This inquiry came from your website.",
     "noDescription": "No description",
     "unknownContact": "Unknown contact",
     "urgency": "Urgency",
@@ -402,6 +406,8 @@
     "howUrgent": "How urgent?",
     "howToContact": "How to contact?",
     "origin": "Source",
+    "firstWebsiteInquiryTitle": "First real website inquiry",
+    "firstWebsiteInquiryBody": "This inquiry came from your website.",
     "call": "Call",
     "emailAction": "Email",
     "missingContact": "Contact details missing",

@@ -16,6 +16,7 @@ function buildActivation(
     widget_live_at: "2026-06-01T10:00:00.000Z",
     widget_last_seen_at: "2026-06-01T10:00:00.000Z",
     widget_last_origin: "https://acme.co",
+    first_website_inquiry_at: null,
     install: {
       company_slug: "acme",
       embed_snippet: '<div data-install-token="secret"></div>',

@@ -4,6 +4,7 @@ from app.agents.lead_agent.agent import LeadCaptureAgent
 from app.agents.lead_agent.models import LeadCaptureLLMOutput, LeadMessageRequest
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.service import LeadCaptureService
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
@@ -16,6 +17,7 @@ def build_service(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
     outputs: list[LeadCaptureLLMOutput],
 ) -> LeadCaptureService:
     return LeadCaptureService(
@@ -24,6 +26,7 @@ def build_service(
         extraction_client=MockLeadExtractionClient(outputs),
         repository=lead_repository,
         company_repository=company_repository,
+        activation_repository=company_activation_repository,
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
     )
 
@@ -33,12 +36,14 @@ async def test_lead_capture_service_tracks_missing_fields(
     conversation_repository: ConversationRepository,
     lead_repository,
     company_repository,
+    company_activation_repository,
     company,
 ) -> None:
     service = build_service(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         outputs=[
                 LeadCaptureLLMOutput(
                     reply="Thanks! What service do you need?",
@@ -67,12 +72,14 @@ async def test_lead_capture_service_persists_complete_lead(
     conversation_repository: ConversationRepository,
     lead_repository,
     company_repository,
+    company_activation_repository,
     company,
 ) -> None:
     service = build_service(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         outputs=[
             LeadCaptureLLMOutput(
                 reply="Thanks, we have everything we need.",
@@ -111,12 +118,14 @@ async def test_lead_capture_service_merges_context_across_messages(
     conversation_repository: ConversationRepository,
     lead_repository,
     company_repository,
+    company_activation_repository,
     company,
 ) -> None:
     service = build_service(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         outputs=[
             LeadCaptureLLMOutput(
                 reply="Thanks Jane. What service do you need?",
@@ -160,12 +169,14 @@ async def test_lead_capture_service_persists_across_service_reinstantiation(
     conversation_repository: ConversationRepository,
     lead_repository,
     company_repository,
+    company_activation_repository,
     company,
 ) -> None:
     first_service = build_service(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         outputs=[
             LeadCaptureLLMOutput(
                 reply="Thanks Jane. What service do you need?",
@@ -186,6 +197,7 @@ async def test_lead_capture_service_persists_across_service_reinstantiation(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
         outputs=[
             LeadCaptureLLMOutput(
                 reply="Got it. When should we call you back?",

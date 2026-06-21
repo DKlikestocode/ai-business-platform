@@ -8,6 +8,7 @@ from app.agents.lead_agent.service import LeadCaptureService
 from app.api.dependencies import get_lead_capture_service
 from app.core.di.container import RuntimeContainer
 from app.main import app
+from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
@@ -37,6 +38,7 @@ def api_client(api_runtime, db_session, company) -> TestClient:
         ),
         repository=lead_repository,
         company_repository=CompanyRepository(db_session),
+        activation_repository=CompanyActivationRepository(db_session),
         notification_service=NotificationService(MockEmailProvider(), lead_repository),
     )
 

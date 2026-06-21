@@ -119,6 +119,7 @@ def _build_lead_capture_service(
         ),
         repository=LeadRepository(db),
         company_repository=CompanyRepository(db),
+        activation_repository=CompanyActivationRepository(db),
         notification_service=notification_service,
         channel=channel,
     )
@@ -135,8 +136,13 @@ def get_conversation_repository(db: Session = Depends(get_db)) -> ConversationRe
 def get_lead_dashboard_service(
     repository: LeadRepository = Depends(get_lead_repository),
     conversation_repository: ConversationRepository = Depends(get_conversation_repository),
+    db: Session = Depends(get_db),
 ) -> LeadDashboardService:
-    return LeadDashboardService(repository, conversation_repository)
+    return LeadDashboardService(
+        repository,
+        conversation_repository,
+        CompanyActivationRepository(db),
+    )
 
 
 def get_company_repository(db: Session = Depends(get_db)) -> CompanyRepository:
