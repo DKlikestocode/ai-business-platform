@@ -8,6 +8,7 @@ import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { sendLeadMessage } from "@/lib/api";
+import { scrollChatContainerToBottom } from "@/lib/chat-scroll";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { Link } from "@/i18n/navigation";
@@ -46,14 +47,18 @@ export function DemoChat() {
   const [leadComplete, setLeadComplete] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [hasOpenFields, setHasOpenFields] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const assistantLabel = company?.name?.trim() || t("assistant");
   const showExampleChips =
     messages.length === 0 && !loading && !leadComplete && !authLoading;
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length === 0) {
+      return;
+    }
+
+    scrollChatContainerToBottom(messagesContainerRef.current);
   }, [messages, loading, leadComplete]);
 
   function handleNewConversation() {
@@ -138,7 +143,7 @@ export function DemoChat() {
       {authLoading ? <LoadingState label={t("loadingAccount")} /> : null}
 
       <div className="chat-panel card">
-        <div className="chat-messages" aria-live="polite">
+        <div className="chat-messages" ref={messagesContainerRef} aria-live="polite">
           {messages.length === 0 ? (
             <div className="chat-empty">
               <h3 className="chat-empty-title">{t("welcomeTitle")}</h3>
@@ -182,8 +187,6 @@ export function DemoChat() {
               <p className="muted">{t("thinking")}</p>
             </div>
           ) : null}
-
-          <div ref={messagesEndRef} />
         </div>
 
         {error ? <AlertBanner>{error}</AlertBanner> : null}

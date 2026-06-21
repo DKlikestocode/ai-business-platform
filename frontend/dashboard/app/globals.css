@@ -1746,7 +1746,12 @@ code {
 
 .public-demo-chat .chat-messages {
   min-height: 300px;
-  max-height: none;
+  max-height: 400px;
+  overflow-anchor: none;
+}
+
+.public-demo-chat .input {
+  scroll-margin: 0;
 }
 
 .landing-cta {
