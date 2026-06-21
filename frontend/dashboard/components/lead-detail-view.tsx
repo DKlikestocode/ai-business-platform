@@ -15,14 +15,12 @@ import {
   formatLeadScore,
   isKnownContactMethod,
 } from "@/lib/lead-qualification";
+import { formatDateTime } from "@/lib/format-datetime";
 import type { Lead, LeadStatus } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: "full",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return formatDateTime(value, locale, "full") ?? "";
 }
 
 function DetailRow({ label, value }: { label: string; value: string | null }) {
@@ -38,6 +36,7 @@ function DetailRow({ label, value }: { label: string; value: string | null }) {
 
 export function LeadDetailView() {
   const params = useParams<{ id: string }>();
+  const leadId = Array.isArray(params.id) ? params.id[0] : params.id;
   const locale = useLocale();
   const t = useTranslations("leadDetail");
   const tLeads = useTranslations("leads");
@@ -49,17 +48,24 @@ export function LeadDetailView() {
   const [updating, setUpdating] = useState(false);
 
   const loadLead = useCallback(async () => {
+    if (!leadId) {
+      setLead(null);
+      setError(t("notFound"));
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchLead(params.id);
+      const data = await fetchLead(leadId);
       setLead(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("loadFailed"));
     } finally {
       setLoading(false);
     }
-  }, [params.id, t]);
+  }, [leadId, t]);
 
   useEffect(() => {
     void loadLead();

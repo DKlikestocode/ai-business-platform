@@ -163,6 +163,21 @@ describe("activation checklist", () => {
     expect(progress.copy_widget).toBe(false);
   });
 
+  it("marks copy_widget incomplete when install metadata is missing", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: {
+        ...buildActivation(),
+        install: undefined as unknown as CompanyActivation["install"],
+      },
+    });
+
+    expect(progress.copy_widget).toBe(false);
+    expect(countActivationChecklistSteps(progress)).toBe(3);
+  });
+
   it("detects awaiting website live state", () => {
     const progress = evaluateActivationChecklist({
       company,

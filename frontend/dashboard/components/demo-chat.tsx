@@ -89,7 +89,7 @@ export function DemoChat() {
         ...current,
         { id: createMessageId(), role: "assistant", content: response.reply },
       ]);
-      setHasOpenFields(response.missing_fields.length > 0);
+      setHasOpenFields((response.missing_fields ?? []).length > 0);
 
       if (response.lead_complete) {
         setLeadComplete(true);

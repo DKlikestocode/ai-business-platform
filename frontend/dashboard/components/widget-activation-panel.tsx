@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { AlertBanner } from "@/components/ui/alert-banner";
@@ -26,7 +26,7 @@ export function WidgetActivationPanel({
   const t = useTranslations("activation");
   const tSettings = useTranslations("settings");
   const tErrors = useTranslations("errors");
-  const errorMessages = getErrorMessages(tErrors);
+  const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const [activation, setActivation] = useState<CompanyActivation | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -61,12 +61,13 @@ export function WidgetActivationPanel({
   }, [loadActivation, reloadKey]);
 
   async function handleCopyEmbed() {
-    if (!activation?.install.embed_snippet) {
+    const snippet = activation?.install?.embed_snippet;
+    if (!snippet) {
       return;
     }
 
     try {
-      await navigator.clipboard.writeText(activation.install.embed_snippet);
+      await navigator.clipboard.writeText(snippet);
       setCopyMessage(tSettings("copied"));
     } catch {
       setCopyMessage(tSettings("copyFailed"));
@@ -75,7 +76,7 @@ export function WidgetActivationPanel({
     window.setTimeout(() => setCopyMessage(null), 2500);
   }
 
-  const embedSnippet = activation?.install.embed_snippet ?? "";
+  const embedSnippet = activation?.install?.embed_snippet ?? "";
   const refreshLabel = activationRefreshLabel(activation?.status, {
     refresh: t("refresh"),
     refreshStale: t("refreshStale"),
