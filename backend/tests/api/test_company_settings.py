@@ -38,6 +38,9 @@ def test_get_company_settings_returns_current_company(
     assert body["contactable_lead_notification_threshold"] == 50
     assert body["service_area_center"] is None
     assert body["service_radius_km"] is None
+    assert body["email_delivery_provider"] == "logging"
+    assert body["email_delivery_ready"] is True
+    assert body["email_delivery_sends_real_email"] is False
     assert body["created_at"]
 
 

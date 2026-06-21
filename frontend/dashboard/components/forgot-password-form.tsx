@@ -58,7 +58,7 @@ export function ForgotPasswordForm() {
               <a href={devResetUrl} className="link">
                 {t("openDevResetLink")}
               </a>
-              {isDevelopment() ? (
+              {isDevelopment ? (
                 <span className="muted"> {t("devResetHint")}</span>
               ) : null}
             </p>
