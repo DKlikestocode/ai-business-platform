@@ -1,7 +1,7 @@
 import logging
 from uuid import UUID
 
-from app.agents.lead_agent.agent import LeadCaptureAgent
+from app.agents.lead_agent.company_context import build_service_area_prompt
 from app.agents.lead_agent.conversation_history import (
     LEAD_DATA_METADATA_KEY,
     build_chat_messages,
@@ -88,6 +88,11 @@ class LeadCaptureService:
         existing_data = load_lead_data_from_messages(existing_messages)
         pre_qualification = evaluate_qualification(existing_data, channel=self._channel)
 
+        company = self._company_repository.get_by_id(company_id)
+        service_area_prompt = (
+            build_service_area_prompt(company) if company is not None else None
+        )
+
         self._conversation_repository.add_message(
             conversation.id,
             MessageRole.USER,
@@ -104,6 +109,7 @@ class LeadCaptureService:
                     pre_qualification,
                     channel=self._channel,
                 ),
+                "service_area_prompt": service_area_prompt,
             },
         )
         system_prompt = await self._agent.build_system_prompt(agent_context)

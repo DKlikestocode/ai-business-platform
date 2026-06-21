@@ -45,3 +45,9 @@ class UserRepository:
 
     def email_exists(self, email: str) -> bool:
         return self.get_by_email(email) is not None
+
+    def update_password(self, user: User, *, password_hash: str) -> User:
+        user.password_hash = password_hash
+        self._session.commit()
+        self._session.refresh(user)
+        return user

@@ -36,6 +36,8 @@ def test_get_company_settings_returns_current_company(
     assert body["notify_on_new_lead"] is True
     assert body["notify_on_contactable_lead"] is True
     assert body["contactable_lead_notification_threshold"] == 50
+    assert body["service_area_center"] is None
+    assert body["service_radius_km"] is None
     assert body["created_at"]
 
 
@@ -54,6 +56,8 @@ def test_patch_company_settings_updates_editable_fields(
             "notify_on_new_lead": False,
             "notify_on_contactable_lead": True,
             "contactable_lead_notification_threshold": 60,
+            "service_area_center": "München",
+            "service_radius_km": 25,
         },
     )
 
@@ -66,6 +70,8 @@ def test_patch_company_settings_updates_editable_fields(
     assert body["notify_on_new_lead"] is False
     assert body["notify_on_contactable_lead"] is True
     assert body["contactable_lead_notification_threshold"] == 60
+    assert body["service_area_center"] == "München"
+    assert body["service_radius_km"] == 25
 
 
 def test_patch_company_settings_preserves_read_only_fields(

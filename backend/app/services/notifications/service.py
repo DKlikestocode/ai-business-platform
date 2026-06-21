@@ -127,6 +127,23 @@ class NotificationService:
             recipient,
         )
 
+    async def send_password_reset_email(self, *, to: str, reset_url: str) -> None:
+        subject = "Passwort zurücksetzen — Agent Platform"
+        body = "\n".join(
+            [
+                "Sie haben ein neues Passwort für Ihr Agent-Platform-Konto angefordert.",
+                "",
+                "Öffnen Sie den folgenden Link, um ein neues Passwort zu setzen:",
+                reset_url,
+                "",
+                "Der Link ist 60 Minuten gültig. Wenn Sie diese Anfrage nicht gestellt haben,",
+                "können Sie diese E-Mail ignorieren.",
+            ],
+        )
+        message = EmailMessage(to=to, subject=subject, body=body)
+        await self._provider.send_email(message)
+        logger.info("Sent password reset email to %s", to)
+
     @staticmethod
     def _qualification_label(status: str) -> str:
         return _QUALIFICATION_LABELS.get(status, status)

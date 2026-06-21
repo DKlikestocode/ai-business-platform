@@ -10,6 +10,7 @@ from app.db.models.enums import UserRole
 
 if TYPE_CHECKING:
     from app.db.models.company import Company
+    from app.db.models.password_reset_token import PasswordResetToken
 
 
 class User(Base):
@@ -38,3 +39,8 @@ class User(Base):
     )
 
     company: Mapped["Company"] = relationship("Company", back_populates="users")
+    password_reset_tokens: Mapped[list["PasswordResetToken"]] = relationship(
+        "PasswordResetToken",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )

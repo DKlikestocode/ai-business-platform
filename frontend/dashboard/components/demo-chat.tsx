@@ -12,8 +12,13 @@ import { scrollChatContainerToBottom } from "@/lib/chat-scroll";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { Link } from "@/i18n/navigation";
+import {
+  DEMO_CHAT_EXAMPLE_KEYS,
+  getDemoChatExampleMessage,
+  type DemoChatExampleKey,
+} from "@/lib/demo-chat-examples";
 
-const EXAMPLE_PROMPT_KEYS = ["plumber", "roofer", "electrician"] as const;
+const EXAMPLE_PROMPT_KEYS = DEMO_CHAT_EXAMPLE_KEYS;
 
 export function createDemoChatConversationId(): string {
   return `demo-chat-${Date.now()}`;
@@ -119,8 +124,13 @@ export function DemoChat() {
     await sendMessage(message);
   }
 
-  function handleExamplePrompt(key: (typeof EXAMPLE_PROMPT_KEYS)[number]) {
-    void sendMessage(t(`exampleMessages.${key}`));
+  function handleExamplePrompt(key: DemoChatExampleKey) {
+    try {
+      const message = getDemoChatExampleMessage(t, key);
+      void sendMessage(message);
+    } catch {
+      setError(t("examplePromptFailed"));
+    }
   }
 
   return (
@@ -157,7 +167,7 @@ export function DemoChat() {
                         key={key}
                         type="button"
                         className="button secondary"
-                        disabled={loading}
+                        disabled={loading || authLoading}
                         onClick={() => handleExamplePrompt(key)}
                       >
                         {t(`examplePrompts.${key}`)}
