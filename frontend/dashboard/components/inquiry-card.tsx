@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { StatusBadge } from "@/components/status-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
+import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { StatusSelect } from "@/components/status-select";
 import { Link } from "@/i18n/navigation";
@@ -58,6 +59,10 @@ export function InquiryCard({
           </time>
         </div>
       </div>
+
+      <InquiryNotificationIndicator
+        notificationSentAt={lead.notification_sent_at}
+      />
 
       {urgency ? (
         <p className="inquiry-card-urgency">
