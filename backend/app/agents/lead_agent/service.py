@@ -136,7 +136,10 @@ class LeadCaptureService:
 
         lead_id: str | None = None
         summary = llm_output.summary
-        if qualification.should_persist:
+        if (
+            qualification.should_persist
+            and self._channel != ConversationChannel.LANDING_DEMO
+        ):
             existing_lead = self._repository.get_by_conversation(
                 request.conversation_id,
                 company_id=company_id,

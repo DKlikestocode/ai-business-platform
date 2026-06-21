@@ -1,22 +1,102 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
+import {
+  LandingDemoApiError,
+  createLandingDemoConversationId,
+  isLandingDemoLimitStatus,
+  sendLandingDemoMessage,
+} from "@/lib/landing-demo";
 
-const DEMO_SCENARIO_KEYS = ["plumber", "roofer", "electrician"] as const;
+const STARTER_KEYS = ["plumber", "roofer", "electrician"] as const;
 
-type DemoScenarioKey = (typeof DEMO_SCENARIO_KEYS)[number];
+type StarterKey = (typeof STARTER_KEYS)[number];
+
+interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
+
+function createMessageId(): string {
+  return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
 
 export function LandingPublicDemo() {
   const t = useTranslations("landing.publicDemo");
-  const [selectedScenario, setSelectedScenario] = useState<DemoScenarioKey | null>(
-    null,
-  );
+  const tCommon = useTranslations("common");
+  const [conversationId, setConversationId] = useState(createLandingDemoConversationId);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [limitReached, setLimitReached] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const showStarters = messages.length === 0 && !loading && !limitReached;
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading, limitReached]);
 
   function handleReset() {
-    setSelectedScenario(null);
+    setConversationId(createLandingDemoConversationId());
+    setMessages([]);
+    setInput("");
+    setError(null);
+    setLimitReached(false);
+  }
+
+  async function sendMessage(message: string) {
+    const trimmed = message.trim();
+    if (!trimmed || loading || limitReached) {
+      return;
+    }
+
+    setError(null);
+    setMessages((current) => [
+      ...current,
+      { id: createMessageId(), role: "user", content: trimmed },
+    ]);
+    setLoading(true);
+
+    try {
+      const response = await sendLandingDemoMessage({
+        conversation_id: conversationId,
+        message: trimmed,
+      });
+
+      setMessages((current) => [
+        ...current,
+        { id: createMessageId(), role: "assistant", content: response.reply },
+      ]);
+    } catch (err) {
+      if (err instanceof LandingDemoApiError && isLandingDemoLimitStatus(err.status)) {
+        setLimitReached(true);
+      } else {
+        setError(err instanceof Error ? err.message : t("sendFailed"));
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const message = input.trim();
+    if (!message) {
+      return;
+    }
+
+    setInput("");
+    await sendMessage(message);
+  }
+
+  function handleStarter(key: StarterKey) {
+    void sendMessage(t(`starters.${key}`));
   }
 
   return (
@@ -32,22 +112,26 @@ export function LandingPublicDemo() {
           <p className="public-demo-lead muted">{t("lead")}</p>
           <p className="public-demo-disclaimer">{t("disclaimer")}</p>
 
-          <p className="chat-prompts-label">{t("chipsLabel")}</p>
-          <div className="chat-prompt-chips">
-            {DEMO_SCENARIO_KEYS.map((key) => (
-              <button
-                key={key}
-                type="button"
-                className="button secondary"
-                aria-pressed={selectedScenario === key}
-                onClick={() => setSelectedScenario(key)}
-              >
-                {t(`chips.${key}`)}
-              </button>
-            ))}
-          </div>
+          {showStarters ? (
+            <>
+              <p className="chat-prompts-label">{t("chipsLabel")}</p>
+              <div className="chat-prompt-chips">
+                {STARTER_KEYS.map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className="button secondary"
+                    disabled={loading}
+                    onClick={() => handleStarter(key)}
+                  >
+                    {t(`chips.${key}`)}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : null}
 
-          {selectedScenario ? (
+          {messages.length > 0 || limitReached ? (
             <div className="public-demo-actions">
               <Link href="/onboarding" className="button">
                 {t("startCta")}
@@ -65,31 +149,64 @@ export function LandingPublicDemo() {
 
         <div className="chat-panel card public-demo-chat">
           <div className="chat-messages" aria-live="polite">
-            {selectedScenario ? (
-              <>
-                <div className="chat-message chat-message-user">
-                  <span className="chat-message-label">{t("customerLabel")}</span>
-                  <p>{t(`scenarios.${selectedScenario}.customer`)}</p>
-                </div>
-                <div className="chat-message chat-message-assistant">
-                  <span className="chat-message-label">
-                    {t("assistantLabel")}
-                  </span>
-                  <p>{t(`scenarios.${selectedScenario}.assistant1`)}</p>
-                </div>
-                <div className="chat-message chat-message-assistant">
-                  <span className="chat-message-label">
-                    {t("assistantLabel")}
-                  </span>
-                  <p>{t(`scenarios.${selectedScenario}.assistant2`)}</p>
-                </div>
-              </>
-            ) : (
+            {messages.length === 0 && !loading ? (
               <div className="chat-empty">
                 <p>{t("emptyState")}</p>
               </div>
-            )}
+            ) : null}
+
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`chat-message chat-message-${message.role}`}
+              >
+                <span className="chat-message-label">
+                  {message.role === "user"
+                    ? t("customerLabel")
+                    : t("assistantLabel")}
+                </span>
+                <p>{message.content}</p>
+              </div>
+            ))}
+
+            {loading ? (
+              <div className="chat-message chat-message-assistant">
+                <span className="chat-message-label">{t("assistantLabel")}</span>
+                <p className="muted">{t("thinking")}</p>
+              </div>
+            ) : null}
+
+            {limitReached ? (
+              <div className="chat-message chat-message-assistant">
+                <span className="chat-message-label">{t("assistantLabel")}</span>
+                <p>{t("limitReached")}</p>
+              </div>
+            ) : null}
+
+            <div ref={messagesEndRef} />
           </div>
+
+          {error ? <p className="alert">{error}</p> : null}
+
+          <form className="chat-form" onSubmit={handleSubmit}>
+            <input
+              className="input"
+              type="text"
+              value={input}
+              placeholder={
+                limitReached ? t("placeholderLimit") : t("placeholderMessage")
+              }
+              disabled={loading || limitReached}
+              onChange={(event) => setInput(event.target.value)}
+            />
+            <button
+              type="submit"
+              className="button"
+              disabled={loading || limitReached || !input.trim()}
+            >
+              {tCommon("send")}
+            </button>
+          </form>
         </div>
       </div>
     </section>

@@ -122,3 +122,13 @@ class ConversationRepository:
             .order_by(Message.created_at.asc())
             .all()
         )
+
+    def count_user_messages(self, conversation_id: UUID) -> int:
+        return (
+            self._session.query(Message)
+            .filter(
+                Message.conversation_id == conversation_id,
+                Message.role == MessageRole.USER.value,
+            )
+            .count()
+        )
