@@ -4,7 +4,7 @@ from app.config import Settings
 from app.core.auth.jwt import TOKEN_TYPE, create_access_token
 from app.core.security import hash_password, verify_password
 from app.db.models.user import User
-from app.domain.exceptions import AuthenticationError
+from app.domain.exceptions import AuthenticationError, NotificationDeliveryError
 from app.repositories.password_reset_repository import PasswordResetRepository
 from app.repositories.user_repository import UserRepository
 from app.services.notifications.interface import EmailMessage
@@ -49,21 +49,38 @@ class AuthService:
         )
         return access_token, TOKEN_TYPE, expires_in
 
-    async def request_password_reset(self, *, email: str) -> None:
+    async def request_password_reset(self, *, email: str) -> str | None:
         if self._password_reset_repository is None or self._notification_service is None:
             logger.warning("Password reset requested but dependencies are not configured.")
-            return
+            raise NotificationDeliveryError("Password reset is not available.")
 
         user = self._user_repository.get_by_email(email)
         if user is None or not user.is_active:
-            return
+            return None
 
         self._password_reset_repository.invalidate_active_tokens_for_user(user.id)
         _token, raw_token = self._password_reset_repository.create_token(user_id=user.id)
         reset_url = self._build_password_reset_url(raw_token)
-        await self._notification_service.send_password_reset_email(
-            to=user.email,
-            reset_url=reset_url,
+        try:
+            await self._notification_service.send_password_reset_email(
+                to=user.email,
+                reset_url=reset_url,
+            )
+        except Exception as exc:
+            logger.exception("Failed to send password reset email to %s", user.email)
+            raise NotificationDeliveryError(
+                "Unable to send password reset email.",
+            ) from exc
+
+        if self._should_expose_dev_reset_link():
+            logger.info("PASSWORD_RESET_LINK to=%s url=%s", user.email, reset_url)
+            return reset_url
+        return None
+
+    def _should_expose_dev_reset_link(self) -> bool:
+        return (
+            self._settings.is_development
+            and self._settings.notification_provider.lower() == "logging"
         )
 
     def reset_password(self, *, token: str, password: str) -> None:

@@ -8,14 +8,17 @@ from app.api.dependencies import (
     get_current_tenant_id,
     get_current_user,
     get_notification_service,
+    get_settings,
 )
 from app.api.schemas.companies import (
     CompanySettingsResponse,
     CompanySettingsUpdateRequest,
     company_to_settings_response,
 )
+from app.config import Settings
 from app.db.models.user import User
 from app.domain.exceptions import NotFoundError
+from app.services.notifications.email_delivery import get_email_delivery_status
 from app.services.notifications.service import NotificationService
 from app.services.tenant_service import CompanyService
 
@@ -36,6 +39,7 @@ _test_notification_rate_limit = RateLimit(
 def get_company_settings(
     company_id: UUID = Depends(get_current_tenant_id),
     service: CompanyService = Depends(get_company_service),
+    settings: Settings = Depends(get_settings),
     _: User = Depends(get_current_user),
 ) -> CompanySettingsResponse:
     try:
@@ -45,7 +49,10 @@ def get_company_settings(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(exc),
         ) from exc
-    return company_to_settings_response(company)
+    return company_to_settings_response(
+        company,
+        email_delivery=get_email_delivery_status(settings),
+    )
 
 
 @router.patch(
@@ -57,6 +64,7 @@ def update_company_settings(
     payload: CompanySettingsUpdateRequest,
     company_id: UUID = Depends(get_current_tenant_id),
     service: CompanyService = Depends(get_company_service),
+    settings: Settings = Depends(get_settings),
     _: User = Depends(get_current_user),
 ) -> CompanySettingsResponse:
     updates = payload.model_dump(exclude_unset=True)
@@ -67,7 +75,10 @@ def update_company_settings(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(exc),
         ) from exc
-    return company_to_settings_response(company)
+    return company_to_settings_response(
+        company,
+        email_delivery=get_email_delivery_status(settings),
+    )
 
 
 @router.post(
@@ -96,4 +107,10 @@ async def send_test_notification(
             detail="No notification email configured.",
         )
 
-    await notification_service.send_test_inquiry_notification(company)
+    try:
+        await notification_service.send_test_inquiry_notification(company)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Unable to send test email. Check server email configuration.",
+        ) from exc

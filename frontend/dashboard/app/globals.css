@@ -909,6 +909,12 @@ code {
   color: var(--muted);
 }
 
+.forgot-password-dev-link {
+  margin: 0;
+  font-size: 0.9375rem;
+  word-break: break-all;
+}
+
 .inquiry-contacted-indicator {
   margin: 0;
   font-size: 0.875rem;

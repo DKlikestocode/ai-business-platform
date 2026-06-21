@@ -5,6 +5,20 @@ from app.config import DEFAULT_JWT_SECRET, Settings, validate_production_setting
 from app.main import create_app
 
 
+def make_production_settings(**overrides: object) -> Settings:
+    values: dict[str, object] = {
+        "app_env": "production",
+        "jwt_secret_key": "a" * 32,
+        "openai_api_key": "sk-test",
+        "notification_provider": "resend",
+        "resend_api_key": "re_test",
+        "notification_from_email": "Agent Platform <noreply@example.com>",
+        "frontend_base_url": "https://app.example.com",
+    }
+    values.update(overrides)
+    return Settings(**values)
+
+
 def test_validate_production_settings_accepts_development() -> None:
     validate_production_settings(Settings(app_env="development"))
 
@@ -12,42 +26,33 @@ def test_validate_production_settings_accepts_development() -> None:
 def test_validate_production_settings_rejects_default_jwt() -> None:
     with pytest.raises(RuntimeError, match="JWT_SECRET_KEY"):
         validate_production_settings(
-            Settings(
-                app_env="production",
-                jwt_secret_key=DEFAULT_JWT_SECRET,
-                openai_api_key="sk-test",
-            )
+            make_production_settings(jwt_secret_key=DEFAULT_JWT_SECRET)
         )
 
 
 def test_validate_production_settings_rejects_short_jwt() -> None:
     with pytest.raises(RuntimeError, match="JWT_SECRET_KEY"):
         validate_production_settings(
-            Settings(
-                app_env="production",
-                jwt_secret_key="too-short",
-                openai_api_key="sk-test",
-            )
+            make_production_settings(jwt_secret_key="too-short")
         )
 
 
 def test_validate_production_settings_requires_openai_key() -> None:
     with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
         validate_production_settings(
-            Settings(
-                app_env="production",
-                jwt_secret_key="a" * 32,
-                openai_api_key="",
-            )
+            make_production_settings(openai_api_key="")
+        )
+
+
+def test_validate_production_settings_requires_resend() -> None:
+    with pytest.raises(RuntimeError, match="NOTIFICATION_PROVIDER"):
+        validate_production_settings(
+            make_production_settings(notification_provider="logging")
         )
 
 
 def test_openapi_disabled_in_production() -> None:
-    settings = Settings(
-        app_env="production",
-        jwt_secret_key="a" * 32,
-        openai_api_key="sk-test",
-    )
+    settings = make_production_settings()
     production_app = create_app(settings)
     client = TestClient(production_app)
 
@@ -60,11 +65,7 @@ def test_registration_disabled_in_production(dev_client: TestClient) -> None:
     from app.config import get_settings
     from app.main import app
 
-    production_settings = Settings(
-        app_env="production",
-        jwt_secret_key="a" * 32,
-        openai_api_key="sk-test",
-    )
+    production_settings = make_production_settings()
     app.dependency_overrides[get_settings] = lambda: production_settings
     try:
         response = dev_client.post(

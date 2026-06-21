@@ -4,6 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field
 
 from app.db.models.company import Company
+from app.services.notifications.email_delivery import EmailDeliveryStatus
 
 
 class CompanyCreateRequest(BaseModel):
@@ -34,6 +35,9 @@ class CompanySettingsResponse(BaseModel):
     contactable_lead_notification_threshold: int
     service_area_center: str | None
     service_radius_km: int | None
+    email_delivery_provider: str
+    email_delivery_ready: bool
+    email_delivery_sends_real_email: bool
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -59,5 +63,27 @@ def company_to_response(company: Company) -> CompanyResponse:
     return CompanyResponse.model_validate(company)
 
 
-def company_to_settings_response(company: Company) -> CompanySettingsResponse:
-    return CompanySettingsResponse.model_validate(company)
+def company_to_settings_response(
+    company: Company,
+    *,
+    email_delivery: EmailDeliveryStatus | None = None,
+) -> CompanySettingsResponse:
+    delivery = email_delivery or EmailDeliveryStatus(
+        provider="logging",
+        ready=False,
+        sends_real_email=False,
+    )
+    return CompanySettingsResponse(
+        name=company.name,
+        slug=company.slug,
+        email=company.email,
+        phone=company.phone,
+        notification_email=company.notification_email,
+        notify_on_new_lead=company.notify_on_new_lead,
+        notify_on_contactable_lead=company.notify_on_contactable_lead,
+        contactable_lead_notification_threshold=company.contactable_lead_notification_threshold,
+        service_area_center=company.service_area_center,
+        service_radius_km=company.service_radius_km,
+        created_at=company.created_at,
+        **delivery.as_dict(),
+    )

@@ -8,6 +8,7 @@ import { AlertBanner } from "@/components/ui/alert-banner";
 import { requestPasswordReset } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
+import { isDevelopment } from "@/lib/env";
 import { Link } from "@/i18n/navigation";
 
 export function ForgotPasswordForm() {
@@ -18,16 +19,21 @@ export function ForgotPasswordForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [devResetUrl, setDevResetUrl] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitting(true);
     setError(null);
     setSuccess(false);
+    setDevResetUrl(null);
 
     try {
-      await requestPasswordReset({ email: email.trim() });
+      const result = await requestPasswordReset({ email: email.trim() });
       setSuccess(true);
+      if (result?.dev_reset_url) {
+        setDevResetUrl(result.dev_reset_url);
+      }
     } catch (err) {
       setError(formatUserFacingError(err, t("failed"), errorMessages));
     } finally {
@@ -43,7 +49,19 @@ export function ForgotPasswordForm() {
           <p className="muted">{t("description")}</p>
 
           {success ? (
-            <AlertBanner variant="success">{t("success")}</AlertBanner>
+            <AlertBanner variant="success">
+              {devResetUrl ? t("successDev") : t("success")}
+            </AlertBanner>
+          ) : null}
+          {devResetUrl ? (
+            <p className="forgot-password-dev-link">
+              <a href={devResetUrl} className="link">
+                {t("openDevResetLink")}
+              </a>
+              {isDevelopment ? (
+                <span className="muted"> {t("devResetHint")}</span>
+              ) : null}
+            </p>
           ) : null}
           {error ? <AlertBanner>{error}</AlertBanner> : null}
 

@@ -137,6 +137,9 @@ describe("api auth client", () => {
       contactable_lead_notification_threshold: 50,
       service_area_center: null,
       service_radius_km: null,
+      email_delivery_provider: "logging",
+      email_delivery_ready: true,
+      email_delivery_sends_real_email: false,
       created_at: "2026-06-10T12:00:00Z",
     };
 

@@ -79,6 +79,9 @@ export interface CompanySettings {
   contactable_lead_notification_threshold: number;
   service_area_center: string | null;
   service_radius_km: number | null;
+  email_delivery_provider: string;
+  email_delivery_ready: boolean;
+  email_delivery_sends_real_email: boolean;
   created_at: string;
 }
 
@@ -118,6 +121,10 @@ export interface TokenResponse {
 
 export interface ForgotPasswordRequest {
   email: string;
+}
+
+export interface ForgotPasswordResponse {
+  dev_reset_url?: string | null;
 }
 
 export interface ResetPasswordRequest {

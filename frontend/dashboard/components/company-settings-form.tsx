@@ -266,6 +266,33 @@ export function CompanySettingsForm() {
           </label>
         </div>
 
+        <h3 className="card-title">{t("emailDelivery")}</h3>
+        <p className="muted field-hint">{t("emailDeliveryHint")}</p>
+        <div className="notification-status-row">
+          <span
+            className={
+              settings.email_delivery_ready
+                ? "badge badge-contactable-yes"
+                : "badge badge-contactable-no"
+            }
+          >
+            {settings.email_delivery_ready
+              ? t("emailDeliveryReady")
+              : t("emailDeliveryNotReady")}
+          </span>
+        </div>
+        <p className="muted field-hint">
+          {settings.email_delivery_provider === "resend"
+            ? settings.email_delivery_sends_real_email
+              ? t("emailDeliveryProviderResend")
+              : t("emailDeliveryProviderResendIncomplete")
+            : t("emailDeliveryProviderLogging")}
+        </p>
+        {settings.email_delivery_provider === "resend" &&
+        !settings.email_delivery_ready ? (
+          <p className="muted field-hint">{t("emailDeliveryResendSetup")}</p>
+        ) : null}
+
         <h3 className="card-title">{t("leadNotifications")}</h3>
         <div className="notification-status-row">
           <span
