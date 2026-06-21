@@ -38,6 +38,19 @@ def notification_client(
     app.dependency_overrides.clear()
 
 
+def _configure_notification_email(
+    client: TestClient,
+    headers: dict[str, str],
+    email: str = "alerts@example.com",
+) -> None:
+    response = client.patch(
+        "/api/v1/company/settings",
+        headers=headers,
+        json={"notification_email": email},
+    )
+    assert response.status_code == 200
+
+
 def test_test_notification_requires_authentication(
     notification_client: TestClient,
 ) -> None:
@@ -183,3 +196,79 @@ def test_test_notification_scoped_to_authenticated_tenant(
         mock_notification_provider.messages[0].to
         == f"other-alerts-{suffix}@example.com"
     )
+
+
+def test_test_notification_within_rate_limit_succeeds(
+    notification_client: TestClient,
+    auth_headers: dict[str, str],
+    mock_notification_provider: MockEmailProvider,
+) -> None:
+    _configure_notification_email(notification_client, auth_headers)
+
+    for _ in range(5):
+        response = notification_client.post(
+            "/api/v1/company/settings/test-notification",
+            headers=auth_headers,
+        )
+        assert response.status_code == 204
+
+    assert len(mock_notification_provider.messages) == 5
+
+
+def test_test_notification_rate_limit_returns_429(
+    notification_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    _configure_notification_email(notification_client, auth_headers)
+
+    for _ in range(5):
+        response = notification_client.post(
+            "/api/v1/company/settings/test-notification",
+            headers=auth_headers,
+        )
+        assert response.status_code == 204
+
+    response = notification_client.post(
+        "/api/v1/company/settings/test-notification",
+        headers=auth_headers,
+    )
+    assert response.status_code == 429
+    assert response.json()["detail"] == "Too many requests. Please try again later."
+
+
+def test_test_notification_rate_limit_scoped_to_endpoint(
+    notification_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    _configure_notification_email(notification_client, auth_headers)
+
+    for _ in range(5):
+        response = notification_client.post(
+            "/api/v1/company/settings/test-notification",
+            headers=auth_headers,
+        )
+        assert response.status_code == 204
+
+    rate_limited = notification_client.post(
+        "/api/v1/company/settings/test-notification",
+        headers=auth_headers,
+    )
+    assert rate_limited.status_code == 429
+
+    settings_response = notification_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"notification_email": "updated-alerts@example.com"},
+    )
+    assert settings_response.status_code == 200
+    assert settings_response.json()["notification_email"] == "updated-alerts@example.com"
+
+    widget_response = notification_client.post(
+        "/api/v1/public/widget/message",
+        json={
+            "company_slug": "missing-company-slug",
+            "conversation_id": "rate-limit-scope-check",
+            "message": "Hello",
+        },
+    )
+    assert widget_response.status_code == 404

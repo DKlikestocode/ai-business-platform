@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.api.dependencies import (
+    RateLimit,
     get_company_service,
     get_current_tenant_id,
     get_current_user,
@@ -19,6 +20,12 @@ from app.services.notifications.service import NotificationService
 from app.services.tenant_service import CompanyService
 
 router = APIRouter(prefix="/company", tags=["company"])
+
+_test_notification_rate_limit = RateLimit(
+    limit=5,
+    window_seconds=60,
+    scope="test_notification",
+)
 
 
 @router.get(
@@ -67,6 +74,7 @@ def update_company_settings(
     "/settings/test-notification",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Send a test inquiry notification email",
+    dependencies=[Depends(_test_notification_rate_limit)],
 )
 async def send_test_notification(
     company_id: UUID = Depends(get_current_tenant_id),
