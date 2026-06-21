@@ -91,7 +91,7 @@ async def test_contactable_partial_lead_notifies_above_threshold(
         outputs=[
             LeadCaptureLLMOutput(
                 reply="Thanks, we received your request.",
-                phone="555-0100",
+                phone="01701234567",
                 description="Roof is leaking badly",
                 location="Berlin",
             ),
@@ -101,7 +101,7 @@ async def test_contactable_partial_lead_notifies_above_threshold(
     response = await service.handle_message(
         LeadMessageRequest(
             conversation_id="notify-contactable-partial",
-            message="My roof is leaking in Berlin, call me at 555-0100",
+            message="My roof is leaking in Berlin, call me at 01701234567",
         ),
         company_id=company.id,
     )
@@ -130,13 +130,13 @@ async def test_contactable_low_score_lead_does_not_notify(
         company_repository=company_repository,
         company_activation_repository=company_activation_repository,
         notification_service=NotificationService(provider, lead_repository),
-        outputs=[LeadCaptureLLMOutput(reply="Thanks!", phone="555-0100")],
+        outputs=[LeadCaptureLLMOutput(reply="Thanks!", phone="01701234567")],
     )
 
     response = await service.handle_message(
         LeadMessageRequest(
             conversation_id="notify-low-score",
-            message="My number is 555-0100",
+            message="My number is 01701234567",
         ),
         company_id=company.id,
     )
@@ -168,7 +168,7 @@ async def test_complete_lead_notifies(
                 reply="Thanks, we have everything we need.",
                 summary="Qualified lead",
                 name="Jane Doe",
-                phone="555-0100",
+                phone="01701234567",
                 location="Berlin",
                 service_requested="Roof repair",
                 description="Leak in kitchen",

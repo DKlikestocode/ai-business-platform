@@ -51,7 +51,7 @@ def test_list_leads_scopes_to_authenticated_tenant(
         conversation_id="tenant-scope-a",
         data=LeadExtractedData(
             name="Tenant Lead",
-            phone="555-0100",
+            phone="01701234567",
             location="Berlin",
             service_requested="HVAC",
             description="Test",
@@ -65,7 +65,7 @@ def test_list_leads_scopes_to_authenticated_tenant(
         conversation_id="tenant-scope-b",
         data=LeadExtractedData(
             name="Other Tenant Lead",
-            phone="555-0200",
+            phone="01701234600",
             location="Munich",
             service_requested="Plumbing",
             description="Test",
@@ -95,7 +95,7 @@ def test_get_lead_rejects_cross_tenant_access(
         conversation_id="cross-tenant-lead",
         data=LeadExtractedData(
             name="Hidden Lead",
-            phone="555-0300",
+            phone="01701234700",
             location="Hamburg",
             service_requested="Electrical",
             description="Test",

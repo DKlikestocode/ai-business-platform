@@ -31,7 +31,7 @@ def test_non_contactable_message_is_incomplete() -> None:
 
 def test_contactable_partial_lead_scores_above_threshold() -> None:
     data = LeadExtractedData(
-        phone="555-0100",
+        phone="01701234567",
         description="Roof is leaking",
         location="Berlin",
     )
@@ -44,7 +44,7 @@ def test_contactable_partial_lead_scores_above_threshold() -> None:
 
 
 def test_contactable_low_score_stays_incomplete_without_context() -> None:
-    data = LeadExtractedData(phone="555-0100")
+    data = LeadExtractedData(phone="01701234567")
 
     qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
 
@@ -56,7 +56,7 @@ def test_contactable_low_score_stays_incomplete_without_context() -> None:
 def test_complete_lead_is_qualified() -> None:
     data = LeadExtractedData(
         name="Jane Doe",
-        phone="555-0100",
+        phone="01701234567",
         location="Berlin",
         service_requested="Roof repair",
         description="Leak in kitchen",

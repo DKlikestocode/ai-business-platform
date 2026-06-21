@@ -48,7 +48,7 @@ async def test_lead_capture_service_tracks_missing_fields(
                 LeadCaptureLLMOutput(
                     reply="Thanks! What service do you need?",
                     name="Jane Doe",
-                    phone="555-0100",
+                    phone="01701234567",
                 ),
         ],
     )
@@ -56,7 +56,7 @@ async def test_lead_capture_service_tracks_missing_fields(
     response = await service.handle_message(
         LeadMessageRequest(
             conversation_id="lead-conv-1",
-            message="Hi, I'm Jane Doe at 555-0100 in Austin.",
+            message="Hi, I'm Jane Doe at 01701234567 in Austin.",
         ),
         company_id=company.id,
     )
@@ -85,7 +85,7 @@ async def test_lead_capture_service_persists_complete_lead(
                 reply="Thanks, we have everything we need.",
                 summary="Jane needs HVAC repair urgently.",
                 name="Jane Doe",
-                phone="555-0100",
+                phone="01701234567",
                 location="Austin, TX",
                 service_requested="HVAC repair",
                 description="AC not cooling",
@@ -130,7 +130,7 @@ async def test_lead_capture_service_merges_context_across_messages(
             LeadCaptureLLMOutput(
                 reply="Thanks Jane. What service do you need?",
                 name="Jane Doe",
-                phone="555-0100",
+                phone="01701234567",
             ),
             LeadCaptureLLMOutput(
                 reply="Got it. When should we call you back?",
@@ -146,7 +146,7 @@ async def test_lead_capture_service_merges_context_across_messages(
     first = await service.handle_message(
         LeadMessageRequest(
             conversation_id="lead-conv-merge",
-            message="I'm Jane at 555-0100",
+            message="I'm Jane at 01701234567",
         ),
         company_id=company.id,
     )
@@ -181,14 +181,14 @@ async def test_lead_capture_service_persists_across_service_reinstantiation(
             LeadCaptureLLMOutput(
                 reply="Thanks Jane. What service do you need?",
                 name="Jane Doe",
-                phone="555-0100",
+                phone="01701234567",
             ),
         ],
     )
     await first_service.handle_message(
         LeadMessageRequest(
             conversation_id="lead-conv-restart",
-            message="I'm Jane at 555-0100",
+            message="I'm Jane at 01701234567",
         ),
         company_id=company.id,
     )
@@ -218,7 +218,7 @@ async def test_lead_capture_service_persists_across_service_reinstantiation(
     )
 
     assert response.extracted_data.name == "Jane Doe"
-    assert response.extracted_data.phone == "555-0100"
+    assert response.extracted_data.phone == "01701234567"
     assert response.lead_complete is True
 
     messages = conversation_repository.list_messages(
@@ -228,7 +228,43 @@ async def test_lead_capture_service_persists_across_service_reinstantiation(
         ).id,
     )
     assert len(messages) == 4
-    assert messages[0].content == "I'm Jane at 555-0100"
+    assert messages[0].content == "I'm Jane at 01701234567"
     assert messages[2].content == (
         "Roof repair in Austin, leak in kitchen, medium urgency, call Friday afternoon."
     )
+
+
+@pytest.mark.asyncio
+async def test_lead_capture_service_rejects_invalid_phone_number(
+    conversation_repository: ConversationRepository,
+    lead_repository,
+    company_repository,
+    company_activation_repository,
+    company,
+) -> None:
+    service = build_service(
+        conversation_repository=conversation_repository,
+        lead_repository=lead_repository,
+        company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
+        outputs=[
+            LeadCaptureLLMOutput(
+                reply="Danke, ich habe Ihre Nummer notiert.",
+                phone="123",
+            ),
+        ],
+    )
+
+    response = await service.handle_message(
+        LeadMessageRequest(
+            conversation_id="lead-conv-invalid-phone",
+            message="Meine Nummer ist 123.",
+        ),
+        company_id=company.id,
+    )
+
+    assert response.extracted_data.phone is None
+    assert response.contactable is False
+    assert "Telefonnummer" in response.reply
+    assert "0170" in response.reply
+

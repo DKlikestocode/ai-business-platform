@@ -29,7 +29,7 @@ def widget_client(db_session, company) -> TestClient:
                 LeadCaptureLLMOutput(
                     reply="Thanks! What service do you need?",
                     name="Widget User",
-                    phone="555-0199",
+                    phone="01701234599",
                     location="Berlin",
                 ),
             ]
@@ -58,7 +58,7 @@ def complete_widget_client(db_session, company) -> TestClient:
                     reply="Thanks, we have everything we need.",
                     summary="Widget lead summary",
                     name="Widget User",
-                    phone="555-0199",
+                    phone="01701234599",
                     location="Berlin",
                     service_requested="Roof repair",
                     description="Leak in kitchen",

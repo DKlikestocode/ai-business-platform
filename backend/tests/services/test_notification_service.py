@@ -23,7 +23,7 @@ class MockEmailProvider:
 def _qualified_data() -> LeadExtractedData:
     return LeadExtractedData(
         name="Jane Doe",
-        phone="555-0100",
+        phone="01701234567",
         location="Berlin",
         service_requested="Roof repair",
         description="Leak in kitchen",
@@ -136,7 +136,7 @@ async def test_contactable_notification_skipped_when_disabled(
     company: Company,
 ) -> None:
     data = LeadExtractedData(
-        phone="555-0100",
+        phone="01701234567",
         description="Leak",
         location="Berlin",
     )

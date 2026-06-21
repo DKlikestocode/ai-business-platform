@@ -26,7 +26,7 @@ def sample_leads(lead_repository: LeadRepository, company: Company) -> list:
                 conversation_id=conversation_id,
                 data=LeadExtractedData(
                     name=name,
-                    phone="555-0100",
+                    phone="01701234567",
                     location="Austin, TX",
                     service_requested="HVAC",
                     description="Needs service",
@@ -176,7 +176,7 @@ def test_list_leads_filters_by_qualification_status(
 ) -> None:
     complete_data = LeadExtractedData(
         name="Qualified Lead",
-        phone="555-0100",
+        phone="01701234567",
         location="Austin, TX",
         service_requested="HVAC",
         description="Needs service",
@@ -210,7 +210,7 @@ def test_list_leads_filters_by_contactable(
 ) -> None:
     contactable_data = LeadExtractedData(
         name="Contactable Lead",
-        phone="555-0200",
+        phone="01701234600",
         location="Austin, TX",
         service_requested="Plumbing",
         description="Leak in kitchen",
@@ -240,10 +240,10 @@ def test_list_leads_sorted_by_lead_score_descending(
     company: Company,
     auth_headers: dict[str, str],
 ) -> None:
-    low_score_data = LeadExtractedData(name="Low Score", phone="555-0300")
+    low_score_data = LeadExtractedData(name="Low Score", phone="01701234700")
     high_score_data = LeadExtractedData(
         name="High Score",
-        phone="555-0400",
+        phone="01701234800",
         location="Austin, TX",
         service_requested="Electrical",
         description="Panel upgrade",

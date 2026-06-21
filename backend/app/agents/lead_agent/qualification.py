@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from app.agents.lead_agent.contact_validation import is_valid_email, is_valid_phone
 from app.agents.lead_agent.models import ContactMethod, LeadExtractedData, QualificationStatus
 from app.agents.lead_agent.utils import is_lead_complete
 from app.db.models.enums import ConversationChannel
@@ -28,14 +29,22 @@ def _has_value(value: str | None) -> bool:
     return value is not None and bool(str(value).strip())
 
 
+def _has_contact_phone(data: LeadExtractedData) -> bool:
+    return is_valid_phone(data.phone)
+
+
+def _has_contact_email(data: LeadExtractedData) -> bool:
+    return is_valid_email(data.email)
+
+
 def has_contact_method(
     data: LeadExtractedData,
     *,
     channel: ConversationChannel,
 ) -> bool:
     return (
-        _has_value(data.phone)
-        or _has_value(data.email)
+        _has_contact_phone(data)
+        or _has_contact_email(data)
         or channel == ConversationChannel.WHATSAPP
     )
 
@@ -47,9 +56,9 @@ def resolve_contact_method(
 ) -> ContactMethod:
     if channel == ConversationChannel.WHATSAPP:
         return ContactMethod.CHANNEL
-    if _has_value(data.phone):
+    if _has_contact_phone(data):
         return ContactMethod.PHONE
-    if _has_value(data.email):
+    if _has_contact_email(data):
         return ContactMethod.EMAIL
     return ContactMethod.UNKNOWN
 
@@ -124,7 +133,8 @@ def build_qualification_hint(
     if not qualification.contactable:
         return (
             "No reliable contact method is available yet. Prioritize asking for a phone "
-            "number or email before collecting other details."
+            "number or email before collecting other details. If the customer provided "
+            "an invalid phone number or email, ask again and give a short example format."
         )
 
     if not _has_value(data.description):
