@@ -101,16 +101,18 @@ export function LandingPublicDemo() {
 
   return (
     <section
-      className="public-demo shell"
+      className="landing-section public-demo shell"
       aria-labelledby="public-demo-title"
     >
-      <div className="public-demo-layout">
-        <div className="public-demo-copy">
-          <h2 id="public-demo-title" className="public-demo-title">
-            {t("title")}
-          </h2>
-          <p className="public-demo-lead muted">{t("lead")}</p>
-          <p className="public-demo-disclaimer">{t("disclaimer")}</p>
+      <div className="public-demo-frame card">
+        <div className="public-demo-layout">
+          <div className="public-demo-copy">
+            <p className="eyebrow">{t("eyebrow")}</p>
+            <h2 id="public-demo-title" className="landing-section-title">
+              {t("title")}
+            </h2>
+            <p className="landing-section-lead muted">{t("lead")}</p>
+            <p className="public-demo-disclaimer">{t("disclaimer")}</p>
 
           {showStarters ? (
             <>
@@ -147,7 +149,7 @@ export function LandingPublicDemo() {
           ) : null}
         </div>
 
-        <div className="chat-panel card public-demo-chat">
+        <div className="chat-panel public-demo-chat">
           <div className="chat-messages" aria-live="polite">
             {messages.length === 0 && !loading ? (
               <div className="chat-empty">
@@ -207,6 +209,7 @@ export function LandingPublicDemo() {
               {tCommon("send")}
             </button>
           </form>
+        </div>
         </div>
       </div>
     </section>

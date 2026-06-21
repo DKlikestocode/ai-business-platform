@@ -40,8 +40,9 @@
   },
   "landing": {
     "eyebrow": "Für Handwerks- und Dienstleistungsbetriebe",
-    "heroTitle": "Mehr Anfragen von Ihrer Website — ohne mehr Aufwand.",
-    "heroLead": "Ein KI-Assistent auf Ihrer Website beantwortet erste Fragen, erfasst Kontakt und Anliegen und informiert Sie, wenn eine Anfrage wichtig ist.",
+    "heroTitle": "Ihre Website fängt Anfragen auf — Sie kümmern sich um den Auftrag.",
+    "heroLead": "Ein Chat auf Ihrer Website beantwortet erste Fragen, erfasst Name, Telefon und Anliegen — und meldet sich, wenn eine Anfrage wichtig ist.",
+    "heroTrustNote": "Kostenlos starten · In Minuten eingerichtet · Keine Kreditkarte",
     "startPilot": "Kostenlos starten",
     "signIn": "Anmelden",
     "preview": {
@@ -65,39 +66,46 @@
       "customer2": "Sabine Wagner"
     },
     "features": {
-      "widgetTitle": "Anfragen direkt auf der Website",
-      "widgetDescription": "Besucher stellen ihre Frage im Chat. Sie erhalten Name, Telefon und Anliegen — ohne Formular.",
-      "qualificationTitle": "Wichtige Anfragen zuerst",
-      "qualificationDescription": "Das System erkennt, ob eine Anfrage kontaktierbar und dringend ist, bevor Ihr Team benachrichtigt wird.",
-      "emailTitle": "Sofort per E-Mail informiert",
-      "emailDescription": "Sie erhalten eine E-Mail mit den wichtigsten Angaben und einem Link zur Anfrage.",
-      "dashboardTitle": "Übersicht für Ihr Team",
-      "dashboardDescription": "Alle Anfragen einsehen, den Bearbeitungsstand setzen und Einstellungen verwalten."
+      "widgetTitle": "Keine Anfrage verpassen — auch abends und am Wochenende",
+      "widgetDescription": "Besucher stellen ihre Frage direkt im Chat. Sie erhalten Name, Telefon und Anliegen — ohne Formular und ohne Rückfragen per E-Mail.",
+      "qualificationTitle": "Dringende Fälle zuerst auf dem Schreibtisch",
+      "qualificationDescription": "Das System erkennt, ob jemand erreichbar ist und wie dringend es ist — bevor Ihr Team benachrichtigt wird.",
+      "emailTitle": "Sofort per E-Mail — mit allem für den Rückruf",
+      "emailDescription": "Sie bekommen eine E-Mail mit den wichtigsten Angaben und einem Link zur vollständigen Anfrage.",
+      "dashboardTitle": "Alle Anfragen an einem Ort — wie ein Posteingang",
+      "dashboardDescription": "Anfragen einsehen, Bearbeitungsstand setzen und Einstellungen verwalten — übersichtlich für Sie und Ihr Team."
     },
-    "ctaTitle": "In wenigen Minuten eingerichtet",
-    "ctaDescription": "Firma anlegen, Chat auf die Website setzen, Testnachricht senden — so sehen Sie, wie es für Sie funktioniert.",
-    "createPilotAccount": "Kostenlos starten",
+    "featuresTitle": "Was Sie davon haben",
+    "featuresLead": "Weniger Telefon-Ping-Pong, mehr klare Anfragen mit allen Infos für den Rückruf.",
+    "ctaTitle": "Bereit, Ihre Website für Sie arbeiten zu lassen?",
+    "ctaDescription": "Legen Sie Ihren Betrieb an, setzen Sie den Chat auf Ihre Website und testen Sie mit einer Nachricht — so sehen Sie, wie es für Sie funktioniert.",
+    "ctaFootnote": "Kostenlos · Keine Kreditkarte · In wenigen Minuten live",
+    "createPilotAccount": "Jetzt kostenlos starten",
     "howItWorks": {
       "title": "So funktioniert's",
-      "lead": "In drei Schritten von der Anmeldung bis zur ersten Anfrage — ohne IT-Kenntnisse.",
+      "lead": "Drei Schritte — von der Anmeldung bis zur ersten echten Anfrage. Ohne IT-Kenntnisse.",
       "steps": {
         "start": {
-          "title": "Kostenlos starten",
-          "description": "Legen Sie Ihr Unternehmen an und richten Sie Ihren Zugang ein. Dauert nur wenige Minuten."
+          "title": "Betrieb anlegen",
+          "description": "Name, Branche, fertig. Ihr Zugang ist in wenigen Minuten eingerichtet.",
+          "outcome": "→ Sie haben Ihren eigenen Posteingang für Anfragen."
         },
         "embed": {
           "title": "Chat auf Ihre Website setzen",
-          "description": "Kopieren Sie den Einbettungscode und fügen Sie ihn auf Ihrer Website ein — wie ein Kontaktformular, nur als Chat."
+          "description": "Kopieren Sie einen Code-Schnipsel und fügen Sie ihn ein — wie bei Google Maps.",
+          "outcome": "→ Besucher können sofort Fragen stellen."
         },
         "inquiries": {
-          "title": "Anfragen direkt erhalten",
-          "description": "Besucher stellen ihre Frage im Chat. Sie bekommen die wichtigsten Angaben per E-Mail und sehen jede Anfrage im Dashboard."
+          "title": "Anfragen erhalten",
+          "description": "Name, Telefon, Anliegen — der Chat erfasst alles Wichtige automatisch.",
+          "outcome": "→ Sie werden per E-Mail informiert und sehen jede Anfrage im Dashboard."
         }
       }
     },
     "publicDemo": {
-      "title": "Probieren Sie den Chat selbst aus",
-      "lead": "Schreiben Sie wie ein Website-Besucher — der Assistent antwortet live mit KI.",
+      "eyebrow": "Live ausprobieren",
+      "title": "Sehen Sie selbst, wie es sich anfühlt",
+      "lead": "Schreiben Sie wie ein Website-Besucher — der Assistent antwortet live.",
       "disclaimer": "Live-Demo: Antworten kommen von der KI. Es wird keine echte Anfrage an ein Unternehmen gesendet.",
       "chipsLabel": "Beispiel starten:",
       "emptyState": "Schreiben Sie eine Nachricht oder wählen Sie ein Beispiel.",
@@ -122,9 +130,9 @@
       "resetCta": "Neue Demo starten"
     },
     "trustTitle": "Vertrauen und Datenschutz",
-    "trustGdpr": "DSGVO-orientiert",
-    "trustHttps": "HTTPS-verschlüsselt",
-    "trustHosting": "Hosting in der EU",
+    "trustGdpr": "DSGVO-orientiert — Ihre Kundendaten bleiben geschützt",
+    "trustHttps": "HTTPS-verschlüsselt — sichere Übertragung",
+    "trustHosting": "Hosting in der EU — Daten bleiben in Europa",
     "trustNoTraining": "Keine Kundendaten im KI-Training"
   },
   "legal": {
