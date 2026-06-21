@@ -5,11 +5,12 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { InquiryCard } from "@/components/inquiry-card";
+import { InquiryTableActions } from "@/components/inquiry-table-actions";
 import { ContactableBadge } from "@/components/contactable-badge";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
-import { StatusSelect } from "@/components/status-select";
+import { InboxStatusSelect } from "@/components/inbox-status-select";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -326,6 +327,7 @@ export function LeadsDashboard() {
                 <th>{t("tableService")}</th>
                 <th>{t("tableStatus")}</th>
                 <th>{t("tableCreated")}</th>
+                <th>{t("tableActions")}</th>
                 <th>{t("tableUpdate")}</th>
               </tr>
             </thead>
@@ -357,7 +359,14 @@ export function LeadsDashboard() {
                   </td>
                   <td>{formatDate(lead.created_at, locale)}</td>
                   <td>
-                    <StatusSelect
+                    <InquiryTableActions
+                      lead={lead}
+                      updating={updatingId === lead.id}
+                      onMarkContacted={() => void handleMarkContacted(lead.id)}
+                    />
+                  </td>
+                  <td>
+                    <InboxStatusSelect
                       value={lead.status}
                       disabled={updatingId === lead.id}
                       onChange={(status) => void handleStatusChange(lead.id, status)}

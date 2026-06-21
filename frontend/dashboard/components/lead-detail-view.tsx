@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
+import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
@@ -228,6 +229,17 @@ export function LeadDetailView() {
                   />
                 </dd>
               </div>
+              {lead.contacted_at ? (
+                <div className="inquiry-handoff-row">
+                  <dt>{t("contactedAtLabel")}</dt>
+                  <dd>
+                    <InquiryContactedIndicator
+                      contactedAt={lead.contacted_at}
+                      variant="detail"
+                    />
+                  </dd>
+                </div>
+              ) : null}
             </dl>
 
             <InquiryCallbackActions
