@@ -312,6 +312,28 @@ a {
   font-size: 0.9rem;
 }
 
+.inquiry-notification-indicator {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.inquiry-card .inquiry-notification-indicator {
+  margin-top: 2px;
+}
+
+.inquiry-notification-sent {
+  color: #1f6b3f;
+}
+
+.inquiry-notification-not-sent {
+  color: var(--muted);
+}
+
+.inquiry-notification-detail {
+  margin: 0;
+}
+
 .detail-header-badges {
   display: flex;
   flex-wrap: wrap;

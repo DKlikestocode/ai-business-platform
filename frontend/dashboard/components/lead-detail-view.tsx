@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
+import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -190,6 +191,15 @@ export function LeadDetailView() {
                 <dt>{t("origin")}</dt>
                 <dd>
                   <InquirySourceBadge source={lead.source} />
+                </dd>
+              </div>
+              <div className="inquiry-handoff-row">
+                <dt>{t("notificationLabel")}</dt>
+                <dd>
+                  <InquiryNotificationIndicator
+                    notificationSentAt={lead.notification_sent_at}
+                    variant="detail"
+                  />
                 </dd>
               </div>
             </dl>
