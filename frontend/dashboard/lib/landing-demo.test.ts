@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import de from "@/messages/de.json";
 import {
+  LANDING_DEMO_MESSAGE_PATH,
   createLandingDemoConversationId,
   isLandingDemoLimitStatus,
   isValidLandingDemoConversationId,
@@ -19,6 +20,10 @@ describe("landing demo limits", () => {
   it("detects rate limit responses", () => {
     expect(isLandingDemoLimitStatus(429)).toBe(true);
     expect(isLandingDemoLimitStatus(200)).toBe(false);
+  });
+
+  it("targets the proxied api path", () => {
+    expect(LANDING_DEMO_MESSAGE_PATH).toBe("/api/v1/public/landing-demo/message");
   });
 });
 

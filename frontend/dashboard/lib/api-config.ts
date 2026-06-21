@@ -24,3 +24,13 @@ export function buildApiUrl(path: string): string {
 
   return `${baseUrl.replace(/\/$/, "")}${path}`;
 }
+
+/** Same-origin browser paths must go through Next.js `/api/*` rewrites. */
+export function buildV1ApiUrl(path: string): string {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (normalized.startsWith("/api/v1/")) {
+    return buildApiUrl(normalized);
+  }
+
+  return buildApiUrl(`/api/v1${normalized}`);
+}
