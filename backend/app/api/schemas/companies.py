@@ -32,6 +32,8 @@ class CompanySettingsResponse(BaseModel):
     notify_on_new_lead: bool
     notify_on_contactable_lead: bool
     contactable_lead_notification_threshold: int
+    service_area_center: str | None
+    service_radius_km: int | None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -49,6 +51,8 @@ class CompanySettingsUpdateRequest(BaseModel):
         ge=0,
         le=100,
     )
+    service_area_center: str | None = Field(default=None, max_length=255)
+    service_radius_km: int | None = Field(default=None, ge=1, le=500)
 
 
 def company_to_response(company: Company) -> CompanyResponse:

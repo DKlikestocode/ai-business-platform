@@ -16,6 +16,7 @@ import {
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { formatDateTime } from "@/lib/format-datetime";
+import { PRIORITY_SCORE_FACTORS } from "@/lib/lead-priority";
 import {
   canSendTestNotification,
   isNotificationEmailDirty,
@@ -29,7 +30,7 @@ function formatDate(value: string, locale: string): string {
 }
 
 export function CompanySettingsForm() {
-  const { company } = useAuth();
+  const { refresh } = useAuth();
   const locale = useLocale();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
@@ -96,10 +97,13 @@ export function CompanySettingsForm() {
         notify_on_contactable_lead: settings.notify_on_contactable_lead,
         contactable_lead_notification_threshold:
           settings.contactable_lead_notification_threshold,
+        service_area_center: settings.service_area_center,
+        service_radius_km: settings.service_radius_km,
       });
       setSettings(updated);
       setSavedNotificationEmail(updated.notification_email);
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
+      await refresh();
       setSuccess(t("saved"));
       setActivationReloadKey((value) => value + 1);
     } catch (err) {
@@ -181,6 +185,7 @@ export function CompanySettingsForm() {
       <>
       <form className="card settings-form" onSubmit={(event) => void handleSubmit(event)}>
         <h3 className="card-title">{t("companyProfile")}</h3>
+        <p className="muted field-hint">{t("companyProfileHint")}</p>
         <div className="settings-grid">
           <label className="field">
             <span>{t("name")}</span>
@@ -223,6 +228,42 @@ export function CompanySettingsForm() {
               {formatDate(settings.created_at, locale)}
             </p>
           </div>
+        </div>
+
+        <h3 className="card-title">{t("serviceArea")}</h3>
+        <p className="muted field-hint">{t("serviceAreaHint")}</p>
+        <div className="settings-grid">
+          <label className="field">
+            <span>{t("serviceAreaCenter")}</span>
+            <input
+              className="input"
+              value={settings.service_area_center ?? ""}
+              onChange={(event) =>
+                updateField(
+                  "service_area_center",
+                  event.target.value.trim() || null,
+                )
+              }
+              placeholder={t("serviceAreaCenterPlaceholder")}
+            />
+          </label>
+          <label className="field">
+            <span>{t("serviceRadiusKm")}</span>
+            <input
+              className="input"
+              type="number"
+              min={1}
+              max={500}
+              value={settings.service_radius_km ?? ""}
+              onChange={(event) =>
+                updateField(
+                  "service_radius_km",
+                  event.target.value ? Number(event.target.value) : null,
+                )
+              }
+              placeholder={t("serviceRadiusKmPlaceholder")}
+            />
+          </label>
         </div>
 
         <h3 className="card-title">{t("leadNotifications")}</h3>
@@ -308,6 +349,14 @@ export function CompanySettingsForm() {
                 )
               }
             />
+            <p className="muted field-hint">{t("contactableThresholdHint")}</p>
+            <ul className="priority-factor-list muted">
+              {PRIORITY_SCORE_FACTORS.map((factor) => (
+                <li key={factor.key}>
+                  {t(`priorityFactors.${factor.key}`, { points: factor.points })}
+                </li>
+              ))}
+            </ul>
           </label>
         </div>
 

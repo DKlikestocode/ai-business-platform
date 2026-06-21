@@ -182,7 +182,30 @@
     "signingIn": "Anmeldung läuft...",
     "signIn": "Anmelden",
     "signInFailed": "Anmeldung fehlgeschlagen. Prüfen Sie E-Mail und Passwort.",
+    "forgotPassword": "Passwort vergessen?",
     "loading": "Laden..."
+  },
+  "forgotPassword": {
+    "title": "Passwort zurücksetzen",
+    "description": "Geben Sie Ihre Anmelde-E-Mail ein. Wir senden Ihnen einen Link zum Zurücksetzen.",
+    "emailLabel": "Anmelde-E-Mail",
+    "submit": "Link senden",
+    "submitting": "Wird gesendet...",
+    "success": "Wenn ein Konto mit dieser E-Mail existiert, haben wir einen Link gesendet.",
+    "failed": "Link konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+    "backToLogin": "Zurück zur Anmeldung"
+  },
+  "resetPassword": {
+    "title": "Neues Passwort setzen",
+    "description": "Wählen Sie ein neues Passwort für Ihr Konto.",
+    "passwordLabel": "Neues Passwort",
+    "passwordHint": "Mindestens 8 Zeichen.",
+    "submit": "Passwort speichern",
+    "submitting": "Wird gespeichert...",
+    "success": "Passwort gespeichert. Sie können sich jetzt anmelden.",
+    "failed": "Passwort konnte nicht gespeichert werden. Fordern Sie einen neuen Link an.",
+    "missingToken": "Der Link ist ungültig oder abgelaufen. Fordern Sie einen neuen Link an.",
+    "backToLogin": "Zur Anmeldung"
   },
   "onboarding": {
     "eyebrow": "Konto einrichten",
@@ -287,10 +310,17 @@
     "notFound": "Einstellungen nicht gefunden.",
     "saved": "Einstellungen gespeichert.",
     "companyProfile": "Unternehmensprofil",
+    "companyProfileHint": "Sie können Name, E-Mail und Telefon jederzeit hier anpassen — nicht nur bei der Registrierung.",
     "name": "Name",
     "phone": "Telefon",
     "slug": "Chat-Referenz",
     "created": "Erstellt",
+    "serviceArea": "Einsatzgebiet",
+    "serviceAreaHint": "Der Chat nutzt diese Angaben, um Kunden außerhalb Ihres Gebiets freundlich hinzuweisen.",
+    "serviceAreaCenter": "Standort / Region",
+    "serviceAreaCenterPlaceholder": "z. B. Berlin oder München-Nord",
+    "serviceRadiusKm": "Radius (km)",
+    "serviceRadiusKmPlaceholder": "z. B. 30",
     "leadNotifications": "E-Mail-Benachrichtigungen",
     "notificationsActive": "Benachrichtigungen aktiv",
     "notificationsInactive": "Nicht aktiv",
@@ -300,6 +330,16 @@
     "notifyQualified": "Bei wichtigen Anfragen benachrichtigen",
     "notifyContactable": "Bei erreichbaren Anfragen ab Prioritätsschwelle benachrichtigen",
     "contactableThreshold": "Prioritätsschwelle für erreichbare Anfragen",
+    "contactableThresholdHint": "Priorität ist eine Zahl von 0 bis 100. Sie steigt, je mehr Angaben vorliegen. Bei erreichbaren Anfragen benachrichtigen wir ab dieser Schwelle.",
+    "priorityFactors": {
+      "contact": "Erreichbarkeit (Telefon oder E-Mail): +{points}",
+      "description": "Problembeschreibung: +{points}",
+      "location": "Standort: +{points}",
+      "service": "Gewünschte Leistung: +{points}",
+      "urgency": "Dringlichkeit: +{points}",
+      "name": "Name: +{points}",
+      "callback": "Wunschzeit für Rückruf: +{points}"
+    },
     "testNotification": "Test senden",
     "testNotificationSending": "Test wird gesendet...",
     "testNotificationSaveFirst": "Bitte speichern Sie die E-Mail-Adresse zuerst.",
@@ -472,7 +512,8 @@
     "viewLead": "Anfrage im Dashboard ansehen",
     "tryAnother": "Weitere Anfrage testen",
     "placeholderComplete": "Anfrage abgeschlossen. Starten Sie eine neue Konversation, um fortzufahren.",
-    "placeholderMessage": "Nachricht eingeben..."
+    "placeholderMessage": "Nachricht eingeben...",
+    "examplePromptFailed": "Beispiel konnte nicht geladen werden. Bitte tippen Sie Ihre Anfrage selbst."
   },
   "qualification": {
     "incomplete": "Unvollständig",

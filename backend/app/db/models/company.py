@@ -31,6 +31,8 @@ class Company(Base):
         nullable=False,
         default=50,
     )
+    service_area_center: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    service_radius_km: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

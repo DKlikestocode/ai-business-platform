@@ -182,7 +182,30 @@
     "signingIn": "Signing in...",
     "signIn": "Sign in",
     "signInFailed": "Sign in failed. Check your email and password.",
+    "forgotPassword": "Forgot password?",
     "loading": "Loading..."
+  },
+  "forgotPassword": {
+    "title": "Reset password",
+    "description": "Enter your sign-in email. We will send you a reset link.",
+    "emailLabel": "Sign-in email",
+    "submit": "Send link",
+    "submitting": "Sending...",
+    "success": "If an account exists for this email, we sent a reset link.",
+    "failed": "Could not send the link. Please try again.",
+    "backToLogin": "Back to sign in"
+  },
+  "resetPassword": {
+    "title": "Set a new password",
+    "description": "Choose a new password for your account.",
+    "passwordLabel": "New password",
+    "passwordHint": "At least 8 characters.",
+    "submit": "Save password",
+    "submitting": "Saving...",
+    "success": "Password saved. You can sign in now.",
+    "failed": "Could not save the password. Request a new link.",
+    "missingToken": "This link is invalid or expired. Request a new link.",
+    "backToLogin": "Go to sign in"
   },
   "onboarding": {
     "eyebrow": "Create your account",
@@ -287,10 +310,17 @@
     "notFound": "Settings not found.",
     "saved": "Settings saved.",
     "companyProfile": "Company profile",
+    "companyProfileHint": "You can update name, email, and phone here anytime — not only during sign-up.",
     "name": "Name",
     "phone": "Phone",
     "slug": "Chat reference",
     "created": "Created",
+    "serviceArea": "Service area",
+    "serviceAreaHint": "The chat uses this to politely guide customers outside your area.",
+    "serviceAreaCenter": "Location / region",
+    "serviceAreaCenterPlaceholder": "e.g. Berlin or North Munich",
+    "serviceRadiusKm": "Radius (km)",
+    "serviceRadiusKmPlaceholder": "e.g. 30",
     "leadNotifications": "Email notifications",
     "notificationsActive": "Notifications active",
     "notificationsInactive": "Not active",
@@ -300,6 +330,16 @@
     "notifyQualified": "Notify on important inquiries",
     "notifyContactable": "Notify on reachable inquiries above priority threshold",
     "contactableThreshold": "Priority threshold for reachable inquiries",
+    "contactableThresholdHint": "Priority is a score from 0 to 100. It rises as more details are captured. For reachable inquiries, we notify from this threshold upward.",
+    "priorityFactors": {
+      "contact": "Reachable (phone or email): +{points}",
+      "description": "Problem description: +{points}",
+      "location": "Location: +{points}",
+      "service": "Requested service: +{points}",
+      "urgency": "Urgency: +{points}",
+      "name": "Name: +{points}",
+      "callback": "Preferred callback time: +{points}"
+    },
     "testNotification": "Send test",
     "testNotificationSending": "Sending test...",
     "testNotificationSaveFirst": "Please save the email address first.",
@@ -472,7 +512,8 @@
     "viewLead": "View inquiry in dashboard",
     "tryAnother": "Try another inquiry",
     "placeholderComplete": "Inquiry complete. Start a new conversation to continue.",
-    "placeholderMessage": "Type your message..."
+    "placeholderMessage": "Type your message...",
+    "examplePromptFailed": "Could not load the example. Please type your inquiry manually."
   },
   "qualification": {
     "incomplete": "Incomplete",

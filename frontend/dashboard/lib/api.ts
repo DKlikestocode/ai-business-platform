@@ -15,6 +15,8 @@ import type {
   LeadMessageResponse,
   LeadStatus,
   LoginRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
   PaginatedLeads,
   QualificationStatus,
   SeedDemoDataResponse,
@@ -144,6 +146,22 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export async function login(payload: LoginRequest): Promise<TokenResponse> {
   return request<TokenResponse>("/api/v1/auth/login", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function requestPasswordReset(
+  payload: ForgotPasswordRequest,
+): Promise<void> {
+  await request("/api/v1/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function resetPassword(payload: ResetPasswordRequest): Promise<void> {
+  await request("/api/v1/auth/reset-password", {
     method: "POST",
     body: JSON.stringify(payload),
   });

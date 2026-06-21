@@ -77,6 +77,8 @@ export interface CompanySettings {
   notify_on_new_lead: boolean;
   notify_on_contactable_lead: boolean;
   contactable_lead_notification_threshold: number;
+  service_area_center: string | null;
+  service_radius_km: number | null;
   created_at: string;
 }
 
@@ -88,6 +90,8 @@ export interface CompanySettingsUpdate {
   notify_on_new_lead?: boolean;
   notify_on_contactable_lead?: boolean;
   contactable_lead_notification_threshold?: number;
+  service_area_center?: string | null;
+  service_radius_km?: number | null;
 }
 
 export interface CurrentUser {
@@ -110,6 +114,15 @@ export interface TokenResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
 }
 
 export type LeadSource = "website" | "test";

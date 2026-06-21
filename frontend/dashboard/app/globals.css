@@ -626,6 +626,16 @@ a {
   gap: 8px;
 }
 
+.priority-factor-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 0.875rem;
+}
+
+.priority-factor-list li + li {
+  margin-top: 4px;
+}
+
 .chat-success-panel {
   margin: 0 20px;
   padding: 16px;

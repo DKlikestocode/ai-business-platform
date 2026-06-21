@@ -81,6 +81,10 @@ export function LoginForm() {
             />
           </label>
 
+          <p className="muted onboarding-footer">
+            <Link href="/forgot-password">{t("forgotPassword")}</Link>
+          </p>
+
           {formError || error ? (
             <AlertBanner>{formError ?? error}</AlertBanner>
           ) : null}

@@ -55,4 +55,8 @@ class LeadCaptureAgent(BaseAgent):
         if qualification_hint:
             sections.append(f"Current qualification guidance:\n{qualification_hint}")
 
+        service_area_prompt = context.metadata.get("service_area_prompt")
+        if service_area_prompt:
+            sections.append(f"Service area guidance:\n{service_area_prompt}")
+
         return "\n\n".join(sections)

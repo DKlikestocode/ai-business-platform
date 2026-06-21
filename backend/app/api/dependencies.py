@@ -22,6 +22,7 @@ from app.db.session import get_db
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
+from app.repositories.password_reset_repository import PasswordResetRepository
 from app.repositories.user_repository import UserRepository
 from app.services.activation.service import ActivationService
 from app.services.auth_service import AuthService
@@ -202,11 +203,24 @@ def get_user_service(
     return UserService(user_repository, company_repository)
 
 
+def get_password_reset_repository(
+    db: Session = Depends(get_db),
+) -> PasswordResetRepository:
+    return PasswordResetRepository(db)
+
+
 def get_auth_service(
     user_repository: UserRepository = Depends(get_user_repository),
+    password_reset_repository: PasswordResetRepository = Depends(get_password_reset_repository),
+    notification_service: NotificationService = Depends(get_notification_service),
     settings: Settings = Depends(get_settings),
 ) -> AuthService:
-    return AuthService(user_repository, settings)
+    return AuthService(
+        user_repository,
+        settings,
+        password_reset_repository=password_reset_repository,
+        notification_service=notification_service,
+    )
 
 
 def _resolve_user_from_credentials(
