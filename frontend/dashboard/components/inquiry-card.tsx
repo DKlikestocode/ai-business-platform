@@ -6,6 +6,11 @@ import { StatusBadge } from "@/components/status-badge";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { StatusSelect } from "@/components/status-select";
 import { Link } from "@/i18n/navigation";
+import {
+  handoffPreviewText,
+  normalizeEmail,
+  normalizePhone,
+} from "@/lib/inquiry-handoff";
 import type { Lead, LeadStatus } from "@/lib/types";
 
 interface InquiryCardProps {
@@ -15,33 +20,6 @@ interface InquiryCardProps {
   onStatusChange: (status: LeadStatus) => void;
 }
 
-function hasPhone(value: string | null | undefined): value is string {
-  return Boolean(value?.trim());
-}
-
-function hasEmail(value: string | null | undefined): value is string {
-  return Boolean(value?.trim());
-}
-
-function previewText(lead: Lead, noDescriptionLabel: string): string {
-  const summary = lead.summary?.trim();
-  if (summary) {
-    return summary;
-  }
-
-  const description = lead.description?.trim();
-  if (description) {
-    return description;
-  }
-
-  const service = lead.service_requested?.trim();
-  if (service) {
-    return service;
-  }
-
-  return noDescriptionLabel;
-}
-
 export function InquiryCard({
   lead,
   createdLabel,
@@ -49,10 +27,10 @@ export function InquiryCard({
   onStatusChange,
 }: InquiryCardProps) {
   const t = useTranslations("leads");
-  const phone = hasPhone(lead.phone) ? lead.phone.trim() : null;
-  const email = hasEmail(lead.email) ? lead.email.trim() : null;
+  const phone = normalizePhone(lead);
+  const email = normalizeEmail(lead);
   const urgency = lead.urgency?.trim() || null;
-  const preview = previewText(lead, t("noDescription"));
+  const preview = handoffPreviewText(lead, t("noDescription"));
 
   return (
     <article className="inquiry-card card">
