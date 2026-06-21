@@ -1,6 +1,7 @@
-import { buildApiUrl } from "@/lib/api-config";
+import { buildV1ApiUrl } from "@/lib/api-config";
 import type { LeadMessageResponse } from "@/lib/types";
 
+export const LANDING_DEMO_MESSAGE_PATH = "/api/v1/public/landing-demo/message";
 export const LANDING_DEMO_CONVERSATION_PREFIX = "landing-demo-";
 export const LANDING_DEMO_MAX_USER_MESSAGES = 6;
 
@@ -32,7 +33,7 @@ export async function sendLandingDemoMessage(
     message: string;
   },
 ): Promise<LeadMessageResponse> {
-  const response = await fetch(buildApiUrl("/public/landing-demo/message"), {
+  const response = await fetch(buildV1ApiUrl("/public/landing-demo/message"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
