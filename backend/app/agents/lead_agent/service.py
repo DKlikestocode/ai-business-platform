@@ -7,6 +7,10 @@ from app.agents.lead_agent.conversation_history import (
     build_chat_messages,
     load_lead_data_from_messages,
 )
+from app.agents.lead_agent.contact_validation import (
+    build_invalid_contact_reply,
+    sanitize_contact_fields,
+)
 from app.agents.lead_agent.extraction import LeadExtractionClient
 from app.agents.lead_agent.models import (
     LeadCaptureResult,
@@ -118,15 +122,23 @@ class LeadCaptureService:
             ChatMessage(role="user", content=request.message),
         ]
         llm_output = await self._extraction_client.extract(messages=extraction_messages)
-        merged_data = merge_lead_data(existing_data, llm_output.to_extracted_data())
+        incoming_data, rejected_contacts = sanitize_contact_fields(
+            llm_output.to_extracted_data(),
+        )
+        merged_data, _ = sanitize_contact_fields(
+            merge_lead_data(existing_data, incoming_data),
+        )
         qualification = evaluate_qualification(merged_data, channel=self._channel)
         missing_fields = get_missing_fields(merged_data)
         lead_complete = is_lead_complete(merged_data)
+        reply = llm_output.reply
+        if rejected_contacts.any_rejected:
+            reply = build_invalid_contact_reply(rejected_contacts)
 
         self._conversation_repository.add_message(
             conversation.id,
             MessageRole.ASSISTANT,
-            llm_output.reply,
+            reply,
             metadata={
                 LEAD_DATA_METADATA_KEY: merged_data.model_dump(mode="json"),
                 "qualification_status": qualification.qualification_status.value,
@@ -175,7 +187,7 @@ class LeadCaptureService:
                 )
 
         return LeadCaptureResult(
-            reply=llm_output.reply,
+            reply=reply,
             lead_complete=lead_complete,
             missing_fields=missing_fields,
             extracted_data=merged_data,

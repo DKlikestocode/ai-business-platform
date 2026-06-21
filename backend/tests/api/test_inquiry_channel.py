@@ -26,7 +26,7 @@ def _build_widget_service(db_session) -> LeadCaptureService:
                 LeadCaptureLLMOutput(
                     reply="Thanks! What service do you need?",
                     name="Widget User",
-                    phone="555-0199",
+                    phone="01701234599",
                     location="Berlin",
                 ),
             ]
@@ -49,7 +49,7 @@ def _build_dashboard_service(db_session) -> LeadCaptureService:
                 LeadCaptureLLMOutput(
                     reply="Thanks! What service do you need?",
                     name="Dashboard User",
-                    phone="555-0100",
+                    phone="01701234567",
                 ),
             ]
         ),
@@ -157,7 +157,7 @@ def test_lead_list_and_detail_return_source_from_conversation_channel(
         conversation_id="website-source-conv",
         data=LeadExtractedData(
             name="Website Lead",
-            phone="555-0200",
+            phone="01701234600",
             location="Berlin",
             service_requested="Heating",
             description="No heat",
@@ -171,7 +171,7 @@ def test_lead_list_and_detail_return_source_from_conversation_channel(
         conversation_id="dashboard-source-conv",
         data=LeadExtractedData(
             name="Test Lead",
-            phone="555-0300",
+            phone="01701234700",
             location="Berlin",
             service_requested="Plumbing",
             description="Leak",
@@ -229,7 +229,7 @@ def test_reused_demo_chat_conversation_upgrades_to_dashboard_channel_and_test_so
                     reply="Thanks, we have everything we need.",
                     summary="Reused demo chat lead",
                     name="Reuse User",
-                    phone="555-0400",
+                    phone="01701234800",
                     location="Berlin",
                     service_requested="Electrical",
                     description="Outlet issue",

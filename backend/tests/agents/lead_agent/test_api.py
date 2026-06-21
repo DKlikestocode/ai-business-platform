@@ -32,7 +32,7 @@ def api_client(api_runtime, db_session, company) -> TestClient:
                 LeadCaptureLLMOutput(
                     reply="Thanks! What service do you need?",
                     name="Jane Doe",
-                    phone="555-0100",
+                    phone="01701234567",
                 ),
             ]
         ),
@@ -56,7 +56,7 @@ def test_lead_message_endpoint_returns_expected_shape(
         "/api/v1/agents/lead/message",
         json={
             "conversation_id": "api-conv-1",
-            "message": "Hi, I'm Jane Doe at 555-0100 in Austin.",
+            "message": "Hi, I'm Jane Doe at 01701234567 in Austin.",
         },
         headers=auth_headers,
     )

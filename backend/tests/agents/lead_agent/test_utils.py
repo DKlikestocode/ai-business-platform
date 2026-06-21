@@ -9,13 +9,13 @@ from app.agents.lead_agent.utils import (
 
 
 def test_merge_lead_data_preserves_existing_and_adds_new_fields() -> None:
-    existing = LeadExtractedData(name="Jane Doe", phone="+1 555 0100")
+    existing = LeadExtractedData(name="Jane Doe", phone="01701234567")
     incoming = LeadExtractedData(location="Austin, TX", service_requested="Roof repair")
 
     merged = merge_lead_data(existing, incoming)
 
     assert merged.name == "Jane Doe"
-    assert merged.phone == "+1 555 0100"
+    assert merged.phone == "01701234567"
     assert merged.location == "Austin, TX"
     assert merged.service_requested == "Roof repair"
 
