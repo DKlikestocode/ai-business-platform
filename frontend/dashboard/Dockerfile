@@ -11,5 +11,7 @@ COPY . .
 
 EXPOSE 3000
 
+RUN chmod +x /app/scripts/docker-dev.sh
+
 ENTRYPOINT ["/bin/sh", "/app/docker-entrypoint.dev.sh"]
-CMD ["npm", "run", "dev"]
+CMD ["/app/scripts/docker-dev.sh"]

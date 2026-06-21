@@ -178,7 +178,7 @@ Default to **clean architecture**: routes thin, services own business rules, rep
 | State | React state + `AuthProvider`. Prefer module-level cache (`lib/dashboard-cache.ts`) over new global providers unless justified. |
 | Styling | CSS in `app/globals.css`. No CSS-in-JS. No new UI libraries without explicit approval. |
 | Components | Server Components by default; `"use client"` only when needed (hooks, events, browser APIs). |
-| Dev Docker | Bind mount `frontend/dashboard → /app`. `node_modules` in named volume. **`.next` is cleared before `next dev`** in `docker-entrypoint.dev.sh`. Never reintroduce a persistent `.next` volume. |
+| Dev Docker | Bind mount `frontend/dashboard → /app`. `node_modules` in named volume. **`.next` lives in an anonymous container volume** (not on the bind mount) and is cleared before each `next dev` start via `scripts/docker-dev.sh`. |
 
 **Frontend must not:**
 
@@ -600,8 +600,9 @@ docker compose up --build
 
 - `frontend/dashboard` bind-mounted to `/app`
 - `frontend_node_modules` volume for `node_modules`
-- **No persistent `.next` volume** — entrypoint deletes `.next` before `next dev`
-- After `npm run build` in Docker, restart dev — do not share production `.next` with dev
+- **`.next` in anonymous volume** — isolated from host/CI builds; cleared on every dev start (`scripts/docker-dev.sh`)
+- `docker compose run … npm run build` is safe while dev is running (separate `.next` volume per container)
+- Host-only dev (no Docker): use `npm run dev:clean` after `npm run build` if the page returns 500
 
 ### Useful commands
 
