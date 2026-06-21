@@ -153,6 +153,8 @@ class LeadRepository:
             return None
 
         lead.status = status.value
+        if status == LeadStatus.CONTACTED and lead.contacted_at is None:
+            lead.contacted_at = datetime.now(UTC)
         self._session.commit()
         self._session.refresh(lead)
         return lead

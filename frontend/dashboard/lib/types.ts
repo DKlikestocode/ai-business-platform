@@ -136,6 +136,7 @@ export interface Lead {
   lead_score: number;
   qualification_status: QualificationStatus;
   notification_sent_at: string | null;
+  contacted_at: string | null;
   created_at: string;
 }
 

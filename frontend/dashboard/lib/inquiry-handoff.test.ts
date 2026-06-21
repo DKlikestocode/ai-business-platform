@@ -35,6 +35,7 @@ function makeLead(overrides: Partial<Lead> = {}): Lead {
     lead_score: 80,
     qualification_status: "contactable",
     notification_sent_at: null,
+    contacted_at: null,
     created_at: "2025-06-01T10:00:00Z",
     ...overrides,
   };

@@ -155,6 +155,24 @@ def test_update_lead_status(
     assert body["status"] == "qualified"
 
 
+def test_update_lead_status_sets_contacted_at(
+    dashboard_client: TestClient,
+    sample_leads,
+    auth_headers: dict[str, str],
+) -> None:
+    lead = sample_leads[0]
+    response = dashboard_client.patch(
+        f"/api/v1/leads/{lead.id}/status",
+        json={"status": "contacted"},
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "contacted"
+    assert body["contacted_at"] is not None
+
+
 def test_update_lead_status_not_found(
     dashboard_client: TestClient,
     auth_headers: dict[str, str],

@@ -899,6 +899,29 @@ code {
   color: var(--muted);
 }
 
+.inquiry-contacted-indicator {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.inquiry-contacted-label {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.inquiry-table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 10rem;
+}
+
+.inquiry-table-action {
+  font-size: 0.8125rem;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
 .inquiry-handoff-card {
   display: grid;
   gap: 20px;

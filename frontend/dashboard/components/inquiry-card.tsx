@@ -5,9 +5,10 @@ import { useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/status-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
+import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
-import { StatusSelect } from "@/components/status-select";
+import { InboxStatusSelect } from "@/components/inbox-status-select";
 import { Link } from "@/i18n/navigation";
 import {
   displayName,
@@ -72,6 +73,8 @@ export function InquiryCard({
         notificationSentAt={lead.notification_sent_at}
       />
 
+      <InquiryContactedIndicator contactedAt={lead.contacted_at} />
+
       {urgency ? (
         <p className="inquiry-card-urgency">
           <span className="inquiry-card-urgency-label">{t("urgency")}</span>
@@ -121,7 +124,7 @@ export function InquiryCard({
 
       <div className="inquiry-card-status">
         <span className="inquiry-card-status-label">{t("status")}</span>
-        <StatusSelect
+        <InboxStatusSelect
           value={lead.status}
           disabled={statusUpdating}
           onChange={onStatusChange}

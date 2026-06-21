@@ -97,6 +97,11 @@ def test_dashboard_service_update_status(
         summary=None,
     )
 
-    updated = dashboard_service.update_status(lead.id, LeadStatus.WON, company_id=company.id)
+    updated = dashboard_service.update_status(lead.id, LeadStatus.CONTACTED, company_id=company.id)
     assert updated is not None
-    assert updated.status == LeadStatus.WON
+    assert updated.status == LeadStatus.CONTACTED
+    assert updated.contacted_at is not None
+
+    won = dashboard_service.update_status(lead.id, LeadStatus.WON, company_id=company.id)
+    assert won is not None
+    assert won.status == LeadStatus.WON
