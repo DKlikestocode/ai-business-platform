@@ -61,6 +61,9 @@ services:
     volumes:
       - ./frontend/dashboard:/app
       - frontend_node_modules:/app/node_modules
+      # Anonymous volume: dev .next never shares the bind-mounted folder with
+      # host or one-off `docker compose run … npm run build` production output.
+      - /app/.next
     depends_on:
       backend:
         condition: service_healthy
