@@ -52,8 +52,9 @@ export function handoffPreviewText(
 
 export const INQUIRY_SOURCE_LABEL_KEY: Record<
   LeadSource,
-  "sourceWebsite" | "sourceTest"
+  "sourceWebsite" | "sourceTest" | "sourcePhone"
 > = {
   website: "sourceWebsite",
   test: "sourceTest",
+  phone: "sourcePhone",
 };

@@ -10,6 +10,7 @@ from app.api.routes import (
     health,
     lead_agent,
     leads,
+    public_voice,
     public_widget,
     landing_demo,
     users,
@@ -21,6 +22,7 @@ settings = get_settings()
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(public_widget.router)
+api_router.include_router(public_voice.router)
 api_router.include_router(landing_demo.router)
 api_router.include_router(auth.router)
 api_router.include_router(companies.router)

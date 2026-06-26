@@ -19,6 +19,7 @@ class ConversationChannel(StrEnum):
     DASHBOARD = "dashboard"
     LANDING_DEMO = "landing_demo"
     WHATSAPP = "whatsapp"
+    VOICE = "voice"
     EMAIL = "email"
     API = "api"
 

@@ -128,7 +128,7 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
-export type LeadSource = "website" | "test";
+export type LeadSource = "website" | "test" | "phone";
 
 export type ServiceAreaStatus =
   | "not_configured"

@@ -16,3 +16,7 @@ def test_missing_channel_defaults_to_website_source() -> None:
 
 def test_landing_demo_channel_maps_to_test_source() -> None:
     assert channel_to_inquiry_source(ConversationChannel.LANDING_DEMO) == InquirySource.TEST
+
+
+def test_voice_channel_maps_to_phone_source() -> None:
+    assert channel_to_inquiry_source(ConversationChannel.VOICE) == InquirySource.PHONE

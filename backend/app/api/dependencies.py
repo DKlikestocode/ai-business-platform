@@ -101,6 +101,19 @@ def get_widget_lead_capture_service(
     )
 
 
+def get_voice_lead_capture_service(
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+    notification_service: NotificationService = Depends(get_notification_service),
+) -> LeadCaptureService:
+    return _build_lead_capture_service(
+        db=db,
+        settings=settings,
+        notification_service=notification_service,
+        channel=ConversationChannel.VOICE,
+    )
+
+
 def get_landing_demo_lead_capture_service(
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),

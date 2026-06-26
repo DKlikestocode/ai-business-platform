@@ -45,7 +45,7 @@ def has_contact_method(
     return (
         _has_contact_phone(data)
         or _has_contact_email(data)
-        or channel == ConversationChannel.WHATSAPP
+        or channel in {ConversationChannel.WHATSAPP, ConversationChannel.VOICE}
     )
 
 
@@ -55,6 +55,10 @@ def resolve_contact_method(
     channel: ConversationChannel,
 ) -> ContactMethod:
     if channel == ConversationChannel.WHATSAPP:
+        return ContactMethod.CHANNEL
+    if channel == ConversationChannel.VOICE:
+        if _has_contact_phone(data):
+            return ContactMethod.PHONE
         return ContactMethod.CHANNEL
     if _has_contact_phone(data):
         return ContactMethod.PHONE
@@ -156,6 +160,13 @@ def build_qualification_hint(
         return (
             "This conversation is on WhatsApp. Treat the channel as the contact method and "
             "focus on gathering useful service context."
+        )
+
+    if channel == ConversationChannel.VOICE:
+        return (
+            "This is a phone call. Keep replies short and spoken-friendly. The caller is "
+            "reachable by phone — confirm callback number only if it may differ from caller "
+            "ID. Prioritize problem, location or postal code, and urgency."
         )
 
     return "Continue qualifying the lead with one or two focused questions at a time."

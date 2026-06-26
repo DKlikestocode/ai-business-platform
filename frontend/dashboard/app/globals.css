@@ -304,6 +304,18 @@ a {
   color: #6b5a1f;
 }
 
+.badge-source-phone {
+  background: #e8eef8;
+  color: #1f3f6b;
+}
+
+.voice-setup-steps {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 8px;
+}
+
 .first-website-inquiry-marker {
   margin-bottom: 12px;
   padding: 12px 14px;

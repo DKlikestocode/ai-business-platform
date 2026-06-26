@@ -30,6 +30,7 @@ import {
 } from "@/lib/notification-recipient";
 import type { CompanySettings } from "@/lib/types";
 import { WidgetActivationPanel } from "@/components/widget-activation-panel";
+import { VoiceSetupPanel } from "@/components/voice-setup-panel";
 
 export function CompanySettingsForm() {
   const { refresh } = useAuth();
@@ -355,6 +356,7 @@ export function CompanySettingsForm() {
       </form>
 
       <WidgetActivationPanel reloadKey={activationReloadKey} />
+      {settings ? <VoiceSetupPanel companySlug={settings.slug} /> : null}
       </>
       ) : null}
     </div>
