@@ -58,7 +58,7 @@ class LeadRepository:
         qualification: QualificationResult | None = None,
         service_area: ServiceAreaEvaluation | None = None,
     ) -> Lead:
-        return self.create(
+        lead = self.create(
             company_id=company_id,
             conversation_id=conversation_id,
             data=data,
@@ -67,6 +67,13 @@ class LeadRepository:
             status=status,
             service_area=service_area,
         )
+        # Example inquiries should appear in the inbox regardless of status badge.
+        lead.archived_at = None
+        if status == LeadStatus.CONTACTED and lead.contacted_at is None:
+            lead.contacted_at = datetime.now(UTC)
+        self._session.commit()
+        self._session.refresh(lead)
+        return lead
 
     def save_or_update(
         self,

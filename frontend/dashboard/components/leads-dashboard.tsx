@@ -27,6 +27,7 @@ import {
 } from "@/lib/lead-qualification";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
+  DEFAULT_LEADS_INBOX_PREFERENCES,
   getLeadsInboxPreferences,
   setLeadsInboxPreferences,
   type LeadsInboxView,
@@ -201,9 +202,30 @@ export function LeadsDashboard() {
     setSeeding(true);
     setError(null);
     try {
-      await seedDemoData();
+      setInboxView("active");
+      setStatusFilter("");
+      setQualificationFilter("");
+      setContactableFilter("");
       setPage(1);
-      await loadLeads();
+      setLeadsInboxPreferences({
+        ...DEFAULT_LEADS_INBOX_PREFERENCES,
+        sort,
+      });
+
+      await seedDemoData();
+
+      const data = await fetchLeads({
+        page: 1,
+        page_size: 20,
+        status: "",
+        qualification_status: "",
+        contactable: "",
+        sort,
+        archived: false,
+      });
+      setLeads(Array.isArray(data.items) ? data.items : []);
+      setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
+      setTotal(typeof data.total === "number" ? data.total : 0);
     } catch (err) {
       setError(formatUserFacingError(err, t("seedFailed"), errorMessages));
     } finally {

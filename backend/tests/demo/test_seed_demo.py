@@ -30,6 +30,28 @@ def test_seed_demo_leads_creates_all_scenarios(
         assert lead.name == seed.data.name
         assert lead.status == seed.status.value
         assert lead.service_area_status in {"in_range", "out_of_range"}
+        assert lead.archived_at is None
+
+
+def test_create_demo_keeps_example_inquiries_in_active_inbox(
+    lead_repository: LeadRepository,
+    company_repository: CompanyRepository,
+) -> None:
+    company = company_repository.create(
+        name="Demo Inbox Visibility Co",
+        email="demo-inbox@example.com",
+    )
+
+    lead = lead_repository.create_demo(
+        company_id=company.id,
+        conversation_id="demo-dachdecker-001",
+        data=DEMO_LEAD_SEEDS[0].data,
+        summary=DEMO_LEAD_SEEDS[0].summary,
+        status=DEMO_LEAD_SEEDS[1].status,
+    )
+
+    assert lead.status == DEMO_LEAD_SEEDS[1].status.value
+    assert lead.archived_at is None
 
 
 def test_seed_demo_leads_configures_service_area_when_missing(
