@@ -8,7 +8,6 @@ import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
-import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
 import { InboxStatusSelect } from "@/components/inbox-status-select";
 import { Link } from "@/i18n/navigation";
 import {
@@ -67,10 +66,6 @@ export function InquiryCard({
         </div>
         <div className="inquiry-card-meta">
           <InquirySourceBadge source={lead.source} />
-          <ServiceAreaStatusBadge
-            status={lead.service_area_status}
-            distanceKm={lead.service_area_distance_km}
-          />
           <StatusBadge status={lead.status} />
           <time className="inquiry-card-date muted" dateTime={lead.created_at}>
             {createdLabel}

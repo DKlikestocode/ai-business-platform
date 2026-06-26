@@ -304,16 +304,6 @@ a {
   color: #6b5a1f;
 }
 
-.service-area-badge--in_range {
-  background: #ecfdf5;
-  color: #047857;
-}
-
-.service-area-badge--out_of_range {
-  background: #fff7ed;
-  color: #c2410c;
-}
-
 .first-website-inquiry-marker {
   margin-bottom: 12px;
   padding: 12px 14px;
