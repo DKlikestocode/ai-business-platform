@@ -139,7 +139,7 @@ def test_get_lead_not_found(
     assert response.status_code == 404
 
 
-def test_update_lead_status(
+def test_update_lead_status_rejects_legacy_status(
     dashboard_client: TestClient,
     sample_leads,
     auth_headers: dict[str, str],
@@ -151,9 +151,7 @@ def test_update_lead_status(
         headers=auth_headers,
     )
 
-    assert response.status_code == 200
-    body = response.json()
-    assert body["status"] == "qualified"
+    assert response.status_code == 422
 
 
 def test_update_lead_status_sets_contacted_at(
@@ -352,7 +350,7 @@ def test_update_lead_status_archives_non_new_lead(
     assert all(item["id"] != str(lead.id) for item in active.json()["items"])
 
 
-def test_list_archived_leads_and_restore(
+def test_list_contacted_leads_and_restore(
     dashboard_client: TestClient,
     sample_leads,
     auth_headers: dict[str, str],
@@ -371,7 +369,9 @@ def test_list_archived_leads_and_restore(
         headers=auth_headers,
     )
     assert restore.status_code == 200
+    assert restore.json()["status"] == "new"
     assert restore.json()["archived_at"] is None
+    assert restore.json()["contacted_at"] is None
 
     active = dashboard_client.get("/api/v1/leads", headers=auth_headers)
     assert any(item["id"] == str(lead.id) for item in active.json()["items"])

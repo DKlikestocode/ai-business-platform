@@ -215,7 +215,4 @@ export interface LeadMessageResponse {
 export const LEAD_STATUSES: LeadStatus[] = [
   "new",
   "contacted",
-  "qualified",
-  "won",
-  "lost",
 ];

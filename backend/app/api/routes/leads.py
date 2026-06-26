@@ -25,7 +25,10 @@ def list_leads(
     qualification_status: QualificationStatus | None = Query(None),
     contactable: bool | None = Query(None),
     sort: Literal["created_at_desc", "lead_score_desc"] = Query("created_at_desc"),
-    archived: bool = Query(False),
+    archived: bool = Query(
+        False,
+        description="When true, return contacted inquiries (status != new).",
+    ),
     company_id: UUID = Depends(get_current_tenant_id),
     service: LeadDashboardService = Depends(get_lead_dashboard_service),
     _: User = Depends(get_current_user),
@@ -82,7 +85,7 @@ def update_lead_status(
 @router.patch(
     "/{lead_id}/restore",
     response_model=LeadResponse,
-    summary="Restore an archived lead to the inbox",
+    summary="Restore a contacted lead to the inbox",
 )
 def restore_lead(
     lead_id: UUID,

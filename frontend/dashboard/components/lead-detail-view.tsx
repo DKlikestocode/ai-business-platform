@@ -9,9 +9,7 @@ import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-ma
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
-import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
 import { StatusBadge } from "@/components/status-badge";
-import { StatusSelect } from "@/components/status-select";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { fetchLead, restoreLead, updateLeadStatus } from "@/lib/api";
@@ -24,7 +22,7 @@ import {
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
-import type { Lead, LeadStatus } from "@/lib/types";
+import type { Lead } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
@@ -116,24 +114,6 @@ export function LeadDetailView() {
     }
   }
 
-  async function handleStatusChange(status: LeadStatus) {
-    if (!lead) return;
-    setUpdating(true);
-    setError(null);
-    setShowContactedSuccess(false);
-    try {
-      const updated = await updateLeadStatus(lead.id, status);
-      setLead(updated);
-      if (status === "contacted") {
-        setShowContactedSuccess(true);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("updateFailed"));
-    } finally {
-      setUpdating(false);
-    }
-  }
-
   const phone = lead ? normalizePhone(lead) : null;
   const email = lead ? normalizeEmail(lead) : null;
   const preview = lead
@@ -144,7 +124,8 @@ export function LeadDetailView() {
   const showFirstWebsiteMarker = lead
     ? shouldShowFirstWebsiteInquiryMarker(lead)
     : false;
-  const isArchived = Boolean(lead?.archived_at);
+  const isContacted = lead ? lead.status !== "new" : false;
+  const isNew = lead?.status === "new";
 
   return (
     <div className="stack">
@@ -174,10 +155,6 @@ export function LeadDetailView() {
           <div className="detail-header">
             <h2>{t("handoffTitle")}</h2>
             <div className="detail-header-badges">
-              <ServiceAreaStatusBadge
-                status={lead.service_area_status}
-                distanceKm={lead.service_area_distance_km}
-              />
               <StatusBadge status={lead.status} />
             </div>
           </div>
@@ -186,10 +163,10 @@ export function LeadDetailView() {
           {restoreSuccess ? (
             <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
           ) : null}
-          {isArchived ? (
+          {isContacted ? (
             <AlertBanner variant="info">
               <div className="stack">
-                <p>{t("archivedNotice")}</p>
+                <p>{t("contactedNotice")}</p>
                 <button
                   type="button"
                   className="button"
@@ -285,12 +262,11 @@ export function LeadDetailView() {
               ) : null}
             </dl>
 
-            {!isArchived ? (
+            {isNew ? (
               <InquiryCallbackActions
                 phone={phone}
                 email={email}
                 status={lead.status}
-                hasContact={showContactActions}
                 updating={updating}
                 showContactedSuccess={showContactedSuccess}
                 onMarkContacted={() => void handleMarkContacted()}
@@ -298,27 +274,11 @@ export function LeadDetailView() {
             ) : null}
           </div>
 
-          {!isArchived ? (
-            <div className="card inquiry-handoff-status">
-              <label className="inquiry-card-status">
-                <span className="inquiry-card-status-label">
-                  {t("updateStatus")}
-                </span>
-                <StatusSelect
-                  value={lead.status}
-                  disabled={updating}
-                  onChange={(status) => void handleStatusChange(status)}
-                />
-              </label>
-            </div>
-          ) : null}
-
           <details className="card inquiry-handoff-more">
             <summary className="inquiry-handoff-more-summary">
               {t("moreDetails")}
             </summary>
             <dl className="detail-list inquiry-handoff-more-list">
-              <DetailRow label={t("postalCode")} value={lead.postal_code} />
               <DetailRow label={t("location")} value={lead.location} />
               <DetailRow
                 label={t("preferredCallback")}

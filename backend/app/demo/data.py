@@ -50,7 +50,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             preferred_callback_time="Donnerstag Vormittag",
         ),
         summary="Elektriker-Anfrage für Smart-Home-Nachrüstung in Hamburg.",
-        status=LeadStatus.CONTACTED,
+        status=LeadStatus.NEW,
     ),
     DemoLeadSeed(
         conversation_id="demo-sanitaer-001",
@@ -70,7 +70,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             preferred_callback_time="Morgen früh ab 8:00 Uhr",
         ),
         summary="Sanitär-Notfall für Gastronomiebetrieb in Hamburg-Altona.",
-        status=LeadStatus.QUALIFIED,
+        status=LeadStatus.NEW,
     ),
     DemoLeadSeed(
         conversation_id="demo-immobilienmakler-001",
@@ -90,7 +90,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             preferred_callback_time="Freitag zwischen 10:00 und 12:00 Uhr",
         ),
         summary="Makler-Anfrage für Verkaufsbewertung in Bremen.",
-        status=LeadStatus.WON,
+        status=LeadStatus.NEW,
     ),
     DemoLeadSeed(
         conversation_id="demo-fitnessstudio-001",
@@ -111,7 +111,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             preferred_callback_time="Nächste Woche Dienstag Nachmittag",
         ),
         summary="Fitnessstudio-Anfrage für Firmenfitness in Bremerhaven.",
-        status=LeadStatus.LOST,
+        status=LeadStatus.NEW,
     ),
 )
 

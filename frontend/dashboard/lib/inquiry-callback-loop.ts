@@ -19,9 +19,6 @@ export function getPrimaryContactAction(
   return "none";
 }
 
-export function shouldShowMarkContactedAction(
-  hasContact: boolean,
-  status: LeadStatus,
-): boolean {
-  return hasContact && shouldPromptMarkContacted(status);
+export function shouldShowMarkContactedAction(status: LeadStatus): boolean {
+  return shouldPromptMarkContacted(status);
 }

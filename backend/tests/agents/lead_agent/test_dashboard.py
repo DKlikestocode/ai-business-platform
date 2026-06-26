@@ -105,11 +105,7 @@ def test_dashboard_service_update_status(
     assert updated is not None
     assert updated.status == LeadStatus.CONTACTED
     assert updated.contacted_at is not None
-
-    won = dashboard_service.update_status(lead.id, LeadStatus.WON, company_id=company.id)
-    assert won is not None
-    assert won.status == LeadStatus.WON
-    assert won.archived_at is not None
+    assert updated.archived_at is not None
 
 
 def test_restore_lead_returns_to_active_inbox(
@@ -139,7 +135,9 @@ def test_restore_lead_returns_to_active_inbox(
 
     restored = dashboard_service.restore_lead(lead.id, company_id=company.id)
     assert restored is not None
+    assert restored.status == LeadStatus.NEW
     assert restored.archived_at is None
+    assert restored.contacted_at is None
 
     active_after, _ = lead_repository.list_leads(page=1, page_size=10, company_id=company.id)
     assert any(item.id == lead.id for item in active_after)

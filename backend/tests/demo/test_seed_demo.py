@@ -1,3 +1,4 @@
+from app.agents.lead_agent.models import LeadStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.demo.data import DEMO_LEAD_SEEDS
 from app.demo.seed import get_or_create_demo_company, seed_demo_leads
@@ -30,6 +31,34 @@ def test_seed_demo_leads_creates_all_scenarios(
         assert lead.name == seed.data.name
         assert lead.status == seed.status.value
         assert lead.service_area_status in {"in_range", "out_of_range"}
+        assert lead.archived_at is None
+
+
+def test_create_demo_leads_appear_in_active_inbox(
+    lead_repository: LeadRepository,
+    company_repository: CompanyRepository,
+) -> None:
+    company = company_repository.create(
+        name="Demo Inbox Visibility Co",
+        email="demo-inbox@example.com",
+    )
+
+    lead = lead_repository.create_demo(
+        company_id=company.id,
+        conversation_id="demo-dachdecker-001",
+        data=DEMO_LEAD_SEEDS[0].data,
+        summary=DEMO_LEAD_SEEDS[0].summary,
+        status=LeadStatus.NEW,
+    )
+
+    active, total = lead_repository.list_leads(
+        page=1,
+        page_size=10,
+        company_id=company.id,
+        archived=False,
+    )
+    assert total == 1
+    assert any(item.id == lead.id for item in active)
 
 
 def test_seed_demo_leads_configures_service_area_when_missing(

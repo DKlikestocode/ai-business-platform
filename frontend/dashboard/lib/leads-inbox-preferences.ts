@@ -12,7 +12,7 @@ import { LEAD_STATUSES } from "@/lib/types";
 
 export const LEADS_INBOX_PREFERENCES_CACHE_KEY = "leads-inbox-preferences";
 
-export type LeadsInboxView = "active" | "archived";
+export type LeadsInboxView = "active" | "contacted";
 
 export type LeadsInboxPreferences = {
   statusFilter: LeadStatus | "";
@@ -53,8 +53,14 @@ function isLeadSort(value: unknown): value is LeadSort {
   );
 }
 
-function isInboxView(value: unknown): value is LeadsInboxView {
-  return value === "active" || value === "archived";
+function migrateInboxView(value: unknown): LeadsInboxView {
+  if (value === "contacted" || value === "active") {
+    return value;
+  }
+  if (value === "archived") {
+    return "contacted";
+  }
+  return "active";
 }
 
 export function normalizeLeadsInboxPreferences(
@@ -82,7 +88,7 @@ export function normalizeLeadsInboxPreferences(
     typeof value.page === "number" && Number.isInteger(value.page) && value.page > 0
       ? value.page
       : 1;
-  const inboxView = isInboxView(value.inboxView) ? value.inboxView : "active";
+  const inboxView = migrateInboxView(value.inboxView);
 
   return {
     statusFilter,
