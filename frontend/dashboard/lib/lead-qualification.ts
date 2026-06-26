@@ -12,11 +12,11 @@ export const QUALIFICATION_BADGE_CLASS: Record<QualificationStatus, string> = {
   qualified: "badge-qual-qualified",
 };
 
-export type LeadSort = "created_at_desc" | "lead_score_desc";
+export type LeadSort = "created_at_desc" | "urgency_desc";
 
 export const LEAD_SORT_OPTIONS: LeadSort[] = [
+  "urgency_desc",
   "created_at_desc",
-  "lead_score_desc",
 ];
 
 export function formatLeadScore(value: number): string {

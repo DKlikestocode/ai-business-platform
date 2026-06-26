@@ -461,7 +461,12 @@
     "updateStatusAria": "Update inquiry status",
     "sortOptions": {
       "created_at_desc": "Newest first",
-      "lead_score_desc": "Highest priority"
+      "urgency_desc": "Urgency"
+    },
+    "urgencyLevels": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
     },
     "statuses": {
       "new": "New",

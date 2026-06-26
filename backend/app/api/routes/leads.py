@@ -24,7 +24,7 @@ def list_leads(
     status: LeadStatus | None = Query(None),
     qualification_status: QualificationStatus | None = Query(None),
     contactable: bool | None = Query(None),
-    sort: Literal["created_at_desc", "lead_score_desc"] = Query("created_at_desc"),
+    sort: Literal["created_at_desc", "urgency_desc"] = Query("urgency_desc"),
     archived: bool = Query(
         False,
         description="When true, return contacted inquiries (status != new).",

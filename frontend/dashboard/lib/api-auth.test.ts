@@ -114,13 +114,13 @@ describe("api auth client", () => {
     await fetchLeads({
       qualification_status: "contactable",
       contactable: true,
-      sort: "lead_score_desc",
+      sort: "urgency_desc",
     });
 
     const [url] = fetchMock.mock.calls[0];
     expect(String(url)).toContain("qualification_status=contactable");
     expect(String(url)).toContain("contactable=true");
-    expect(String(url)).toContain("sort=lead_score_desc");
+    expect(String(url)).toContain("sort=urgency_desc");
   });
 
   it("loads and updates company settings with bearer auth", async () => {

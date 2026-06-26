@@ -22,6 +22,7 @@ import {
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
+import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { Lead } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
@@ -45,6 +46,7 @@ export function LeadDetailView() {
   const leadId = Array.isArray(params.id) ? params.id[0] : params.id;
   const locale = useLocale();
   const t = useTranslations("leadDetail");
+  const tLeads = useTranslations("leads");
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,7 +120,9 @@ export function LeadDetailView() {
   const preview = lead
     ? handoffPreviewText(lead, t("noDescription"))
     : t("noDescription");
-  const urgency = lead?.urgency?.trim() || null;
+  const urgencyLabel = lead
+    ? formatUrgencyLabel(lead.urgency, (level) => tLeads(`urgencyLevels.${level}`))
+    : null;
   const preferredCallback = lead?.preferred_callback_time?.trim() || null;
   const showContactActions = lead ? hasContactData(lead) : false;
   const showFirstWebsiteMarker = lead
@@ -155,12 +159,12 @@ export function LeadDetailView() {
           <div className="detail-header">
             <h2>{t("handoffTitle")}</h2>
             <div className="detail-header-badges">
-              {urgency || preferredCallback ? (
+              {urgencyLabel || preferredCallback ? (
                 <div className="inquiry-card-corner-meta inquiry-detail-corner-meta">
-                  {urgency ? (
+                  {urgencyLabel ? (
                     <span className="inquiry-card-corner-item">
                       <span className="inquiry-card-corner-label">{t("howUrgent")}</span>
-                      <span className="inquiry-card-corner-value">{urgency}</span>
+                      <span className="inquiry-card-corner-value">{urgencyLabel}</span>
                     </span>
                   ) : null}
                   {preferredCallback ? (

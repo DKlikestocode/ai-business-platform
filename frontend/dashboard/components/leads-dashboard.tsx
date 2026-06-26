@@ -16,7 +16,12 @@ import { fetchLeads, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/a
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { isDevelopment } from "@/lib/env";
-import { formatLeadScore, isKnownContactMethod } from "@/lib/lead-qualification";
+import {
+  LEAD_SORT_OPTIONS,
+  formatLeadScore,
+  isKnownContactMethod,
+  type LeadSort,
+} from "@/lib/lead-qualification";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   DEFAULT_LEADS_INBOX_PREFERENCES,
@@ -24,11 +29,8 @@ import {
   setLeadsInboxPreferences,
   type LeadsInboxView,
 } from "@/lib/leads-inbox-preferences";
-import type { Lead, LeadStatus } from "@/lib/types";
-import { LEAD_STATUSES } from "@/lib/types";
+import type { Lead } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
-
-const INBOX_SORT = "lead_score_desc" as const;
 
 function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "medium") ?? "";
@@ -44,9 +46,7 @@ export function LeadsDashboard() {
   const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const initialPreferences = useMemo(() => getLeadsInboxPreferences(), []);
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | "">(
-    initialPreferences.statusFilter,
-  );
+  const [sort, setSort] = useState<LeadSort>(initialPreferences.sort);
   const [page, setPage] = useState(initialPreferences.page);
   const [inboxView, setInboxView] = useState<LeadsInboxView>(
     initialPreferences.inboxView,
@@ -68,9 +68,8 @@ export function LeadsDashboard() {
       const data = await fetchLeads({
         page,
         page_size: 20,
-        status: statusFilter,
         contactable: true,
-        sort: INBOX_SORT,
+        sort,
         archived: isContactedView,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
@@ -81,7 +80,7 @@ export function LeadsDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [page, statusFilter, isContactedView, t, errorMessages]);
+  }, [page, sort, isContactedView, t, errorMessages]);
 
   useEffect(() => {
     if (authLoading) {
@@ -92,11 +91,11 @@ export function LeadsDashboard() {
 
   useEffect(() => {
     setLeadsInboxPreferences({
-      statusFilter,
+      sort,
       page,
       inboxView,
     });
-  }, [statusFilter, page, inboxView]);
+  }, [sort, page, inboxView]);
 
   function applyLeadUpdate(updated: Lead) {
     if (!isContactedView && updated.status !== "new") {
@@ -158,7 +157,6 @@ export function LeadsDashboard() {
     setError(null);
     try {
       setInboxView("active");
-      setStatusFilter("");
       setPage(1);
       setLeadsInboxPreferences(DEFAULT_LEADS_INBOX_PREFERENCES);
 
@@ -167,9 +165,8 @@ export function LeadsDashboard() {
       const data = await fetchLeads({
         page: 1,
         page_size: 20,
-        status: "",
         contactable: true,
-        sort: INBOX_SORT,
+        sort,
         archived: false,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
@@ -191,18 +188,11 @@ export function LeadsDashboard() {
     return tContactMethod(value);
   }
 
-  const hasActiveFilters = Boolean(statusFilter);
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
-    !isContactedView &&
-    !isDataLoading &&
-    leads.length === 0 &&
-    !hasActiveFilters;
+    !isContactedView && !isDataLoading && leads.length === 0;
   const showContactedEmpty =
-    isContactedView &&
-    !isDataLoading &&
-    leads.length === 0 &&
-    !hasActiveFilters;
+    isContactedView && !isDataLoading && leads.length === 0;
   const useCardView = !isDataLoading && total > 0 && total <= 10;
 
   return (
@@ -234,20 +224,19 @@ export function LeadsDashboard() {
       <div className="toolbar">
         <div className="toolbar-filters">
           <label className="field-inline">
-            <span>{t("status")}</span>
+            <span>{t("sort")}</span>
             <select
               className="select"
-              value={statusFilter}
+              value={sort}
               disabled={isDataLoading}
               onChange={(event) => {
                 setPage(1);
-                setStatusFilter(event.target.value as LeadStatus | "");
+                setSort(event.target.value as LeadSort);
               }}
             >
-              <option value="">{t("allStatuses")}</option>
-              {LEAD_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {t(`statuses.${status}`)}
+              {LEAD_SORT_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {t(`sortOptions.${option}`)}
                 </option>
               ))}
             </select>
@@ -301,10 +290,6 @@ export function LeadsDashboard() {
           title={t("emptyContactedTitle")}
           description={t("emptyContactedDescription")}
         />
-      ) : null}
-
-      {!isDataLoading && leads.length === 0 && hasActiveFilters ? (
-        <p className="muted">{t("filterEmptyDescription")}</p>
       ) : null}
 
       {useCardView ? (

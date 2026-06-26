@@ -461,7 +461,12 @@
     "updateStatusAria": "Anfrage-Status aktualisieren",
     "sortOptions": {
       "created_at_desc": "Neueste zuerst",
-      "lead_score_desc": "Höchste Priorität"
+      "urgency_desc": "Dringlichkeit"
+    },
+    "urgencyLevels": {
+      "high": "Hoch",
+      "medium": "Mittel",
+      "low": "Niedrig"
     },
     "statuses": {
       "new": "Neu",
