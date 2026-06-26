@@ -255,7 +255,7 @@
       },
       "copy_widget": {
         "title": "Embed chat on your website",
-        "description": "Copy the embed code for your website.",
+        "description": "Copy the embed code in Settings and add it to your website.",
         "action": "View embed code"
       },
       "install_widget": {
@@ -297,7 +297,7 @@
     "companySettings": "Company settings",
     "activationStatusTitle": "Your website chat status",
     "activationHint": "Find the embed code and more guidance in Settings under Chat on your website.",
-    "copyWidgetHint": "Find the full embed code in Settings. You can also see there whether your chat is already active.",
+    "copyWidgetHint": "Open Settings, copy the code with “Copy embed code” — this step is marked done only after you copy.",
     "installWidgetLiveHint": "Your chat was detected on your website. The next step is your first real inquiry.",
     "firstWebsiteInquiryHint": "Only inquiries from your website count. Dashboard test chat is for practice only.",
     "awaitingFirstWebsiteInquiry": "Next: wait for the first real inquiry from your website. Test chat inquiries do not count.",

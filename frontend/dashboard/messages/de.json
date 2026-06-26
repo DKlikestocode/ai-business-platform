@@ -255,7 +255,7 @@
       },
       "copy_widget": {
         "title": "Chat auf Ihrer Website einbinden",
-        "description": "Kopieren Sie den Einbindungscode für Ihre Website.",
+        "description": "Kopieren Sie den Einbindungscode in den Einstellungen und fügen Sie ihn auf Ihrer Website ein.",
         "action": "Einbindungscode anzeigen"
       },
       "install_widget": {
@@ -297,7 +297,7 @@
     "companySettings": "Unternehmenseinstellungen",
     "activationStatusTitle": "Status Ihres Website-Chats",
     "activationHint": "Den Einbindungscode und weitere Hinweise finden Sie in den Einstellungen unter Chat auf Ihrer Website.",
-    "copyWidgetHint": "Den vollständigen Einbindungscode finden Sie in den Einstellungen. Dort sehen Sie auch, ob Ihr Chat bereits aktiv ist.",
+    "copyWidgetHint": "Öffnen Sie die Einstellungen, kopieren Sie den Code mit „Einbindungscode kopieren“ — der Schritt wird erst dann als erledigt markiert.",
     "installWidgetLiveHint": "Ihr Chat wurde auf Ihrer Website erkannt. Der nächste Schritt ist die erste echte Anfrage.",
     "firstWebsiteInquiryHint": "Nur Anfragen von Ihrer Website zählen. Der Test-Chat im Dashboard dient nur zum Ausprobieren.",
     "awaitingFirstWebsiteInquiry": "Als Nächstes: Warten Sie auf die erste echte Anfrage von Ihrer Website. Test-Anfragen aus dem Test-Chat zählen nicht.",

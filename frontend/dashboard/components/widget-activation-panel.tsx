@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
+import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { fetchCompanyActivation } from "@/lib/api";
@@ -13,6 +14,12 @@ import {
   ActivationStatusView,
   activationRefreshLabel,
 } from "@/components/activation-status-view";
+import { markOnboardingStepComplete } from "@/lib/onboarding";
+import {
+  isWidgetEmbedHashActive,
+  scrollToWidgetEmbedSection,
+  WIDGET_EMBED_SECTION_ID,
+} from "@/lib/widget-embed-anchor";
 import type { CompanyActivation } from "@/lib/types";
 
 interface WidgetActivationPanelProps {
@@ -22,6 +29,7 @@ interface WidgetActivationPanelProps {
 export function WidgetActivationPanel({
   reloadKey = 0,
 }: WidgetActivationPanelProps) {
+  const { company } = useAuth();
   const locale = useLocale();
   const t = useTranslations("activation");
   const tSettings = useTranslations("settings");
@@ -60,6 +68,16 @@ export function WidgetActivationPanel({
     void loadActivation({ refresh: reloadKey > 0 });
   }, [loadActivation, reloadKey]);
 
+  useEffect(() => {
+    if (!activation || loading) {
+      return;
+    }
+
+    if (isWidgetEmbedHashActive()) {
+      scrollToWidgetEmbedSection();
+    }
+  }, [activation, loading, reloadKey]);
+
   async function handleCopyEmbed() {
     const snippet = activation?.install?.embed_snippet;
     if (!snippet) {
@@ -68,6 +86,9 @@ export function WidgetActivationPanel({
 
     try {
       await navigator.clipboard.writeText(snippet);
+      if (company?.id) {
+        markOnboardingStepComplete(company.id, "copy_widget");
+      }
       setCopyMessage(tSettings("copied"));
     } catch {
       setCopyMessage(tSettings("copyFailed"));
@@ -83,7 +104,7 @@ export function WidgetActivationPanel({
   });
 
   return (
-    <div className="card stack">
+    <div className="card stack" id={WIDGET_EMBED_SECTION_ID}>
       <div className="embed-header">
         <h3 className="card-title">{tSettings("widgetEmbed")}</h3>
         <div className="embed-header-actions">

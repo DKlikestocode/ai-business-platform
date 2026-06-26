@@ -99,8 +99,33 @@ describe("activation checklist", () => {
 
     expect(isOnboardingComplete(legacyProgress)).toBe(true);
     expect(isActivationChecklistComplete(progress)).toBe(false);
-    expect(countActivationChecklistSteps(progress)).toBe(4);
+    expect(countActivationChecklistSteps(progress)).toBe(3);
     expect(progress.install_widget).toBe(false);
+  });
+
+  it("marks copy_widget incomplete until the embed code was copied", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({ status: "awaiting_widget" }),
+    });
+
+    expect(progress.copy_widget).toBe(false);
+    expect(countActivationChecklistSteps(progress)).toBe(3);
+  });
+
+  it("marks copy_widget complete after the embed code was copied", () => {
+    const progress = evaluateActivationChecklist({
+      company,
+      user,
+      settings,
+      activation: buildActivation({ status: "awaiting_widget" }),
+      embedCopied: true,
+    });
+
+    expect(progress.copy_widget).toBe(true);
+    expect(countActivationChecklistSteps(progress)).toBe(4);
   });
 
   it("reports full progress only when activation is live and first inquiry arrived", () => {
@@ -114,6 +139,7 @@ describe("activation checklist", () => {
         widget_last_origin: "https://acme.co",
         first_website_inquiry_at: "2026-06-11T10:00:00Z",
       }),
+      embedCopied: true,
     });
 
     expect(isActivationChecklistComplete(progress)).toBe(true);
@@ -132,6 +158,7 @@ describe("activation checklist", () => {
         widget_last_seen_at: "2026-06-10T13:00:00Z",
         widget_last_origin: "https://acme.co",
       }),
+      embedCopied: true,
     });
 
     expect(progress.install_widget).toBe(true);
@@ -150,6 +177,7 @@ describe("activation checklist", () => {
         widget_last_seen_at: "2026-06-01T10:00:00Z",
         widget_last_origin: "https://acme.co",
       }),
+      embedCopied: true,
     });
 
     expect(progress.install_widget).toBe(false);
@@ -224,6 +252,7 @@ describe("activation checklist", () => {
       user,
       settings,
       activation: buildActivation({ status: "awaiting_widget" }),
+      embedCopied: true,
     });
 
     expect(isAwaitingWebsiteLive(progress, "awaiting_widget")).toBe(true);
@@ -239,6 +268,7 @@ describe("activation checklist", () => {
         status: "live",
         widget_last_seen_at: "2026-06-10T13:00:00Z",
       }),
+      embedCopied: true,
     });
 
     expect(isAwaitingFirstWebsiteInquiry(progress)).toBe(true);

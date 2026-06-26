@@ -3,6 +3,8 @@ import {
   isActivationSetupLive,
 } from "@/lib/activation-display";
 import { isNotificationRecipientConfigured } from "@/lib/notification-recipient";
+import { isOnboardingStepComplete } from "@/lib/onboarding";
+import { SETTINGS_WIDGET_EMBED_HREF } from "@/lib/widget-embed-anchor";
 import type {
   Company,
   CompanyActivation,
@@ -27,8 +29,8 @@ export const ACTIVATION_CHECKLIST_STEPS: ActivationChecklistStepConfig[] = [
   { id: "company" },
   { id: "user" },
   { id: "notification_email", href: "/settings" },
-  { id: "copy_widget", href: "/settings" },
-  { id: "install_widget", href: "/settings" },
+  { id: "copy_widget", href: SETTINGS_WIDGET_EMBED_HREF },
+  { id: "install_widget", href: SETTINGS_WIDGET_EMBED_HREF },
   { id: "first_website_inquiry", href: "/leads" },
 ];
 
@@ -37,6 +39,8 @@ export interface ActivationChecklistInput {
   user: CurrentUser | null | undefined;
   settings: CompanySettings | null | undefined;
   activation: CompanyActivation | null | undefined;
+  /** Test hook: when set, overrides local embed-copy tracking. */
+  embedCopied?: boolean;
 }
 
 function hasNotificationEmailConfigured(
@@ -59,6 +63,19 @@ function hasServerEmbedSnippet(
   return embedSnippetIncludesInstallToken(snippet);
 }
 
+function hasCopiedWidgetEmbed(
+  companyId: string | undefined,
+  copiedOverride?: boolean,
+): boolean {
+  if (copiedOverride !== undefined) {
+    return copiedOverride;
+  }
+  if (!companyId) {
+    return false;
+  }
+  return isOnboardingStepComplete(companyId, "copy_widget");
+}
+
 export function evaluateActivationChecklist(
   input: ActivationChecklistInput,
 ): Record<ActivationChecklistStepId, boolean> {
@@ -66,12 +83,16 @@ export function evaluateActivationChecklist(
     input.settings,
     input.activation,
   );
+  const embedReady = hasServerEmbedSnippet(input.activation);
 
   return {
     company: Boolean(input.company),
     user: Boolean(input.user),
     notification_email: notificationConfigured,
-    copy_widget: notificationConfigured && hasServerEmbedSnippet(input.activation),
+    copy_widget:
+      notificationConfigured &&
+      embedReady &&
+      hasCopiedWidgetEmbed(input.company?.id, input.embedCopied),
     install_widget: isActivationSetupLive(input.activation?.status),
     first_website_inquiry: Boolean(input.activation?.first_website_inquiry_at),
   };
