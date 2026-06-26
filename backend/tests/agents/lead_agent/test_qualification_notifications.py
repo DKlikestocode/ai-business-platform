@@ -74,7 +74,7 @@ async def test_non_contactable_urgent_message_does_not_notify(
 
 
 @pytest.mark.asyncio
-async def test_contactable_partial_lead_notifies_above_threshold(
+async def test_contactable_partial_lead_notifies_at_default_min_urgency(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
@@ -94,6 +94,7 @@ async def test_contactable_partial_lead_notifies_above_threshold(
                 phone="01701234567",
                 description="Roof is leaking badly",
                 location="Berlin",
+                urgency="hoch",
             ),
         ],
     )
@@ -116,7 +117,7 @@ async def test_contactable_partial_lead_notifies_above_threshold(
 
 
 @pytest.mark.asyncio
-async def test_contactable_low_score_lead_does_not_notify(
+async def test_contactable_lead_without_urgency_does_not_notify(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
@@ -212,6 +213,7 @@ async def test_whatsapp_channel_notifies_for_contactable_context(
                 reply="Thanks, we received your WhatsApp request.",
                 description="Kitchen leak",
                 location="Berlin",
+                urgency="mittel",
             ),
         ],
     )

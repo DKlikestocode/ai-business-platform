@@ -340,19 +340,12 @@
     "notificationEmail": "Benachrichtigungs-E-Mail",
     "notificationEmailPlaceholder": "Leer lassen für Unternehmens-E-Mail",
     "notificationEmailFallbackHint": "Ohne eigene Adresse gehen Benachrichtigungen an die Unternehmens-E-Mail oben. Test-E-Mails funktionieren dann ebenfalls.",
-    "notifyQualified": "Bei wichtigen Anfragen benachrichtigen",
-    "notifyContactable": "Bei erreichbaren Anfragen ab Prioritätsschwelle benachrichtigen",
-    "contactableThreshold": "Prioritätsschwelle für erreichbare Anfragen",
-    "contactableThresholdHint": "Priorität ist eine Zahl von 0 bis 100. Sie steigt, je mehr Angaben vorliegen. Bei erreichbaren Anfragen benachrichtigen wir ab dieser Schwelle.",
-    "priorityFactors": {
-      "contact": "Erreichbarkeit (Telefon oder E-Mail): +{points}",
-      "description": "Problembeschreibung: +{points}",
-      "location": "Standort: +{points}",
-      "postalCode": "Postleitzahl: +{points}",
-      "service": "Gewünschte Leistung: +{points}",
-      "urgency": "Dringlichkeit: +{points}",
-      "name": "Name: +{points}",
-      "callback": "Wunschzeit für Rückruf: +{points}"
+    "notificationMinUrgency": "Benachrichtigen ab Dringlichkeit",
+    "notificationMinUrgencyHint": "Sie erhalten eine E-Mail nur bei erreichbaren Anfragen mit mindestens dieser Dringlichkeit.",
+    "notificationMinUrgencyOptions": {
+      "high": "Nur bei hoher Dringlichkeit",
+      "medium": "Ab mittlerer Dringlichkeit (empfohlen)",
+      "low": "Bei jeder Dringlichkeit"
     },
     "testNotification": "Test senden",
     "testNotificationSending": "Test wird gesendet...",

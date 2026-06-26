@@ -15,7 +15,10 @@ import {
 } from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
-import { PRIORITY_SCORE_FACTORS } from "@/lib/lead-priority";
+import {
+  NOTIFICATION_MIN_URGENCY_LEVELS,
+  type NotificationMinUrgency,
+} from "@/lib/notification-min-urgency";
 import {
   canSendTestNotification,
   isNotificationEmailDirty,
@@ -92,10 +95,7 @@ export function CompanySettingsForm() {
         email: settings.email,
         phone: settings.phone,
         notification_email: settings.notification_email,
-        notify_on_new_lead: settings.notify_on_new_lead,
-        notify_on_contactable_lead: settings.notify_on_contactable_lead,
-        contactable_lead_notification_threshold:
-          settings.contactable_lead_notification_threshold,
+        notification_min_urgency: settings.notification_min_urgency,
         service_area_center: settings.service_area_center,
         service_radius_km: settings.service_radius_km,
       });
@@ -325,49 +325,25 @@ export function CompanySettingsForm() {
               <p className="muted field-hint">{t("notificationEmailFallbackHint")}</p>
             ) : null}
           </label>
-          <label className="field checkbox-field">
-            <input
-              type="checkbox"
-              checked={settings.notify_on_new_lead}
-              onChange={(event) =>
-                updateField("notify_on_new_lead", event.target.checked)
-              }
-            />
-            <span>{t("notifyQualified")}</span>
-          </label>
-          <label className="field checkbox-field">
-            <input
-              type="checkbox"
-              checked={settings.notify_on_contactable_lead}
-              onChange={(event) =>
-                updateField("notify_on_contactable_lead", event.target.checked)
-              }
-            />
-            <span>{t("notifyContactable")}</span>
-          </label>
           <label className="field">
-            <span>{t("contactableThreshold")}</span>
-            <input
+            <span>{t("notificationMinUrgency")}</span>
+            <select
               className="input"
-              type="number"
-              min={0}
-              max={100}
-              value={settings.contactable_lead_notification_threshold}
+              value={settings.notification_min_urgency}
               onChange={(event) =>
                 updateField(
-                  "contactable_lead_notification_threshold",
-                  Number(event.target.value),
+                  "notification_min_urgency",
+                  event.target.value as NotificationMinUrgency,
                 )
               }
-            />
-            <p className="muted field-hint">{t("contactableThresholdHint")}</p>
-            <ul className="priority-factor-list muted">
-              {PRIORITY_SCORE_FACTORS.map((factor) => (
-                <li key={factor.key}>
-                  {t(`priorityFactors.${factor.key}`, { points: factor.points })}
-                </li>
+            >
+              {NOTIFICATION_MIN_URGENCY_LEVELS.map((level) => (
+                <option key={level} value={level}>
+                  {t(`notificationMinUrgencyOptions.${level}`)}
+                </option>
               ))}
-            </ul>
+            </select>
+            <p className="muted field-hint">{t("notificationMinUrgencyHint")}</p>
           </label>
         </div>
 

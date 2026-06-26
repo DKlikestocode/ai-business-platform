@@ -88,17 +88,32 @@ async def test_notification_not_duplicated(
 
 
 @pytest.mark.asyncio
-async def test_notification_skipped_when_qualified_notifications_disabled(
+async def test_notification_skipped_when_urgency_below_minimum(
     lead_repository: LeadRepository,
     company: Company,
 ) -> None:
-    company.notify_on_new_lead = False
+    company.notification_min_urgency = "high"
     lead_repository._session.commit()
     lead_repository._session.refresh(company)
 
+    data = LeadExtractedData(
+        name="Jane Doe",
+        phone="01701234567",
+        location="Berlin",
+        description="Leak in kitchen",
+        urgency="medium",
+    )
+    qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
+    lead = lead_repository.create(
+        company_id=company.id,
+        conversation_id=f"notify-conv-{uuid.uuid4().hex[:8]}",
+        data=data,
+        summary="Jane needs help.",
+        qualification=qualification,
+    )
+
     provider = MockEmailProvider()
     service = NotificationService(provider, lead_repository)
-    lead = _create_lead(lead_repository, company)
 
     sent = await service.maybe_notify_lead(company, lead, channel=ConversationChannel.WEB)
 
@@ -140,6 +155,7 @@ async def test_contactable_notification_skipped_when_disabled(
         phone="01701234567",
         description="Leak",
         location="Berlin",
+        urgency="medium",
     )
     qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
     lead = lead_repository.create(
@@ -149,7 +165,7 @@ async def test_contactable_notification_skipped_when_disabled(
         summary=None,
         qualification=qualification,
     )
-    company.notify_on_contactable_lead = False
+    company.notification_min_urgency = "high"
     lead_repository._session.commit()
     lead_repository._session.refresh(company)
 
