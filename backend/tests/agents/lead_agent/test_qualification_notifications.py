@@ -229,3 +229,43 @@ async def test_whatsapp_channel_notifies_for_contactable_context(
     assert response.contactable is True
     assert response.lead_score >= 50
     assert len(provider.messages) == 1
+
+
+@pytest.mark.asyncio
+async def test_voice_channel_notifies_for_contactable_context_with_caller_id(
+    conversation_repository: ConversationRepository,
+    lead_repository: LeadRepository,
+    company_repository: CompanyRepository,
+    company_activation_repository: CompanyActivationRepository,
+    company,
+) -> None:
+    provider = MockEmailProvider()
+    service = build_service(
+        conversation_repository=conversation_repository,
+        lead_repository=lead_repository,
+        company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
+        notification_service=NotificationService(provider, lead_repository),
+        channel=ConversationChannel.VOICE,
+        outputs=[
+            LeadCaptureLLMOutput(
+                reply="Danke, wir haben Ihre Anfrage aufgenommen.",
+                description="Wasser im Keller",
+                location="Berlin",
+                urgency="hoch",
+            ),
+        ],
+    )
+
+    response = await service.handle_message(
+        LeadMessageRequest(
+            conversation_id="notify-voice",
+            message="Wasser im Keller in Berlin",
+        ),
+        company_id=company.id,
+        caller_phone="+491701234567",
+    )
+
+    assert response.contactable is True
+    assert response.lead_score >= 50
+    assert len(provider.messages) == 1

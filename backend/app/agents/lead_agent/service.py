@@ -12,11 +12,13 @@ from app.agents.lead_agent.conversation_history import (
 )
 from app.agents.lead_agent.contact_validation import (
     build_invalid_contact_reply,
+    is_valid_phone,
     sanitize_contact_fields,
 )
 from app.agents.lead_agent.extraction import LeadExtractionClient
 from app.agents.lead_agent.models import (
     LeadCaptureResult,
+    LeadExtractedData,
     LeadMessageRequest,
     LeadMessageResponse,
 )
@@ -78,8 +80,13 @@ class LeadCaptureService:
         request: LeadMessageRequest,
         *,
         company_id: UUID,
+        caller_phone: str | None = None,
     ) -> LeadMessageResponse:
-        result = await self._process_message(request, company_id=company_id)
+        result = await self._process_message(
+            request,
+            company_id=company_id,
+            caller_phone=caller_phone,
+        )
         return build_message_response(result)
 
     async def _process_message(
@@ -87,6 +94,7 @@ class LeadCaptureService:
         request: LeadMessageRequest,
         *,
         company_id: UUID,
+        caller_phone: str | None = None,
     ) -> LeadCaptureResult:
         conversation = self._conversation_repository.get_or_create_by_external_id(
             company_id=company_id,
@@ -95,6 +103,15 @@ class LeadCaptureService:
         )
         existing_messages = self._conversation_repository.list_messages(conversation.id)
         existing_data = load_lead_data_from_messages(existing_messages)
+        if (
+            caller_phone
+            and self._channel == ConversationChannel.VOICE
+            and not is_valid_phone(existing_data.phone)
+        ):
+            caller_data, _ = sanitize_contact_fields(LeadExtractedData(phone=caller_phone))
+            existing_data, _ = sanitize_contact_fields(
+                merge_lead_data(existing_data, caller_data),
+            )
         pre_qualification = evaluate_qualification(existing_data, channel=self._channel)
 
         company = self._company_repository.get_by_id(company_id)

@@ -12,7 +12,8 @@ interface InquirySourceBadgeProps {
 
 export function InquirySourceBadge({ source }: InquirySourceBadgeProps) {
   const t = useTranslations("leads");
-  const resolvedSource: LeadSource = source === "test" ? "test" : "website";
+  const resolvedSource: LeadSource =
+    source === "test" ? "test" : source === "phone" ? "phone" : "website";
   const badgeClass =
     INQUIRY_SOURCE_BADGE_CLASS[resolvedSource] ??
     INQUIRY_SOURCE_BADGE_CLASS.website;

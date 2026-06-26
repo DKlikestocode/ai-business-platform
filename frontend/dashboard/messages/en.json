@@ -359,7 +359,18 @@
     "copySnippet": "Copy embed code",
     "widgetDescription": "Copy the embed code and add it to your website. The status below shows whether chat is already active there. Optionally add a privacy policy link in the code for visitors.",
     "copied": "Copied to clipboard.",
-    "copyFailed": "Unable to copy. Select the code manually."
+    "copyFailed": "Unable to copy. Select the code manually.",
+    "voiceIntakeTitle": "Phone inquiries (pilot)",
+    "voiceIntakeDescription": "Missed calls can flow into the same inbox as website chat via Vapi. One-time setup happens in Vapi and Twilio — below are the URLs and steps for your pilot.",
+    "voiceIntakeSlugHint": "Your chat reference for Vapi metadata: {slug}",
+    "voiceWebhookUrl": "Vapi server URL (webhook)",
+    "voiceMessageUrl": "Direct message endpoint (optional)",
+    "voiceSetupStepVapi": "Create a German Vapi assistant for a short intake (problem, location/postal code, urgency, callback number).",
+    "voiceSetupStepTwilio": "Connect a Twilio phone number in Vapi and assign it to the assistant.",
+    "voiceSetupStepMetadata": "Set assistant metadata company_slug: \"{slug}\".",
+    "voiceSetupStepModels": "Recommended: Deepgram Nova-3 Multilingual (STT), ElevenLabs Flash (TTS), GPT-4o mini (dialog).",
+    "voiceSetupStepTool": "Configure a server tool capture_inquiry that calls our webhook on each customer utterance.",
+    "voiceSetupDocsHint": "Full pilot guide: docs/voice-pilot-vapi.md in the project repository."
   },
   "activation": {
     "statusTitle": "Chat status",
@@ -451,6 +462,7 @@
     "openDetails": "Open details",
     "sourceWebsite": "Website",
     "sourceTest": "Test",
+    "sourcePhone": "Phone",
     "firstWebsiteInquiryTitle": "First real website inquiry",
     "firstWebsiteInquiryBody": "This inquiry came from your website.",
     "notificationSentShort": "Email sent",

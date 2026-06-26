@@ -359,7 +359,18 @@
     "copySnippet": "Einbindungscode kopieren",
     "widgetDescription": "Kopieren Sie den Einbindungscode und fügen Sie ihn auf Ihrer Website ein. Der Status unten zeigt, ob der Chat dort bereits aktiv ist. Optional können Sie im Code einen Link zu Ihrer Datenschutzerklärung ergänzen.",
     "copied": "In die Zwischenablage kopiert.",
-    "copyFailed": "Kopieren nicht möglich. Markieren Sie den Code manuell."
+    "copyFailed": "Kopieren nicht möglich. Markieren Sie den Code manuell.",
+    "voiceIntakeTitle": "Telefon-Anfragen (Pilot)",
+    "voiceIntakeDescription": "Verpasste Anrufe können über Vapi in denselben Posteingang wie Website-Chats laufen. Die Einrichtung erfolgt einmalig in Vapi und Twilio — hier sehen Sie die URLs und Schritte für Ihren Pilot.",
+    "voiceIntakeSlugHint": "Ihre Chat-Referenz für Vapi-Metadaten: {slug}",
+    "voiceWebhookUrl": "Vapi Server-URL (Webhook)",
+    "voiceMessageUrl": "Direkter Nachrichten-Endpunkt (optional)",
+    "voiceSetupStepVapi": "Erstellen Sie in Vapi einen Assistenten für Deutsch mit kurzem Intake (Problem, Ort/PLZ, Dringlichkeit, Rückrufnummer).",
+    "voiceSetupStepTwilio": "Verbinden Sie eine Twilio-Telefonnummer in Vapi und weisen Sie sie dem Assistenten zu.",
+    "voiceSetupStepMetadata": "Hinterlegen Sie in den Assistenten-Metadaten company_slug: \"{slug}\".",
+    "voiceSetupStepModels": "Empfohlen: Deepgram Nova-3 Multilingual (STT), ElevenLabs Flash (TTS), GPT-4o mini (Dialog).",
+    "voiceSetupStepTool": "Richten Sie ein Server-Tool capture_inquiry ein, das bei jeder Kundenaussage unseren Webhook aufruft.",
+    "voiceSetupDocsHint": "Ausführliche Pilot-Anleitung: docs/voice-pilot-vapi.md im Projekt-Repository."
   },
   "activation": {
     "statusTitle": "Chat-Status",
@@ -451,6 +462,7 @@
     "openDetails": "Details öffnen",
     "sourceWebsite": "Website",
     "sourceTest": "Test",
+    "sourcePhone": "Telefon",
     "firstWebsiteInquiryTitle": "Erste echte Website-Anfrage",
     "firstWebsiteInquiryBody": "Diese Anfrage kam von Ihrer Website.",
     "notificationSentShort": "E-Mail gesendet",
