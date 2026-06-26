@@ -6,6 +6,7 @@ from app.db.models.company import Company
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
 from app.services.notifications.interface import EmailMessage, EmailProvider
+from app.services.notifications.recipient import resolve_notification_recipient
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ class NotificationService:
             )
             return False
 
-        recipient = company.notification_email or company.email
+        recipient = resolve_notification_recipient(company)
         if not recipient:
             logger.warning(
                 "Skipping lead notification for company %s: no notification email configured.",
@@ -113,7 +114,7 @@ class NotificationService:
         return await self.maybe_notify_lead(company, lead, channel=channel)
 
     async def send_test_inquiry_notification(self, company: Company) -> None:
-        recipient = (company.notification_email or "").strip()
+        recipient = resolve_notification_recipient(company)
         if not recipient:
             raise ValueError("No notification email configured.")
 

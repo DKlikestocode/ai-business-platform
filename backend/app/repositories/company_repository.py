@@ -37,21 +37,38 @@ class CompanyRepository:
     def get_by_slug(self, slug: str) -> Company | None:
         return self._session.query(Company).filter(Company.slug == slug).one_or_none()
 
-    def slug_exists(self, slug: str) -> bool:
-        return self.get_by_slug(slug) is not None
+    def slug_exists(self, slug: str, *, exclude_company_id: UUID | None = None) -> bool:
+        company = self.get_by_slug(slug)
+        if company is None:
+            return False
+        if exclude_company_id is not None and company.id == exclude_company_id:
+            return False
+        return True
 
     def update_settings(self, company: Company, **fields: object) -> Company:
+        name = fields.get("name")
+        if isinstance(name, str) and name != company.name:
+            company.slug = self._generate_unique_slug(
+                name,
+                exclude_company_id=company.id,
+            )
+
         for key, value in fields.items():
             setattr(company, key, value)
         self._session.commit()
         self._session.refresh(company)
         return company
 
-    def _generate_unique_slug(self, name: str) -> str:
+    def _generate_unique_slug(
+        self,
+        name: str,
+        *,
+        exclude_company_id: UUID | None = None,
+    ) -> str:
         base_slug = slugify(name)
         slug = base_slug
         suffix = 1
-        while self.slug_exists(slug):
+        while self.slug_exists(slug, exclude_company_id=exclude_company_id):
             slug = f"{base_slug}-{suffix}"
             suffix += 1
         return slug

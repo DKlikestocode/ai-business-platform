@@ -6,6 +6,24 @@ import {
   canSendTestNotification,
   isNotificationEmailDirty,
 } from "@/lib/notification-settings";
+import type { CompanySettings } from "@/lib/types";
+
+const baseSettings: CompanySettings = {
+  name: "Acme",
+  slug: "acme",
+  email: "hello@acme.co",
+  phone: null,
+  notification_email: null,
+  notify_on_new_lead: true,
+  notify_on_contactable_lead: true,
+  contactable_lead_notification_threshold: 50,
+  service_area_center: null,
+  service_radius_km: null,
+  email_delivery_provider: "logging",
+  email_delivery_ready: true,
+  email_delivery_sends_real_email: false,
+  created_at: "2026-06-10T12:00:00Z",
+};
 
 describe("notification settings helpers", () => {
   it("treats matching saved and draft emails as clean", () => {
@@ -27,19 +45,28 @@ describe("notification settings helpers", () => {
   });
 
   it("disables test send when notification email is unsaved", () => {
-    expect(
-      canSendTestNotification("alerts@acme.co", "ops@acme.co"),
-    ).toBe(false);
-    expect(canSendTestNotification(null, "ops@acme.co")).toBe(false);
+    const saved = { ...baseSettings, notification_email: "alerts@acme.co" };
+    const draft = { ...saved, notification_email: "ops@acme.co" };
+
+    expect(canSendTestNotification(saved, draft)).toBe(false);
   });
 
   it("allows test send when saved email matches draft", () => {
+    const saved = { ...baseSettings, notification_email: "alerts@acme.co" };
+
+    expect(canSendTestNotification(saved, saved)).toBe(true);
     expect(
-      canSendTestNotification("alerts@acme.co", "alerts@acme.co"),
+      canSendTestNotification(
+        { ...saved, notification_email: " alerts@acme.co " },
+        saved,
+      ),
     ).toBe(true);
-    expect(
-      canSendTestNotification(" alerts@acme.co ", "alerts@acme.co"),
-    ).toBe(true);
+  });
+
+  it("allows test send when company email is the configured fallback", () => {
+    const saved = { ...baseSettings, notification_email: null };
+
+    expect(canSendTestNotification(saved, saved)).toBe(true);
   });
 
   it("includes save-first copy in DE and EN", () => {

@@ -59,7 +59,9 @@ export function evaluateOnboardingProgress(
     widgetTested?: boolean;
   },
 ): Record<OnboardingStepId, boolean> {
-  const hasNotificationEmail = Boolean(settings?.notification_email?.trim());
+  const hasNotificationEmail = Boolean(
+    settings?.notification_email?.trim() || settings?.email?.trim(),
+  );
 
   return {
     company: true,

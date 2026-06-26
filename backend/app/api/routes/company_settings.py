@@ -19,6 +19,7 @@ from app.config import Settings
 from app.db.models.user import User
 from app.domain.exceptions import NotFoundError
 from app.services.notifications.email_delivery import get_email_delivery_status
+from app.services.notifications.recipient import resolve_notification_recipient
 from app.services.notifications.service import NotificationService
 from app.services.tenant_service import CompanyService
 
@@ -101,7 +102,7 @@ async def send_test_notification(
             detail=str(exc),
         ) from exc
 
-    if not company.notification_email or not company.notification_email.strip():
+    if not resolve_notification_recipient(company):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="No notification email configured.",

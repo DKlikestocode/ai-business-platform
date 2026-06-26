@@ -3,6 +3,7 @@ import uuid
 import pytest
 from fastapi.testclient import TestClient
 
+from app.core.utils import slugify
 from app.core.security import hash_password
 from app.db.models.enums import UserRole
 from app.main import app
@@ -77,24 +78,50 @@ def test_patch_company_settings_updates_editable_fields(
     assert body["service_radius_km"] == 25
 
 
-def test_patch_company_settings_preserves_read_only_fields(
+def test_patch_company_settings_updates_slug_when_name_changes(
     settings_client: TestClient,
     company,
     auth_headers: dict[str, str],
 ) -> None:
-    original_slug = company.slug
+    suffix = uuid.uuid4().hex[:8]
+    new_name = f"Werkstatt Schmidt {suffix} GmbH"
     original_created_at = company.created_at.isoformat()
 
     response = settings_client.patch(
         "/api/v1/company/settings",
         headers=auth_headers,
-        json={"name": "Renamed Company"},
+        json={"name": new_name},
     )
 
     assert response.status_code == 200
     body = response.json()
-    assert body["slug"] == original_slug
+    assert body["name"] == new_name
+    assert body["slug"] == slugify(new_name)
     assert body["created_at"].startswith(original_created_at[:19])
+
+
+def test_patch_company_settings_avoids_slug_collision_on_rename(
+    settings_client: TestClient,
+    company,
+    company_repository,
+    auth_headers: dict[str, str],
+) -> None:
+    suffix = uuid.uuid4().hex[:8]
+    blocked_slug = f"acme-plumbing-{suffix}"
+    company_repository.create(
+        name="Blocker Company",
+        email=f"blocker-{suffix}@example.com",
+        slug=blocked_slug,
+    )
+
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"name": f"Acme Plumbing {suffix}"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["slug"] == f"{blocked_slug}-1"
 
 
 def test_patch_company_settings_rejects_invalid_threshold(
