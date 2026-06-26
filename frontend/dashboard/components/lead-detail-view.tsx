@@ -11,8 +11,9 @@ import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indica
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusSelect } from "@/components/status-select";
+import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { fetchLead, updateLeadStatus } from "@/lib/api";
+import { fetchLead, restoreLead, updateLeadStatus } from "@/lib/api";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   displayName,
@@ -51,6 +52,7 @@ export function LeadDetailView() {
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
   const [showContactedSuccess, setShowContactedSuccess] = useState(false);
+  const [restoreSuccess, setRestoreSuccess] = useState(false);
 
   const loadLead = useCallback(async () => {
     if (!leadId) {
@@ -78,7 +80,24 @@ export function LeadDetailView() {
 
   useEffect(() => {
     setShowContactedSuccess(false);
+    setRestoreSuccess(false);
   }, [leadId]);
+
+  async function handleRestore() {
+    if (!lead) return;
+    setUpdating(true);
+    setError(null);
+    setRestoreSuccess(false);
+    try {
+      const updated = await restoreLead(lead.id);
+      setLead(updated);
+      setRestoreSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("restoreFailed"));
+    } finally {
+      setUpdating(false);
+    }
+  }
 
   async function handleMarkContacted() {
     if (!lead) return;
@@ -124,6 +143,7 @@ export function LeadDetailView() {
   const showFirstWebsiteMarker = lead
     ? shouldShowFirstWebsiteInquiryMarker(lead)
     : false;
+  const isArchived = Boolean(lead?.archived_at);
 
   return (
     <div className="stack">
@@ -158,6 +178,24 @@ export function LeadDetailView() {
           </div>
 
           {error ? <div className="alert">{error}</div> : null}
+          {restoreSuccess ? (
+            <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
+          ) : null}
+          {isArchived ? (
+            <AlertBanner variant="info">
+              <div className="stack">
+                <p>{t("archivedNotice")}</p>
+                <button
+                  type="button"
+                  className="button"
+                  disabled={updating}
+                  onClick={() => void handleRestore()}
+                >
+                  {t("restore")}
+                </button>
+              </div>
+            </AlertBanner>
+          ) : null}
 
           {showFirstWebsiteMarker ? (
             <FirstWebsiteInquiryMarker variant="detail" />
@@ -242,29 +280,33 @@ export function LeadDetailView() {
               ) : null}
             </dl>
 
-            <InquiryCallbackActions
-              phone={phone}
-              email={email}
-              status={lead.status}
-              hasContact={showContactActions}
-              updating={updating}
-              showContactedSuccess={showContactedSuccess}
-              onMarkContacted={() => void handleMarkContacted()}
-            />
+            {!isArchived ? (
+              <InquiryCallbackActions
+                phone={phone}
+                email={email}
+                status={lead.status}
+                hasContact={showContactActions}
+                updating={updating}
+                showContactedSuccess={showContactedSuccess}
+                onMarkContacted={() => void handleMarkContacted()}
+              />
+            ) : null}
           </div>
 
-          <div className="card inquiry-handoff-status">
-            <label className="inquiry-card-status">
-              <span className="inquiry-card-status-label">
-                {t("updateStatus")}
-              </span>
-              <StatusSelect
-                value={lead.status}
-                disabled={updating}
-                onChange={(status) => void handleStatusChange(status)}
-              />
-            </label>
-          </div>
+          {!isArchived ? (
+            <div className="card inquiry-handoff-status">
+              <label className="inquiry-card-status">
+                <span className="inquiry-card-status-label">
+                  {t("updateStatus")}
+                </span>
+                <StatusSelect
+                  value={lead.status}
+                  disabled={updating}
+                  onChange={(status) => void handleStatusChange(status)}
+                />
+              </label>
+            </div>
+          ) : null}
 
           <details className="card inquiry-handoff-more">
             <summary className="inquiry-handoff-more-summary">

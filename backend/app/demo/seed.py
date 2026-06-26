@@ -44,7 +44,7 @@ def seed_demo_leads(
     skipped = 0
 
     for seed in DEMO_LEAD_SEEDS:
-        if repository.get_by_conversation(seed.conversation_id) is not None:
+        if repository.get_by_conversation(seed.conversation_id, company_id=company_id) is not None:
             skipped += 1
             continue
 

@@ -217,10 +217,14 @@ export async function fetchLeads(params?: {
   qualification_status?: QualificationStatus | "";
   contactable?: boolean | "";
   sort?: LeadSort;
+  archived?: boolean;
 }): Promise<PaginatedLeads> {
   const search = new URLSearchParams();
   search.set("page", String(params?.page ?? 1));
   search.set("page_size", String(params?.page_size ?? 20));
+  if (params?.archived) {
+    search.set("archived", "true");
+  }
   if (params?.status) {
     search.set("status", params.status);
   }
@@ -247,6 +251,12 @@ export async function updateLeadStatus(
   return request<Lead>(`/api/v1/leads/${leadId}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
+  });
+}
+
+export async function restoreLead(leadId: string): Promise<Lead> {
+  return request<Lead>(`/api/v1/leads/${leadId}/restore`, {
+    method: "PATCH",
   });
 }
 

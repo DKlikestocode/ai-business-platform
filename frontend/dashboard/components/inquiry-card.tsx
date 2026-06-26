@@ -25,8 +25,10 @@ interface InquiryCardProps {
   createdLabel: string;
   statusUpdating: boolean;
   showContactedSuccess: boolean;
+  archiveMode?: boolean;
   onStatusChange: (status: LeadStatus) => void;
   onMarkContacted: () => void;
+  onRestore?: () => void;
 }
 
 export function InquiryCard({
@@ -34,8 +36,10 @@ export function InquiryCard({
   createdLabel,
   statusUpdating,
   showContactedSuccess,
+  archiveMode = false,
   onStatusChange,
   onMarkContacted,
+  onRestore,
 }: InquiryCardProps) {
   const t = useTranslations("leads");
   const phone = normalizePhone(lead);
@@ -106,30 +110,44 @@ export function InquiryCard({
         </div>
       ) : null}
 
-      <InquiryCallbackActions
-        phone={phone}
-        email={email}
-        status={lead.status}
-        hasContact={showContactActions}
-        updating={statusUpdating}
-        showContactedSuccess={showContactedSuccess}
-        onMarkContacted={onMarkContacted}
-      />
+      {!archiveMode ? (
+        <InquiryCallbackActions
+          phone={phone}
+          email={email}
+          status={lead.status}
+          hasContact={showContactActions}
+          updating={statusUpdating}
+          showContactedSuccess={showContactedSuccess}
+          onMarkContacted={onMarkContacted}
+        />
+      ) : null}
 
       <div className="inquiry-card-actions">
         <Link href={`/leads/${lead.id}`} className="button secondary">
           {t("openDetails")}
         </Link>
+        {archiveMode && onRestore ? (
+          <button
+            type="button"
+            className="button"
+            disabled={statusUpdating}
+            onClick={onRestore}
+          >
+            {t("restore")}
+          </button>
+        ) : null}
       </div>
 
-      <div className="inquiry-card-status">
-        <span className="inquiry-card-status-label">{t("status")}</span>
-        <InboxStatusSelect
-          value={lead.status}
-          disabled={statusUpdating}
-          onChange={onStatusChange}
-        />
-      </div>
+      {!archiveMode ? (
+        <div className="inquiry-card-status">
+          <span className="inquiry-card-status-label">{t("status")}</span>
+          <InboxStatusSelect
+            value={lead.status}
+            disabled={statusUpdating}
+            onChange={onStatusChange}
+          />
+        </div>
+      ) : null}
     </article>
   );
 }

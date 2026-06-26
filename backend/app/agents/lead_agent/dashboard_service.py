@@ -42,6 +42,7 @@ class LeadDashboardService:
         qualification_status: QualificationStatus | None = None,
         contactable: bool | None = None,
         sort: str = "created_at_desc",
+        archived: bool = False,
     ) -> PaginatedLeadResponse:
         items, total = self._repository.list_leads(
             page=page,
@@ -53,6 +54,7 @@ class LeadDashboardService:
             contactable=contactable,
             sort=sort,
             company_id=company_id,
+            archived=archived,
         )
         channels = self._conversation_repository.get_channels_by_external_ids(
             company_id=company_id,
@@ -90,6 +92,21 @@ class LeadDashboardService:
         company_id: UUID,
     ) -> LeadResponse | None:
         lead = self._repository.update_status(lead_id, status, company_id=company_id)
+        if lead is None:
+            return None
+        channels = self._conversation_repository.get_channels_by_external_ids(
+            company_id=company_id,
+            external_ids=[lead.conversation_id],
+        )
+        source = resolve_lead_source(lead, channels)
+        return lead_to_response(
+            lead,
+            source=source,
+            first_website_inquiry_lead_id=self._first_website_inquiry_lead_id(company_id),
+        )
+
+    def restore_lead(self, lead_id: UUID, *, company_id: UUID) -> LeadResponse | None:
+        lead = self._repository.restore_lead(lead_id, company_id=company_id)
         if lead is None:
             return None
         channels = self._conversation_repository.get_channels_by_external_ids(

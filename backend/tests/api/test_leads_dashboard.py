@@ -69,9 +69,9 @@ def test_list_leads_returns_paginated_response(
     body = response.json()
     assert body["page"] == 1
     assert body["page_size"] == 2
-    assert body["total"] >= 5
-    assert body["total_pages"] >= 3
-    assert len(body["items"]) == 2
+    assert body["total"] == 1
+    assert body["total_pages"] == 1
+    assert len(body["items"]) == 1
     assert "id" in body["items"][0]
     assert "company_id" in body["items"][0]
     assert "status" in body["items"][0]
@@ -83,7 +83,7 @@ def test_list_leads_filters_by_status(
     auth_headers: dict[str, str],
 ) -> None:
     response = dashboard_client.get(
-        "/api/v1/leads?status=contacted",
+        "/api/v1/leads?status=contacted&archived=true",
         headers=auth_headers,
     )
 
@@ -326,3 +326,48 @@ def test_update_lead_status_rejects_invalid_status(
     )
 
     assert response.status_code == 422
+
+
+def test_update_lead_status_archives_non_new_lead(
+    dashboard_client: TestClient,
+    sample_leads,
+    auth_headers: dict[str, str],
+) -> None:
+    lead = sample_leads[0]
+    response = dashboard_client.patch(
+        f"/api/v1/leads/{lead.id}/status",
+        json={"status": "contacted"},
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["archived_at"] is not None
+
+    active = dashboard_client.get("/api/v1/leads", headers=auth_headers)
+    assert active.status_code == 200
+    assert all(item["id"] != str(lead.id) for item in active.json()["items"])
+
+
+def test_list_archived_leads_and_restore(
+    dashboard_client: TestClient,
+    sample_leads,
+    auth_headers: dict[str, str],
+) -> None:
+    lead = sample_leads[1]
+    archived = dashboard_client.get(
+        "/api/v1/leads?archived=true",
+        headers=auth_headers,
+    )
+    assert archived.status_code == 200
+    assert archived.json()["total"] >= 4
+    assert any(item["id"] == str(lead.id) for item in archived.json()["items"])
+
+    restore = dashboard_client.patch(
+        f"/api/v1/leads/{lead.id}/restore",
+        headers=auth_headers,
+    )
+    assert restore.status_code == 200
+    assert restore.json()["archived_at"] is None
+
+    active = dashboard_client.get("/api/v1/leads", headers=auth_headers)
+    assert any(item["id"] == str(lead.id) for item in active.json()["items"])

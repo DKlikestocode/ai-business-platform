@@ -157,6 +157,7 @@ export interface Lead {
   qualification_status: QualificationStatus;
   notification_sent_at: string | null;
   contacted_at: string | null;
+  archived_at: string | null;
   created_at: string;
 }
 
