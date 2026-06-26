@@ -14,9 +14,7 @@ const baseSettings: CompanySettings = {
   email: "hello@acme.co",
   phone: null,
   notification_email: null,
-  notify_on_new_lead: true,
-  notify_on_contactable_lead: true,
-  contactable_lead_notification_threshold: 50,
+  notification_min_urgency: "medium",
   service_area_center: null,
   service_radius_km: null,
   email_delivery_provider: "logging",
@@ -75,6 +73,15 @@ describe("notification settings helpers", () => {
     );
     expect(en.settings.testNotificationSaveFirst).toBe(
       "Please save the email address first.",
+    );
+  });
+
+  it("includes urgency notification copy in DE and EN", () => {
+    expect(de.settings.notificationMinUrgency).toBe(
+      "Benachrichtigen ab Dringlichkeit",
+    );
+    expect(en.settings.notificationMinUrgencyOptions.medium).toContain(
+      "recommended",
     );
   });
 });

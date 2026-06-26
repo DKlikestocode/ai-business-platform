@@ -1,5 +1,6 @@
 import logging
 
+from app.agents.lead_agent.urgency import meets_notification_min_urgency
 from app.agents.lead_agent.models import QualificationStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.db.models.company import Company
@@ -48,17 +49,14 @@ class NotificationService:
         if lead.notification_sent_at is not None:
             return False
 
-        if lead.qualification_status == QualificationStatus.QUALIFIED.value:
-            return company.notify_on_new_lead
-
         contactable_allowed = lead.contactable or channel == ConversationChannel.WHATSAPP
         if not contactable_allowed:
             return False
 
-        if not company.notify_on_contactable_lead:
-            return False
-
-        return lead.lead_score >= company.contactable_lead_notification_threshold
+        return meets_notification_min_urgency(
+            lead.urgency,
+            company.notification_min_urgency,
+        )
 
     async def maybe_notify_lead(
         self,

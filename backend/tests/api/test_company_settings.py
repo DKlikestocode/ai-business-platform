@@ -34,9 +34,7 @@ def test_get_company_settings_returns_current_company(
     assert body["email"] == company.email
     assert body["phone"] == company.phone
     assert body["notification_email"] is None
-    assert body["notify_on_new_lead"] is True
-    assert body["notify_on_contactable_lead"] is True
-    assert body["contactable_lead_notification_threshold"] == 50
+    assert body["notification_min_urgency"] == "medium"
     assert body["service_area_center"] is None
     assert body["service_radius_km"] is None
     assert body["email_delivery_provider"] == "logging"
@@ -57,9 +55,7 @@ def test_patch_company_settings_updates_editable_fields(
             "email": "updated@example.com",
             "phone": "+49 30 123456",
             "notification_email": "alerts@example.com",
-            "notify_on_new_lead": False,
-            "notify_on_contactable_lead": True,
-            "contactable_lead_notification_threshold": 60,
+            "notification_min_urgency": "low",
             "service_area_center": "München",
             "service_radius_km": 25,
         },
@@ -71,9 +67,7 @@ def test_patch_company_settings_updates_editable_fields(
     assert body["email"] == "updated@example.com"
     assert body["phone"] == "+49 30 123456"
     assert body["notification_email"] == "alerts@example.com"
-    assert body["notify_on_new_lead"] is False
-    assert body["notify_on_contactable_lead"] is True
-    assert body["contactable_lead_notification_threshold"] == 60
+    assert body["notification_min_urgency"] == "low"
     assert body["service_area_center"] == "München"
     assert body["service_radius_km"] == 25
 
@@ -147,14 +141,14 @@ def test_patch_company_settings_avoids_slug_collision_on_rename(
     assert response.json()["slug"] == f"{blocked_slug}-1"
 
 
-def test_patch_company_settings_rejects_invalid_threshold(
+def test_patch_company_settings_rejects_invalid_notification_min_urgency(
     settings_client: TestClient,
     auth_headers: dict[str, str],
 ) -> None:
     response = settings_client.patch(
         "/api/v1/company/settings",
         headers=auth_headers,
-        json={"contactable_lead_notification_threshold": 150},
+        json={"notification_min_urgency": "urgent"},
     )
 
     assert response.status_code == 422

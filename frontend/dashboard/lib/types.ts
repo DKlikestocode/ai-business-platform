@@ -74,9 +74,7 @@ export interface CompanySettings {
   email: string;
   phone: string | null;
   notification_email: string | null;
-  notify_on_new_lead: boolean;
-  notify_on_contactable_lead: boolean;
-  contactable_lead_notification_threshold: number;
+  notification_min_urgency: "high" | "medium" | "low";
   service_area_center: string | null;
   service_radius_km: number | null;
   email_delivery_provider: string;
@@ -90,9 +88,7 @@ export interface CompanySettingsUpdate {
   email?: string;
   phone?: string | null;
   notification_email?: string | null;
-  notify_on_new_lead?: boolean;
-  notify_on_contactable_lead?: boolean;
-  contactable_lead_notification_threshold?: number;
+  notification_min_urgency?: "high" | "medium" | "low";
   service_area_center?: string | null;
   service_radius_km?: number | null;
 }

@@ -340,19 +340,12 @@
     "notificationEmail": "Notification email",
     "notificationEmailPlaceholder": "Leave empty to use company email",
     "notificationEmailFallbackHint": "Without a dedicated address, notifications use your company email above. Test emails work the same way.",
-    "notifyQualified": "Notify on important inquiries",
-    "notifyContactable": "Notify on reachable inquiries above priority threshold",
-    "contactableThreshold": "Priority threshold for reachable inquiries",
-    "contactableThresholdHint": "Priority is a score from 0 to 100. It rises as more details are captured. For reachable inquiries, we notify from this threshold upward.",
-    "priorityFactors": {
-      "contact": "Reachable (phone or email): +{points}",
-      "description": "Problem description: +{points}",
-      "location": "Location: +{points}",
-      "postalCode": "Postal code: +{points}",
-      "service": "Requested service: +{points}",
-      "urgency": "Urgency: +{points}",
-      "name": "Name: +{points}",
-      "callback": "Preferred callback time: +{points}"
+    "notificationMinUrgency": "Notify from urgency level",
+    "notificationMinUrgencyHint": "You only receive an email for reachable inquiries at or above this urgency level.",
+    "notificationMinUrgencyOptions": {
+      "high": "High urgency only",
+      "medium": "Medium urgency and above (recommended)",
+      "low": "Any urgency level"
     },
     "testNotification": "Send test",
     "testNotificationSending": "Sending test...",

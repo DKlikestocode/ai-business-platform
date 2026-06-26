@@ -1,6 +1,8 @@
 from datetime import datetime
 from uuid import UUID
 
+from typing import Literal
+
 from pydantic import BaseModel, EmailStr, Field
 
 from app.db.models.company import Company
@@ -30,9 +32,7 @@ class CompanySettingsResponse(BaseModel):
     email: str
     phone: str | None
     notification_email: str | None
-    notify_on_new_lead: bool
-    notify_on_contactable_lead: bool
-    contactable_lead_notification_threshold: int
+    notification_min_urgency: Literal["high", "medium", "low"]
     service_area_center: str | None
     service_radius_km: int | None
     email_delivery_provider: str
@@ -48,13 +48,7 @@ class CompanySettingsUpdateRequest(BaseModel):
     email: EmailStr | None = None
     phone: str | None = Field(default=None, max_length=50)
     notification_email: EmailStr | None = None
-    notify_on_new_lead: bool | None = None
-    notify_on_contactable_lead: bool | None = None
-    contactable_lead_notification_threshold: int | None = Field(
-        default=None,
-        ge=0,
-        le=100,
-    )
+    notification_min_urgency: Literal["high", "medium", "low"] | None = None
     service_area_center: str | None = Field(default=None, max_length=255)
     service_radius_km: int | None = Field(default=None, ge=1, le=500)
 
@@ -79,9 +73,7 @@ def company_to_settings_response(
         email=company.email,
         phone=company.phone,
         notification_email=company.notification_email,
-        notify_on_new_lead=company.notify_on_new_lead,
-        notify_on_contactable_lead=company.notify_on_contactable_lead,
-        contactable_lead_notification_threshold=company.contactable_lead_notification_threshold,
+        notification_min_urgency=company.notification_min_urgency,  # type: ignore[arg-type]
         service_area_center=company.service_area_center,
         service_radius_km=company.service_radius_km,
         created_at=company.created_at,

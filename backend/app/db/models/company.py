@@ -24,6 +24,11 @@ class Company(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
     notification_email: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    notification_min_urgency: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="medium",
+    )
     notify_on_new_lead: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     notify_on_contactable_lead: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     contactable_lead_notification_threshold: Mapped[int] = mapped_column(
