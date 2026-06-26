@@ -15,7 +15,7 @@ import { AlertBanner } from "@/components/ui/alert-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { fetchLeads, seedDemoData, updateLeadStatus } from "@/lib/api";
+import { fetchLeads, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { isDevelopment } from "@/lib/env";
@@ -26,6 +26,11 @@ import {
   isKnownContactMethod,
 } from "@/lib/lead-qualification";
 import { formatDateTime } from "@/lib/format-datetime";
+import {
+  getLeadsInboxPreferences,
+  setLeadsInboxPreferences,
+  type LeadsInboxView,
+} from "@/lib/leads-inbox-preferences";
 import type { LeadSort } from "@/lib/lead-qualification";
 import type { Lead, LeadStatus, QualificationStatus } from "@/lib/types";
 import { LEAD_STATUSES } from "@/lib/types";
@@ -44,16 +49,22 @@ export function LeadsDashboard() {
   const tContactMethod = useTranslations("contactMethod");
   const tErrors = useTranslations("errors");
   const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
+  const initialPreferences = useMemo(() => getLeadsInboxPreferences(), []);
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | "">("");
+  const [statusFilter, setStatusFilter] = useState<LeadStatus | "">(
+    initialPreferences.statusFilter,
+  );
   const [qualificationFilter, setQualificationFilter] = useState<
     QualificationStatus | ""
-  >("");
+  >(initialPreferences.qualificationFilter);
   const [contactableFilter, setContactableFilter] = useState<
     "true" | "false" | ""
-  >("");
-  const [sort, setSort] = useState<LeadSort>("created_at_desc");
-  const [page, setPage] = useState(1);
+  >(initialPreferences.contactableFilter);
+  const [sort, setSort] = useState<LeadSort>(initialPreferences.sort);
+  const [page, setPage] = useState(initialPreferences.page);
+  const [inboxView, setInboxView] = useState<LeadsInboxView>(
+    initialPreferences.inboxView,
+  );
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -61,7 +72,9 @@ export function LeadsDashboard() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [contactedSuccessId, setContactedSuccessId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
-  const [seedMessage, setSeedMessage] = useState<string | null>(null);
+  const [seedFeedback, setSeedFeedback] = useState<"already_exist" | null>(null);
+  const [restoreSuccessId, setRestoreSuccessId] = useState<string | null>(null);
+  const isArchiveView = inboxView === "archived";
 
   const loadLeads = useCallback(async () => {
     setLoading(true);
@@ -77,6 +90,7 @@ export function LeadsDashboard() {
             ? ""
             : contactableFilter === "true",
         sort,
+        archived: isArchiveView,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
       setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
@@ -92,6 +106,7 @@ export function LeadsDashboard() {
     qualificationFilter,
     contactableFilter,
     sort,
+    isArchiveView,
     t,
     errorMessages,
   ]);
@@ -103,15 +118,46 @@ export function LeadsDashboard() {
     void loadLeads();
   }, [loadLeads, authLoading]);
 
+  useEffect(() => {
+    setLeadsInboxPreferences({
+      statusFilter,
+      qualificationFilter,
+      contactableFilter,
+      sort,
+      page,
+      inboxView,
+    });
+  }, [statusFilter, qualificationFilter, contactableFilter, sort, page, inboxView]);
+
+  useEffect(() => {
+    if (!seedFeedback) {
+      return;
+    }
+    const timeoutId = window.setTimeout(() => {
+      setSeedFeedback(null);
+    }, 6000);
+    return () => window.clearTimeout(timeoutId);
+  }, [seedFeedback]);
+
+  function applyLeadUpdate(updated: Lead) {
+    if (!isArchiveView && updated.archived_at) {
+      setLeads((current) => current.filter((lead) => lead.id !== updated.id));
+      setTotal((current) => Math.max(0, current - 1));
+      return;
+    }
+
+    setLeads((current) =>
+      current.map((lead) => (lead.id === updated.id ? updated : lead)),
+    );
+  }
+
   async function handleStatusChange(leadId: string, status: LeadStatus) {
     setUpdatingId(leadId);
     setError(null);
     setContactedSuccessId((current) => (current === leadId ? null : current));
     try {
       const updated = await updateLeadStatus(leadId, status);
-      setLeads((current) =>
-        current.map((lead) => (lead.id === leadId ? updated : lead)),
-      );
+      applyLeadUpdate(updated);
     } catch (err) {
       setError(formatUserFacingError(err, t("updateFailed"), errorMessages));
     } finally {
@@ -125,10 +171,10 @@ export function LeadsDashboard() {
     setContactedSuccessId(null);
     try {
       const updated = await updateLeadStatus(leadId, "contacted");
-      setLeads((current) =>
-        current.map((lead) => (lead.id === leadId ? updated : lead)),
-      );
-      setContactedSuccessId(leadId);
+      applyLeadUpdate(updated);
+      if (!updated.archived_at) {
+        setContactedSuccessId(leadId);
+      }
     } catch (err) {
       setError(formatUserFacingError(err, t("updateFailed"), errorMessages));
     } finally {
@@ -136,13 +182,45 @@ export function LeadsDashboard() {
     }
   }
 
+  async function handleRestoreLead(leadId: string) {
+    setUpdatingId(leadId);
+    setError(null);
+    setRestoreSuccessId(null);
+    try {
+      await restoreLead(leadId);
+      setLeads((current) => current.filter((lead) => lead.id !== leadId));
+      setTotal((current) => Math.max(0, current - 1));
+      setRestoreSuccessId(leadId);
+    } catch (err) {
+      setError(formatUserFacingError(err, t("restoreFailed"), errorMessages));
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
+  function handleInboxViewChange(nextView: LeadsInboxView) {
+    if (nextView === inboxView) {
+      return;
+    }
+    setInboxView(nextView);
+    setPage(1);
+    setRestoreSuccessId(null);
+    setContactedSuccessId(null);
+  }
+
   async function handleSeedDemoData() {
     setSeeding(true);
     setError(null);
-    setSeedMessage(null);
+    setSeedFeedback(null);
     try {
       const result = await seedDemoData();
-      setSeedMessage(result.message);
+      const created = Number(result.created) || 0;
+      const skipped = Number(result.skipped) || 0;
+
+      if (created === 0 && skipped > 0) {
+        setSeedFeedback("already_exist");
+      }
+
       setPage(1);
       await loadLeads();
     } catch (err) {
@@ -166,12 +244,43 @@ export function LeadsDashboard() {
   );
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
-    !isDataLoading && leads.length === 0 && !hasActiveFilters;
+    !isArchiveView &&
+    !isDataLoading &&
+    leads.length === 0 &&
+    !hasActiveFilters;
+  const showArchiveEmpty =
+    isArchiveView &&
+    !isDataLoading &&
+    leads.length === 0 &&
+    !hasActiveFilters;
   const useCardView = !isDataLoading && total > 0 && total <= 10;
 
   return (
     <div className="stack">
-      <PageHeader title={t("title")} description={t("description")} />
+      <PageHeader
+        title={isArchiveView ? t("archiveTitle") : t("title")}
+        description={isArchiveView ? t("archiveDescription") : t("description")}
+      />
+      <div className="inbox-view-toggle" role="tablist" aria-label={t("viewToggleLabel")}>
+        <button
+          type="button"
+          role="tab"
+          className={`button secondary${isArchiveView ? "" : " is-active"}`}
+          aria-selected={!isArchiveView}
+          onClick={() => handleInboxViewChange("active")}
+        >
+          {t("viewActive")}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          className={`button secondary${isArchiveView ? " is-active" : ""}`}
+          aria-selected={isArchiveView}
+          onClick={() => handleInboxViewChange("archived")}
+        >
+          {t("viewArchive")}
+        </button>
+      </div>
       <div className="toolbar">
         <div className="toolbar-filters">
           <label className="field-inline">
@@ -252,7 +361,7 @@ export function LeadsDashboard() {
           </label>
         </div>
         <div className="toolbar-actions">
-          {isDevelopment ? (
+          {isDevelopment && !isArchiveView ? (
             <button
               type="button"
               className="button dev"
@@ -268,7 +377,13 @@ export function LeadsDashboard() {
         </div>
       </div>
 
-      {seedMessage ? <AlertBanner variant="success">{seedMessage}</AlertBanner> : null}
+      {restoreSuccessId ? (
+        <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
+      ) : null}
+
+      {seedFeedback === "already_exist" ? (
+        <AlertBanner variant="info">{t("seedAlreadyExist")}</AlertBanner>
+      ) : null}
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
       {error ? <AlertBanner>{error}</AlertBanner> : null}
@@ -292,6 +407,13 @@ export function LeadsDashboard() {
         />
       ) : null}
 
+      {showArchiveEmpty ? (
+        <EmptyState
+          title={t("emptyArchiveTitle")}
+          description={t("emptyArchiveDescription")}
+        />
+      ) : null}
+
       {!isDataLoading && leads.length === 0 && hasActiveFilters ? (
         <p className="muted">{t("filterEmptyDescription")}</p>
       ) : null}
@@ -305,8 +427,10 @@ export function LeadsDashboard() {
               createdLabel={formatDate(lead.created_at, locale)}
               statusUpdating={updatingId === lead.id}
               showContactedSuccess={contactedSuccessId === lead.id}
+              archiveMode={isArchiveView}
               onStatusChange={(status) => void handleStatusChange(lead.id, status)}
               onMarkContacted={() => void handleMarkContacted(lead.id)}
+              onRestore={() => void handleRestoreLead(lead.id)}
             />
           ))}
         </div>
@@ -328,7 +452,7 @@ export function LeadsDashboard() {
                 <th>{t("tableStatus")}</th>
                 <th>{t("tableCreated")}</th>
                 <th>{t("tableActions")}</th>
-                <th>{t("tableUpdate")}</th>
+                {!isArchiveView ? <th>{t("tableUpdate")}</th> : null}
               </tr>
             </thead>
             <tbody>
@@ -362,16 +486,20 @@ export function LeadsDashboard() {
                     <InquiryTableActions
                       lead={lead}
                       updating={updatingId === lead.id}
+                      archiveMode={isArchiveView}
                       onMarkContacted={() => void handleMarkContacted(lead.id)}
+                      onRestore={() => void handleRestoreLead(lead.id)}
                     />
                   </td>
-                  <td>
-                    <InboxStatusSelect
-                      value={lead.status}
-                      disabled={updatingId === lead.id}
-                      onChange={(status) => void handleStatusChange(lead.id, status)}
-                    />
-                  </td>
+                  {!isArchiveView ? (
+                    <td>
+                      <InboxStatusSelect
+                        value={lead.status}
+                        disabled={updatingId === lead.id}
+                        onChange={(status) => void handleStatusChange(lead.id, status)}
+                      />
+                    </td>
+                  ) : null}
                 </tr>
               ))}
             </tbody>

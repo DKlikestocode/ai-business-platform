@@ -36,6 +36,7 @@ class LeadResponse(BaseModel):
     qualification_status: QualificationStatus
     notification_sent_at: datetime | None
     contacted_at: datetime | None
+    archived_at: datetime | None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -100,6 +101,7 @@ def lead_to_response(
             "qualification_status": lead.qualification_status,
             "notification_sent_at": lead.notification_sent_at,
             "contacted_at": lead.contacted_at,
+            "archived_at": lead.archived_at,
             "created_at": lead.created_at,
         }
     )

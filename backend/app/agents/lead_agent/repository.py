@@ -38,6 +38,8 @@ class LeadRepository:
             status=status,
         )
         self._session.add(lead)
+        if status != LeadStatus.NEW:
+            lead.archived_at = datetime.now(UTC)
         self._session.commit()
         self._session.refresh(lead)
         return lead
@@ -115,10 +117,15 @@ class LeadRepository:
         contactable: bool | None = None,
         sort: str = "created_at_desc",
         company_id: UUID | None = None,
+        archived: bool = False,
     ) -> tuple[list[Lead], int]:
         query = self._session.query(Lead)
         if company_id is not None:
             query = query.filter(Lead.company_id == company_id)
+        if archived:
+            query = query.filter(Lead.archived_at.isnot(None))
+        else:
+            query = query.filter(Lead.archived_at.is_(None))
         if status is not None:
             query = query.filter(Lead.status == status.value)
         if qualification_status is not None:
@@ -155,6 +162,20 @@ class LeadRepository:
         lead.status = status.value
         if status == LeadStatus.CONTACTED and lead.contacted_at is None:
             lead.contacted_at = datetime.now(UTC)
+        if status == LeadStatus.NEW:
+            lead.archived_at = None
+        elif lead.archived_at is None:
+            lead.archived_at = datetime.now(UTC)
+        self._session.commit()
+        self._session.refresh(lead)
+        return lead
+
+    def restore_lead(self, lead_id: UUID, *, company_id: UUID) -> Lead | None:
+        lead = self.get_by_id(lead_id, company_id=company_id)
+        if lead is None:
+            return None
+
+        lead.archived_at = None
         self._session.commit()
         self._session.refresh(lead)
         return lead

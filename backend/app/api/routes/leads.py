@@ -25,6 +25,7 @@ def list_leads(
     qualification_status: QualificationStatus | None = Query(None),
     contactable: bool | None = Query(None),
     sort: Literal["created_at_desc", "lead_score_desc"] = Query("created_at_desc"),
+    archived: bool = Query(False),
     company_id: UUID = Depends(get_current_tenant_id),
     service: LeadDashboardService = Depends(get_lead_dashboard_service),
     _: User = Depends(get_current_user),
@@ -37,6 +38,7 @@ def list_leads(
         contactable=contactable,
         sort=sort,
         company_id=company_id,
+        archived=archived,
     )
 
 
@@ -69,6 +71,26 @@ def update_lead_status(
     _: User = Depends(get_current_user),
 ) -> LeadResponse:
     lead = service.update_status(lead_id, payload.status, company_id=company_id)
+    if lead is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Lead '{lead_id}' not found.",
+        )
+    return lead
+
+
+@router.patch(
+    "/{lead_id}/restore",
+    response_model=LeadResponse,
+    summary="Restore an archived lead to the inbox",
+)
+def restore_lead(
+    lead_id: UUID,
+    company_id: UUID = Depends(get_current_tenant_id),
+    service: LeadDashboardService = Depends(get_lead_dashboard_service),
+    _: User = Depends(get_current_user),
+) -> LeadResponse:
+    lead = service.restore_lead(lead_id, company_id=company_id)
     if lead is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
