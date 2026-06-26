@@ -139,6 +139,7 @@ class LeadCaptureService:
                 ),
                 "service_area_prompt": service_area_prompt,
                 "service_area_status_prompt": service_area_status_prompt,
+                "channel_voice_prompt": self._channel == ConversationChannel.VOICE,
             },
         )
         system_prompt = await self._agent.build_system_prompt(agent_context)

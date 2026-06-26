@@ -316,6 +316,23 @@ a {
   gap: 8px;
 }
 
+.field-with-action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.field-with-action .input,
+.field-with-action input {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.field-with-action .button {
+  flex: 0 0 auto;
+}
+
 .first-website-inquiry-marker {
   margin-bottom: 12px;
   padding: 12px 14px;

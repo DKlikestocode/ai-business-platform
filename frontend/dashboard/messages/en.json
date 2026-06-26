@@ -370,6 +370,8 @@
     "voiceSetupStepMetadata": "Set assistant metadata company_slug: \"{slug}\".",
     "voiceSetupStepModels": "Recommended: Deepgram Nova-3 Multilingual (STT), ElevenLabs Flash (TTS), GPT-4o mini (dialog).",
     "voiceSetupStepTool": "Configure a server tool capture_inquiry that calls our webhook on each customer utterance.",
+    "voiceSetupStepSecret": "Set VAPI_WEBHOOK_SECRET on the server and the same value as X-Vapi-Secret in Vapi (Custom Credential).",
+    "voiceWebhookSecretHint": "The webhook URL points at your API host (not the dashboard URL). In production, secure the webhook with VAPI_WEBHOOK_SECRET.",
     "voiceSetupDocsHint": "Full pilot guide: docs/voice-pilot-vapi.md in the project repository."
   },
   "activation": {

@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     public_api_base_url: str = "http://localhost:8000"
     widget_stale_after_hours: int = 168
     landing_demo_max_user_messages: int = 6
+    vapi_webhook_secret: str = ""
 
     @computed_field
     @property

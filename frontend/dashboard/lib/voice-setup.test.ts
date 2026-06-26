@@ -13,12 +13,12 @@ describe("voice setup urls", () => {
     expect(VOICE_MESSAGE_PATH).toBe("/api/v1/public/voice/message");
   });
 
-  it("builds absolute urls when origin is provided", () => {
-    expect(buildVoiceWebhookUrl("https://app.example.com")).toBe(
-      "https://app.example.com/api/v1/public/voice/webhook",
+  it("builds absolute urls from api base", () => {
+    expect(buildVoiceWebhookUrl("http://localhost:8000")).toBe(
+      "http://localhost:8000/api/v1/public/voice/webhook",
     );
-    expect(buildVoiceMessageUrl("https://app.example.com")).toBe(
-      "https://app.example.com/api/v1/public/voice/message",
+    expect(buildVoiceMessageUrl("https://api.example.com")).toBe(
+      "https://api.example.com/api/v1/public/voice/message",
     );
   });
 });

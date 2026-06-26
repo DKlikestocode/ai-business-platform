@@ -9,6 +9,7 @@ from app.agents.lead_agent.models import LeadCaptureLLMOutput
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.service import LeadCaptureService
 from app.api.dependencies import get_voice_lead_capture_service
+from app.config import Settings, get_settings
 from app.db.models.enums import ConversationChannel
 from app.main import app
 from app.repositories.company_activation_repository import CompanyActivationRepository
@@ -212,6 +213,66 @@ def test_public_voice_webhook_tool_calls(voice_client: TestClient, company) -> N
     assert response.status_code == 200
     body = response.json()
     assert body["results"][0]["result"] == "Danke! Was genau ist das Problem?"
+
+
+def _voice_webhook_payload(company_slug: str) -> dict:
+    return {
+        "message": {
+            "type": "tool-calls",
+            "call": {
+                "id": "vapi-call-secret",
+                "metadata": {"company_slug": company_slug},
+                "customer": {"number": "+491701234567"},
+            },
+            "toolCallList": [
+                {
+                    "id": "tool-call-secret",
+                    "type": "function",
+                    "function": {
+                        "name": "capture_inquiry",
+                        "arguments": json.dumps({"message": "Rohrbruch in Berlin"}),
+                    },
+                }
+            ],
+        }
+    }
+
+
+def test_public_voice_webhook_rejects_missing_secret_when_configured(
+    voice_client: TestClient,
+    company,
+) -> None:
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        vapi_webhook_secret="pilot-secret",
+    )
+    try:
+        response = voice_client.post(
+            "/api/v1/public/voice/webhook",
+            json=_voice_webhook_payload(company.slug),
+        )
+    finally:
+        app.dependency_overrides.pop(get_settings, None)
+
+    assert response.status_code == 401
+
+
+def test_public_voice_webhook_accepts_matching_secret(
+    voice_client: TestClient,
+    company,
+) -> None:
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        vapi_webhook_secret="pilot-secret",
+    )
+    try:
+        response = voice_client.post(
+            "/api/v1/public/voice/webhook",
+            json=_voice_webhook_payload(company.slug),
+            headers={"X-Vapi-Secret": "pilot-secret"},
+        )
+    finally:
+        app.dependency_overrides.pop(get_settings, None)
+
+    assert response.status_code == 200
 
 
 def test_public_voice_end_of_call_returns_204(voice_client: TestClient) -> None:

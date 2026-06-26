@@ -159,7 +159,8 @@ In Vapi, link the Twilio number to this assistant. Place a test call.
 
 - Webhook is public (like widget). Rate-limited per IP.
 - Do not put secrets in Vapi metadata.
-- For production hardening, add `serverUrlSecret` verification (follow-up).
+- **Production:** set `VAPI_WEBHOOK_SECRET` on the backend and configure the same value in Vapi as a Custom Credential with header `X-Vapi-Secret` (Bearer prefix off). Requests with a wrong or missing secret receive HTTP 401.
+- Leave `VAPI_WEBHOOK_SECRET` empty in local development to skip header verification.
 
 ## Pilot checklist
 
@@ -169,5 +170,6 @@ In Vapi, link the Twilio number to this assistant. Place a test call.
 - [ ] `company_slug` in assistant metadata
 - [ ] Server URL → `/api/v1/public/voice/webhook`
 - [ ] `capture_inquiry` tool defined
+- [ ] `VAPI_WEBHOOK_SECRET` set on server + matching `X-Vapi-Secret` in Vapi (production)
 - [ ] Test call → inquiry in inbox with **Telefon** badge
 - [ ] Notification email received (if urgency threshold met)
