@@ -24,6 +24,9 @@ function makeLead(overrides: Partial<Lead> = {}): Lead {
     email: "max@example.com",
     company: null,
     location: "Berlin",
+    postal_code: "10115",
+    service_area_status: null,
+    service_area_distance_km: null,
     service_requested: "Sanitär-Notfall",
     description: "Küchenspüle läuft aus",
     urgency: "Dringend",
@@ -36,6 +39,7 @@ function makeLead(overrides: Partial<Lead> = {}): Lead {
     qualification_status: "contactable",
     notification_sent_at: null,
     contacted_at: null,
+    archived_at: null,
     created_at: "2025-06-01T10:00:00Z",
     ...overrides,
   };

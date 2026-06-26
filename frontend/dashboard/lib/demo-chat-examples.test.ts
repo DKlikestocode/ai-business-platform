@@ -28,4 +28,11 @@ describe("demo chat example messages", () => {
 
     expect(getDemoChatExampleMessage(translate, "plumber")).toContain("Klempner");
   });
+
+  it("includes postal codes in example messages", () => {
+    for (const key of DEMO_CHAT_EXAMPLE_KEYS) {
+      const message = resolveDemoChatExampleMessage(de, key);
+      expect(message).toMatch(/PLZ\s*\d{5}|\(\d{5}\)|\d{5}/);
+    }
+  });
 });

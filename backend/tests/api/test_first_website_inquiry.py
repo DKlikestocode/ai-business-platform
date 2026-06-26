@@ -21,6 +21,7 @@ _COMPLETE_WEBSITE_OUTPUT = LeadCaptureLLMOutput(
     name="Website User",
     phone="01701234599",
     location="Berlin",
+    postal_code="10115",
     service_requested="Roof repair",
     description="Leak in kitchen",
     urgency="high",

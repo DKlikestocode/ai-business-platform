@@ -28,6 +28,7 @@ class QualificationStatus(StrEnum):
 REQUIRED_LEAD_FIELDS: tuple[str, ...] = (
     "name",
     "phone",
+    "postal_code",
     "location",
     "service_requested",
     "description",
@@ -47,6 +48,7 @@ class LeadExtractedData(BaseModel):
     email: str | None = None
     company: str | None = None
     location: str | None = None
+    postal_code: str | None = None
     service_requested: str | None = None
     description: str | None = None
     urgency: str | None = None
@@ -64,6 +66,7 @@ class LeadCaptureLLMOutput(BaseModel):
     email: str | None = None
     company: str | None = None
     location: str | None = None
+    postal_code: str | None = None
     service_requested: str | None = None
     description: str | None = None
     urgency: str | None = None
@@ -76,6 +79,7 @@ class LeadCaptureLLMOutput(BaseModel):
             email=self.email,
             company=self.company,
             location=self.location,
+            postal_code=self.postal_code,
             service_requested=self.service_requested,
             description=self.description,
             urgency=self.urgency,

@@ -87,6 +87,7 @@ async def test_lead_capture_service_persists_complete_lead(
                 name="Jane Doe",
                 phone="01701234567",
                 location="Austin, TX",
+                postal_code="10115",
                 service_requested="HVAC repair",
                 description="AC not cooling",
                 urgency="high",
@@ -135,6 +136,7 @@ async def test_lead_capture_service_merges_context_across_messages(
             LeadCaptureLLMOutput(
                 reply="Got it. When should we call you back?",
                 location="Austin, TX",
+                postal_code="10115",
                 service_requested="Roof repair",
                 description="Leak in kitchen",
                 urgency="medium",
@@ -202,6 +204,7 @@ async def test_lead_capture_service_persists_across_service_reinstantiation(
             LeadCaptureLLMOutput(
                 reply="Got it. When should we call you back?",
                 location="Austin, TX",
+                postal_code="10115",
                 service_requested="Roof repair",
                 description="Leak in kitchen",
                 urgency="medium",

@@ -40,7 +40,7 @@ def test_contactable_partial_lead_scores_above_threshold() -> None:
 
     assert qualification.contactable is True
     assert qualification.qualification_status == QualificationStatus.CONTACTABLE
-    assert qualification.lead_score == 60
+    assert qualification.lead_score == 55
 
 
 def test_contactable_low_score_stays_incomplete_without_context() -> None:
@@ -58,6 +58,7 @@ def test_complete_lead_is_qualified() -> None:
         name="Jane Doe",
         phone="01701234567",
         location="Berlin",
+        postal_code="10115",
         service_requested="Roof repair",
         description="Leak in kitchen",
         urgency="high",
