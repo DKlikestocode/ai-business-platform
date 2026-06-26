@@ -1,3 +1,4 @@
+from app.agents.lead_agent.voice_prompt import VOICE_CHANNEL_PROMPT
 from app.core.agent_engine.base import BaseAgent
 from app.core.agent_engine.context import AgentContext
 
@@ -62,5 +63,8 @@ class LeadCaptureAgent(BaseAgent):
         service_area_status_prompt = context.metadata.get("service_area_status_prompt")
         if service_area_status_prompt:
             sections.append(f"Service area check:\n{service_area_status_prompt}")
+
+        if context.metadata.get("channel_voice_prompt"):
+            sections.append(VOICE_CHANNEL_PROMPT)
 
         return "\n\n".join(sections)

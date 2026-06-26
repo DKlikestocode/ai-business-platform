@@ -1,14 +1,17 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Response, status
 
 from app.agents.lead_agent.models import LeadMessageRequest
 from app.agents.lead_agent.service import LeadCaptureService
 from app.api.dependencies import (
     RateLimit,
     get_company_repository,
+    get_settings,
     get_voice_lead_capture_service,
 )
+from app.config import Settings
+from app.services.voice.webhook_auth import require_vapi_webhook_secret
 from app.api.schemas.voice import VoiceMessageRequest, VoiceMessageResponse
 from app.api.voice_vapi import (
     build_vapi_tool_results,
@@ -77,7 +80,11 @@ async def handle_voice_webhook(
     payload: dict[str, Any],
     service: LeadCaptureService = Depends(get_voice_lead_capture_service),
     company_repository: CompanyRepository = Depends(get_company_repository),
+    settings: Settings = Depends(get_settings),
+    x_vapi_secret: str | None = Header(default=None, alias="X-Vapi-Secret"),
 ) -> dict[str, Any] | Response:
+    require_vapi_webhook_secret(x_vapi_secret, settings)
+
     message = payload.get("message")
     if not isinstance(message, dict):
         return {}
