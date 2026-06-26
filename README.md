@@ -1,11 +1,11 @@
-# AI Agent Platform
+# AI Anfragen-Assistent
 
 Multi-agent platform with a shared core, specialized agents, and a management dashboard.
 
 ## Architecture
 
 ```
-AI Agent Platform
+AI Anfragen-Assistent
 │
 ├── Core
 │   ├── Auth

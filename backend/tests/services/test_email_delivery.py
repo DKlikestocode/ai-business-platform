@@ -22,7 +22,7 @@ def test_resend_provider_requires_keys() -> None:
         Settings(
             notification_provider="resend",
             resend_api_key="re_test",
-            notification_from_email="Agent Platform <noreply@example.com>",
+            notification_from_email="AI Anfragen-Assistent <noreply@example.com>",
         ),
     )
     assert configured.ready is True

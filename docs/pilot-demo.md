@@ -1,6 +1,6 @@
 # Pilot customer demo guide
 
-Use this guide to demonstrate the AI Agent Platform to a first real pilot customer without adding new product features.
+Use this guide to demonstrate AI Anfragen-Assistent to a first real pilot customer without adding new product features.
 
 ## What the pilot gets
 

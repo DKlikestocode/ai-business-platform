@@ -347,7 +347,7 @@ Before shipping or reviewing UI, answer these five questions in the PR or design
 3. **Progressive disclosure** — settings and advanced options behind clear sections
 4. **Consistent vocabulary** — DE/EN terminology aligned (see Product Philosophy)
 5. **Trust by default** — legal links in footer, DSGVO copy on landing, no dark patterns
-6. **Brand:** Product name `Agent Platform` in marketing; dashboard shell title should align (known gap: `AI Agent Platform` in `appShell.title`)
+6. **Brand:** Product name `AI Anfragen-Assistent` (DE) / `AI Inquiry Assistant` (EN) in marketing and dashboard shell
 
 Color tokens (do not invent new palettes per feature):
 

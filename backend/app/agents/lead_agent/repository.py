@@ -139,6 +139,32 @@ class LeadRepository:
         self._session.commit()
         return deleted
 
+    def delete_by_id(self, lead_id: UUID, *, company_id: UUID) -> bool:
+        lead = self.get_by_id(lead_id, company_id=company_id)
+        if lead is None:
+            return False
+
+        self._session.delete(lead)
+        self._session.commit()
+        return True
+
+    def delete_contacted(
+        self,
+        *,
+        company_id: UUID,
+        contactable: bool | None = None,
+    ) -> int:
+        query = self._session.query(Lead).filter(
+            Lead.company_id == company_id,
+            Lead.status != LeadStatus.NEW.value,
+        )
+        if contactable is not None:
+            query = query.filter(Lead.contactable == contactable)
+
+        deleted = query.delete(synchronize_session=False)
+        self._session.commit()
+        return deleted
+
     def list_leads(
         self,
         *,

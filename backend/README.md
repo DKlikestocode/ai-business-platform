@@ -1,6 +1,6 @@
 # Backend
 
-FastAPI application for the AI Agent Platform.
+FastAPI application for AI Anfragen-Assistent.
 
 ## Agent Runtime Core
 

@@ -12,7 +12,7 @@ def make_production_settings(**overrides: object) -> Settings:
         "openai_api_key": "sk-test",
         "notification_provider": "resend",
         "resend_api_key": "re_test",
-        "notification_from_email": "Agent Platform <noreply@example.com>",
+        "notification_from_email": "AI Anfragen-Assistent <noreply@example.com>",
         "frontend_base_url": "https://app.example.com",
     }
     values.update(overrides)

@@ -1,6 +1,6 @@
 # Production Deployment
 
-This guide covers deploying the AI Agent Platform with Docker Compose for a pilot or small production environment.
+This guide covers deploying AI Anfragen-Assistent with Docker Compose for a pilot or small production environment.
 
 ## Prerequisites
 

@@ -129,10 +129,10 @@ class NotificationService:
         )
 
     async def send_password_reset_email(self, *, to: str, reset_url: str) -> None:
-        subject = "Passwort zurücksetzen — Agent Platform"
+        subject = "Passwort zurücksetzen — AI Anfragen-Assistent"
         body = "\n".join(
             [
-                "Sie haben ein neues Passwort für Ihr Agent-Platform-Konto angefordert.",
+                "Sie haben ein neues Passwort für Ihr AI Anfragen-Assistent-Konto angefordert.",
                 "",
                 "Öffnen Sie den folgenden Link, um ein neues Passwort zu setzen:",
                 reset_url,
@@ -159,7 +159,7 @@ class NotificationService:
     def _build_test_inquiry_email_body(*, company: Company) -> str:
         return "\n".join(
             [
-                "Dies ist eine Test-E-Mail von Agent Platform.",
+                "Dies ist eine Test-E-Mail vom AI Anfragen-Assistenten.",
                 "",
                 f"Sie erhalten diese Nachricht, weil Sie einen Test für {company.name} "
                 "ausgelöst haben.",

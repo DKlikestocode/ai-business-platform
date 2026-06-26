@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "Anfragen-Assistent für Unternehmen",
+    "title": "AI Anfragen-Assistent für Unternehmen",
     "description": "Erfassen Sie Website-Anfragen automatisch, priorisieren Sie wichtige Kunden und informieren Sie Ihr Team per E-Mail."
   },
   "common": {
@@ -30,12 +30,12 @@
     "marketing": "Marketing-Navigation"
   },
   "brand": {
-    "name": "Agent Platform",
+    "name": "AI Anfragen-Assistent",
     "mark": "AI",
     "tagline": "KI-Assistenz für Website-Anfragen — für Handwerk und Dienstleistung."
   },
   "appShell": {
-    "title": "AI Agent Platform",
+    "title": "AI Anfragen-Assistent",
     "subtitle": "Ihre Website-Anfragen an einem Ort"
   },
   "landing": {
@@ -143,7 +143,7 @@
       "title": "Impressum",
       "intro": "Angaben gemäß § 5 TMG.",
       "operatorHeading": "Betreiber",
-      "operatorBody": "Agent Platform — Plattform zur KI-gestützten Erfassung und Qualifizierung von Website-Anfragen für Unternehmen.",
+      "operatorBody": "AI Anfragen-Assistent — KI-gestützte Erfassung und Qualifizierung von Website-Anfragen für Unternehmen.",
       "contactHeading": "Kontakt",
       "contactBody": "Für vertragliche, technische und rechtliche Anfragen kontaktieren Sie bitte den Plattformbetreiber über die Ihnen im Rahmen der Registrierung oder des Vertrags mitgeteilten Kontaktdaten.",
       "disputeHeading": "EU-Streitschlichtung",
@@ -153,7 +153,7 @@
       "title": "Datenschutzerklärung",
       "intro": "Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Nachfolgend informieren wir Sie über die Verarbeitung personenbezogener Daten bei der Nutzung dieser Plattform.",
       "controllerHeading": "Verantwortlicher",
-      "controllerBody": "Verantwortlicher im Sinne der DSGVO ist der Betreiber der Plattform Agent Platform. Kontaktdaten entnehmen Sie bitte dem Impressum.",
+      "controllerBody": "Verantwortlicher im Sinne der DSGVO ist der Betreiber des AI Anfragen-Assistenten. Kontaktdaten entnehmen Sie bitte dem Impressum.",
       "dataCollectedHeading": "Welche Daten wir verarbeiten",
       "dataCollectedBody": "Wir verarbeiten Daten, die Sie uns bei der Registrierung und Nutzung des Dashboards angeben (z. B. Name, E-Mail, Unternehmensdaten). Über das Website-Widget erfasste Chat-Nachrichten und Lead-Angaben (z. B. Name, Telefon, Standort, Serviceanfrage) werden zur Bearbeitung von Kundenanfragen gespeichert.",
       "purposeHeading": "Zweck der Verarbeitung",
@@ -405,6 +405,15 @@
     "restore": "Zurück in Posteingang",
     "restoreSuccess": "Anfrage wieder im Posteingang.",
     "restoreFailed": "Anfrage konnte nicht wiederhergestellt werden.",
+    "delete": "Löschen",
+    "deleteAria": "Anfrage löschen",
+    "deleteConfirm": "Diese Anfrage endgültig löschen?",
+    "deleteFailed": "Anfrage konnte nicht gelöscht werden.",
+    "deleteAllContacted": "Alle löschen",
+    "deleteAllContactedConfirm": "Alle kontaktierten Anfragen endgültig löschen?",
+    "deleteAllContactedSuccess": "Alle kontaktierten Anfragen wurden gelöscht.",
+    "deleteAllContactedFailed": "Kontaktierte Anfragen konnten nicht gelöscht werden.",
+    "deletingAllContacted": "Wird gelöscht...",
     "emptyContactedTitle": "Noch keine kontaktierten Anfragen",
     "emptyContactedDescription": "Sobald Sie eine Anfrage als kontaktiert markieren, verschwindet sie aus dem Posteingang und erscheint hier.",
     "status": "Status",
@@ -484,6 +493,10 @@
     "restoreSuccess": "Anfrage wieder im Posteingang.",
     "restoreFailed": "Anfrage konnte nicht wiederhergestellt werden.",
     "contactedNotice": "Diese Anfrage ist als kontaktiert markiert und erscheint nicht im Posteingang.",
+    "delete": "Löschen",
+    "deleteAria": "Anfrage löschen",
+    "deleteConfirm": "Diese Anfrage endgültig löschen?",
+    "deleteFailed": "Anfrage konnte nicht gelöscht werden.",
     "notFound": "Anfrage nicht gefunden.",
     "backToLeads": "← Zurück zu Anfragen",
     "handoffTitle": "Anfrage",

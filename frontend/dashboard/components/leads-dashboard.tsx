@@ -12,7 +12,7 @@ import { AlertBanner } from "@/components/ui/alert-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { fetchLeads, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/api";
+import { fetchLeads, deleteAllContactedLeads, deleteLead, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { isDevelopment } from "@/lib/env";
@@ -59,6 +59,8 @@ export function LeadsDashboard() {
   const [contactedSuccessId, setContactedSuccessId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [restoreSuccessId, setRestoreSuccessId] = useState<string | null>(null);
+  const [deleteAllSuccess, setDeleteAllSuccess] = useState(false);
+  const [deletingAll, setDeletingAll] = useState(false);
   const isContactedView = inboxView === "contacted";
 
   const loadLeads = useCallback(async () => {
@@ -142,6 +144,53 @@ export function LeadsDashboard() {
     }
   }
 
+  function handleDeleteLead(leadId: string) {
+    if (!window.confirm(t("deleteConfirm"))) {
+      return;
+    }
+
+    void (async () => {
+      setUpdatingId(leadId);
+      setError(null);
+      try {
+        await deleteLead(leadId);
+        setLeads((current) => current.filter((lead) => lead.id !== leadId));
+        setTotal((current) => Math.max(0, current - 1));
+        setContactedSuccessId((current) => (current === leadId ? null : current));
+        setRestoreSuccessId((current) => (current === leadId ? null : current));
+      } catch (err) {
+        setError(formatUserFacingError(err, t("deleteFailed"), errorMessages));
+      } finally {
+        setUpdatingId(null);
+      }
+    })();
+  }
+
+  function handleDeleteAllContacted() {
+    if (!window.confirm(t("deleteAllContactedConfirm"))) {
+      return;
+    }
+
+    void (async () => {
+      setDeletingAll(true);
+      setError(null);
+      setDeleteAllSuccess(false);
+      try {
+        await deleteAllContactedLeads();
+        setLeads([]);
+        setTotal(0);
+        setTotalPages(1);
+        setPage(1);
+        setRestoreSuccessId(null);
+        setDeleteAllSuccess(true);
+      } catch (err) {
+        setError(formatUserFacingError(err, t("deleteAllContactedFailed"), errorMessages));
+      } finally {
+        setDeletingAll(false);
+      }
+    })();
+  }
+
   function handleInboxViewChange(nextView: LeadsInboxView) {
     if (nextView === inboxView) {
       return;
@@ -150,6 +199,7 @@ export function LeadsDashboard() {
     setPage(1);
     setRestoreSuccessId(null);
     setContactedSuccessId(null);
+    setDeleteAllSuccess(false);
   }
 
   async function handleSeedDemoData() {
@@ -243,6 +293,16 @@ export function LeadsDashboard() {
           </label>
         </div>
         <div className="toolbar-actions">
+          {isContactedView && total > 0 ? (
+            <button
+              type="button"
+              className="button secondary"
+              disabled={isDataLoading || deletingAll || updatingId !== null}
+              onClick={handleDeleteAllContacted}
+            >
+              {deletingAll ? t("deletingAllContacted") : t("deleteAllContacted")}
+            </button>
+          ) : null}
           {isDevelopment && !isContactedView ? (
             <button
               type="button"
@@ -261,6 +321,10 @@ export function LeadsDashboard() {
 
       {restoreSuccessId ? (
         <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
+      ) : null}
+
+      {deleteAllSuccess ? (
+        <AlertBanner variant="success">{t("deleteAllContactedSuccess")}</AlertBanner>
       ) : null}
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
@@ -304,6 +368,7 @@ export function LeadsDashboard() {
               contactedMode={isContactedView}
               onMarkContacted={() => void handleMarkContacted(lead.id)}
               onRestore={() => void handleRestoreLead(lead.id)}
+              onDelete={() => handleDeleteLead(lead.id)}
             />
           ))}
         </div>
@@ -353,6 +418,7 @@ export function LeadsDashboard() {
                       contactedMode={isContactedView}
                       onMarkContacted={() => void handleMarkContacted(lead.id)}
                       onRestore={() => void handleRestoreLead(lead.id)}
+                      onDelete={() => handleDeleteLead(lead.id)}
                     />
                   </td>
                 </tr>

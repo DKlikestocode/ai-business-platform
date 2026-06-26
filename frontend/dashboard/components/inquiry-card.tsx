@@ -27,6 +27,7 @@ interface InquiryCardProps {
   contactedMode?: boolean;
   onMarkContacted: () => void;
   onRestore?: () => void;
+  onDelete?: () => void;
 }
 
 export function InquiryCard({
@@ -37,6 +38,7 @@ export function InquiryCard({
   contactedMode = false,
   onMarkContacted,
   onRestore,
+  onDelete,
 }: InquiryCardProps) {
   const t = useTranslations("leads");
   const phone = normalizePhone(lead);
@@ -136,6 +138,17 @@ export function InquiryCard({
             onClick={onRestore}
           >
             {t("restore")}
+          </button>
+        ) : null}
+        {onDelete ? (
+          <button
+            type="button"
+            className="inquiry-card-delete"
+            disabled={statusUpdating}
+            aria-label={t("deleteAria")}
+            onClick={onDelete}
+          >
+            {t("delete")}
           </button>
         ) : null}
       </div>

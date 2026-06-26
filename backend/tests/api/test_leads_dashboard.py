@@ -370,3 +370,80 @@ def test_list_contacted_leads_and_restore(
 
     active = dashboard_client.get("/api/v1/leads", headers=auth_headers)
     assert any(item["id"] == str(lead.id) for item in active.json()["items"])
+
+
+def test_delete_lead(
+    dashboard_client: TestClient,
+    sample_leads,
+    auth_headers: dict[str, str],
+) -> None:
+    lead = sample_leads[0]
+    response = dashboard_client.delete(
+        f"/api/v1/leads/{lead.id}",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 204
+
+    get_response = dashboard_client.get(
+        f"/api/v1/leads/{lead.id}",
+        headers=auth_headers,
+    )
+    assert get_response.status_code == 404
+
+
+def test_delete_lead_not_found(
+    dashboard_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    response = dashboard_client.delete(
+        "/api/v1/leads/00000000-0000-0000-0000-000000000099",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 404
+
+
+def test_delete_all_contacted_leads(
+    dashboard_client: TestClient,
+    lead_repository: LeadRepository,
+    company: Company,
+    auth_headers: dict[str, str],
+) -> None:
+    active_data = LeadExtractedData(name="Active Lead", phone="01701234701")
+    contacted_data = LeadExtractedData(name="Contacted Lead", phone="01701234702")
+    active = lead_repository.create(
+        company_id=company.id,
+        conversation_id="bulk-delete-active",
+        data=active_data,
+        summary="Active",
+        qualification=evaluate_qualification(active_data, channel=ConversationChannel.WEB),
+    )
+    contacted = lead_repository.create(
+        company_id=company.id,
+        conversation_id="bulk-delete-contacted",
+        data=contacted_data,
+        summary="Contacted",
+        qualification=evaluate_qualification(contacted_data, channel=ConversationChannel.WEB),
+    )
+    lead_repository.update_status(
+        contacted.id,
+        LeadStatus.CONTACTED,
+        company_id=company.id,
+    )
+
+    response = dashboard_client.delete(
+        "/api/v1/leads/contacted",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["deleted"] >= 1
+
+    assert lead_repository.get_by_id(active.id, company_id=company.id) is not None
+
+    get_contacted = dashboard_client.get(
+        f"/api/v1/leads/{contacted.id}",
+        headers=auth_headers,
+    )
+    assert get_contacted.status_code == 404

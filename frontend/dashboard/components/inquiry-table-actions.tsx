@@ -12,6 +12,7 @@ interface InquiryTableActionsProps {
   contactedMode?: boolean;
   onMarkContacted: () => void;
   onRestore?: () => void;
+  onDelete?: () => void;
 }
 
 export function InquiryTableActions({
@@ -20,6 +21,7 @@ export function InquiryTableActions({
   contactedMode = false,
   onMarkContacted,
   onRestore,
+  onDelete,
 }: InquiryTableActionsProps) {
   const t = useTranslations("leads");
   const tDetail = useTranslations("leadDetail");
@@ -58,6 +60,17 @@ export function InquiryTableActions({
           onClick={onRestore}
         >
           {t("restore")}
+        </button>
+      ) : null}
+      {onDelete ? (
+        <button
+          type="button"
+          className="button secondary inquiry-table-action inquiry-table-action-delete"
+          disabled={updating}
+          aria-label={t("deleteAria")}
+          onClick={onDelete}
+        >
+          {t("delete")}
         </button>
       ) : null}
     </div>

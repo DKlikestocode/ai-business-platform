@@ -12,7 +12,7 @@ import { InquiryNotificationIndicator } from "@/components/inquiry-notification-
 import { StatusBadge } from "@/components/status-badge";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { fetchLead, restoreLead, updateLeadStatus } from "@/lib/api";
+import { fetchLead, deleteLead, restoreLead, updateLeadStatus } from "@/lib/api";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   displayName,
@@ -24,7 +24,7 @@ import {
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
 import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { Lead } from "@/lib/types";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "full") ?? "";
@@ -47,6 +47,7 @@ export function LeadDetailView() {
   const locale = useLocale();
   const t = useTranslations("leadDetail");
   const tLeads = useTranslations("leads");
+  const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,6 +112,23 @@ export function LeadDetailView() {
     } catch (err) {
       setError(err instanceof Error ? err.message : t("updateFailed"));
     } finally {
+      setUpdating(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!lead) return;
+    if (!window.confirm(t("deleteConfirm"))) {
+      return;
+    }
+
+    setUpdating(true);
+    setError(null);
+    try {
+      await deleteLead(lead.id);
+      router.push("/leads");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("deleteFailed"));
       setUpdating(false);
     }
   }
@@ -286,6 +304,18 @@ export function LeadDetailView() {
                 onMarkContacted={() => void handleMarkContacted()}
               />
             ) : null}
+
+            <div className="inquiry-card-actions inquiry-detail-footer">
+              <button
+                type="button"
+                className="inquiry-card-delete"
+                disabled={updating}
+                aria-label={t("deleteAria")}
+                onClick={() => void handleDelete()}
+              >
+                {t("delete")}
+              </button>
+            </div>
           </div>
 
           <details className="card inquiry-handoff-more">
