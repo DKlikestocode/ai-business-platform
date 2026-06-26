@@ -10,8 +10,9 @@ import {
 describe("lead priority helpers", () => {
   it("matches backend scoring weights", () => {
     expect(MAX_PRIORITY_SCORE).toBe(100);
-    expect(PRIORITY_SCORE_FACTORS).toHaveLength(7);
+    expect(PRIORITY_SCORE_FACTORS).toHaveLength(8);
     expect(PRIORITY_SCORE_FACTORS[0]).toEqual({ key: "contact", points: 25 });
+    expect(PRIORITY_SCORE_FACTORS[3]).toEqual({ key: "postalCode", points: 5 });
   });
 
   it("clamps threshold display values", () => {
