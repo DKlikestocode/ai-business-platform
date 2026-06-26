@@ -319,6 +319,20 @@ export async function sendTestNotification(): Promise<void> {
   });
 }
 
+export interface TestVoiceIntakeResponse {
+  reply: string;
+  lead_id: string | null;
+}
+
+export async function sendTestVoiceIntake(): Promise<TestVoiceIntakeResponse> {
+  return request<TestVoiceIntakeResponse>(
+    "/api/v1/company/settings/test-voice-intake",
+    {
+      method: "POST",
+    },
+  );
+}
+
 export async function fetchCompanyActivation(): Promise<CompanyActivation> {
   return request<CompanyActivation>("/api/v1/company/activation");
 }

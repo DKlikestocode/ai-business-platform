@@ -372,6 +372,12 @@
     "voiceSetupStepTool": "Richten Sie ein Server-Tool capture_inquiry ein, das bei jeder Kundenaussage unseren Webhook aufruft.",
     "voiceSetupStepSecret": "Setzen Sie auf dem Server VAPI_WEBHOOK_SECRET und denselben Wert als X-Vapi-Secret in Vapi (Custom Credential).",
     "voiceWebhookSecretHint": "Die Webhook-URL zeigt auf Ihre API (nicht die Dashboard-Adresse). In Produktion sollten Sie den Webhook mit VAPI_WEBHOOK_SECRET absichern.",
+    "voiceTestIntake": "Telefon-Anfrage simulieren",
+    "voiceTestIntakeRunning": "Simulation läuft…",
+    "voiceTestIntakeHint": "Erzeugt eine Beispiel-Anfrage mit Telefon-Badge im Posteingang. Das ist kein echter Anruf über Vapi.",
+    "voiceTestIntakeSuccess": "Die simulierte Anfrage liegt im Posteingang.",
+    "voiceTestIntakeViewInbox": "Anfrage ansehen",
+    "voiceTestIntakeFailed": "Die Telefon-Simulation konnte nicht ausgeführt werden.",
     "voiceSetupDocsHint": "Ausführliche Pilot-Anleitung: docs/voice-pilot-vapi.md im Projekt-Repository."
   },
   "activation": {
