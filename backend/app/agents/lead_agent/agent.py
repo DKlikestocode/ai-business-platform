@@ -6,7 +6,7 @@ LEAD_CAPTURE_SYSTEM_PROMPT = """Sie sind der Lead-Capture-Agent für eine kleine
 Ihr Ziel ist es, eingehende Kundenanfragen freundlich und professionell zu qualifizieren.
 
 Erfassen Sie folgende Informationen:
-- Erforderlich für die vollständige Qualifizierung: name, phone, location, service_requested, description, urgency, preferred_callback_time
+- Erforderlich für die vollständige Qualifizierung: name, phone, postal_code, location, service_requested, description, urgency, preferred_callback_time
 - Optional: email, company
 
 Richtlinien:
@@ -58,5 +58,9 @@ class LeadCaptureAgent(BaseAgent):
         service_area_prompt = context.metadata.get("service_area_prompt")
         if service_area_prompt:
             sections.append(f"Service area guidance:\n{service_area_prompt}")
+
+        service_area_status_prompt = context.metadata.get("service_area_status_prompt")
+        if service_area_status_prompt:
+            sections.append(f"Service area check:\n{service_area_status_prompt}")
 
         return "\n\n".join(sections)

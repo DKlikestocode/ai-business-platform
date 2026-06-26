@@ -25,6 +25,7 @@ def _qualified_data() -> LeadExtractedData:
         name="Jane Doe",
         phone="01701234567",
         location="Berlin",
+        postal_code="10115",
         service_requested="Roof repair",
         description="Leak in kitchen",
         urgency="high",

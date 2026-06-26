@@ -26,6 +26,7 @@ _COMPLETE_OUTPUT = LeadCaptureLLMOutput(
     name="Demo Besucher",
     phone="01701234599",
     location="Berlin",
+    postal_code="10115",
     service_requested="Sanitär",
     description="Undichte Spüle",
     urgency="hoch",

@@ -1,7 +1,10 @@
 import logging
 from uuid import UUID
 
-from app.agents.lead_agent.company_context import build_service_area_prompt
+from app.agents.lead_agent.company_context import (
+    build_service_area_prompt,
+    build_service_area_status_prompt,
+)
 from app.agents.lead_agent.conversation_history import (
     LEAD_DATA_METADATA_KEY,
     build_chat_messages,
@@ -36,6 +39,12 @@ from app.repositories.company_activation_repository import CompanyActivationRepo
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
+from app.services.service_area.evaluate import (
+    append_service_area_reply_note,
+    evaluate_service_area,
+    resolve_lead_postal_code,
+)
+from app.services.service_area.models import ServiceAreaStatus
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +101,8 @@ class LeadCaptureService:
         service_area_prompt = (
             build_service_area_prompt(company) if company is not None else None
         )
+        pre_service_area_eval = evaluate_service_area(company, existing_data)
+        service_area_status_prompt = build_service_area_status_prompt(pre_service_area_eval)
 
         self._conversation_repository.add_message(
             conversation.id,
@@ -110,6 +121,7 @@ class LeadCaptureService:
                     channel=self._channel,
                 ),
                 "service_area_prompt": service_area_prompt,
+                "service_area_status_prompt": service_area_status_prompt,
             },
         )
         system_prompt = await self._agent.build_system_prompt(agent_context)
@@ -134,12 +146,28 @@ class LeadCaptureService:
         merged_data, _ = sanitize_contact_fields(
             merge_lead_data(existing_data, incoming_data),
         )
+        if merged_data.postal_code is None:
+            resolved_plz = resolve_lead_postal_code(merged_data)
+            if resolved_plz is not None:
+                merged_data = merged_data.model_copy(update={"postal_code": resolved_plz})
+
+        service_area_eval = evaluate_service_area(company, merged_data)
         qualification = evaluate_qualification(merged_data, channel=self._channel)
         missing_fields = get_missing_fields(merged_data)
         lead_complete = is_lead_complete(merged_data)
         reply = llm_output.reply
         if rejected_contacts.any_rejected:
             reply = build_invalid_contact_reply(rejected_contacts)
+        elif (
+            service_area_eval.status
+            in {ServiceAreaStatus.IN_RANGE, ServiceAreaStatus.OUT_OF_RANGE}
+            and resolve_lead_postal_code(existing_data) != service_area_eval.postal_code
+        ):
+            reply = append_service_area_reply_note(
+                reply,
+                service_area_eval,
+                radius_km=company.service_radius_km if company is not None else None,
+            )
 
         self._conversation_repository.add_message(
             conversation.id,
@@ -169,6 +197,7 @@ class LeadCaptureService:
                 summary=summary,
                 qualification=qualification,
                 existing=existing_lead,
+                service_area=service_area_eval,
             )
             lead_id = str(lead.id)
             logger.info(

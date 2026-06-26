@@ -15,6 +15,9 @@ function buildLead(overrides: Partial<Lead> = {}): Lead {
     email: null,
     company: null,
     location: "Berlin",
+    postal_code: "10115",
+    service_area_status: null,
+    service_area_distance_km: null,
     service_requested: "Dach",
     description: "Undichtes Dach",
     urgency: "hoch",
@@ -27,6 +30,7 @@ function buildLead(overrides: Partial<Lead> = {}): Lead {
     qualification_status: "qualified",
     notification_sent_at: null,
     contacted_at: null,
+    archived_at: null,
     created_at: "2026-06-21T10:00:00Z",
     ...overrides,
   };

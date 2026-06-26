@@ -134,6 +134,12 @@ export interface ResetPasswordRequest {
 
 export type LeadSource = "website" | "test";
 
+export type ServiceAreaStatus =
+  | "not_configured"
+  | "unknown"
+  | "in_range"
+  | "out_of_range";
+
 export interface Lead {
   id: string;
   company_id: string;
@@ -145,6 +151,9 @@ export interface Lead {
   email: string | null;
   company: string | null;
   location: string;
+  postal_code: string | null;
+  service_area_status: ServiceAreaStatus | null;
+  service_area_distance_km: number | null;
   service_requested: string;
   description: string;
   urgency: string;
@@ -182,6 +191,7 @@ export interface LeadExtractedData {
   email: string | null;
   company: string | null;
   location: string | null;
+  postal_code: string | null;
   service_requested: string | null;
   description: string | null;
   urgency: string | null;

@@ -20,6 +20,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             email="thomas.weber@email.de",
             company="Weber Dach GmbH",
             location="München, Bayern",
+            postal_code="80331",
             service_requested="Dachreparatur nach Sturm",
             description=(
                 "Mehrere Dachziegel sind abgedriftet und es tropft leicht "
@@ -39,6 +40,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             email="s.klein@klein-berlin.de",
             company=None,
             location="Berlin, Prenzlauer Berg",
+            postal_code="10405",
             service_requested="Elektroinstallation Smart Home",
             description=(
                 "Neue Wohnung, ich möchte Rolladen, Licht und Heizung "
@@ -58,6 +60,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             email=None,
             company="Cafe Hafenblick",
             location="Hamburg, Altona",
+            postal_code="22765",
             service_requested="Sanitär-Notdienst",
             description=(
                 "Undichtes Abwasserrohr in der Gästetoilette des Cafés. "
@@ -77,6 +80,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             email="anna.hoffmann@immobilien-koeln.de",
             company="Hoffmann Immobilien",
             location="Köln, Lindenthal",
+            postal_code="50933",
             service_requested="Immobilienbewertung",
             description=(
                 "Eigentumswohnung mit 85 m², Baujahr 1998, soll in den "
@@ -96,6 +100,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             email="julia.richter@fitlife-koeln.de",
             company="FitLife Köln GmbH",
             location="Köln, Ehrenfeld",
+            postal_code="50825",
             service_requested="Firmenfitness-Angebot",
             description=(
                 "Wir planen ein Firmenfitness-Programm für 45 Mitarbeitende "

@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.core.utils import slugify
 from app.db.models.company import Company
+from app.services.service_area.coordinates import refresh_company_service_area_coordinates
 
 
 class CompanyRepository:
@@ -53,8 +54,17 @@ class CompanyRepository:
                 exclude_company_id=company.id,
             )
 
+        service_area_changed = any(
+            key in fields
+            for key in ("service_area_center", "service_radius_km")
+        )
+
         for key, value in fields.items():
             setattr(company, key, value)
+
+        if service_area_changed:
+            refresh_company_service_area_coordinates(company)
+
         self._session.commit()
         self._session.refresh(company)
         return company

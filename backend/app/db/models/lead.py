@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, func
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -26,6 +26,9 @@ class Lead(Base):
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
     company: Mapped[str | None] = mapped_column(String(255), nullable=True)
     location: Mapped[str] = mapped_column(String(255), nullable=False)
+    postal_code: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    service_area_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    service_area_distance_km: Mapped[float | None] = mapped_column(Float, nullable=True)
     service_requested: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     urgency: Mapped[str] = mapped_column(String(50), nullable=False)

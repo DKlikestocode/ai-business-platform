@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, Integer, String, func
+from sqlalchemy import Boolean, DateTime, Float, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -33,6 +33,8 @@ class Company(Base):
     )
     service_area_center: Mapped[str | None] = mapped_column(String(255), nullable=True)
     service_radius_km: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    service_area_latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    service_area_longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

@@ -43,6 +43,7 @@ def test_is_lead_complete_when_all_required_fields_present() -> None:
         name="Jane",
         phone="555",
         location="Austin",
+        postal_code="10115",
         service_requested="HVAC",
         description="AC not cooling",
         urgency="high",

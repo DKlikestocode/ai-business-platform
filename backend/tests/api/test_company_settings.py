@@ -78,6 +78,29 @@ def test_patch_company_settings_updates_editable_fields(
     assert body["service_radius_km"] == 25
 
 
+def test_patch_company_settings_resolves_service_area_coordinates_from_plz(
+    settings_client: TestClient,
+    company,
+    db_session,
+    auth_headers: dict[str, str],
+) -> None:
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={
+            "service_area_center": "80331 München",
+            "service_radius_km": 30,
+        },
+    )
+
+    assert response.status_code == 200
+    db_session.refresh(company)
+    assert company.service_area_latitude is not None
+    assert company.service_area_longitude is not None
+    assert 47 < company.service_area_latitude < 49
+    assert 10 < company.service_area_longitude < 12
+
+
 def test_patch_company_settings_updates_slug_when_name_changes(
     settings_client: TestClient,
     company,

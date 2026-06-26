@@ -11,6 +11,7 @@ from app.agents.lead_agent.inquiry_source import (
 from app.agents.lead_agent.models import ContactMethod, LeadStatus, QualificationStatus
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
+from app.services.service_area.models import ServiceAreaStatus
 
 
 class LeadResponse(BaseModel):
@@ -24,6 +25,9 @@ class LeadResponse(BaseModel):
     email: str | None
     company: str | None
     location: str
+    postal_code: str | None
+    service_area_status: ServiceAreaStatus | None = None
+    service_area_distance_km: float | None = None
     service_requested: str
     description: str
     urgency: str
@@ -89,6 +93,9 @@ def lead_to_response(
             "email": lead.email,
             "company": lead.company,
             "location": lead.location,
+            "postal_code": lead.postal_code,
+            "service_area_status": lead.service_area_status,
+            "service_area_distance_km": lead.service_area_distance_km,
             "service_requested": lead.service_requested,
             "description": lead.description,
             "urgency": lead.urgency,

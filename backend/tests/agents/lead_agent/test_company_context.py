@@ -16,6 +16,7 @@ def test_build_service_area_prompt_with_center_and_radius() -> None:
     assert prompt is not None
     assert "Berlin" in prompt
     assert "30 km" in prompt
+    assert "Postleitzahl" in prompt
 
 
 def test_build_service_area_prompt_returns_none_when_unconfigured() -> None:

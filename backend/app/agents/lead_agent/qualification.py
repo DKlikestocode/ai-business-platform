@@ -74,7 +74,9 @@ def calculate_lead_score(
     if _has_value(data.description):
         score += 20
     if _has_value(data.location):
-        score += 15
+        score += 10
+    if _has_value(data.postal_code):
+        score += 5
     if _has_value(data.service_requested):
         score += 15
     if _has_value(data.urgency):
@@ -91,6 +93,7 @@ def has_useful_context(data: LeadExtractedData) -> bool:
         _has_value(data.description)
         or _has_value(data.service_requested)
         or _has_value(data.location)
+        or _has_value(data.postal_code)
     )
 
 

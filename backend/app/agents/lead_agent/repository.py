@@ -7,6 +7,7 @@ from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
 from app.agents.lead_agent.qualification import QualificationResult, evaluate_qualification
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
+from app.services.service_area.models import ServiceAreaEvaluation
 
 
 class LeadRepository:
@@ -24,6 +25,7 @@ class LeadRepository:
         summary: str | None,
         qualification: QualificationResult | None = None,
         status: LeadStatus = LeadStatus.NEW,
+        service_area: ServiceAreaEvaluation | None = None,
     ) -> Lead:
         resolved_qualification = qualification or evaluate_qualification(
             data,
@@ -36,6 +38,7 @@ class LeadRepository:
             summary=summary,
             qualification=resolved_qualification,
             status=status,
+            service_area=service_area,
         )
         self._session.add(lead)
         if status != LeadStatus.NEW:
@@ -72,9 +75,16 @@ class LeadRepository:
         summary: str | None,
         qualification: QualificationResult,
         existing: Lead | None = None,
+        service_area: ServiceAreaEvaluation | None = None,
     ) -> tuple[Lead, bool]:
         if existing is not None:
-            self._apply_lead_fields(existing, data=data, summary=summary, qualification=qualification)
+            self._apply_lead_fields(
+                existing,
+                data=data,
+                summary=summary,
+                qualification=qualification,
+                service_area=service_area,
+            )
             self._session.commit()
             self._session.refresh(existing)
             return existing, False
@@ -85,6 +95,7 @@ class LeadRepository:
             data=data,
             summary=summary,
             qualification=qualification,
+            service_area=service_area,
         )
         return lead, True
 
@@ -199,8 +210,9 @@ class LeadRepository:
         summary: str | None,
         qualification: QualificationResult,
         status: LeadStatus,
+        service_area: ServiceAreaEvaluation | None = None,
     ) -> Lead:
-        return Lead(
+        lead = Lead(
             company_id=company_id,
             conversation_id=conversation_id,
             name=data.name or "",
@@ -208,6 +220,13 @@ class LeadRepository:
             email=data.email,
             company=data.company,
             location=data.location or "",
+            postal_code=data.postal_code,
+            service_area_status=(
+                service_area.status.value if service_area is not None else None
+            ),
+            service_area_distance_km=(
+                service_area.distance_km if service_area is not None else None
+            ),
             service_requested=data.service_requested or "",
             description=data.description or "",
             urgency=data.urgency or "",
@@ -219,6 +238,7 @@ class LeadRepository:
             lead_score=qualification.lead_score,
             qualification_status=qualification.qualification_status.value,
         )
+        return lead
 
     @staticmethod
     def _apply_lead_fields(
@@ -227,12 +247,17 @@ class LeadRepository:
         data: LeadExtractedData,
         summary: str | None,
         qualification: QualificationResult,
+        service_area: ServiceAreaEvaluation | None = None,
     ) -> None:
         lead.name = data.name or lead.name
         lead.phone = data.phone or lead.phone
         lead.email = data.email or lead.email
         lead.company = data.company or lead.company
         lead.location = data.location or lead.location
+        lead.postal_code = data.postal_code or lead.postal_code
+        if service_area is not None:
+            lead.service_area_status = service_area.status.value
+            lead.service_area_distance_km = service_area.distance_km
         lead.service_requested = data.service_requested or lead.service_requested
         lead.description = data.description or lead.description
         lead.urgency = data.urgency or lead.urgency

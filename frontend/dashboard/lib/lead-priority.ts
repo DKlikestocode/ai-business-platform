@@ -6,7 +6,8 @@ export interface PriorityScoreFactor {
 export const PRIORITY_SCORE_FACTORS: PriorityScoreFactor[] = [
   { key: "contact", points: 25 },
   { key: "description", points: 20 },
-  { key: "location", points: 15 },
+  { key: "location", points: 10 },
+  { key: "postalCode", points: 5 },
   { key: "service", points: 15 },
   { key: "urgency", points: 10 },
   { key: "name", points: 10 },
