@@ -10,6 +10,7 @@ from app.domain.exceptions import InvalidWidgetHeartbeatError, NotFoundError
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.services.activation.embed import build_widget_embed_snippet
+from app.services.notifications.recipient import is_notification_configured
 from app.services.activation.origin import (
     InvalidPageOriginError,
     build_blocked_origins,
@@ -145,7 +146,7 @@ class ActivationService:
 
     @staticmethod
     def _notification_configured(company: Company) -> bool:
-        return bool(company.notification_email and company.notification_email.strip())
+        return is_notification_configured(company)
 
     def _effective_status(
         self,

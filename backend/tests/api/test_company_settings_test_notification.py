@@ -59,10 +59,32 @@ def test_test_notification_requires_authentication(
     assert response.status_code == 401
 
 
-def test_test_notification_missing_notification_email_returns_422(
+def test_test_notification_uses_company_email_when_notification_email_missing(
     notification_client: TestClient,
     auth_headers: dict[str, str],
+    mock_notification_provider: MockEmailProvider,
+    company,
 ) -> None:
+    response = notification_client.post(
+        "/api/v1/company/settings/test-notification",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 204
+    assert len(mock_notification_provider.messages) == 1
+    assert mock_notification_provider.messages[0].to == company.email
+
+
+def test_test_notification_missing_recipient_returns_422(
+    notification_client: TestClient,
+    auth_headers: dict[str, str],
+    company_repository,
+    company,
+) -> None:
+    stored = company_repository.get_by_id(company.id)
+    assert stored is not None
+    company_repository.update_settings(stored, email="", notification_email=None)
+
     response = notification_client.post(
         "/api/v1/company/settings/test-notification",
         headers=auth_headers,

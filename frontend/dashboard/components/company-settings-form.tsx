@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
@@ -15,23 +15,21 @@ import {
 } from "@/lib/dashboard-cache";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
-import { formatDateTime } from "@/lib/format-datetime";
 import { PRIORITY_SCORE_FACTORS } from "@/lib/lead-priority";
 import {
   canSendTestNotification,
   isNotificationEmailDirty,
   normalizeNotificationEmail,
 } from "@/lib/notification-settings";
+import {
+  isNotificationConfigured,
+  resolveNotificationRecipient,
+} from "@/lib/notification-recipient";
 import type { CompanySettings } from "@/lib/types";
 import { WidgetActivationPanel } from "@/components/widget-activation-panel";
 
-function formatDate(value: string, locale: string): string {
-  return formatDateTime(value, locale, "full") ?? "";
-}
-
 export function CompanySettingsForm() {
   const { refresh } = useAuth();
-  const locale = useLocale();
   const t = useTranslations("settings");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
@@ -88,6 +86,7 @@ export function CompanySettingsForm() {
     setError(null);
     setSuccess(null);
     try {
+      const previousSlug = settings.slug;
       const updated = await updateCompanySettings({
         name: settings.name,
         email: settings.email,
@@ -104,7 +103,9 @@ export function CompanySettingsForm() {
       setSavedNotificationEmail(updated.notification_email);
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
       await refresh();
-      setSuccess(t("saved"));
+      setSuccess(
+        updated.slug !== previousSlug ? t("savedSlugChanged") : t("saved"),
+      );
       setActivationReloadKey((value) => value + 1);
     } catch (err) {
       setError(formatUserFacingError(err, t("saveFailed"), errorMessages));
@@ -121,17 +122,12 @@ export function CompanySettingsForm() {
     setSuccess(null);
   }
 
-  const notificationsActive = Boolean(
-    normalizeNotificationEmail(savedNotificationEmail),
-  );
+  const notificationsActive = isNotificationConfigured(settings);
   const notificationEmailDirty = isNotificationEmailDirty(
     savedNotificationEmail,
     settings?.notification_email,
   );
-  const testNotificationEnabled = canSendTestNotification(
-    savedNotificationEmail,
-    settings?.notification_email,
-  );
+  const testNotificationEnabled = canSendTestNotification(settings, settings);
 
   async function handleTestNotification() {
     if (!testNotificationEnabled) {
@@ -145,7 +141,7 @@ export function CompanySettingsForm() {
       await sendTestNotification();
       setSuccess(
         t("testNotificationSuccess", {
-          email: normalizeNotificationEmail(savedNotificationEmail),
+          email: resolveNotificationRecipient(settings),
         }),
       );
     } catch (err) {
@@ -216,18 +212,6 @@ export function CompanySettingsForm() {
               }
             />
           </label>
-          <div className="field">
-            <span>{t("slug")}</span>
-            <p className="read-only-value">
-              <code>{settings.slug}</code>
-            </p>
-          </div>
-          <div className="field">
-            <span>{t("created")}</span>
-            <p className="read-only-value muted">
-              {formatDate(settings.created_at, locale)}
-            </p>
-          </div>
         </div>
 
         <h3 className="card-title">{t("serviceArea")}</h3>

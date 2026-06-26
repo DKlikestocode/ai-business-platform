@@ -2,6 +2,7 @@ import {
   embedSnippetIncludesInstallToken,
   isActivationSetupLive,
 } from "@/lib/activation-display";
+import { isNotificationConfigured } from "@/lib/notification-recipient";
 import type {
   Company,
   CompanyActivation,
@@ -45,7 +46,7 @@ function hasNotificationEmailConfigured(
   if (activation?.notification_configured) {
     return true;
   }
-  return Boolean(settings?.notification_email?.trim());
+  return isNotificationConfigured(settings);
 }
 
 function hasServerEmbedSnippet(
