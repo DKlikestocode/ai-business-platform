@@ -26,7 +26,7 @@ export interface ActivationChecklistStepConfig {
 export const ACTIVATION_CHECKLIST_STEPS: ActivationChecklistStepConfig[] = [
   { id: "company" },
   { id: "user" },
-  { id: "notification_email", href: "/settings" },
+  { id: "notification_email", href: "/settings#lead-notifications" },
   { id: "copy_widget", href: "/settings" },
   { id: "install_widget", href: "/settings" },
   { id: "first_website_inquiry", href: "/leads" },
