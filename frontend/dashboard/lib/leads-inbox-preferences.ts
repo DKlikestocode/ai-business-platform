@@ -2,27 +2,38 @@ import {
   getDashboardCache,
   setDashboardCache,
 } from "@/lib/dashboard-cache";
-import type { LeadStatus } from "@/lib/types";
-import { LEAD_STATUSES } from "@/lib/types";
+import {
+  LEAD_SORT_OPTIONS,
+  type LeadSort,
+} from "@/lib/lead-qualification";
 
 export const LEADS_INBOX_PREFERENCES_CACHE_KEY = "leads-inbox-preferences";
 
 export type LeadsInboxView = "active" | "contacted";
 
 export type LeadsInboxPreferences = {
-  statusFilter: LeadStatus | "";
+  sort: LeadSort;
   page: number;
   inboxView: LeadsInboxView;
 };
 
 export const DEFAULT_LEADS_INBOX_PREFERENCES: LeadsInboxPreferences = {
-  statusFilter: "",
+  sort: "urgency_desc",
   page: 1,
   inboxView: "active",
 };
 
-function isLeadStatus(value: unknown): value is LeadStatus {
-  return typeof value === "string" && LEAD_STATUSES.includes(value as LeadStatus);
+function isLeadSort(value: unknown): value is LeadSort {
+  return (
+    typeof value === "string" && LEAD_SORT_OPTIONS.includes(value as LeadSort)
+  );
+}
+
+function migrateSort(value: unknown): LeadSort {
+  if (value === "lead_score_desc") {
+    return "urgency_desc";
+  }
+  return isLeadSort(value) ? value : "urgency_desc";
 }
 
 function migrateInboxView(value: unknown): LeadsInboxView {
@@ -43,18 +54,15 @@ export function normalizeLeadsInboxPreferences(
   }
 
   const value = raw as Partial<LeadsInboxPreferences> & Record<string, unknown>;
-  const statusFilter =
-    value.statusFilter === "" || isLeadStatus(value.statusFilter)
-      ? (value.statusFilter ?? "")
-      : "";
   const page =
     typeof value.page === "number" && Number.isInteger(value.page) && value.page > 0
       ? value.page
       : 1;
   const inboxView = migrateInboxView(value.inboxView);
+  const sort = migrateSort(value.sort);
 
   return {
-    statusFilter,
+    sort,
     page,
     inboxView,
   };

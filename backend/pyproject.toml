@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ai-agent-platform-backend"
 version = "0.1.0"
-description = "AI Agent Platform API"
+description = "AI Anfragen-Assistent API"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

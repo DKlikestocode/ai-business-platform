@@ -60,6 +60,10 @@ class LeadStatusUpdateRequest(BaseModel):
     status: Literal[LeadStatus.NEW, LeadStatus.CONTACTED]
 
 
+class BulkDeleteLeadsResponse(BaseModel):
+    deleted: int
+
+
 def resolve_is_first_website_inquiry(
     lead: Lead,
     *,

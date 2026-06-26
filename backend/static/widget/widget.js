@@ -21,7 +21,7 @@
     document.getElementById("ai-agent-widget");
 
   if (!container) {
-    console.error("AI Agent widget: missing container element.");
+    console.error("AI Anfragen-Assistent widget: missing container element.");
     return;
   }
 

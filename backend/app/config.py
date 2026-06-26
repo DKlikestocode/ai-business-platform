@@ -14,7 +14,7 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    app_name: str = "AI Agent Platform"
+    app_name: str = "AI Anfragen-Assistent"
     environment: str = "development"
     app_env: str = "development"
     debug: bool = False

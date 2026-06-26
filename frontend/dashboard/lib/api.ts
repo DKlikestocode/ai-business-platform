@@ -260,6 +260,18 @@ export async function restoreLead(leadId: string): Promise<Lead> {
   });
 }
 
+export async function deleteLead(leadId: string): Promise<void> {
+  await request<void>(`/api/v1/leads/${leadId}`, {
+    method: "DELETE",
+  });
+}
+
+export async function deleteAllContactedLeads(): Promise<{ deleted: number }> {
+  return request<{ deleted: number }>("/api/v1/leads/contacted?contactable=true", {
+    method: "DELETE",
+  });
+}
+
 export async function seedDemoData(): Promise<SeedDemoDataResponse> {
   return request<SeedDemoDataResponse>("/api/v1/dev/seed-demo-data", {
     method: "POST",

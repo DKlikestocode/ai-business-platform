@@ -34,8 +34,8 @@ describe("lead qualification display helpers", () => {
 
   it("defines lead sort options", () => {
     expect(LEAD_SORT_OPTIONS).toEqual([
+      "urgency_desc",
       "created_at_desc",
-      "lead_score_desc",
     ]);
   });
 });

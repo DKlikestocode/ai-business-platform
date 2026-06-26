@@ -119,3 +119,17 @@ class LeadDashboardService:
             source=source,
             first_website_inquiry_lead_id=self._first_website_inquiry_lead_id(company_id),
         )
+
+    def delete_lead(self, lead_id: UUID, *, company_id: UUID) -> bool:
+        return self._repository.delete_by_id(lead_id, company_id=company_id)
+
+    def delete_contacted_leads(
+        self,
+        *,
+        company_id: UUID,
+        contactable: bool | None = None,
+    ) -> int:
+        return self._repository.delete_contacted(
+            company_id=company_id,
+            contactable=contactable,
+        )

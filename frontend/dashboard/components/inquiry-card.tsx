@@ -16,6 +16,7 @@ import {
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
+import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { Lead } from "@/lib/types";
 
 interface InquiryCardProps {
@@ -26,6 +27,7 @@ interface InquiryCardProps {
   contactedMode?: boolean;
   onMarkContacted: () => void;
   onRestore?: () => void;
+  onDelete?: () => void;
 }
 
 export function InquiryCard({
@@ -36,15 +38,18 @@ export function InquiryCard({
   contactedMode = false,
   onMarkContacted,
   onRestore,
+  onDelete,
 }: InquiryCardProps) {
   const t = useTranslations("leads");
   const phone = normalizePhone(lead);
   const email = normalizeEmail(lead);
-  const urgency = lead.urgency?.trim() || null;
+  const urgencyLabel = formatUrgencyLabel(lead.urgency, (level) =>
+    t(`urgencyLevels.${level}`),
+  );
   const preferredCallback = lead.preferred_callback_time?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
   const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
-  const hasCornerMeta = Boolean(urgency || preferredCallback);
+  const hasCornerMeta = Boolean(urgencyLabel || preferredCallback);
 
   return (
     <article className="inquiry-card card">
@@ -63,10 +68,10 @@ export function InquiryCard({
         <div className="inquiry-card-meta">
           {hasCornerMeta ? (
             <div className="inquiry-card-corner-meta">
-              {urgency ? (
+              {urgencyLabel ? (
                 <span className="inquiry-card-corner-item">
                   <span className="inquiry-card-corner-label">{t("urgency")}</span>
-                  <span className="inquiry-card-corner-value">{urgency}</span>
+                  <span className="inquiry-card-corner-value">{urgencyLabel}</span>
                 </span>
               ) : null}
               {preferredCallback ? (
@@ -133,6 +138,17 @@ export function InquiryCard({
             onClick={onRestore}
           >
             {t("restore")}
+          </button>
+        ) : null}
+        {onDelete ? (
+          <button
+            type="button"
+            className="inquiry-card-delete"
+            disabled={statusUpdating}
+            aria-label={t("deleteAria")}
+            onClick={onDelete}
+          >
+            {t("delete")}
           </button>
         ) : null}
       </div>

@@ -20,7 +20,6 @@ describe("leads inbox preferences", () => {
   it("normalizes invalid stored values back to defaults", () => {
     expect(
       normalizeLeadsInboxPreferences({
-        statusFilter: "invalid",
         page: 0,
       }),
     ).toEqual(DEFAULT_LEADS_INBOX_PREFERENCES);
@@ -32,15 +31,23 @@ describe("leads inbox preferences", () => {
         statusFilter: "new",
         qualificationFilter: "qualified",
         contactableFilter: "true",
-        sort: "lead_score_desc",
+        sort: "created_at_desc",
         page: 2,
         inboxView: "active",
       }),
     ).toEqual({
-      statusFilter: "new",
+      sort: "created_at_desc",
       page: 2,
       inboxView: "active",
     });
+  });
+
+  it("migrates lead_score_desc sort to urgency_desc", () => {
+    expect(
+      normalizeLeadsInboxPreferences({
+        sort: "lead_score_desc",
+      }).sort,
+    ).toBe("urgency_desc");
   });
 
   it("migrates archived inbox view to contacted", () => {
@@ -53,7 +60,7 @@ describe("leads inbox preferences", () => {
 
   it("persists valid filter selections across reads", () => {
     const preferences = {
-      statusFilter: "contacted" as const,
+      sort: "urgency_desc" as const,
       page: 2,
       inboxView: "contacted" as const,
     };

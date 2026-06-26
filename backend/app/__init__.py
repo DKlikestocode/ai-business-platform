@@ -1,1 +1,1 @@
-"""AI Agent Platform backend application."""
+"""AI Anfragen-Assistent backend application."""

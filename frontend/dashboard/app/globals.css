@@ -809,7 +809,41 @@ code {
 .inquiry-card {
   display: grid;
   gap: 12px;
-  position: relative;
+}
+
+.inquiry-card-delete {
+  margin-left: auto;
+  padding: 4px 10px;
+  min-height: 32px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.inquiry-card-delete:hover:not(:disabled) {
+  color: #b91c1c;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.inquiry-card-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inquiry-detail-footer {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  width: 100%;
+}
+
+.inquiry-table-action-delete {
+  font-size: 0.85rem;
 }
 
 .inquiry-card-header {
@@ -912,6 +946,8 @@ code {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
+  width: 100%;
 }
 
 .inquiry-card .inquiry-callback-actions {

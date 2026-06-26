@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
+from app.agents.lead_agent.urgency import urgency_sort_rank_expression
 from app.agents.lead_agent.qualification import QualificationResult, evaluate_qualification
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
@@ -138,6 +139,32 @@ class LeadRepository:
         self._session.commit()
         return deleted
 
+    def delete_by_id(self, lead_id: UUID, *, company_id: UUID) -> bool:
+        lead = self.get_by_id(lead_id, company_id=company_id)
+        if lead is None:
+            return False
+
+        self._session.delete(lead)
+        self._session.commit()
+        return True
+
+    def delete_contacted(
+        self,
+        *,
+        company_id: UUID,
+        contactable: bool | None = None,
+    ) -> int:
+        query = self._session.query(Lead).filter(
+            Lead.company_id == company_id,
+            Lead.status != LeadStatus.NEW.value,
+        )
+        if contactable is not None:
+            query = query.filter(Lead.contactable == contactable)
+
+        deleted = query.delete(synchronize_session=False)
+        self._session.commit()
+        return deleted
+
     def list_leads(
         self,
         *,
@@ -164,15 +191,15 @@ class LeadRepository:
         if contactable is not None:
             query = query.filter(Lead.contactable == contactable)
 
-        order_by = (
-            Lead.lead_score.desc()
-            if sort == "lead_score_desc"
-            else Lead.created_at.desc()
-        )
+        if sort == "urgency_desc":
+            urgency_rank = urgency_sort_rank_expression(Lead.urgency)
+            order_by = (urgency_rank.desc(), Lead.created_at.desc())
+        else:
+            order_by = (Lead.created_at.desc(),)
 
         total = query.count()
         items = (
-            query.order_by(order_by)
+            query.order_by(*order_by)
             .offset((page - 1) * page_size)
             .limit(page_size)
             .all()

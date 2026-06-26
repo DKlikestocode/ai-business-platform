@@ -253,46 +253,41 @@ def test_list_leads_filters_by_contactable(
     assert all(item["contactable"] is True for item in body["items"])
 
 
-def test_list_leads_sorted_by_lead_score_descending(
+def test_list_leads_sorted_by_urgency_descending(
     dashboard_client: TestClient,
     lead_repository: LeadRepository,
     company: Company,
     auth_headers: dict[str, str],
 ) -> None:
-    low_score_data = LeadExtractedData(name="Low Score", phone="01701234700")
-    high_score_data = LeadExtractedData(
-        name="High Score",
-        phone="01701234800",
-        location="Austin, TX",
-        postal_code="10115",
-        service_requested="Electrical",
-        description="Panel upgrade",
-        urgency="high",
-        preferred_callback_time="Afternoon",
-    )
-    lead_repository.create(
-        company_id=company.id,
-        conversation_id="sort-low-score",
-        data=low_score_data,
-        summary="Low score",
-        qualification=evaluate_qualification(low_score_data, channel=ConversationChannel.WEB),
-    )
-    lead_repository.create(
-        company_id=company.id,
-        conversation_id="sort-high-score",
-        data=high_score_data,
-        summary="High score",
-        qualification=evaluate_qualification(high_score_data, channel=ConversationChannel.WEB),
-    )
+    for urgency, conversation_id in (
+        ("niedrig", "sort-urgency-low"),
+        ("hoch", "sort-urgency-high"),
+        ("mittel", "sort-urgency-medium"),
+    ):
+        data = LeadExtractedData(
+            name=f"Lead {urgency}",
+            phone="01701234700",
+            urgency=urgency,
+        )
+        lead_repository.create(
+            company_id=company.id,
+            conversation_id=conversation_id,
+            data=data,
+            summary=f"Urgency {urgency}",
+            qualification=evaluate_qualification(data, channel=ConversationChannel.WEB),
+        )
 
     response = dashboard_client.get(
-        "/api/v1/leads?sort=lead_score_desc&page_size=50",
+        "/api/v1/leads?sort=urgency_desc&page_size=50",
         headers=auth_headers,
     )
 
     assert response.status_code == 200
-    scores = [item["lead_score"] for item in response.json()["items"]]
-    assert scores == sorted(scores, reverse=True)
+    items = response.json()["items"]
+    test_items = [
+        item for item in items if item["name"].startswith("Lead ")
+    ]
+    assert [item["urgency"] for item in test_items] == ["hoch", "mittel", "niedrig"]
 
 
 def test_get_lead_includes_qualification_fields(
@@ -375,3 +370,80 @@ def test_list_contacted_leads_and_restore(
 
     active = dashboard_client.get("/api/v1/leads", headers=auth_headers)
     assert any(item["id"] == str(lead.id) for item in active.json()["items"])
+
+
+def test_delete_lead(
+    dashboard_client: TestClient,
+    sample_leads,
+    auth_headers: dict[str, str],
+) -> None:
+    lead = sample_leads[0]
+    response = dashboard_client.delete(
+        f"/api/v1/leads/{lead.id}",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 204
+
+    get_response = dashboard_client.get(
+        f"/api/v1/leads/{lead.id}",
+        headers=auth_headers,
+    )
+    assert get_response.status_code == 404
+
+
+def test_delete_lead_not_found(
+    dashboard_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    response = dashboard_client.delete(
+        "/api/v1/leads/00000000-0000-0000-0000-000000000099",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 404
+
+
+def test_delete_all_contacted_leads(
+    dashboard_client: TestClient,
+    lead_repository: LeadRepository,
+    company: Company,
+    auth_headers: dict[str, str],
+) -> None:
+    active_data = LeadExtractedData(name="Active Lead", phone="01701234701")
+    contacted_data = LeadExtractedData(name="Contacted Lead", phone="01701234702")
+    active = lead_repository.create(
+        company_id=company.id,
+        conversation_id="bulk-delete-active",
+        data=active_data,
+        summary="Active",
+        qualification=evaluate_qualification(active_data, channel=ConversationChannel.WEB),
+    )
+    contacted = lead_repository.create(
+        company_id=company.id,
+        conversation_id="bulk-delete-contacted",
+        data=contacted_data,
+        summary="Contacted",
+        qualification=evaluate_qualification(contacted_data, channel=ConversationChannel.WEB),
+    )
+    lead_repository.update_status(
+        contacted.id,
+        LeadStatus.CONTACTED,
+        company_id=company.id,
+    )
+
+    response = dashboard_client.delete(
+        "/api/v1/leads/contacted",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["deleted"] >= 1
+
+    assert lead_repository.get_by_id(active.id, company_id=company.id) is not None
+
+    get_contacted = dashboard_client.get(
+        f"/api/v1/leads/{contacted.id}",
+        headers=auth_headers,
+    )
+    assert get_contacted.status_code == 404

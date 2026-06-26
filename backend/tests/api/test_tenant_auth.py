@@ -113,6 +113,33 @@ def test_get_lead_rejects_cross_tenant_access(
     assert response.status_code == 404
 
 
+def test_delete_lead_rejects_cross_tenant_access(
+    dev_client: TestClient,
+    lead_repository: LeadRepository,
+    other_company: Company,
+    auth_headers: dict[str, str],
+) -> None:
+    lead = lead_repository.create(
+        company_id=other_company.id,
+        conversation_id="cross-tenant-delete",
+        data=LeadExtractedData(
+            name="Hidden Lead",
+            phone="01701234700",
+            location="Hamburg",
+            postal_code="10115",
+            service_requested="Electrical",
+            description="Test",
+            urgency="medium",
+            preferred_callback_time="Evening",
+        ),
+        summary=None,
+    )
+
+    response = dev_client.delete(f"/api/v1/leads/{lead.id}", headers=auth_headers)
+
+    assert response.status_code == 404
+
+
 def test_get_company_rejects_other_tenant(
     dev_client: TestClient,
     other_company: Company,

@@ -12,11 +12,16 @@ import { AlertBanner } from "@/components/ui/alert-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { fetchLeads, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/api";
+import { fetchLeads, deleteAllContactedLeads, deleteLead, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/api";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { isDevelopment } from "@/lib/env";
-import { formatLeadScore, isKnownContactMethod } from "@/lib/lead-qualification";
+import {
+  LEAD_SORT_OPTIONS,
+  formatLeadScore,
+  isKnownContactMethod,
+  type LeadSort,
+} from "@/lib/lead-qualification";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   DEFAULT_LEADS_INBOX_PREFERENCES,
@@ -24,11 +29,8 @@ import {
   setLeadsInboxPreferences,
   type LeadsInboxView,
 } from "@/lib/leads-inbox-preferences";
-import type { Lead, LeadStatus } from "@/lib/types";
-import { LEAD_STATUSES } from "@/lib/types";
+import type { Lead } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
-
-const INBOX_SORT = "lead_score_desc" as const;
 
 function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "medium") ?? "";
@@ -44,9 +46,7 @@ export function LeadsDashboard() {
   const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const initialPreferences = useMemo(() => getLeadsInboxPreferences(), []);
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [statusFilter, setStatusFilter] = useState<LeadStatus | "">(
-    initialPreferences.statusFilter,
-  );
+  const [sort, setSort] = useState<LeadSort>(initialPreferences.sort);
   const [page, setPage] = useState(initialPreferences.page);
   const [inboxView, setInboxView] = useState<LeadsInboxView>(
     initialPreferences.inboxView,
@@ -59,6 +59,8 @@ export function LeadsDashboard() {
   const [contactedSuccessId, setContactedSuccessId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [restoreSuccessId, setRestoreSuccessId] = useState<string | null>(null);
+  const [deleteAllSuccess, setDeleteAllSuccess] = useState(false);
+  const [deletingAll, setDeletingAll] = useState(false);
   const isContactedView = inboxView === "contacted";
 
   const loadLeads = useCallback(async () => {
@@ -68,9 +70,8 @@ export function LeadsDashboard() {
       const data = await fetchLeads({
         page,
         page_size: 20,
-        status: statusFilter,
         contactable: true,
-        sort: INBOX_SORT,
+        sort,
         archived: isContactedView,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
@@ -81,7 +82,7 @@ export function LeadsDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [page, statusFilter, isContactedView, t, errorMessages]);
+  }, [page, sort, isContactedView, t, errorMessages]);
 
   useEffect(() => {
     if (authLoading) {
@@ -92,11 +93,11 @@ export function LeadsDashboard() {
 
   useEffect(() => {
     setLeadsInboxPreferences({
-      statusFilter,
+      sort,
       page,
       inboxView,
     });
-  }, [statusFilter, page, inboxView]);
+  }, [sort, page, inboxView]);
 
   function applyLeadUpdate(updated: Lead) {
     if (!isContactedView && updated.status !== "new") {
@@ -143,6 +144,53 @@ export function LeadsDashboard() {
     }
   }
 
+  function handleDeleteLead(leadId: string) {
+    if (!window.confirm(t("deleteConfirm"))) {
+      return;
+    }
+
+    void (async () => {
+      setUpdatingId(leadId);
+      setError(null);
+      try {
+        await deleteLead(leadId);
+        setLeads((current) => current.filter((lead) => lead.id !== leadId));
+        setTotal((current) => Math.max(0, current - 1));
+        setContactedSuccessId((current) => (current === leadId ? null : current));
+        setRestoreSuccessId((current) => (current === leadId ? null : current));
+      } catch (err) {
+        setError(formatUserFacingError(err, t("deleteFailed"), errorMessages));
+      } finally {
+        setUpdatingId(null);
+      }
+    })();
+  }
+
+  function handleDeleteAllContacted() {
+    if (!window.confirm(t("deleteAllContactedConfirm"))) {
+      return;
+    }
+
+    void (async () => {
+      setDeletingAll(true);
+      setError(null);
+      setDeleteAllSuccess(false);
+      try {
+        await deleteAllContactedLeads();
+        setLeads([]);
+        setTotal(0);
+        setTotalPages(1);
+        setPage(1);
+        setRestoreSuccessId(null);
+        setDeleteAllSuccess(true);
+      } catch (err) {
+        setError(formatUserFacingError(err, t("deleteAllContactedFailed"), errorMessages));
+      } finally {
+        setDeletingAll(false);
+      }
+    })();
+  }
+
   function handleInboxViewChange(nextView: LeadsInboxView) {
     if (nextView === inboxView) {
       return;
@@ -151,6 +199,7 @@ export function LeadsDashboard() {
     setPage(1);
     setRestoreSuccessId(null);
     setContactedSuccessId(null);
+    setDeleteAllSuccess(false);
   }
 
   async function handleSeedDemoData() {
@@ -158,7 +207,6 @@ export function LeadsDashboard() {
     setError(null);
     try {
       setInboxView("active");
-      setStatusFilter("");
       setPage(1);
       setLeadsInboxPreferences(DEFAULT_LEADS_INBOX_PREFERENCES);
 
@@ -167,9 +215,8 @@ export function LeadsDashboard() {
       const data = await fetchLeads({
         page: 1,
         page_size: 20,
-        status: "",
         contactable: true,
-        sort: INBOX_SORT,
+        sort,
         archived: false,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
@@ -191,18 +238,11 @@ export function LeadsDashboard() {
     return tContactMethod(value);
   }
 
-  const hasActiveFilters = Boolean(statusFilter);
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
-    !isContactedView &&
-    !isDataLoading &&
-    leads.length === 0 &&
-    !hasActiveFilters;
+    !isContactedView && !isDataLoading && leads.length === 0;
   const showContactedEmpty =
-    isContactedView &&
-    !isDataLoading &&
-    leads.length === 0 &&
-    !hasActiveFilters;
+    isContactedView && !isDataLoading && leads.length === 0;
   const useCardView = !isDataLoading && total > 0 && total <= 10;
 
   return (
@@ -234,26 +274,35 @@ export function LeadsDashboard() {
       <div className="toolbar">
         <div className="toolbar-filters">
           <label className="field-inline">
-            <span>{t("status")}</span>
+            <span>{t("sort")}</span>
             <select
               className="select"
-              value={statusFilter}
+              value={sort}
               disabled={isDataLoading}
               onChange={(event) => {
                 setPage(1);
-                setStatusFilter(event.target.value as LeadStatus | "");
+                setSort(event.target.value as LeadSort);
               }}
             >
-              <option value="">{t("allStatuses")}</option>
-              {LEAD_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {t(`statuses.${status}`)}
+              {LEAD_SORT_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {t(`sortOptions.${option}`)}
                 </option>
               ))}
             </select>
           </label>
         </div>
         <div className="toolbar-actions">
+          {isContactedView && total > 0 ? (
+            <button
+              type="button"
+              className="button secondary"
+              disabled={isDataLoading || deletingAll || updatingId !== null}
+              onClick={handleDeleteAllContacted}
+            >
+              {deletingAll ? t("deletingAllContacted") : t("deleteAllContacted")}
+            </button>
+          ) : null}
           {isDevelopment && !isContactedView ? (
             <button
               type="button"
@@ -272,6 +321,10 @@ export function LeadsDashboard() {
 
       {restoreSuccessId ? (
         <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
+      ) : null}
+
+      {deleteAllSuccess ? (
+        <AlertBanner variant="success">{t("deleteAllContactedSuccess")}</AlertBanner>
       ) : null}
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
@@ -303,10 +356,6 @@ export function LeadsDashboard() {
         />
       ) : null}
 
-      {!isDataLoading && leads.length === 0 && hasActiveFilters ? (
-        <p className="muted">{t("filterEmptyDescription")}</p>
-      ) : null}
-
       {useCardView ? (
         <div className="inquiry-list">
           {leads.map((lead) => (
@@ -319,6 +368,7 @@ export function LeadsDashboard() {
               contactedMode={isContactedView}
               onMarkContacted={() => void handleMarkContacted(lead.id)}
               onRestore={() => void handleRestoreLead(lead.id)}
+              onDelete={() => handleDeleteLead(lead.id)}
             />
           ))}
         </div>
@@ -368,6 +418,7 @@ export function LeadsDashboard() {
                       contactedMode={isContactedView}
                       onMarkContacted={() => void handleMarkContacted(lead.id)}
                       onRestore={() => void handleRestoreLead(lead.id)}
+                      onDelete={() => handleDeleteLead(lead.id)}
                     />
                   </td>
                 </tr>

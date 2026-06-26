@@ -12,7 +12,7 @@ import { InquiryNotificationIndicator } from "@/components/inquiry-notification-
 import { StatusBadge } from "@/components/status-badge";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { fetchLead, restoreLead, updateLeadStatus } from "@/lib/api";
+import { fetchLead, deleteLead, restoreLead, updateLeadStatus } from "@/lib/api";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   displayName,
@@ -22,8 +22,9 @@ import {
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
+import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { Lead } from "@/lib/types";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "full") ?? "";
@@ -45,6 +46,8 @@ export function LeadDetailView() {
   const leadId = Array.isArray(params.id) ? params.id[0] : params.id;
   const locale = useLocale();
   const t = useTranslations("leadDetail");
+  const tLeads = useTranslations("leads");
+  const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,12 +116,31 @@ export function LeadDetailView() {
     }
   }
 
+  async function handleDelete() {
+    if (!lead) return;
+    if (!window.confirm(t("deleteConfirm"))) {
+      return;
+    }
+
+    setUpdating(true);
+    setError(null);
+    try {
+      await deleteLead(lead.id);
+      router.push("/leads");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("deleteFailed"));
+      setUpdating(false);
+    }
+  }
+
   const phone = lead ? normalizePhone(lead) : null;
   const email = lead ? normalizeEmail(lead) : null;
   const preview = lead
     ? handoffPreviewText(lead, t("noDescription"))
     : t("noDescription");
-  const urgency = lead?.urgency?.trim() || null;
+  const urgencyLabel = lead
+    ? formatUrgencyLabel(lead.urgency, (level) => tLeads(`urgencyLevels.${level}`))
+    : null;
   const preferredCallback = lead?.preferred_callback_time?.trim() || null;
   const showContactActions = lead ? hasContactData(lead) : false;
   const showFirstWebsiteMarker = lead
@@ -155,12 +177,12 @@ export function LeadDetailView() {
           <div className="detail-header">
             <h2>{t("handoffTitle")}</h2>
             <div className="detail-header-badges">
-              {urgency || preferredCallback ? (
+              {urgencyLabel || preferredCallback ? (
                 <div className="inquiry-card-corner-meta inquiry-detail-corner-meta">
-                  {urgency ? (
+                  {urgencyLabel ? (
                     <span className="inquiry-card-corner-item">
                       <span className="inquiry-card-corner-label">{t("howUrgent")}</span>
-                      <span className="inquiry-card-corner-value">{urgency}</span>
+                      <span className="inquiry-card-corner-value">{urgencyLabel}</span>
                     </span>
                   ) : null}
                   {preferredCallback ? (
@@ -282,6 +304,18 @@ export function LeadDetailView() {
                 onMarkContacted={() => void handleMarkContacted()}
               />
             ) : null}
+
+            <div className="inquiry-card-actions inquiry-detail-footer">
+              <button
+                type="button"
+                className="inquiry-card-delete"
+                disabled={updating}
+                aria-label={t("deleteAria")}
+                onClick={() => void handleDelete()}
+              >
+                {t("delete")}
+              </button>
+            </div>
           </div>
 
           <details className="card inquiry-handoff-more">

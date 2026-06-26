@@ -12,7 +12,7 @@
 
 # Product Overview
 
-Agent Platform is an AI employee for small service businesses: it captures website inquiries through a conversational interface, extracts who needs what and how urgently, notifies the business when an inquiry is worth acting on, and presents a clear inbox so the owner can call or email back. The product is German-first, built for Handwerk and local Dienstleister who think in phone calls and Posteingang — not CRM pipelines or SaaS administration.
+AI Anfragen-Assistent is an AI employee for small service businesses: it captures website inquiries through a conversational interface, extracts who needs what and how urgently, notifies the business when an inquiry is worth acting on, and presents a clear inbox so the owner can call or email back. The product is German-first, built for Handwerk and local Dienstleister who think in phone calls and Posteingang — not CRM pipelines or SaaS administration.
 
 ---
 
@@ -209,7 +209,7 @@ Ranked by impact on shipping and operating the core loop.
 2. **Onboarding honesty gap** — Progress stored in browser localStorage; widget install is manual checkbox, not verified on live site.
 3. **Test-Chat vs website ambiguity** — Same agent, different channels; product can imply success without a real website inquiry.
 4. **Production provisioning** — Self-serve signup disabled in production; every tenant requires CLI or internal process.
-5. **Brand inconsistency** — Marketing uses "Agent Platform"; dashboard shell still "AI Agent Platform".
+5. **Brand** — Product name is **AI Anfragen-Assistent** (DE) / **AI Inquiry Assistant** (EN) across marketing and dashboard.
 6. **Widget visitor experience** — Hardcoded German in embed script; no locale alignment with business or visitor.
 7. **Dual conversation storage** — Lead agent persists to PostgreSQL; generic agent runtime still in-memory. Confusing mental model for extending agents.
 8. **Notification fallback** — SMTP provider is a stub; production depends entirely on Resend configuration discipline.

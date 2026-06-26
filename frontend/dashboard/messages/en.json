@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "Inquiry assistant for small businesses",
+    "title": "AI Inquiry Assistant for small businesses",
     "description": "Capture website inquiries automatically, prioritize important customers, and notify your team by email."
   },
   "common": {
@@ -30,12 +30,12 @@
     "marketing": "Marketing navigation"
   },
   "brand": {
-    "name": "Agent Platform",
+    "name": "AI Inquiry Assistant",
     "mark": "AI",
     "tagline": "AI assistance for website inquiries — for trades and service businesses."
   },
   "appShell": {
-    "title": "AI Agent Platform",
+    "title": "AI Inquiry Assistant",
     "subtitle": "Your website inquiries in one place"
   },
   "landing": {
@@ -143,7 +143,7 @@
       "title": "Legal notice (Impressum)",
       "intro": "Information according to § 5 TMG (Germany).",
       "operatorHeading": "Operator",
-      "operatorBody": "Agent Platform — platform for AI-assisted capture and qualification of website inquiries for businesses.",
+      "operatorBody": "AI Inquiry Assistant — AI-assisted capture and qualification of website inquiries for businesses.",
       "contactHeading": "Contact",
       "contactBody": "For contractual, technical, and legal inquiries, please contact the platform operator using the contact details provided during registration or in your contract.",
       "disputeHeading": "EU dispute resolution",
@@ -153,7 +153,7 @@
       "title": "Privacy policy",
       "intro": "Protecting your personal data matters to us. Below we explain how we process personal data when you use this platform.",
       "controllerHeading": "Data controller",
-      "controllerBody": "The data controller under the GDPR is the operator of the Agent Platform. Please refer to the legal notice (Impressum) for contact details.",
+      "controllerBody": "The data controller under the GDPR is the operator of AI Inquiry Assistant. Please refer to the legal notice (Impressum) for contact details.",
       "dataCollectedHeading": "Data we process",
       "dataCollectedBody": "We process data you provide when registering and using the dashboard (e.g. name, email, company details). Chat messages and lead details captured via the website widget (e.g. name, phone, location, service request) are stored to handle customer inquiries.",
       "purposeHeading": "Purpose of processing",
@@ -405,6 +405,15 @@
     "restore": "Back to inbox",
     "restoreSuccess": "Inquiry restored to the inbox.",
     "restoreFailed": "Could not restore the inquiry.",
+    "delete": "Delete",
+    "deleteAria": "Delete inquiry",
+    "deleteConfirm": "Permanently delete this inquiry?",
+    "deleteFailed": "Could not delete the inquiry.",
+    "deleteAllContacted": "Delete all",
+    "deleteAllContactedConfirm": "Permanently delete all contacted inquiries?",
+    "deleteAllContactedSuccess": "All contacted inquiries were deleted.",
+    "deleteAllContactedFailed": "Could not delete contacted inquiries.",
+    "deletingAllContacted": "Deleting...",
     "emptyContactedTitle": "No contacted inquiries yet",
     "emptyContactedDescription": "When you mark an inquiry as contacted, it leaves the inbox and appears here.",
     "status": "Status",
@@ -461,7 +470,12 @@
     "updateStatusAria": "Update inquiry status",
     "sortOptions": {
       "created_at_desc": "Newest first",
-      "lead_score_desc": "Highest priority"
+      "urgency_desc": "Urgency"
+    },
+    "urgencyLevels": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
     },
     "statuses": {
       "new": "New",
@@ -479,6 +493,10 @@
     "restoreSuccess": "Inquiry restored to the inbox.",
     "restoreFailed": "Could not restore the inquiry.",
     "contactedNotice": "This inquiry is marked as contacted and hidden from the inbox.",
+    "delete": "Delete",
+    "deleteAria": "Delete inquiry",
+    "deleteConfirm": "Permanently delete this inquiry?",
+    "deleteFailed": "Could not delete the inquiry.",
     "notFound": "Inquiry not found.",
     "backToLeads": "← Back to inquiries",
     "handoffTitle": "Inquiry",

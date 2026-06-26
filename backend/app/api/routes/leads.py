@@ -11,7 +11,12 @@ from app.api.dependencies import (
     get_current_user,
     get_lead_dashboard_service,
 )
-from app.api.schemas.leads import LeadResponse, LeadStatusUpdateRequest, PaginatedLeadResponse
+from app.api.schemas.leads import (
+    BulkDeleteLeadsResponse,
+    LeadResponse,
+    LeadStatusUpdateRequest,
+    PaginatedLeadResponse,
+)
 from app.db.models.user import User
 
 router = APIRouter(prefix="/leads", tags=["leads"])
@@ -24,7 +29,7 @@ def list_leads(
     status: LeadStatus | None = Query(None),
     qualification_status: QualificationStatus | None = Query(None),
     contactable: bool | None = Query(None),
-    sort: Literal["created_at_desc", "lead_score_desc"] = Query("created_at_desc"),
+    sort: Literal["created_at_desc", "urgency_desc"] = Query("urgency_desc"),
     archived: bool = Query(
         False,
         description="When true, return contacted inquiries (status != new).",
@@ -43,6 +48,24 @@ def list_leads(
         company_id=company_id,
         archived=archived,
     )
+
+
+@router.delete(
+    "/contacted",
+    response_model=BulkDeleteLeadsResponse,
+    summary="Delete all contacted inquiries",
+)
+def delete_contacted_leads(
+    contactable: bool | None = Query(None),
+    company_id: UUID = Depends(get_current_tenant_id),
+    service: LeadDashboardService = Depends(get_lead_dashboard_service),
+    _: User = Depends(get_current_user),
+) -> BulkDeleteLeadsResponse:
+    deleted = service.delete_contacted_leads(
+        company_id=company_id,
+        contactable=contactable,
+    )
+    return BulkDeleteLeadsResponse(deleted=deleted)
 
 
 @router.get("/{lead_id}", response_model=LeadResponse, summary="Get lead by ID")
@@ -100,3 +123,22 @@ def restore_lead(
             detail=f"Lead '{lead_id}' not found.",
         )
     return lead
+
+
+@router.delete(
+    "/{lead_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a lead",
+)
+def delete_lead(
+    lead_id: UUID,
+    company_id: UUID = Depends(get_current_tenant_id),
+    service: LeadDashboardService = Depends(get_lead_dashboard_service),
+    _: User = Depends(get_current_user),
+) -> None:
+    deleted = service.delete_lead(lead_id, company_id=company_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Lead '{lead_id}' not found.",
+        )
