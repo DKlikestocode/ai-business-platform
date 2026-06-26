@@ -45,7 +45,6 @@ export function LeadDetailView() {
   const leadId = Array.isArray(params.id) ? params.id[0] : params.id;
   const locale = useLocale();
   const t = useTranslations("leadDetail");
-  const tCommon = useTranslations("common");
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -120,6 +119,7 @@ export function LeadDetailView() {
     ? handoffPreviewText(lead, t("noDescription"))
     : t("noDescription");
   const urgency = lead?.urgency?.trim() || null;
+  const preferredCallback = lead?.preferred_callback_time?.trim() || null;
   const showContactActions = lead ? hasContactData(lead) : false;
   const showFirstWebsiteMarker = lead
     ? shouldShowFirstWebsiteInquiryMarker(lead)
@@ -155,6 +155,26 @@ export function LeadDetailView() {
           <div className="detail-header">
             <h2>{t("handoffTitle")}</h2>
             <div className="detail-header-badges">
+              {urgency || preferredCallback ? (
+                <div className="inquiry-card-corner-meta inquiry-detail-corner-meta">
+                  {urgency ? (
+                    <span className="inquiry-card-corner-item">
+                      <span className="inquiry-card-corner-label">{t("howUrgent")}</span>
+                      <span className="inquiry-card-corner-value">{urgency}</span>
+                    </span>
+                  ) : null}
+                  {preferredCallback ? (
+                    <span className="inquiry-card-corner-item">
+                      <span className="inquiry-card-corner-label">
+                        {t("preferredCallback")}
+                      </span>
+                      <span className="inquiry-card-corner-value">
+                        {preferredCallback}
+                      </span>
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
               <StatusBadge status={lead.status} />
             </div>
           </div>
@@ -194,16 +214,6 @@ export function LeadDetailView() {
               <div className="inquiry-handoff-row">
                 <dt>{t("whatAbout")}</dt>
                 <dd className="inquiry-handoff-value">{preview}</dd>
-              </div>
-              <div className="inquiry-handoff-row">
-                <dt>{t("howUrgent")}</dt>
-                <dd className="inquiry-handoff-value">
-                  {urgency ? (
-                    <span className="inquiry-handoff-urgency">{urgency}</span>
-                  ) : (
-                    tCommon("dash")
-                  )}
-                </dd>
               </div>
               <div className="inquiry-handoff-row">
                 <dt>{t("howToContact")}</dt>
@@ -280,10 +290,6 @@ export function LeadDetailView() {
             </summary>
             <dl className="detail-list inquiry-handoff-more-list">
               <DetailRow label={t("location")} value={lead.location} />
-              <DetailRow
-                label={t("preferredCallback")}
-                value={lead.preferred_callback_time}
-              />
               <DetailRow label={t("company")} value={lead.company} />
               <DetailRow
                 label={t("created")}

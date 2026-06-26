@@ -44,6 +44,7 @@ export function InquiryCard({
   const preferredCallback = lead.preferred_callback_time?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
   const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
+  const hasCornerMeta = Boolean(urgency || preferredCallback);
 
   return (
     <article className="inquiry-card card">
@@ -60,6 +61,24 @@ export function InquiryCard({
           ) : null}
         </div>
         <div className="inquiry-card-meta">
+          {hasCornerMeta ? (
+            <div className="inquiry-card-corner-meta">
+              {urgency ? (
+                <span className="inquiry-card-corner-item">
+                  <span className="inquiry-card-corner-label">{t("urgency")}</span>
+                  <span className="inquiry-card-corner-value">{urgency}</span>
+                </span>
+              ) : null}
+              {preferredCallback ? (
+                <span className="inquiry-card-corner-item">
+                  <span className="inquiry-card-corner-label">
+                    {t("preferredCallback")}
+                  </span>
+                  <span className="inquiry-card-corner-value">{preferredCallback}</span>
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           <InquirySourceBadge source={lead.source} />
           <StatusBadge status={lead.status} />
           <time className="inquiry-card-date muted" dateTime={lead.created_at}>
@@ -73,20 +92,6 @@ export function InquiryCard({
       />
 
       <InquiryContactedIndicator contactedAt={lead.contacted_at} />
-
-      {urgency ? (
-        <p className="inquiry-card-urgency">
-          <span className="inquiry-card-urgency-label">{t("urgency")}</span>
-          <span className="inquiry-card-urgency-value">{urgency}</span>
-        </p>
-      ) : null}
-
-      {preferredCallback ? (
-        <p className="inquiry-card-urgency">
-          <span className="inquiry-card-urgency-label">{t("preferredCallback")}</span>
-          <span className="inquiry-card-urgency-value">{preferredCallback}</span>
-        </p>
-      ) : null}
 
       <p className="inquiry-card-preview">{preview}</p>
 

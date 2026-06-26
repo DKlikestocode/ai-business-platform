@@ -809,6 +809,7 @@ code {
 .inquiry-card {
   display: grid;
   gap: 12px;
+  position: relative;
 }
 
 .inquiry-card-header {
@@ -847,24 +848,37 @@ code {
   white-space: nowrap;
 }
 
-.inquiry-card-urgency {
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  align-self: start;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #fef3c7;
-  color: #b45309;
-  font-size: 0.8rem;
-  font-weight: 600;
+.inquiry-card-corner-meta {
+  display: grid;
+  gap: 2px;
+  justify-items: end;
+  max-width: 11rem;
+  text-align: right;
 }
 
-.inquiry-card-urgency-label {
+.inquiry-card-corner-item {
+  display: block;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.inquiry-card-corner-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 0.7rem;
+}
+
+.inquiry-card-corner-value {
+  display: block;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.inquiry-detail-corner-meta {
+  margin-bottom: 4px;
 }
 
 .inquiry-card-preview {
