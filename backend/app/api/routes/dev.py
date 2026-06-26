@@ -30,7 +30,11 @@ def seed_demo_data(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
     if current_user is not None:
-        return seed_demo_leads(repository, company_id=current_user.company_id)
+        return seed_demo_leads(
+            repository,
+            company_id=current_user.company_id,
+            company_repository=company_repository,
+        )
 
     return seed_demo_leads(repository, company_repository=company_repository)
 

@@ -8,10 +8,18 @@ def test_seed_demo_leads_creates_all_scenarios(
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
 ) -> None:
-    result = seed_demo_leads(lead_repository, company_repository=company_repository)
-    company = get_or_create_demo_company(company_repository)
+    company = company_repository.create(
+        name="Demo Seed Scenarios Co",
+        email="demo-scenarios@example.com",
+    )
+    result = seed_demo_leads(
+        lead_repository,
+        company_id=company.id,
+        company_repository=company_repository,
+    )
 
-    assert result.created + result.skipped == len(DEMO_LEAD_SEEDS)
+    assert result.created == len(DEMO_LEAD_SEEDS)
+    assert result.skipped == 0
 
     for seed in DEMO_LEAD_SEEDS:
         lead = lead_repository.get_by_conversation(
@@ -21,6 +29,28 @@ def test_seed_demo_leads_creates_all_scenarios(
         assert lead is not None
         assert lead.name == seed.data.name
         assert lead.status == seed.status.value
+        assert lead.service_area_status in {"in_range", "out_of_range"}
+
+
+def test_seed_demo_leads_configures_service_area_when_missing(
+    lead_repository: LeadRepository,
+    company_repository: CompanyRepository,
+) -> None:
+    company = company_repository.create(
+        name="Service Area Seed Co",
+        email="service-area-seed@example.com",
+    )
+
+    seed_demo_leads(
+        lead_repository,
+        company_id=company.id,
+        company_repository=company_repository,
+    )
+
+    company_repository._session.refresh(company)
+    assert company.service_area_center == "22303 Hamburg"
+    assert company.service_radius_km == 40
+    assert company.service_area_latitude is not None
 
 
 def test_seed_demo_leads_skips_existing_records(
@@ -28,8 +58,16 @@ def test_seed_demo_leads_skips_existing_records(
     company_repository: CompanyRepository,
 ) -> None:
     company = get_or_create_demo_company(company_repository)
-    first = seed_demo_leads(lead_repository, company_id=company.id)
-    second = seed_demo_leads(lead_repository, company_id=company.id)
+    first = seed_demo_leads(
+        lead_repository,
+        company_id=company.id,
+        company_repository=company_repository,
+    )
+    second = seed_demo_leads(
+        lead_repository,
+        company_id=company.id,
+        company_repository=company_repository,
+    )
 
     assert first.created + first.skipped == len(DEMO_LEAD_SEEDS)
     assert second.created == 0
@@ -46,8 +84,16 @@ def test_seed_demo_leads_allows_same_conversation_ids_per_company(
         email="second-demo@example.com",
     )
 
-    seed_demo_leads(lead_repository, company_id=company_a.id)
-    result_b = seed_demo_leads(lead_repository, company_id=company_b.id)
+    seed_demo_leads(
+        lead_repository,
+        company_id=company_a.id,
+        company_repository=company_repository,
+    )
+    result_b = seed_demo_leads(
+        lead_repository,
+        company_id=company_b.id,
+        company_repository=company_repository,
+    )
 
     assert result_b.created == len(DEMO_LEAD_SEEDS)
     assert result_b.skipped == 0

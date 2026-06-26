@@ -56,6 +56,7 @@ class LeadRepository:
         summary: str | None,
         status: LeadStatus,
         qualification: QualificationResult | None = None,
+        service_area: ServiceAreaEvaluation | None = None,
     ) -> Lead:
         return self.create(
             company_id=company_id,
@@ -64,6 +65,7 @@ class LeadRepository:
             summary=summary,
             qualification=qualification,
             status=status,
+            service_area=service_area,
         )
 
     def save_or_update(

@@ -16,11 +16,11 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
         conversation_id="demo-dachdecker-001",
         data=LeadExtractedData(
             name="Thomas Weber",
-            phone="+49 89 1234 5678",
+            phone="+49 40 3012345",
             email="thomas.weber@email.de",
             company="Weber Dach GmbH",
-            location="München, Bayern",
-            postal_code="80331",
+            location="Hamburg, Barmbek",
+            postal_code="22303",
             service_requested="Dachreparatur nach Sturm",
             description=(
                 "Mehrere Dachziegel sind abgedriftet und es tropft leicht "
@@ -29,18 +29,18 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             urgency="hoch",
             preferred_callback_time="Heute Nachmittag ab 15:00 Uhr",
         ),
-        summary="Dachdecker-Anfrage wegen Sturmschaden in München.",
+        summary="Dachdecker-Anfrage wegen Sturmschaden in Hamburg-Barmbek.",
         status=LeadStatus.NEW,
     ),
     DemoLeadSeed(
         conversation_id="demo-elektriker-001",
         data=LeadExtractedData(
             name="Sandra Klein",
-            phone="+49 30 9876 5432",
-            email="s.klein@klein-berlin.de",
+            phone="+49 40 9876543",
+            email="s.klein@example.de",
             company=None,
-            location="Berlin, Prenzlauer Berg",
-            postal_code="10405",
+            location="Hamburg, Bergedorf",
+            postal_code="21029",
             service_requested="Elektroinstallation Smart Home",
             description=(
                 "Neue Wohnung, ich möchte Rolladen, Licht und Heizung "
@@ -49,16 +49,16 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             urgency="mittel",
             preferred_callback_time="Donnerstag Vormittag",
         ),
-        summary="Elektriker-Anfrage für Smart-Home-Nachrüstung in Berlin.",
+        summary="Elektriker-Anfrage für Smart-Home-Nachrüstung in Hamburg.",
         status=LeadStatus.CONTACTED,
     ),
     DemoLeadSeed(
         conversation_id="demo-sanitaer-001",
         data=LeadExtractedData(
             name="Michael Bauer",
-            phone="+49 40 5555 7788",
+            phone="+49 40 55557788",
             email=None,
-            company="Cafe Hafenblick",
+            company="Café Hafenblick",
             location="Hamburg, Altona",
             postal_code="22765",
             service_requested="Sanitär-Notdienst",
@@ -69,18 +69,18 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             urgency="hoch",
             preferred_callback_time="Morgen früh ab 8:00 Uhr",
         ),
-        summary="Sanitär-Notfall für Gastronomiebetrieb in Hamburg.",
+        summary="Sanitär-Notfall für Gastronomiebetrieb in Hamburg-Altona.",
         status=LeadStatus.QUALIFIED,
     ),
     DemoLeadSeed(
         conversation_id="demo-immobilienmakler-001",
         data=LeadExtractedData(
             name="Anna Hoffmann",
-            phone="+49 221 4444 9900",
-            email="anna.hoffmann@immobilien-koeln.de",
+            phone="+49 421 4444990",
+            email="anna.hoffmann@immobilien-bremen.de",
             company="Hoffmann Immobilien",
-            location="Köln, Lindenthal",
-            postal_code="50933",
+            location="Bremen, Neustadt",
+            postal_code="28195",
             service_requested="Immobilienbewertung",
             description=(
                 "Eigentumswohnung mit 85 m², Baujahr 1998, soll in den "
@@ -89,18 +89,18 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             urgency="mittel",
             preferred_callback_time="Freitag zwischen 10:00 und 12:00 Uhr",
         ),
-        summary="Makler-Anfrage für Verkaufsbewertung einer Eigentumswohnung in Köln.",
+        summary="Makler-Anfrage für Verkaufsbewertung in Bremen.",
         status=LeadStatus.WON,
     ),
     DemoLeadSeed(
         conversation_id="demo-fitnessstudio-001",
         data=LeadExtractedData(
             name="Julia Richter",
-            phone="+49 89 7777 2211",
-            email="julia.richter@fitlife-koeln.de",
-            company="FitLife Köln GmbH",
-            location="Köln, Ehrenfeld",
-            postal_code="50825",
+            phone="+49 471 7777221",
+            email="julia.richter@fitlife-bremerhaven.de",
+            company="FitLife Bremerhaven GmbH",
+            location="Bremerhaven",
+            postal_code="27568",
             service_requested="Firmenfitness-Angebot",
             description=(
                 "Wir planen ein Firmenfitness-Programm für 45 Mitarbeitende "
@@ -110,7 +110,7 @@ DEMO_LEAD_SEEDS: tuple[DemoLeadSeed, ...] = (
             urgency="niedrig",
             preferred_callback_time="Nächste Woche Dienstag Nachmittag",
         ),
-        summary="Fitnessstudio-Anfrage für Firmenfitness mit 45 Mitarbeitenden.",
+        summary="Fitnessstudio-Anfrage für Firmenfitness in Bremerhaven.",
         status=LeadStatus.LOST,
     ),
 )

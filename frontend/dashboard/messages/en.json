@@ -321,9 +321,9 @@
     "slugHint": "Derived from your company name and used in the chat embed code. It updates when the name changes.",
     "created": "Created",
     "serviceArea": "Service area",
-    "serviceAreaHint": "The chat checks inquiries by postal code. Enter your location with PLZ (e.g. 80331 Munich).",
+    "serviceAreaHint": "The chat checks inquiries by postal code. Enter your location with PLZ (e.g. 22303 Hamburg).",
     "serviceAreaCenter": "Location / region",
-    "serviceAreaCenterPlaceholder": "e.g. 80331 Munich",
+    "serviceAreaCenterPlaceholder": "e.g. 22303 Hamburg",
     "serviceRadiusKm": "Radius (km)",
     "serviceRadiusKmPlaceholder": "e.g. 30",
     "leadNotifications": "Email notifications",
@@ -523,17 +523,17 @@
     "newConversation": "New conversation",
     "loadingAccount": "Loading account...",
     "welcomeTitle": "This is what your customers experience",
-    "welcomeBody": "Write an inquiry as if you were a website visitor. The assistant asks targeted questions and captures everything for your team.",
+    "welcomeBody": "Write an inquiry as if you were a website visitor. The assistant asks for a postal code and checks your service area from Settings.",
     "examplePromptsLabel": "Try an example:",
     "examplePrompts": {
-      "plumber": "Plumbing emergency Berlin",
+      "plumber": "Plumbing emergency Hamburg",
       "roofer": "Roof damage after storm",
-      "electrician": "Smart home electrical"
+      "electrician": "Electrical Bremen"
     },
     "exampleMessages": {
-      "plumber": "Hello, I urgently need a plumber in Berlin. My kitchen sink is leaking badly. You can reach me at +49 170 1234567.",
-      "roofer": "Hi, after the storm several roof tiles are missing and water is dripping into the attic. Location Munich. Please inspect soon.",
-      "electrician": "I'm looking for an electrician in Berlin for smart home retrofit in a 3-bedroom flat. Thursday morning would work for a callback."
+      "plumber": "Hello, I urgently need a plumber in Hamburg (PLZ 20354). My kitchen sink is leaking badly. You can reach me at +49 170 1234567.",
+      "roofer": "Hi, after the storm several roof tiles are missing and water is dripping into the attic. Location Hamburg-Barmbek, PLZ 22303. Please inspect soon.",
+      "electrician": "I'm looking for an electrician in Bremen (PLZ 28195) for smart home retrofit in a 3-bedroom flat. Thursday morning would work for a callback."
     },
     "customer": "Customer",
     "assistant": "Assistant",
