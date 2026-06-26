@@ -120,6 +120,24 @@ class LeadRepository:
             query = query.filter(Lead.company_id == company_id)
         return query.order_by(Lead.created_at.desc()).first()
 
+    def delete_by_conversation_ids(
+        self,
+        conversation_ids: frozenset[str] | set[str],
+        *,
+        company_id: UUID,
+    ) -> int:
+        if not conversation_ids:
+            return 0
+
+        deleted = (
+            self._session.query(Lead)
+            .filter(Lead.company_id == company_id)
+            .filter(Lead.conversation_id.in_(conversation_ids))
+            .delete(synchronize_session=False)
+        )
+        self._session.commit()
+        return deleted
+
     def list_leads(
         self,
         *,

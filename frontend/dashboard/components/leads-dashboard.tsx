@@ -72,7 +72,6 @@ export function LeadsDashboard() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [contactedSuccessId, setContactedSuccessId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
-  const [seedFeedback, setSeedFeedback] = useState<"already_exist" | null>(null);
   const [restoreSuccessId, setRestoreSuccessId] = useState<string | null>(null);
   const isArchiveView = inboxView === "archived";
 
@@ -128,16 +127,6 @@ export function LeadsDashboard() {
       inboxView,
     });
   }, [statusFilter, qualificationFilter, contactableFilter, sort, page, inboxView]);
-
-  useEffect(() => {
-    if (!seedFeedback) {
-      return;
-    }
-    const timeoutId = window.setTimeout(() => {
-      setSeedFeedback(null);
-    }, 6000);
-    return () => window.clearTimeout(timeoutId);
-  }, [seedFeedback]);
 
   function applyLeadUpdate(updated: Lead) {
     if (!isArchiveView && updated.archived_at) {
@@ -211,16 +200,8 @@ export function LeadsDashboard() {
   async function handleSeedDemoData() {
     setSeeding(true);
     setError(null);
-    setSeedFeedback(null);
     try {
-      const result = await seedDemoData();
-      const created = Number(result.created) || 0;
-      const skipped = Number(result.skipped) || 0;
-
-      if (created === 0 && skipped > 0) {
-        setSeedFeedback("already_exist");
-      }
-
+      await seedDemoData();
       setPage(1);
       await loadLeads();
     } catch (err) {
@@ -379,10 +360,6 @@ export function LeadsDashboard() {
 
       {restoreSuccessId ? (
         <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
-      ) : null}
-
-      {seedFeedback === "already_exist" ? (
-        <AlertBanner variant="info">{t("seedAlreadyExist")}</AlertBanner>
       ) : null}
 
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}

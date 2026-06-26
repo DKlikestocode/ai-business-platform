@@ -53,7 +53,7 @@ def test_seed_demo_leads_configures_service_area_when_missing(
     assert company.service_area_latitude is not None
 
 
-def test_seed_demo_leads_skips_existing_records(
+def test_seed_demo_leads_replaces_existing_records(
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
 ) -> None:
@@ -69,9 +69,11 @@ def test_seed_demo_leads_skips_existing_records(
         company_repository=company_repository,
     )
 
-    assert first.created + first.skipped == len(DEMO_LEAD_SEEDS)
-    assert second.created == 0
-    assert second.skipped == len(DEMO_LEAD_SEEDS)
+    assert first.created == len(DEMO_LEAD_SEEDS)
+    assert first.skipped == 0
+    assert second.created == len(DEMO_LEAD_SEEDS)
+    assert second.skipped == 0
+    assert second.deleted == len(DEMO_LEAD_SEEDS)
 
 
 def test_seed_demo_leads_allows_same_conversation_ids_per_company(

@@ -27,8 +27,9 @@ def test_seed_demo_data_is_idempotent(dev_client: TestClient) -> None:
 
     assert first.status_code == 200
     assert second.status_code == 200
-    assert second.json()["created"] == 0
-    assert second.json()["skipped"] == 5
+    assert second.json()["created"] == 5
+    assert second.json()["skipped"] == 0
+    assert second.json()["deleted"] == 5
 
 
 def test_seed_demo_data_disabled_outside_development(

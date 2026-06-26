@@ -181,6 +181,7 @@ export interface PaginatedLeads {
 export interface SeedDemoDataResponse {
   created: number;
   skipped: number;
+  deleted?: number;
   lead_ids: string[];
   message: string;
 }
