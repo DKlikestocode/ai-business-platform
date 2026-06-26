@@ -6,9 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth-provider";
 import { InquiryCard } from "@/components/inquiry-card";
 import { InquiryTableActions } from "@/components/inquiry-table-actions";
-import { ContactableBadge } from "@/components/contactable-badge";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
-import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -18,12 +16,7 @@ import { fetchLeads, restoreLead, seedDemoData, updateLeadStatus } from "@/lib/a
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { isDevelopment } from "@/lib/env";
-import {
-  LEAD_SORT_OPTIONS,
-  QUALIFICATION_STATUSES,
-  formatLeadScore,
-  isKnownContactMethod,
-} from "@/lib/lead-qualification";
+import { formatLeadScore, isKnownContactMethod } from "@/lib/lead-qualification";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   DEFAULT_LEADS_INBOX_PREFERENCES,
@@ -31,10 +24,11 @@ import {
   setLeadsInboxPreferences,
   type LeadsInboxView,
 } from "@/lib/leads-inbox-preferences";
-import type { LeadSort } from "@/lib/lead-qualification";
-import type { Lead, LeadStatus, QualificationStatus } from "@/lib/types";
+import type { Lead, LeadStatus } from "@/lib/types";
 import { LEAD_STATUSES } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
+
+const INBOX_SORT = "lead_score_desc" as const;
 
 function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "medium") ?? "";
@@ -45,7 +39,6 @@ export function LeadsDashboard() {
   const { loading: authLoading, error: authError } = useAuth();
   const t = useTranslations("leads");
   const tCommon = useTranslations("common");
-  const tQualification = useTranslations("qualification");
   const tContactMethod = useTranslations("contactMethod");
   const tErrors = useTranslations("errors");
   const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
@@ -54,13 +47,6 @@ export function LeadsDashboard() {
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "">(
     initialPreferences.statusFilter,
   );
-  const [qualificationFilter, setQualificationFilter] = useState<
-    QualificationStatus | ""
-  >(initialPreferences.qualificationFilter);
-  const [contactableFilter, setContactableFilter] = useState<
-    "true" | "false" | ""
-  >(initialPreferences.contactableFilter);
-  const [sort, setSort] = useState<LeadSort>(initialPreferences.sort);
   const [page, setPage] = useState(initialPreferences.page);
   const [inboxView, setInboxView] = useState<LeadsInboxView>(
     initialPreferences.inboxView,
@@ -83,12 +69,8 @@ export function LeadsDashboard() {
         page,
         page_size: 20,
         status: statusFilter,
-        qualification_status: qualificationFilter,
-        contactable:
-          contactableFilter === ""
-            ? ""
-            : contactableFilter === "true",
-        sort,
+        contactable: true,
+        sort: INBOX_SORT,
         archived: isContactedView,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
@@ -99,16 +81,7 @@ export function LeadsDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [
-    page,
-    statusFilter,
-    qualificationFilter,
-    contactableFilter,
-    sort,
-    isContactedView,
-    t,
-    errorMessages,
-  ]);
+  }, [page, statusFilter, isContactedView, t, errorMessages]);
 
   useEffect(() => {
     if (authLoading) {
@@ -120,13 +93,10 @@ export function LeadsDashboard() {
   useEffect(() => {
     setLeadsInboxPreferences({
       statusFilter,
-      qualificationFilter,
-      contactableFilter,
-      sort,
       page,
       inboxView,
     });
-  }, [statusFilter, qualificationFilter, contactableFilter, sort, page, inboxView]);
+  }, [statusFilter, page, inboxView]);
 
   function applyLeadUpdate(updated: Lead) {
     if (!isContactedView && updated.status !== "new") {
@@ -189,13 +159,8 @@ export function LeadsDashboard() {
     try {
       setInboxView("active");
       setStatusFilter("");
-      setQualificationFilter("");
-      setContactableFilter("");
       setPage(1);
-      setLeadsInboxPreferences({
-        ...DEFAULT_LEADS_INBOX_PREFERENCES,
-        sort,
-      });
+      setLeadsInboxPreferences(DEFAULT_LEADS_INBOX_PREFERENCES);
 
       await seedDemoData();
 
@@ -203,9 +168,8 @@ export function LeadsDashboard() {
         page: 1,
         page_size: 20,
         status: "",
-        qualification_status: "",
-        contactable: "",
-        sort,
+        contactable: true,
+        sort: INBOX_SORT,
         archived: false,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
@@ -227,9 +191,7 @@ export function LeadsDashboard() {
     return tContactMethod(value);
   }
 
-  const hasActiveFilters = Boolean(
-    statusFilter || qualificationFilter || contactableFilter,
-  );
+  const hasActiveFilters = Boolean(statusFilter);
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
     !isContactedView &&
@@ -286,63 +248,6 @@ export function LeadsDashboard() {
               {LEAD_STATUSES.map((status) => (
                 <option key={status} value={status}>
                   {t(`statuses.${status}`)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="field-inline">
-            <span>{t("qualification")}</span>
-            <select
-              className="select"
-              value={qualificationFilter}
-              disabled={isDataLoading}
-              onChange={(event) => {
-                setPage(1);
-                setQualificationFilter(
-                  event.target.value as QualificationStatus | "",
-                );
-              }}
-            >
-              <option value="">{t("allQualifications")}</option>
-              {QUALIFICATION_STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {tQualification(status)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="field-inline">
-            <span>{t("contactable")}</span>
-            <select
-              className="select"
-              value={contactableFilter}
-              disabled={isDataLoading}
-              onChange={(event) => {
-                setPage(1);
-                setContactableFilter(
-                  event.target.value as "true" | "false" | "",
-                );
-              }}
-            >
-              <option value="">{t("all")}</option>
-              <option value="true">{tCommon("yes")}</option>
-              <option value="false">{tCommon("no")}</option>
-            </select>
-          </label>
-          <label className="field-inline">
-            <span>{t("sort")}</span>
-            <select
-              className="select"
-              value={sort}
-              disabled={isDataLoading}
-              onChange={(event) => {
-                setPage(1);
-                setSort(event.target.value as LeadSort);
-              }}
-            >
-              {LEAD_SORT_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {t(`sortOptions.${option}`)}
                 </option>
               ))}
             </select>
@@ -427,8 +332,6 @@ export function LeadsDashboard() {
                 <th>{t("tableName")}</th>
                 <th>{t("tableSource")}</th>
                 <th>{t("tableScore")}</th>
-                <th>{t("tableQualification")}</th>
-                <th>{t("tableContactable")}</th>
                 <th>{t("tableMethod")}</th>
                 <th>{t("tablePhone")}</th>
                 <th>{t("tableService")}</th>
@@ -450,12 +353,6 @@ export function LeadsDashboard() {
                   </td>
                   <td>
                     <span className="score-pill">{formatLeadScore(lead.lead_score)}</span>
-                  </td>
-                  <td>
-                    <QualificationBadge status={lead.qualification_status} />
-                  </td>
-                  <td>
-                    <ContactableBadge contactable={lead.contactable} />
                   </td>
                   <td>{formatMethod(lead.contact_method)}</td>
                   <td>{lead.phone}</td>
