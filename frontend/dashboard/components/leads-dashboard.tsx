@@ -10,7 +10,6 @@ import { ContactableBadge } from "@/components/contactable-badge";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { QualificationBadge } from "@/components/qualification-badge";
 import { StatusBadge } from "@/components/status-badge";
-import { InboxStatusSelect } from "@/components/inbox-status-select";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -74,7 +73,7 @@ export function LeadsDashboard() {
   const [contactedSuccessId, setContactedSuccessId] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [restoreSuccessId, setRestoreSuccessId] = useState<string | null>(null);
-  const isArchiveView = inboxView === "archived";
+  const isContactedView = inboxView === "contacted";
 
   const loadLeads = useCallback(async () => {
     setLoading(true);
@@ -90,7 +89,7 @@ export function LeadsDashboard() {
             ? ""
             : contactableFilter === "true",
         sort,
-        archived: isArchiveView,
+        archived: isContactedView,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
       setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
@@ -106,7 +105,7 @@ export function LeadsDashboard() {
     qualificationFilter,
     contactableFilter,
     sort,
-    isArchiveView,
+    isContactedView,
     t,
     errorMessages,
   ]);
@@ -130,7 +129,7 @@ export function LeadsDashboard() {
   }, [statusFilter, qualificationFilter, contactableFilter, sort, page, inboxView]);
 
   function applyLeadUpdate(updated: Lead) {
-    if (!isArchiveView && updated.archived_at) {
+    if (!isContactedView && updated.status !== "new") {
       setLeads((current) => current.filter((lead) => lead.id !== updated.id));
       setTotal((current) => Math.max(0, current - 1));
       return;
@@ -141,20 +140,6 @@ export function LeadsDashboard() {
     );
   }
 
-  async function handleStatusChange(leadId: string, status: LeadStatus) {
-    setUpdatingId(leadId);
-    setError(null);
-    setContactedSuccessId((current) => (current === leadId ? null : current));
-    try {
-      const updated = await updateLeadStatus(leadId, status);
-      applyLeadUpdate(updated);
-    } catch (err) {
-      setError(formatUserFacingError(err, t("updateFailed"), errorMessages));
-    } finally {
-      setUpdatingId(null);
-    }
-  }
-
   async function handleMarkContacted(leadId: string) {
     setUpdatingId(leadId);
     setError(null);
@@ -162,7 +147,7 @@ export function LeadsDashboard() {
     try {
       const updated = await updateLeadStatus(leadId, "contacted");
       applyLeadUpdate(updated);
-      if (!updated.archived_at) {
+      if (updated.status === "contacted") {
         setContactedSuccessId(leadId);
       }
     } catch (err) {
@@ -247,12 +232,12 @@ export function LeadsDashboard() {
   );
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
-    !isArchiveView &&
+    !isContactedView &&
     !isDataLoading &&
     leads.length === 0 &&
     !hasActiveFilters;
-  const showArchiveEmpty =
-    isArchiveView &&
+  const showContactedEmpty =
+    isContactedView &&
     !isDataLoading &&
     leads.length === 0 &&
     !hasActiveFilters;
@@ -261,15 +246,15 @@ export function LeadsDashboard() {
   return (
     <div className="stack">
       <PageHeader
-        title={isArchiveView ? t("archiveTitle") : t("title")}
-        description={isArchiveView ? t("archiveDescription") : t("description")}
+        title={isContactedView ? t("contactedTitle") : t("title")}
+        description={isContactedView ? t("contactedDescription") : t("description")}
       />
       <div className="inbox-view-toggle" role="tablist" aria-label={t("viewToggleLabel")}>
         <button
           type="button"
           role="tab"
-          className={`button secondary${isArchiveView ? "" : " is-active"}`}
-          aria-selected={!isArchiveView}
+          className={`button secondary${isContactedView ? "" : " is-active"}`}
+          aria-selected={!isContactedView}
           onClick={() => handleInboxViewChange("active")}
         >
           {t("viewActive")}
@@ -277,11 +262,11 @@ export function LeadsDashboard() {
         <button
           type="button"
           role="tab"
-          className={`button secondary${isArchiveView ? " is-active" : ""}`}
-          aria-selected={isArchiveView}
-          onClick={() => handleInboxViewChange("archived")}
+          className={`button secondary${isContactedView ? " is-active" : ""}`}
+          aria-selected={isContactedView}
+          onClick={() => handleInboxViewChange("contacted")}
         >
-          {t("viewArchive")}
+          {t("viewContacted")}
         </button>
       </div>
       <div className="toolbar">
@@ -364,7 +349,7 @@ export function LeadsDashboard() {
           </label>
         </div>
         <div className="toolbar-actions">
-          {isDevelopment && !isArchiveView ? (
+          {isDevelopment && !isContactedView ? (
             <button
               type="button"
               className="button dev"
@@ -406,10 +391,10 @@ export function LeadsDashboard() {
         />
       ) : null}
 
-      {showArchiveEmpty ? (
+      {showContactedEmpty ? (
         <EmptyState
-          title={t("emptyArchiveTitle")}
-          description={t("emptyArchiveDescription")}
+          title={t("emptyContactedTitle")}
+          description={t("emptyContactedDescription")}
         />
       ) : null}
 
@@ -426,8 +411,7 @@ export function LeadsDashboard() {
               createdLabel={formatDate(lead.created_at, locale)}
               statusUpdating={updatingId === lead.id}
               showContactedSuccess={contactedSuccessId === lead.id}
-              archiveMode={isArchiveView}
-              onStatusChange={(status) => void handleStatusChange(lead.id, status)}
+              contactedMode={isContactedView}
               onMarkContacted={() => void handleMarkContacted(lead.id)}
               onRestore={() => void handleRestoreLead(lead.id)}
             />
@@ -451,7 +435,6 @@ export function LeadsDashboard() {
                 <th>{t("tableStatus")}</th>
                 <th>{t("tableCreated")}</th>
                 <th>{t("tableActions")}</th>
-                {!isArchiveView ? <th>{t("tableUpdate")}</th> : null}
               </tr>
             </thead>
             <tbody>
@@ -485,20 +468,11 @@ export function LeadsDashboard() {
                     <InquiryTableActions
                       lead={lead}
                       updating={updatingId === lead.id}
-                      archiveMode={isArchiveView}
+                      contactedMode={isContactedView}
                       onMarkContacted={() => void handleMarkContacted(lead.id)}
                       onRestore={() => void handleRestoreLead(lead.id)}
                     />
                   </td>
-                  {!isArchiveView ? (
-                    <td>
-                      <InboxStatusSelect
-                        value={lead.status}
-                        disabled={updatingId === lead.id}
-                        onChange={(status) => void handleStatusChange(lead.id, status)}
-                      />
-                    </td>
-                  ) : null}
                 </tr>
               ))}
             </tbody>

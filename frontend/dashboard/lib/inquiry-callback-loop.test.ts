@@ -24,20 +24,16 @@ describe("getPrimaryContactAction", () => {
 });
 
 describe("shouldShowMarkContactedAction", () => {
-  it("shows mark contacted for new inquiries with phone", () => {
-    expect(shouldShowMarkContactedAction(true, "new")).toBe(true);
-  });
-
-  it("shows mark contacted for new inquiries with email only", () => {
-    expect(shouldShowMarkContactedAction(true, "new")).toBe(true);
+  it("shows mark contacted for new inquiries", () => {
+    expect(shouldShowMarkContactedAction("new")).toBe(true);
   });
 
   it("hides mark contacted when status is already contacted", () => {
-    expect(shouldShowMarkContactedAction(true, "contacted")).toBe(false);
+    expect(shouldShowMarkContactedAction("contacted")).toBe(false);
   });
 
-  it("hides mark contacted when contact data is missing", () => {
-    expect(shouldShowMarkContactedAction(false, "new")).toBe(false);
+  it("hides mark contacted for legacy statuses", () => {
+    expect(shouldShowMarkContactedAction("won")).toBe(false);
   });
 });
 

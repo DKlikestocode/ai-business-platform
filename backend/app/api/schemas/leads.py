@@ -2,6 +2,8 @@ import math
 from datetime import datetime
 from uuid import UUID
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 from app.agents.lead_agent.inquiry_source import (
@@ -55,7 +57,7 @@ class PaginatedLeadResponse(BaseModel):
 
 
 class LeadStatusUpdateRequest(BaseModel):
-    status: LeadStatus
+    status: Literal[LeadStatus.NEW, LeadStatus.CONTACTED]
 
 
 def resolve_is_first_website_inquiry(

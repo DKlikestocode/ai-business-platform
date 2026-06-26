@@ -9,7 +9,7 @@ import type { Lead } from "@/lib/types";
 interface InquiryTableActionsProps {
   lead: Lead;
   updating: boolean;
-  archiveMode?: boolean;
+  contactedMode?: boolean;
   onMarkContacted: () => void;
   onRestore?: () => void;
 }
@@ -17,7 +17,7 @@ interface InquiryTableActionsProps {
 export function InquiryTableActions({
   lead,
   updating,
-  archiveMode = false,
+  contactedMode = false,
   onMarkContacted,
   onRestore,
 }: InquiryTableActionsProps) {
@@ -25,9 +25,8 @@ export function InquiryTableActions({
   const tDetail = useTranslations("leadDetail");
   const phone = normalizePhone(lead);
   const email = normalizeEmail(lead);
-  const hasContact = Boolean(phone || email);
   const showMarkContacted =
-    !archiveMode && shouldShowMarkContactedAction(hasContact, lead.status);
+    !contactedMode && shouldShowMarkContactedAction(lead.status);
 
   return (
     <div className="inquiry-table-actions">
@@ -51,7 +50,7 @@ export function InquiryTableActions({
           {tDetail("markContacted")}
         </button>
       ) : null}
-      {archiveMode && onRestore ? (
+      {contactedMode && onRestore ? (
         <button
           type="button"
           className="button inquiry-table-action"

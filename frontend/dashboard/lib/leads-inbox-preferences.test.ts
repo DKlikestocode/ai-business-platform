@@ -29,6 +29,14 @@ describe("leads inbox preferences", () => {
     ).toEqual(DEFAULT_LEADS_INBOX_PREFERENCES);
   });
 
+  it("migrates archived inbox view to contacted", () => {
+    expect(
+      normalizeLeadsInboxPreferences({
+        inboxView: "archived",
+      }).inboxView,
+    ).toBe("contacted");
+  });
+
   it("persists valid filter selections across reads", () => {
     const preferences = {
       statusFilter: "contacted" as const,
@@ -36,7 +44,7 @@ describe("leads inbox preferences", () => {
       contactableFilter: "true" as const,
       sort: "lead_score_desc" as const,
       page: 2,
-      inboxView: "archived" as const,
+      inboxView: "contacted" as const,
     };
 
     setLeadsInboxPreferences(preferences);

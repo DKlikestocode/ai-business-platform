@@ -58,7 +58,7 @@ class LeadRepository:
         qualification: QualificationResult | None = None,
         service_area: ServiceAreaEvaluation | None = None,
     ) -> Lead:
-        lead = self.create(
+        return self.create(
             company_id=company_id,
             conversation_id=conversation_id,
             data=data,
@@ -67,13 +67,6 @@ class LeadRepository:
             status=status,
             service_area=service_area,
         )
-        # Example inquiries should appear in the inbox regardless of status badge.
-        lead.archived_at = None
-        if status == LeadStatus.CONTACTED and lead.contacted_at is None:
-            lead.contacted_at = datetime.now(UTC)
-        self._session.commit()
-        self._session.refresh(lead)
-        return lead
 
     def save_or_update(
         self,
@@ -161,9 +154,9 @@ class LeadRepository:
         if company_id is not None:
             query = query.filter(Lead.company_id == company_id)
         if archived:
-            query = query.filter(Lead.archived_at.isnot(None))
+            query = query.filter(Lead.status != LeadStatus.NEW.value)
         else:
-            query = query.filter(Lead.archived_at.is_(None))
+            query = query.filter(Lead.status == LeadStatus.NEW.value)
         if status is not None:
             query = query.filter(Lead.status == status.value)
         if qualification_status is not None:
@@ -202,6 +195,7 @@ class LeadRepository:
             lead.contacted_at = datetime.now(UTC)
         if status == LeadStatus.NEW:
             lead.archived_at = None
+            lead.contacted_at = None
         elif lead.archived_at is None:
             lead.archived_at = datetime.now(UTC)
         self._session.commit()
@@ -213,7 +207,9 @@ class LeadRepository:
         if lead is None:
             return None
 
+        lead.status = LeadStatus.NEW.value
         lead.archived_at = None
+        lead.contacted_at = None
         self._session.commit()
         self._session.refresh(lead)
         return lead

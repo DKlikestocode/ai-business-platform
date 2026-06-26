@@ -8,25 +8,22 @@ import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
-import { InboxStatusSelect } from "@/components/inbox-status-select";
 import { Link } from "@/i18n/navigation";
 import {
   displayName,
   handoffPreviewText,
-  hasContactData,
   normalizeEmail,
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
-import type { Lead, LeadStatus } from "@/lib/types";
+import type { Lead } from "@/lib/types";
 
 interface InquiryCardProps {
   lead: Lead;
   createdLabel: string;
   statusUpdating: boolean;
   showContactedSuccess: boolean;
-  archiveMode?: boolean;
-  onStatusChange: (status: LeadStatus) => void;
+  contactedMode?: boolean;
   onMarkContacted: () => void;
   onRestore?: () => void;
 }
@@ -36,8 +33,7 @@ export function InquiryCard({
   createdLabel,
   statusUpdating,
   showContactedSuccess,
-  archiveMode = false,
-  onStatusChange,
+  contactedMode = false,
   onMarkContacted,
   onRestore,
 }: InquiryCardProps) {
@@ -48,7 +44,6 @@ export function InquiryCard({
   const preferredCallback = lead.preferred_callback_time?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
   const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
-  const showContactActions = hasContactData(lead);
 
   return (
     <article className="inquiry-card card">
@@ -110,12 +105,11 @@ export function InquiryCard({
         </div>
       ) : null}
 
-      {!archiveMode ? (
+      {!contactedMode ? (
         <InquiryCallbackActions
           phone={phone}
           email={email}
           status={lead.status}
-          hasContact={showContactActions}
           updating={statusUpdating}
           showContactedSuccess={showContactedSuccess}
           onMarkContacted={onMarkContacted}
@@ -126,7 +120,7 @@ export function InquiryCard({
         <Link href={`/leads/${lead.id}`} className="button secondary">
           {t("openDetails")}
         </Link>
-        {archiveMode && onRestore ? (
+        {contactedMode && onRestore ? (
           <button
             type="button"
             className="button"
@@ -137,17 +131,6 @@ export function InquiryCard({
           </button>
         ) : null}
       </div>
-
-      {!archiveMode ? (
-        <div className="inquiry-card-status">
-          <span className="inquiry-card-status-label">{t("status")}</span>
-          <InboxStatusSelect
-            value={lead.status}
-            disabled={statusUpdating}
-            onChange={onStatusChange}
-          />
-        </div>
-      ) : null}
     </article>
   );
 }

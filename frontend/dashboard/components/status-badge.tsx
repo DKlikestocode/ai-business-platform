@@ -4,13 +4,14 @@ import { useTranslations } from "next-intl";
 
 import type { LeadStatus } from "@/lib/types";
 
-const STATUS_CLASS: Record<LeadStatus, string> = {
+const STATUS_CLASS: Record<"new" | "contacted", string> = {
   new: "badge-new",
   contacted: "badge-contacted",
-  qualified: "badge-qualified",
-  won: "badge-won",
-  lost: "badge-lost",
 };
+
+function displayStatus(status: LeadStatus): "new" | "contacted" {
+  return status === "new" ? "new" : "contacted";
+}
 
 interface StatusBadgeProps {
   status: LeadStatus;
@@ -18,10 +19,11 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   const t = useTranslations("leads.statuses");
+  const resolved = displayStatus(status);
 
   return (
-    <span className={`badge ${STATUS_CLASS[status]}`}>
-      {t(status)}
+    <span className={`badge ${STATUS_CLASS[resolved]}`}>
+      {t(resolved)}
     </span>
   );
 }
