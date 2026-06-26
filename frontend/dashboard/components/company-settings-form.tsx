@@ -278,7 +278,9 @@ export function CompanySettingsForm() {
           <p className="muted field-hint">{t("emailDeliveryResendSetup")}</p>
         ) : null}
 
-        <h3 className="card-title">{t("leadNotifications")}</h3>
+        <h3 id="lead-notifications" className="card-title">
+          {t("leadNotifications")}
+        </h3>
         <div className="notification-status-row">
           <span
             className={

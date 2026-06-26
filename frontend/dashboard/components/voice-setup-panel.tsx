@@ -66,79 +66,90 @@ export function VoiceSetupPanel({ companySlug }: VoiceSetupPanelProps) {
   }
 
   return (
-    <section className="card stack" aria-labelledby="voice-setup-title">
-      <div className="stack">
-        <h2 id="voice-setup-title" className="page-title">
-          {t("voiceIntakeTitle")}
-        </h2>
-        <p className="muted">{t("voiceIntakeDescription")}</p>
-      </div>
+    <details className="card voice-setup-disclosure">
+      <summary className="voice-setup-disclosure-summary">
+        <span className="voice-setup-disclosure-title">
+          {t("voiceIntakeDisclosureTitle")}
+        </span>
+        <span className="muted voice-setup-disclosure-hint">
+          {t("voiceIntakeDisclosureHint")}
+        </span>
+      </summary>
 
-      <div className="voice-test-intake-block stack">
-        <p className="muted">{t("voiceTestIntakeHint")}</p>
-        <button
-          type="button"
-          className="button secondary"
-          onClick={() => void handleTestVoiceIntake()}
-          disabled={testingIntake}
-        >
-          {testingIntake ? t("voiceTestIntakeRunning") : t("voiceTestIntake")}
-        </button>
-        {testError ? <AlertBanner variant="error">{testError}</AlertBanner> : null}
-        {testLeadId ? (
-          <AlertBanner variant="success">
-            {t("voiceTestIntakeSuccess")}{" "}
-            <Link href={`/leads/${testLeadId}`}>{t("voiceTestIntakeViewInbox")}</Link>
-          </AlertBanner>
-        ) : null}
-      </div>
+      <section className="stack voice-setup-disclosure-body" aria-labelledby="voice-setup-title">
+        <div className="stack">
+          <h2 id="voice-setup-title" className="page-title">
+            {t("voiceIntakeTitle")}
+          </h2>
+          <p className="muted">{t("voiceIntakeDescription")}</p>
+        </div>
 
-      <div className="stack">
-        <p className="muted">{t("voiceIntakeSlugHint", { slug: companySlug })}</p>
-        <label className="field">
-          <span>{t("voiceWebhookUrl")}</span>
-          <div className="field-with-action">
-            <input readOnly value={webhookUrl} aria-readonly="true" />
-            <button
-              type="button"
-              className="button secondary"
-              onClick={() => void handleCopy(webhookUrl)}
-            >
-              {t("copySnippet")}
-            </button>
-          </div>
-        </label>
-        <label className="field">
-          <span>{t("voiceMessageUrl")}</span>
-          <div className="field-with-action">
-            <input readOnly value={messageUrl} aria-readonly="true" />
-            <button
-              type="button"
-              className="button secondary"
-              onClick={() => void handleCopy(messageUrl)}
-            >
-              {t("copySnippet")}
-            </button>
-          </div>
-        </label>
-        <p className="muted field-hint">{t("voiceWebhookSecretHint")}</p>
-        {copyMessage ? (
-          <p className="muted" role="status" aria-live="polite">
-            {copyMessage}
-          </p>
-        ) : null}
-      </div>
+        <div className="voice-test-intake-block stack">
+          <p className="muted">{t("voiceTestIntakeHint")}</p>
+          <button
+            type="button"
+            className="button secondary"
+            onClick={() => void handleTestVoiceIntake()}
+            disabled={testingIntake}
+          >
+            {testingIntake ? t("voiceTestIntakeRunning") : t("voiceTestIntake")}
+          </button>
+          {testError ? <AlertBanner variant="error">{testError}</AlertBanner> : null}
+          {testLeadId ? (
+            <AlertBanner variant="success">
+              {t("voiceTestIntakeSuccess")}{" "}
+              <Link href={`/leads/${testLeadId}`}>{t("voiceTestIntakeViewInbox")}</Link>
+            </AlertBanner>
+          ) : null}
+        </div>
 
-      <ol className="voice-setup-steps">
-        <li>{t("voiceSetupStepVapi")}</li>
-        <li>{t("voiceSetupStepTwilio")}</li>
-        <li>{t("voiceSetupStepMetadata", { slug: companySlug })}</li>
-        <li>{t("voiceSetupStepModels")}</li>
-        <li>{t("voiceSetupStepTool")}</li>
-        <li>{t("voiceSetupStepSecret")}</li>
-      </ol>
+        <div className="stack">
+          <p className="muted">{t("voiceIntakeSlugHint", { slug: companySlug })}</p>
+          <label className="field">
+            <span>{t("voiceWebhookUrl")}</span>
+            <div className="field-with-action">
+              <input readOnly value={webhookUrl} aria-readonly="true" />
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => void handleCopy(webhookUrl)}
+              >
+                {t("copySnippet")}
+              </button>
+            </div>
+          </label>
+          <label className="field">
+            <span>{t("voiceMessageUrl")}</span>
+            <div className="field-with-action">
+              <input readOnly value={messageUrl} aria-readonly="true" />
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => void handleCopy(messageUrl)}
+              >
+                {t("copySnippet")}
+              </button>
+            </div>
+          </label>
+          <p className="muted field-hint">{t("voiceWebhookSecretHint")}</p>
+          {copyMessage ? (
+            <p className="muted" role="status" aria-live="polite">
+              {copyMessage}
+            </p>
+          ) : null}
+        </div>
 
-      <p className="muted field-hint">{t("voiceSetupDocsHint")}</p>
-    </section>
+        <ol className="voice-setup-steps">
+          <li>{t("voiceSetupStepVapi")}</li>
+          <li>{t("voiceSetupStepTwilio")}</li>
+          <li>{t("voiceSetupStepMetadata", { slug: companySlug })}</li>
+          <li>{t("voiceSetupStepModels")}</li>
+          <li>{t("voiceSetupStepTool")}</li>
+          <li>{t("voiceSetupStepSecret")}</li>
+        </ol>
+
+        <p className="muted field-hint">{t("voiceSetupDocsHint")}</p>
+      </section>
+    </details>
   );
 }

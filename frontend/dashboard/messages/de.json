@@ -301,6 +301,7 @@
     "installWidgetLiveHint": "Ihr Chat wurde auf Ihrer Website erkannt. Der nächste Schritt ist die erste echte Anfrage.",
     "firstWebsiteInquiryHint": "Nur Anfragen von Ihrer Website zählen. Der Test-Chat im Dashboard dient nur zum Ausprobieren.",
     "awaitingFirstWebsiteInquiry": "Als Nächstes: Warten Sie auf die erste echte Anfrage von Ihrer Website. Test-Anfragen aus dem Test-Chat zählen nicht.",
+    "notificationTestHint": "Speichern Sie die E-Mail-Adresse und klicken Sie auf „Test senden“, um die Zustellung zu prüfen.",
     "firstWebsiteInquiryReached": "Ihre erste echte Website-Anfrage ist eingegangen. Neue Anfragen finden Sie unter Anfragen.",
     "openSandboxChat": "Test-Chat öffnen (Sandbox)"
   },
@@ -361,6 +362,8 @@
     "copied": "In die Zwischenablage kopiert.",
     "copyFailed": "Kopieren nicht möglich. Markieren Sie den Code manuell.",
     "voiceIntakeTitle": "Telefon-Anfragen (Pilot)",
+    "voiceIntakeDisclosureTitle": "Telefon-Anfragen (optional, später)",
+    "voiceIntakeDisclosureHint": "Erst nach Twilio-Nummer und Handelsregistereintrag — jetzt optional testen.",
     "voiceIntakeDescription": "Verpasste Anrufe können über Vapi in denselben Posteingang wie Website-Chats laufen. Die Einrichtung erfolgt einmalig in Vapi und Twilio — hier sehen Sie die URLs und Schritte für Ihren Pilot.",
     "voiceIntakeSlugHint": "Ihre Chat-Referenz für Vapi-Metadaten: {slug}",
     "voiceWebhookUrl": "Vapi Server-URL (Webhook)",

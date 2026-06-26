@@ -316,6 +316,36 @@ a {
   gap: 8px;
 }
 
+.voice-setup-disclosure {
+  padding: 0;
+}
+
+.voice-setup-disclosure-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 20px;
+  display: grid;
+  gap: 4px;
+}
+
+.voice-setup-disclosure-summary::-webkit-details-marker {
+  display: none;
+}
+
+.voice-setup-disclosure-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.voice-setup-disclosure-hint {
+  font-size: 0.95rem;
+}
+
+.voice-setup-disclosure-body {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+}
+
 .field-with-action {
   display: flex;
   flex-wrap: wrap;

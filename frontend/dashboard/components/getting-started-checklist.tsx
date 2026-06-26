@@ -269,6 +269,9 @@ export function GettingStartedChecklist() {
                     <p className="muted">
                       {tOnboarding(`${stepKey}.description`)}
                     </p>
+                    {step.id === "notification_email" ? (
+                      <p className="muted">{t("notificationTestHint")}</p>
+                    ) : null}
                     {step.id === "copy_widget" ? (
                       <p className="muted">{t("copyWidgetHint")}</p>
                     ) : null}

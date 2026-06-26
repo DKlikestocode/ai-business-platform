@@ -301,6 +301,7 @@
     "installWidgetLiveHint": "Your chat was detected on your website. The next step is your first real inquiry.",
     "firstWebsiteInquiryHint": "Only inquiries from your website count. Dashboard test chat is for practice only.",
     "awaitingFirstWebsiteInquiry": "Next: wait for the first real inquiry from your website. Test chat inquiries do not count.",
+    "notificationTestHint": "Save the email address and click Send test to verify delivery.",
     "firstWebsiteInquiryReached": "Your first real website inquiry has arrived. Find new inquiries under Inquiries.",
     "openSandboxChat": "Open test chat (sandbox)"
   },
@@ -361,6 +362,8 @@
     "copied": "Copied to clipboard.",
     "copyFailed": "Unable to copy. Select the code manually.",
     "voiceIntakeTitle": "Phone inquiries (pilot)",
+    "voiceIntakeDisclosureTitle": "Phone inquiries (optional, later)",
+    "voiceIntakeDisclosureHint": "After Twilio number and business registration — optional to explore now.",
     "voiceIntakeDescription": "Missed calls can flow into the same inbox as website chat via Vapi. One-time setup happens in Vapi and Twilio — below are the URLs and steps for your pilot.",
     "voiceIntakeSlugHint": "Your chat reference for Vapi metadata: {slug}",
     "voiceWebhookUrl": "Vapi server URL (webhook)",
