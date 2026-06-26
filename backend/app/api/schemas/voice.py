@@ -28,3 +28,8 @@ class VoiceMessageRequest(BaseModel):
 
 class VoiceMessageResponse(BaseModel):
     reply: str
+
+
+class TestVoiceIntakeResponse(BaseModel):
+    reply: str
+    lead_id: str | None = None

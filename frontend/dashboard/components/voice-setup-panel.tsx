@@ -3,11 +3,16 @@
 import { useCallback, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { AlertBanner } from "@/components/ui/alert-banner";
+import { sendTestVoiceIntake } from "@/lib/api";
+import { formatUserFacingError } from "@/lib/errors";
+import { getErrorMessages } from "@/lib/i18n-error-messages";
 import {
   buildVoiceMessageUrl,
   buildVoiceWebhookUrl,
 } from "@/lib/voice-setup";
 import { getPublicApiBaseUrl } from "@/lib/widget-embed";
+import { Link } from "@/i18n/navigation";
 
 interface VoiceSetupPanelProps {
   companySlug: string;
@@ -15,7 +20,12 @@ interface VoiceSetupPanelProps {
 
 export function VoiceSetupPanel({ companySlug }: VoiceSetupPanelProps) {
   const t = useTranslations("settings");
+  const tErrors = useTranslations("errors");
+  const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
+  const [testingIntake, setTestingIntake] = useState(false);
+  const [testError, setTestError] = useState<string | null>(null);
+  const [testLeadId, setTestLeadId] = useState<string | null>(null);
   const apiBase = useMemo(() => getPublicApiBaseUrl(), []);
   const webhookUrl = useMemo(
     () => buildVoiceWebhookUrl(apiBase),
@@ -39,6 +49,22 @@ export function VoiceSetupPanel({ companySlug }: VoiceSetupPanelProps) {
     [t],
   );
 
+  async function handleTestVoiceIntake() {
+    setTestingIntake(true);
+    setTestError(null);
+    setTestLeadId(null);
+    try {
+      const result = await sendTestVoiceIntake();
+      setTestLeadId(result.lead_id);
+    } catch (err) {
+      setTestError(
+        formatUserFacingError(err, t("voiceTestIntakeFailed"), errorMessages),
+      );
+    } finally {
+      setTestingIntake(false);
+    }
+  }
+
   return (
     <section className="card stack" aria-labelledby="voice-setup-title">
       <div className="stack">
@@ -46,6 +72,25 @@ export function VoiceSetupPanel({ companySlug }: VoiceSetupPanelProps) {
           {t("voiceIntakeTitle")}
         </h2>
         <p className="muted">{t("voiceIntakeDescription")}</p>
+      </div>
+
+      <div className="voice-test-intake-block stack">
+        <p className="muted">{t("voiceTestIntakeHint")}</p>
+        <button
+          type="button"
+          className="button secondary"
+          onClick={() => void handleTestVoiceIntake()}
+          disabled={testingIntake}
+        >
+          {testingIntake ? t("voiceTestIntakeRunning") : t("voiceTestIntake")}
+        </button>
+        {testError ? <AlertBanner variant="error">{testError}</AlertBanner> : null}
+        {testLeadId ? (
+          <AlertBanner variant="success">
+            {t("voiceTestIntakeSuccess")}{" "}
+            <Link href={`/leads/${testLeadId}`}>{t("voiceTestIntakeViewInbox")}</Link>
+          </AlertBanner>
+        ) : null}
       </div>
 
       <div className="stack">
