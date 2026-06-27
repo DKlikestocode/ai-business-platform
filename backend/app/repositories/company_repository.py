@@ -47,13 +47,6 @@ class CompanyRepository:
         return True
 
     def update_settings(self, company: Company, **fields: object) -> Company:
-        name = fields.get("name")
-        if isinstance(name, str) and name != company.name:
-            company.slug = self._generate_unique_slug(
-                name,
-                exclude_company_id=company.id,
-            )
-
         service_area_changed = any(
             key in fields
             for key in ("service_area_center", "service_radius_km")

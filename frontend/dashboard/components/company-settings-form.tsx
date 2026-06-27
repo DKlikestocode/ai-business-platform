@@ -90,7 +90,6 @@ export function CompanySettingsForm() {
     setError(null);
     setSuccess(null);
     try {
-      const previousSlug = settings.slug;
       const updated = await updateCompanySettings({
         name: settings.name,
         email: settings.email,
@@ -104,9 +103,7 @@ export function CompanySettingsForm() {
       setSavedNotificationEmail(updated.notification_email);
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, updated);
       await refresh();
-      setSuccess(
-        updated.slug !== previousSlug ? t("savedSlugChanged") : t("saved"),
-      );
+      setSuccess(t("saved"));
       setActivationReloadKey((value) => value + 1);
     } catch (err) {
       setError(formatUserFacingError(err, t("saveFailed"), errorMessages));
