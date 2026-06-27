@@ -4,6 +4,8 @@ export type QualificationStatus = "incomplete" | "contactable" | "qualified";
 
 export type ContactMethod = "phone" | "email" | "channel" | "unknown";
 
+export type CompanyTradeId = "skh";
+
 export type UserRole = "owner" | "admin" | "member";
 
 export type ActivationStatus =
@@ -77,6 +79,7 @@ export interface CompanySettings {
   notification_min_urgency: "high" | "medium" | "low";
   service_area_center: string | null;
   service_radius_km: number | null;
+  trade: CompanyTradeId | null;
   email_delivery_provider: string;
   email_delivery_ready: boolean;
   email_delivery_sends_real_email: boolean;
@@ -91,6 +94,7 @@ export interface CompanySettingsUpdate {
   notification_min_urgency?: "high" | "medium" | "low";
   service_area_center?: string | null;
   service_radius_km?: number | null;
+  trade?: CompanyTradeId | null;
 }
 
 export interface CurrentUser {

@@ -13,15 +13,19 @@ Erfassen Sie folgende Informationen:
 Richtlinien:
 - Antworten Sie immer auf Deutsch in der Sie-Form.
 - Stellen Sie jeweils nur eine oder zwei gezielte Fragen.
-- Wenn weder Telefon noch E-Mail bekannt ist, fragen Sie zuerst nach einer Kontaktmöglichkeit.
+- Fragen Sie zuerst nach dem Anliegen: Was ist das Problem oder welcher Service wird benötigt?
+- Erst wenn das Anliegen verstanden ist, fragen Sie nach einer Kontaktmöglichkeit (Telefon oder E-Mail).
 - Akzeptieren Sie nur gut lesbare Telefonnummern (z. B. 0170 1234567, +49 170 1234567) und gültige E-Mail-Adressen (z. B. name@beispiel.de).
-- Wenn eine Kontaktmöglichkeit vorhanden ist, die Beschreibung aber unzureichend ist, fragen Sie nach dem Problem oder dem gewünschten Service.
+- Wenn das Anliegen noch unklar ist, fragen Sie nach dem Problem oder dem gewünschten Service — nicht nach Kontaktdaten.
 - Wenn der Lead mit hilfreichem Kontext kontaktierbar ist, bestätigen Sie den Eingang der Anfrage.
 - Bestätigen Sie Angaben, wenn der Kunde sie mitteilt.
 - Halten Sie Antworten kurz und hilfreich.
 - Erfinden Sie keine Informationen, die der Kunde nicht genannt hat.
 - Wiederholen Sie keine unnötigen Fragen.
 - Wenn alle erforderlichen Felder erfasst sind, bestätigen Sie die nächsten Schritte und den voraussichtlichen Rückruf.
+- Dringlichkeit immer als genau einer von: hoch, mittel, niedrig speichern.
+- Zeitangaben des Kunden übersetzen: heute/sofort/Notfall → hoch; morgen/bald/diese Woche → mittel; keine Eile/flexibel → niedrig.
+- Konkrete Rückrufwünsche (z. B. „heute Nachmittag“, „morgen früh“) zusätzlich in preferred_callback_time festhalten.
 - Geben Sie keine Preise oder Kostenzusagen.
 - Garantieren Sie keine festen Termine oder verbindlichen Rückrufzeiten.
 """
@@ -66,5 +70,9 @@ class LeadCaptureAgent(BaseAgent):
 
         if context.metadata.get("channel_voice_prompt"):
             sections.append(VOICE_CHANNEL_PROMPT)
+
+        trade_prompt = context.metadata.get("trade_prompt")
+        if trade_prompt:
+            sections.append(f"Branchen-Kontext:\n{trade_prompt}")
 
         return "\n\n".join(sections)

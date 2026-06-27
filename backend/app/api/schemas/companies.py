@@ -3,10 +3,13 @@ from uuid import UUID
 
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.db.models.company import Company
 from app.services.notifications.email_delivery import EmailDeliveryStatus
+from app.trades.registry import is_valid_trade
+
+CompanyTrade = Literal["skh"]
 
 
 class CompanyCreateRequest(BaseModel):
@@ -35,6 +38,7 @@ class CompanySettingsResponse(BaseModel):
     notification_min_urgency: Literal["high", "medium", "low"]
     service_area_center: str | None
     service_radius_km: int | None
+    trade: CompanyTrade | None
     email_delivery_provider: str
     email_delivery_ready: bool
     email_delivery_sends_real_email: bool
@@ -51,6 +55,14 @@ class CompanySettingsUpdateRequest(BaseModel):
     notification_min_urgency: Literal["high", "medium", "low"] | None = None
     service_area_center: str | None = Field(default=None, max_length=255)
     service_radius_km: int | None = Field(default=None, ge=1, le=500)
+    trade: CompanyTrade | None = None
+
+    @field_validator("trade")
+    @classmethod
+    def validate_trade(cls, value: str | None) -> str | None:
+        if value is not None and not is_valid_trade(value):
+            raise ValueError("Unsupported trade.")
+        return value
 
 
 def company_to_response(company: Company) -> CompanyResponse:
@@ -76,6 +88,7 @@ def company_to_settings_response(
         notification_min_urgency=company.notification_min_urgency,  # type: ignore[arg-type]
         service_area_center=company.service_area_center,
         service_radius_km=company.service_radius_km,
+        trade=company.trade,  # type: ignore[arg-type]
         created_at=company.created_at,
         **delivery.as_dict(),
     )

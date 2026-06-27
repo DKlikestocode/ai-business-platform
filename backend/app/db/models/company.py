@@ -40,6 +40,7 @@ class Company(Base):
     service_radius_km: Mapped[int | None] = mapped_column(Integer, nullable=True)
     service_area_latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     service_area_longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
+    trade: Mapped[str | None] = mapped_column(String(32), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

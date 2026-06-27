@@ -29,6 +29,7 @@ import {
   resolveNotificationRecipient,
 } from "@/lib/notification-recipient";
 import type { CompanySettings } from "@/lib/types";
+import { isCompanyTradeId } from "@/lib/trades/types";
 import { WidgetActivationPanel } from "@/components/widget-activation-panel";
 import { VoiceSetupPanel } from "@/components/voice-setup-panel";
 
@@ -98,6 +99,7 @@ export function CompanySettingsForm() {
         notification_min_urgency: settings.notification_min_urgency,
         service_area_center: settings.service_area_center,
         service_radius_km: settings.service_radius_km,
+        trade: settings.trade,
       });
       setSettings(updated);
       setSavedNotificationEmail(updated.notification_email);
@@ -209,6 +211,23 @@ export function CompanySettingsForm() {
                 updateField("phone", event.target.value || null)
               }
             />
+          </label>
+          <label className="field">
+            <span>{t("trade")}</span>
+            <select
+              className="input"
+              value={settings.trade ?? ""}
+              onChange={(event) =>
+                updateField(
+                  "trade",
+                  isCompanyTradeId(event.target.value) ? event.target.value : null,
+                )
+              }
+            >
+              <option value="">{t("tradeOptions.general")}</option>
+              <option value="skh">{t("tradeOptions.skh")}</option>
+            </select>
+            <p className="muted field-hint">{t("tradeHint")}</p>
           </label>
         </div>
 

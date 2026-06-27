@@ -72,7 +72,7 @@ def test_complete_lead_is_qualified() -> None:
 
 
 @pytest.mark.asyncio
-async def test_agent_prioritizes_contact_method_when_missing() -> None:
+async def test_agent_prioritizes_problem_context_when_missing() -> None:
     agent = LeadCaptureAgent()
     data = LeadExtractedData(urgency="high")
     qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
@@ -90,5 +90,25 @@ async def test_agent_prioritizes_contact_method_when_missing() -> None:
 
     prompt = await agent.build_system_prompt(context)
 
-    assert "phone" in prompt.lower()
-    assert "email" in prompt.lower()
+    assert "problem" in prompt.lower() or "service" in prompt.lower()
+    hint = context.metadata["qualification_hint"].lower()
+    assert "phone" not in hint or "before" in hint
+
+
+def test_qualification_hint_prioritizes_problem_before_contact() -> None:
+    data = LeadExtractedData()
+    qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
+
+    hint = build_qualification_hint(data, qualification, channel=ConversationChannel.WEB)
+
+    assert "problem" in hint.lower() or "service" in hint.lower()
+    assert "contact method" not in hint.lower() or "understood" in hint.lower()
+
+
+def test_qualification_hint_asks_contact_after_context() -> None:
+    data = LeadExtractedData(description="Heizung defekt")
+    qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
+
+    hint = build_qualification_hint(data, qualification, channel=ConversationChannel.WEB)
+
+    assert "phone" in hint.lower() or "email" in hint.lower()

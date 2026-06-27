@@ -36,6 +36,7 @@ def test_get_company_settings_returns_current_company(
     assert body["notification_min_urgency"] == "medium"
     assert body["service_area_center"] is None
     assert body["service_radius_km"] is None
+    assert body["trade"] is None
     assert body["email_delivery_provider"] == "logging"
     assert body["email_delivery_ready"] is True
     assert body["email_delivery_sends_real_email"] is False
@@ -69,6 +70,33 @@ def test_patch_company_settings_updates_editable_fields(
     assert body["notification_min_urgency"] == "low"
     assert body["service_area_center"] == "München"
     assert body["service_radius_km"] == 25
+
+
+def test_patch_company_settings_updates_trade(
+    settings_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"trade": "skh"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["trade"] == "skh"
+
+
+def test_patch_company_settings_rejects_invalid_trade(
+    settings_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"trade": "invalid"},
+    )
+
+    assert response.status_code == 422
 
 
 def test_patch_company_settings_resolves_service_area_coordinates_from_plz(

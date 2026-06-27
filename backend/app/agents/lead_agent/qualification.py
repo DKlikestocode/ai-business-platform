@@ -137,16 +137,23 @@ def build_qualification_hint(
             "and expected callback timing. Do not ask unnecessary repeated questions."
         )
 
-    if not qualification.contactable:
+    if not has_useful_context(data):
         return (
-            "No reliable contact method is available yet. Prioritize asking for a phone "
-            "number or email before collecting other details. If the customer provided "
-            "an invalid phone number or email, ask again and give a short example format."
+            "The customer's request is not clear yet. Prioritize understanding the problem "
+            "or service needed before asking for phone or email. Ask one focused question "
+            "about what they need help with."
         )
 
-    if not _has_value(data.description):
+    if not qualification.contactable:
         return (
-            "A contact method is available, but the problem description is still weak. "
+            "The request is understood, but no reliable contact method is available yet. "
+            "Ask for a phone number or email so the business can follow up. If the customer "
+            "provided an invalid phone number or email, ask again and give a short example format."
+        )
+
+    if not _has_value(data.description) and not _has_value(data.service_requested):
+        return (
+            "A contact method is available, but the problem or service is still unclear. "
             "Ask for a concise description of the issue or service needed."
         )
 

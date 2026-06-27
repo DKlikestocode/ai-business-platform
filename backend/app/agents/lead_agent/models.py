@@ -69,8 +69,21 @@ class LeadCaptureLLMOutput(BaseModel):
     postal_code: str | None = None
     service_requested: str | None = None
     description: str | None = None
-    urgency: str | None = None
-    preferred_callback_time: str | None = None
+    urgency: str | None = Field(
+        default=None,
+        description=(
+            "Dringlichkeit als genau einer von: hoch, mittel, niedrig. "
+            "heute/sofort/Notfall → hoch; morgen/bald/diese Woche → mittel; "
+            "keine Eile/flexibel → niedrig."
+        ),
+    )
+    preferred_callback_time: str | None = Field(
+        default=None,
+        description=(
+            "Bevorzugte Rückrufzeit in den Worten des Kunden, z. B. heute Nachmittag "
+            "oder morgen früh."
+        ),
+    )
 
     def to_extracted_data(self) -> LeadExtractedData:
         return LeadExtractedData(
