@@ -101,14 +101,30 @@
   const submitEl = container.querySelector(".ai-agent-widget-submit");
   let loading = false;
 
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function appendMessage(role, content) {
     const bubble = document.createElement("div");
     bubble.style.marginBottom = "10px";
     bubble.innerHTML = `<strong style="display:block;font-size:12px;color:#6b7280;margin-bottom:4px;">${
       role === "user" ? COPY.userLabel : COPY.assistantLabel
-    }</strong><div>${content}</div>`;
+    }</strong><div>${escapeHtml(content)}</div>`;
     messagesEl.appendChild(bubble);
     messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function endChat() {
+    loading = false;
+    inputEl.disabled = true;
+    submitEl.disabled = true;
+    submitEl.textContent = COPY.send;
   }
 
   function setLoading(active) {
@@ -159,13 +175,13 @@
     inputEl.value = "";
     appendMessage("user", message);
 
+    let leadCompleted = false;
     try {
       const result = await sendMessage(message);
       appendMessage("assistant", result.reply);
-      if (result.lead_complete) {
+      leadCompleted = Boolean(result.lead_complete);
+      if (leadCompleted) {
         appendMessage("assistant", COPY.leadComplete);
-        inputEl.disabled = true;
-        submitEl.disabled = true;
       }
     } catch (error) {
       appendMessage(
@@ -173,7 +189,9 @@
         error instanceof Error ? error.message : COPY.genericError,
       );
     } finally {
-      if (!inputEl.disabled) {
+      if (leadCompleted) {
+        endChat();
+      } else {
         setLoading(false);
       }
     }
