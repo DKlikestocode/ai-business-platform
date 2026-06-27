@@ -24,6 +24,7 @@ def main() -> None:
     parser.add_argument("--company-email", required=True)
     parser.add_argument("--company-phone", default=None)
     parser.add_argument("--notification-email", default=None)
+    parser.add_argument("--trade", default=None, help="Industry pack, e.g. skh")
     parser.add_argument("--admin-first-name", default="Pilot")
     parser.add_argument("--admin-last-name", default="Owner")
     parser.add_argument("--admin-email", required=True)
@@ -48,6 +49,7 @@ def main() -> None:
                 company_email=args.company_email,
                 company_phone=args.company_phone,
                 notification_email=args.notification_email,
+                trade=args.trade,
                 admin_first_name=args.admin_first_name,
                 admin_last_name=args.admin_last_name,
                 admin_email=args.admin_email,

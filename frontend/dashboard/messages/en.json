@@ -16,7 +16,10 @@
     "done": "Done",
     "todo": "To do",
     "dev": "Dev",
-    "devMode": "Development mode"
+    "devMode": "Development mode",
+    "language": "Language",
+    "localeDe": "DE",
+    "localeEn": "EN"
   },
   "nav": {
     "gettingStarted": "Getting Started",
@@ -318,6 +321,12 @@
     "companyProfileHint": "You can update name, email, and phone here anytime — not only during sign-up.",
     "name": "Name",
     "phone": "Phone",
+    "trade": "Trade",
+    "tradeHint": "Controls industry language in the website chat and trade-specific examples in the dashboard.",
+    "tradeOptions": {
+      "general": "General (trades & services)",
+      "skh": "Plumbing / heating / HVAC"
+    },
     "slug": "Chat reference",
     "slugHint": "Derived from your company name and used in the chat embed code. It updates when the name changes.",
     "created": "Created",
@@ -594,6 +603,34 @@
     "loadUserFailed": "Failed to load current user.",
     "loginFailed": "Login failed.",
     "signedInAs": "Signed in as"
+  },
+  "trades": {
+    "skh": {
+      "gettingStarted": {
+        "description": "Set up inquiry capture for plumbing, heating, and HVAC on your website.",
+        "welcomeLead": "In a few minutes you will receive plumbing, heating, and HVAC inquiries from your website here.",
+        "firstWebsiteInquiryHint": "Only real website inquiries count — e.g. burst pipes, heating failure, or AC issues."
+      },
+      "demoChat": {
+        "description": "Try typical plumbing/heating/HVAC flows — separate from your live website chat.",
+        "welcomeBody": "Write a request like a customer: heating failure, blocked toilet, or AC maintenance. The assistant asks for postal code and checks your service area.",
+        "successBody": "This is how a complete SKH inquiry lands in your inbox — with contact details, issue, and urgency.",
+        "examplePrompts": {
+          "heating": "Heating failure",
+          "plumbing": "Blocked toilet",
+          "climate": "AC not cooling"
+        },
+        "exampleMessages": {
+          "heating": "Hello, our heating has been down since this morning — no hot water. Postal code 22303 Hamburg-Barmbek. Please call back ASAP at +49 170 1234567.",
+          "plumbing": "Hi, the toilet is overflowing and the sink is blocked. Hamburg (postal code 20354). Reach me at sabine@example.com.",
+          "climate": "Our office AC is no longer cooling properly. Postal code 28195 Bremen. Best to call tomorrow morning at +49 176 9876543."
+        }
+      },
+      "leads": {
+        "emptyTitle": "Your plumbing/heating/HVAC inquiries appear here",
+        "emptyDescription": "When visitors use your chat, inquiries about plumbing, heating, and HVAC show up here automatically."
+      }
+    }
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",

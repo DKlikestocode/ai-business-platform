@@ -16,7 +16,10 @@
     "done": "Erledigt",
     "todo": "Offen",
     "dev": "Dev",
-    "devMode": "Entwicklungsmodus"
+    "devMode": "Entwicklungsmodus",
+    "language": "Sprache",
+    "localeDe": "DE",
+    "localeEn": "EN"
   },
   "nav": {
     "gettingStarted": "Erste Schritte",
@@ -318,6 +321,12 @@
     "companyProfileHint": "Sie können Name, E-Mail und Telefon jederzeit hier anpassen — nicht nur bei der Registrierung.",
     "name": "Name",
     "phone": "Telefon",
+    "trade": "Branche",
+    "tradeHint": "Steuert Fachsprache im Website-Chat und branchenspezifische Beispiele im Dashboard.",
+    "tradeOptions": {
+      "general": "Allgemein (Handwerk & Service)",
+      "skh": "Sanitär / Heizung / Klima"
+    },
     "slug": "Chat-Referenz",
     "slugHint": "Wird aus dem Firmennamen abgeleitet und im Chat-Einbindungscode verwendet. Sie ändert sich mit dem Namen.",
     "created": "Erstellt",
@@ -594,6 +603,34 @@
     "loadUserFailed": "Aktueller Benutzer konnte nicht geladen werden.",
     "loginFailed": "Anmeldung fehlgeschlagen.",
     "signedInAs": "Angemeldet als"
+  },
+  "trades": {
+    "skh": {
+      "gettingStarted": {
+        "description": "So richten Sie die Anfrage-Erfassung für Sanitär, Heizung und Klima auf Ihrer Website ein.",
+        "welcomeLead": "In wenigen Minuten empfangen Sie hier Anfragen zu Sanitär, Heizung und Klima direkt von Ihrer Website.",
+        "firstWebsiteInquiryHint": "Nur echte Website-Anfragen zählen — z. B. zu Rohrbruch, Heizungsausfall oder Klimaanlage."
+      },
+      "demoChat": {
+        "description": "Testen Sie den Ablauf für typische SKH-Anfragen — getrennt von Ihrem Website-Chat.",
+        "welcomeBody": "Schreiben Sie eine Anfrage wie ein Kunde: z. B. Heizungsausfall, verstopftes WC oder Klima-Wartung. Der Assistent fragt nach PLZ und prüft Ihr Einsatzgebiet.",
+        "successBody": "So landet eine vollständige SKH-Anfrage in Ihrem Posteingang — mit Kontakt, Anliegen und Dringlichkeit.",
+        "examplePrompts": {
+          "heating": "Heizung ausgefallen",
+          "plumbing": "WC verstopft",
+          "climate": "Klima kühlt nicht"
+        },
+        "exampleMessages": {
+          "heating": "Guten Tag, unsere Heizung ist seit heute Morgen ausgefallen — kein warmes Wasser. PLZ 22303 Hamburg-Barmbek. Bitte schnellstmöglich Rückruf unter 0170 1234567.",
+          "plumbing": "Hallo, das WC läuft über und die Spüle ist verstopft. Standort Hamburg (PLZ 20354). Erreichbar unter sabine@beispiel.de.",
+          "climate": "Unsere Klimaanlage im Büro kühlt nicht mehr richtig. PLZ 28195 Bremen. Rückruf am besten morgen vormittag, Telefon 0176 9876543."
+        }
+      },
+      "leads": {
+        "emptyTitle": "Hier erscheinen Ihre SKH-Anfragen",
+        "emptyDescription": "Sobald Besucher Ihren Chat nutzen, erscheinen Anfragen zu Sanitär, Heizung und Klima automatisch hier."
+      }
+    }
   },
   "errors": {
     "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",

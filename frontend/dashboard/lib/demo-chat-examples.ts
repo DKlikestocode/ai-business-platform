@@ -1,6 +1,23 @@
+import type { CompanyTradeId } from "@/lib/types";
+
 export const DEMO_CHAT_EXAMPLE_KEYS = ["plumber", "roofer", "electrician"] as const;
 
+export const SKH_DEMO_CHAT_EXAMPLE_KEYS = ["heating", "plumbing", "climate"] as const;
+
 export type DemoChatExampleKey = (typeof DEMO_CHAT_EXAMPLE_KEYS)[number];
+
+export type SkhDemoChatExampleKey = (typeof SKH_DEMO_CHAT_EXAMPLE_KEYS)[number];
+
+export type TradeDemoChatExampleKey = DemoChatExampleKey | SkhDemoChatExampleKey;
+
+export function getDemoChatExampleKeys(
+  trade: CompanyTradeId | null | undefined,
+): readonly TradeDemoChatExampleKey[] {
+  if (trade === "skh") {
+    return SKH_DEMO_CHAT_EXAMPLE_KEYS;
+  }
+  return DEMO_CHAT_EXAMPLE_KEYS;
+}
 
 type DemoChatMessages = {
   demoChat?: {
@@ -34,12 +51,18 @@ export function isResolvedTranslation(
     `${namespace}.${key}`,
     `demoChat.${key}`,
   ];
-  return !candidates.includes(trimmed);
+  if (candidates.includes(trimmed)) {
+    return false;
+  }
+  if (trimmed.endsWith(`.${key}`) && trimmed.includes(".")) {
+    return false;
+  }
+  return true;
 }
 
 export function getDemoChatExampleMessage(
   translate: (key: string) => string,
-  key: DemoChatExampleKey,
+  key: TradeDemoChatExampleKey,
 ): string {
   const messageKey = `exampleMessages.${key}`;
   const message = translate(messageKey).trim();

@@ -135,6 +135,7 @@ describe("api auth client", () => {
       notification_min_urgency: "medium" as const,
       service_area_center: null,
       service_radius_km: null,
+      trade: null,
       email_delivery_provider: "logging",
       email_delivery_ready: true,
       email_delivery_sends_real_email: false,

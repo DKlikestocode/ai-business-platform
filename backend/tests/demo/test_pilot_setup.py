@@ -32,6 +32,32 @@ def test_setup_pilot_customer_creates_company_and_owner(
     assert "/static/widget/widget.js" in result.widget_snippet
 
 
+def test_setup_pilot_customer_sets_trade_when_provided(
+    company_repository,
+    user_repository,
+) -> None:
+    suffix = uuid.uuid4().hex[:8]
+    result = setup_pilot_customer(
+        company_repository=company_repository,
+        user_repository=user_repository,
+        payload=PilotCustomerInput(
+            company_name=f"SKH Pilot {suffix}",
+            company_email=f"skh-{suffix}@example.com",
+            company_phone=None,
+            notification_email=None,
+            trade="skh",
+            admin_first_name="Pilot",
+            admin_last_name="Owner",
+            admin_email=f"skh-owner-{suffix}@example.com",
+            admin_password="secure-password",
+        ),
+    )
+
+    company = company_repository.get_by_slug(result.company_slug)
+    assert company is not None
+    assert company.trade == "skh"
+
+
 def test_setup_pilot_customer_rejects_duplicate_admin_email(
     company_repository,
     user_repository,

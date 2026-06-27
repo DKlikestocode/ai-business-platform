@@ -31,6 +31,7 @@ class PilotCustomerInput:
     admin_last_name: str
     admin_email: str
     admin_password: str
+    trade: str | None = None
     api_base_url: str = "http://localhost:8000"
     frontend_base_url: str = "http://localhost:3000"
 
@@ -54,6 +55,12 @@ def setup_pilot_customer(
         company = company_repository.update_settings(
             company,
             notification_email=payload.notification_email,
+        )
+
+    if payload.trade:
+        company = company_repository.update_settings(
+            company,
+            trade=payload.trade,
         )
 
     user = user_repository.create(

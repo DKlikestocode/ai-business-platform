@@ -29,7 +29,14 @@ import {
   setLeadsInboxPreferences,
   type LeadsInboxView,
 } from "@/lib/leads-inbox-preferences";
-import type { Lead } from "@/lib/types";
+import {
+  COMPANY_SETTINGS_CACHE_KEY,
+  getDashboardCache,
+  loadCachedCompanySettings,
+} from "@/lib/dashboard-cache";
+import { translateWithTradeOverride } from "@/lib/trade-copy";
+import { tradeNamespace } from "@/lib/trades/types";
+import type { CompanySettings, Lead } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
@@ -39,11 +46,20 @@ function formatDate(value: string, locale: string): string {
 export function LeadsDashboard() {
   const locale = useLocale();
   const { loading: authLoading, error: authError } = useAuth();
+  const [settings, setSettings] = useState<CompanySettings | null>(() =>
+    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
+  const trade = settings?.trade ?? null;
   const t = useTranslations("leads");
+  const tTrade = useTranslations(tradeNamespace(trade, "leads"));
   const tCommon = useTranslations("common");
   const tContactMethod = useTranslations("contactMethod");
   const tErrors = useTranslations("errors");
   const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
+  const tt = useCallback(
+    (key: string) => translateWithTradeOverride(t, tTrade, key, Boolean(trade)),
+    [trade, t, tTrade],
+  );
   const initialPreferences = useMemo(() => getLeadsInboxPreferences(), []);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [sort, setSort] = useState<LeadSort>(initialPreferences.sort);
@@ -83,6 +99,10 @@ export function LeadsDashboard() {
       setLoading(false);
     }
   }, [page, sort, isContactedView, t, errorMessages]);
+
+  useEffect(() => {
+    void loadCachedCompanySettings(setSettings);
+  }, []);
 
   useEffect(() => {
     if (authLoading) {
@@ -338,8 +358,8 @@ export function LeadsDashboard() {
 
       {showFirstRunEmpty ? (
         <EmptyState
-          title={t("emptyTitle")}
-          description={t("emptyDescription")}
+          title={tt("emptyTitle")}
+          description={tt("emptyDescription")}
           actionHref="/settings"
           actionLabel={t("emptySetupCta")}
           secondaryActionHref="/demo-chat"
