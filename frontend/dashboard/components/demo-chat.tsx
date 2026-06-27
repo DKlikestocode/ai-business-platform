@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
@@ -9,16 +9,22 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { sendLeadMessage } from "@/lib/api";
 import { scrollChatContainerToBottom } from "@/lib/chat-scroll";
+import {
+  COMPANY_SETTINGS_CACHE_KEY,
+  getDashboardCache,
+  loadCachedCompanySettings,
+} from "@/lib/dashboard-cache";
+import {
+  getDemoChatExampleKeys,
+  getDemoChatExampleMessage,
+  type TradeDemoChatExampleKey,
+} from "@/lib/demo-chat-examples";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { Link } from "@/i18n/navigation";
-import {
-  DEMO_CHAT_EXAMPLE_KEYS,
-  getDemoChatExampleMessage,
-  type DemoChatExampleKey,
-} from "@/lib/demo-chat-examples";
-
-const EXAMPLE_PROMPT_KEYS = DEMO_CHAT_EXAMPLE_KEYS;
+import { translateWithTradeOverride } from "@/lib/trade-copy";
+import { tradeNamespace } from "@/lib/trades/types";
+import type { CompanySettings } from "@/lib/types";
 
 export function createDemoChatConversationId(): string {
   return `demo-chat-${Date.now()}`;
@@ -40,10 +46,21 @@ function createMessageId(): string {
 
 export function DemoChat() {
   const { company, loading: authLoading, error: authError } = useAuth();
+  const [settings, setSettings] = useState<CompanySettings | null>(() =>
+    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
+  const trade = settings?.trade ?? null;
   const t = useTranslations("demoChat");
+  const tTrade = useTranslations(tradeNamespace(trade, "demoChat"));
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
   const errorMessages = getErrorMessages(tErrors);
+  const tt = (key: string) =>
+    translateWithTradeOverride(t, tTrade, key, Boolean(trade));
+  const examplePromptKeys = useMemo(
+    () => getDemoChatExampleKeys(trade),
+    [trade],
+  );
   const [conversationId, setConversationId] = useState(createDemoChatConversationId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -53,6 +70,10 @@ export function DemoChat() {
   const [leadId, setLeadId] = useState<string | null>(null);
   const [hasOpenFields, setHasOpenFields] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    void loadCachedCompanySettings(setSettings);
+  }, []);
 
   const assistantLabel = company?.name?.trim() || t("assistant");
   const showExampleChips =
@@ -124,9 +145,12 @@ export function DemoChat() {
     await sendMessage(message);
   }
 
-  function handleExamplePrompt(key: DemoChatExampleKey) {
+  function handleExamplePrompt(key: TradeDemoChatExampleKey) {
     try {
-      const message = getDemoChatExampleMessage(t, key);
+      const message = getDemoChatExampleMessage(
+        (messageKey) => tt(messageKey),
+        key,
+      );
       void sendMessage(message);
     } catch {
       setError(t("examplePromptFailed"));
@@ -135,7 +159,7 @@ export function DemoChat() {
 
   return (
     <div className="stack">
-      <PageHeader title={t("title")} description={t("description")}>
+      <PageHeader title={tt("title")} description={tt("description")}>
         <button
           type="button"
           className="button secondary"
@@ -157,12 +181,12 @@ export function DemoChat() {
           {messages.length === 0 ? (
             <div className="chat-empty">
               <h3 className="chat-empty-title">{t("welcomeTitle")}</h3>
-              <p>{t("welcomeBody")}</p>
+              <p>{tt("welcomeBody")}</p>
               {showExampleChips ? (
                 <>
                   <p className="chat-prompts-label">{t("examplePromptsLabel")}</p>
                   <div className="chat-prompt-chips">
-                    {EXAMPLE_PROMPT_KEYS.map((key) => (
+                    {examplePromptKeys.map((key) => (
                       <button
                         key={key}
                         type="button"
@@ -170,7 +194,7 @@ export function DemoChat() {
                         disabled={loading || authLoading}
                         onClick={() => handleExamplePrompt(key)}
                       >
-                        {t(`examplePrompts.${key}`)}
+                        {tt(`examplePrompts.${key}`)}
                       </button>
                     ))}
                   </div>
@@ -204,7 +228,7 @@ export function DemoChat() {
         {leadComplete && leadId ? (
           <div className="chat-success-panel">
             <h3 className="chat-success-title">{t("successTitle")}</h3>
-            <p className="muted">{t("successBody")}</p>
+            <p className="muted">{tt("successBody")}</p>
             <div className="chat-success-actions">
               <Link href={`/leads/${leadId}`} className="button">
                 {t("viewLead")}

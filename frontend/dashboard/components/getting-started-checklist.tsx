@@ -30,18 +30,26 @@ import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import type { CompanyActivation, CompanySettings } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
+import { translateWithTradeOverride } from "@/lib/trade-copy";
+import { tradeNamespace } from "@/lib/trades/types";
 
 export function GettingStartedChecklist() {
   const { user, company, loading: authLoading } = useAuth();
   const locale = useLocale();
+  const [settings, setSettings] = useState<CompanySettings | null>(() =>
+    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
+  const trade = settings?.trade ?? null;
   const t = useTranslations("gettingStarted");
+  const tTrade = useTranslations(tradeNamespace(trade, "gettingStarted"));
   const tActivation = useTranslations("activation");
   const tCommon = useTranslations("common");
   const tOnboarding = useTranslations("onboarding.steps");
   const tErrors = useTranslations("errors");
   const errorMessages = useMemo(() => getErrorMessages(tErrors), [tErrors]);
-  const [settings, setSettings] = useState<CompanySettings | null>(() =>
-    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  const tt = useCallback(
+    (key: string) => translateWithTradeOverride(t, tTrade, key, Boolean(trade)),
+    [trade, t, tTrade],
   );
   const [loading, setLoading] = useState(
     () => !getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
@@ -146,7 +154,7 @@ export function GettingStartedChecklist() {
 
   return (
     <div className="stack">
-      <PageHeader title={t("title")} description={t("description")}>
+      <PageHeader title={t("title")} description={tt("description")}>
         {isReady ? (
           <div className="progress-pill">
             {t("progress", {
@@ -196,7 +204,7 @@ export function GettingStartedChecklist() {
             <h3 id="welcome-banner-title" className="welcome-banner-title">
               {t("welcomeTitle", { name: welcomeName })}
             </h3>
-            <p className="welcome-banner-lead muted">{t("welcomeLead")}</p>
+            <p className="welcome-banner-lead muted">{tt("welcomeLead")}</p>
             {nextStep ? (
               <div className="welcome-banner-next">
                 <p className="welcome-banner-next-label">
@@ -279,7 +287,7 @@ export function GettingStartedChecklist() {
                       <p className="muted">{t("installWidgetLiveHint")}</p>
                     ) : null}
                     {step.id === "first_website_inquiry" ? (
-                      <p className="muted">{t("firstWebsiteInquiryHint")}</p>
+                      <p className="muted">{tt("firstWebsiteInquiryHint")}</p>
                     ) : null}
                     {company.slug && step.id === "copy_widget" ? (
                       <p className="muted">

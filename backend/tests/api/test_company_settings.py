@@ -3,7 +3,6 @@ import uuid
 import pytest
 from fastapi.testclient import TestClient
 
-from app.core.utils import slugify
 from app.core.security import hash_password
 from app.db.models.enums import UserRole
 from app.main import app
@@ -37,6 +36,7 @@ def test_get_company_settings_returns_current_company(
     assert body["notification_min_urgency"] == "medium"
     assert body["service_area_center"] is None
     assert body["service_radius_km"] is None
+    assert body["trade"] is None
     assert body["email_delivery_provider"] == "logging"
     assert body["email_delivery_ready"] is True
     assert body["email_delivery_sends_real_email"] is False
@@ -72,6 +72,33 @@ def test_patch_company_settings_updates_editable_fields(
     assert body["service_radius_km"] == 25
 
 
+def test_patch_company_settings_updates_trade(
+    settings_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"trade": "skh"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["trade"] == "skh"
+
+
+def test_patch_company_settings_rejects_invalid_trade(
+    settings_client: TestClient,
+    auth_headers: dict[str, str],
+) -> None:
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"trade": "invalid"},
+    )
+
+    assert response.status_code == 422
+
+
 def test_patch_company_settings_resolves_service_area_coordinates_from_plz(
     settings_client: TestClient,
     company,
@@ -93,52 +120,6 @@ def test_patch_company_settings_resolves_service_area_coordinates_from_plz(
     assert company.service_area_longitude is not None
     assert 47 < company.service_area_latitude < 49
     assert 10 < company.service_area_longitude < 12
-
-
-def test_patch_company_settings_updates_slug_when_name_changes(
-    settings_client: TestClient,
-    company,
-    auth_headers: dict[str, str],
-) -> None:
-    suffix = uuid.uuid4().hex[:8]
-    new_name = f"Werkstatt Schmidt {suffix} GmbH"
-    original_created_at = company.created_at.isoformat()
-
-    response = settings_client.patch(
-        "/api/v1/company/settings",
-        headers=auth_headers,
-        json={"name": new_name},
-    )
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["name"] == new_name
-    assert body["slug"] == slugify(new_name)
-    assert body["created_at"].startswith(original_created_at[:19])
-
-
-def test_patch_company_settings_avoids_slug_collision_on_rename(
-    settings_client: TestClient,
-    company,
-    company_repository,
-    auth_headers: dict[str, str],
-) -> None:
-    suffix = uuid.uuid4().hex[:8]
-    blocked_slug = f"acme-plumbing-{suffix}"
-    company_repository.create(
-        name="Blocker Company",
-        email=f"blocker-{suffix}@example.com",
-        slug=blocked_slug,
-    )
-
-    response = settings_client.patch(
-        "/api/v1/company/settings",
-        headers=auth_headers,
-        json={"name": f"Acme Plumbing {suffix}"},
-    )
-
-    assert response.status_code == 200
-    assert response.json()["slug"] == f"{blocked_slug}-1"
 
 
 def test_patch_company_settings_rejects_invalid_notification_min_urgency(

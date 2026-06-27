@@ -15,6 +15,7 @@ from app.agents.lead_agent.contact_validation import (
     is_valid_phone,
     sanitize_contact_fields,
 )
+from app.agents.lead_agent.conversation_flow import resolve_qualification_reply
 from app.agents.lead_agent.extraction import LeadExtractionClient
 from app.agents.lead_agent.models import (
     LeadCaptureResult,
@@ -27,6 +28,7 @@ from app.agents.lead_agent.qualification import (
     evaluate_qualification,
 )
 from app.agents.lead_agent.repository import LeadRepository
+from app.agents.lead_agent.urgency import sanitize_urgency_fields
 from app.agents.lead_agent.utils import (
     build_message_response,
     get_missing_fields,
@@ -47,6 +49,7 @@ from app.services.service_area.evaluate import (
     resolve_lead_postal_code,
 )
 from app.services.service_area.models import ServiceAreaStatus
+from app.trades.registry import build_trade_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -120,6 +123,7 @@ class LeadCaptureService:
         )
         pre_service_area_eval = evaluate_service_area(company, existing_data)
         service_area_status_prompt = build_service_area_status_prompt(pre_service_area_eval)
+        trade_prompt = build_trade_prompt(company.trade) if company is not None else None
 
         self._conversation_repository.add_message(
             conversation.id,
@@ -140,6 +144,7 @@ class LeadCaptureService:
                 "service_area_prompt": service_area_prompt,
                 "service_area_status_prompt": service_area_status_prompt,
                 "channel_voice_prompt": self._channel == ConversationChannel.VOICE,
+                "trade_prompt": trade_prompt,
             },
         )
         system_prompt = await self._agent.build_system_prompt(agent_context)
@@ -164,6 +169,7 @@ class LeadCaptureService:
         merged_data, _ = sanitize_contact_fields(
             merge_lead_data(existing_data, incoming_data),
         )
+        merged_data = sanitize_urgency_fields(merged_data)
         if merged_data.postal_code is None:
             resolved_plz = resolve_lead_postal_code(merged_data)
             if resolved_plz is not None:
@@ -176,8 +182,15 @@ class LeadCaptureService:
         reply = llm_output.reply
         if rejected_contacts.any_rejected:
             reply = build_invalid_contact_reply(rejected_contacts)
-        elif (
-            service_area_eval.status
+        else:
+            reply = resolve_qualification_reply(
+                merged_data=merged_data,
+                channel=self._channel,
+                llm_reply=reply,
+            )
+        if (
+            not rejected_contacts.any_rejected
+            and service_area_eval.status
             in {ServiceAreaStatus.IN_RANGE, ServiceAreaStatus.OUT_OF_RANGE}
             and resolve_lead_postal_code(existing_data) != service_area_eval.postal_code
         ):
