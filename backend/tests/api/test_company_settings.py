@@ -122,6 +122,54 @@ def test_patch_company_settings_resolves_service_area_coordinates_from_plz(
     assert 10 < company.service_area_longitude < 12
 
 
+def test_patch_company_settings_keeps_slug_when_name_changes(
+    settings_client: TestClient,
+    company,
+    auth_headers: dict[str, str],
+) -> None:
+    suffix = uuid.uuid4().hex[:8]
+    new_name = f"Werkstatt Schmidt {suffix} GmbH"
+    original_slug = company.slug
+    original_created_at = company.created_at.isoformat()
+
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"name": new_name},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["name"] == new_name
+    assert body["slug"] == original_slug
+    assert body["created_at"].startswith(original_created_at[:19])
+
+
+def test_patch_company_settings_keeps_slug_when_rename_matches_existing_slug(
+    settings_client: TestClient,
+    company,
+    company_repository,
+    auth_headers: dict[str, str],
+) -> None:
+    suffix = uuid.uuid4().hex[:8]
+    blocked_slug = f"acme-plumbing-{suffix}"
+    original_slug = company.slug
+    company_repository.create(
+        name="Blocker Company",
+        email=f"blocker-{suffix}@example.com",
+        slug=blocked_slug,
+    )
+
+    response = settings_client.patch(
+        "/api/v1/company/settings",
+        headers=auth_headers,
+        json={"name": f"Acme Plumbing {suffix}"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["slug"] == original_slug
+
+
 def test_patch_company_settings_rejects_invalid_notification_min_urgency(
     settings_client: TestClient,
     auth_headers: dict[str, str],

@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 
 import { Link } from "@/i18n/navigation";
 
+import { LocaleSwitcher } from "@/components/locale-switcher";
+
 interface MarketingShellProps {
   children: ReactNode;
 }
@@ -20,6 +22,7 @@ export async function MarketingShell({ children }: MarketingShellProps) {
           <span>{brand("name")}</span>
         </Link>
         <nav className="marketing-nav" aria-label={nav("marketing")}>
+          <LocaleSwitcher />
           <Link href="/login" className="nav-link">
             {nav("signIn")}
           </Link>
