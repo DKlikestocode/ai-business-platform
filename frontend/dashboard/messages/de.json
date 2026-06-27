@@ -16,7 +16,10 @@
     "done": "Erledigt",
     "todo": "Offen",
     "dev": "Dev",
-    "devMode": "Entwicklungsmodus"
+    "devMode": "Entwicklungsmodus",
+    "language": "Sprache",
+    "localeDe": "DE",
+    "localeEn": "EN"
   },
   "nav": {
     "gettingStarted": "Erste Schritte",

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/components/auth-provider";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link } from "@/i18n/navigation";
 import { isDevelopment } from "@/lib/env";
 
@@ -20,6 +21,7 @@ export function SiteNav() {
 
   return (
     <nav className="site-nav" aria-label={t("main")}>
+      <LocaleSwitcher />
       {links.map((link) => (
         <Link key={link.href} href={link.href} className="nav-link">
           {t(link.labelKey)}

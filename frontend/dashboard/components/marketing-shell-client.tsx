@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { LegalFooterLinks } from "@/components/legal-footer-links";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link } from "@/i18n/navigation";
 
 interface MarketingShellClientProps {
@@ -22,6 +23,7 @@ export function MarketingShellClient({ children }: MarketingShellClientProps) {
           <span>{brand("name")}</span>
         </Link>
         <nav className="marketing-nav" aria-label={nav("marketing")}>
+          <LocaleSwitcher />
           <Link href="/login" className="nav-link">
             {nav("signIn")}
           </Link>

@@ -70,7 +70,50 @@ a {
 
 .site-nav {
   display: flex;
+  align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+.locale-switcher {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.locale-switcher-option {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.locale-switcher-option:hover {
+  color: var(--primary);
+}
+
+.locale-switcher-option.is-active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.locale-switcher-option.is-active:hover {
+  color: #ffffff;
+}
+
+.locale-switcher-option:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  z-index: 1;
 }
 
 .nav-link {
@@ -803,6 +846,12 @@ code {
   gap: 20px;
   justify-items: center;
   width: min(100%, 420px);
+}
+
+.login-locale-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .login-card {
