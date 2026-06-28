@@ -40,8 +40,8 @@ def build_service_area_prompt(company: Company) -> str | None:
 def build_service_area_status_prompt(evaluation: ServiceAreaEvaluation) -> str | None:
     if evaluation.status == ServiceAreaStatus.UNKNOWN:
         return (
-            "Standortprüfung: Die Postleitzahl fehlt noch oder ist ungültig. "
-            "Fragen Sie nach der 5-stelligen deutschen PLZ."
+            "Standortprüfung: Ohne gültige Postleitzahl ist keine Einschätzung zum "
+            "Einsatzgebiet möglich. Fragen Sie nach der 5-stelligen deutschen PLZ."
         )
 
     if evaluation.status == ServiceAreaStatus.NOT_CONFIGURED:

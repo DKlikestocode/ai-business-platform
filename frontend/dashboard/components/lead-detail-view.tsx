@@ -9,6 +9,7 @@ import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-ma
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
+import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -197,6 +198,10 @@ export function LeadDetailView() {
                   ) : null}
                 </div>
               ) : null}
+              <ServiceAreaStatusBadge
+                status={lead.service_area_status}
+                distanceKm={lead.service_area_distance_km}
+              />
               <StatusBadge status={lead.status} />
             </div>
           </div>
@@ -323,6 +328,7 @@ export function LeadDetailView() {
               {t("moreDetails")}
             </summary>
             <dl className="detail-list inquiry-handoff-more-list">
+              <DetailRow label={t("postalCode")} value={lead.postal_code} />
               <DetailRow label={t("location")} value={lead.location} />
               <DetailRow label={t("company")} value={lead.company} />
               <DetailRow
