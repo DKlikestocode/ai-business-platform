@@ -201,6 +201,7 @@ export function CompanySettingsForm() {
               onChange={(event) => updateField("email", event.target.value)}
               required
             />
+            <p className="muted field-hint">{t("emailHint")}</p>
           </label>
           <label className="field">
             <span>{t("phone")}</span>
@@ -211,6 +212,7 @@ export function CompanySettingsForm() {
                 updateField("phone", event.target.value || null)
               }
             />
+            <p className="muted field-hint">{t("phoneHint")}</p>
           </label>
           <label className="field">
             <span>{t("trade")}</span>

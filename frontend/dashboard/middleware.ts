@@ -90,7 +90,13 @@ export default function middleware(request: NextRequest) {
     }
 
     const target = request.nextUrl.clone();
-    target.pathname = "/site";
+    if (pathname === "/impressum") {
+      target.pathname = "/site/impressum";
+    } else if (pathname === "/datenschutz") {
+      target.pathname = "/site/datenschutz";
+    } else {
+      target.pathname = "/site";
+    }
     return NextResponse.rewrite(target);
   }
 
@@ -150,6 +156,8 @@ export const config = {
     "/",
     "/site",
     "/site/:path*",
+    "/impressum",
+    "/datenschutz",
     "/(de|en)/:path*",
     "/dashboard",
     "/dashboard/:path*",

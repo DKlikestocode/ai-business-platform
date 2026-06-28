@@ -32,6 +32,7 @@ class PilotCustomerInput:
     admin_email: str
     admin_password: str
     trade: str | None = None
+    company_slug: str | None = None
     api_base_url: str = "http://localhost:8000"
     frontend_base_url: str = "http://localhost:3000"
 
@@ -49,6 +50,7 @@ def setup_pilot_customer(
         name=payload.company_name,
         email=payload.company_email,
         phone=payload.company_phone,
+        slug=payload.company_slug,
     )
 
     if payload.notification_email:

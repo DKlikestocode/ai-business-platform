@@ -36,3 +36,8 @@ export function getSiteCompanySlug(): string {
     DEFAULT_SITE_COMPANY_SLUG
   );
 }
+
+/** Public URL prefix for business-site pages (`""` on SITE_DOMAIN, `/site` on localhost). */
+export function getBusinessSitePublicBasePath(): string {
+  return getConfiguredSiteHostnames().length > 0 ? "" : "/site";
+}

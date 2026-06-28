@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     widget_stale_after_hours: int = 168
     landing_demo_max_user_messages: int = 6
     vapi_webhook_secret: str = ""
+    self_serve_registration_enabled: bool = False
 
     @computed_field
     @property

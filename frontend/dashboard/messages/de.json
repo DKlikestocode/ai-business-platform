@@ -320,7 +320,9 @@
     "companyProfile": "Unternehmensprofil",
     "companyProfileHint": "Sie können Name, E-Mail und Telefon jederzeit hier anpassen — nicht nur bei der Registrierung.",
     "name": "Name",
+    "emailHint": "Öffentliche Kontakt-E-Mail auf Ihrer Website (z. B. hallo@ihre-domain.de). Benachrichtigungen können separat eingestellt werden.",
     "phone": "Telefon",
+    "phoneHint": "Wird auf Ihrer öffentlichen Website im Kopfbereich und unter Kontakt angezeigt.",
     "trade": "Branche",
     "tradeHint": "Steuert Fachsprache im Website-Chat und branchenspezifische Beispiele im Dashboard.",
     "tradeOptions": {
@@ -656,7 +658,75 @@
     "phoneLabel": "Telefon",
     "contactChatHint": "Öffnen Sie den Chat unten rechts und schildern Sie kurz Ihr Problem, Ihre Postleitzahl und wie wir Sie erreichen können.",
     "loadFailedTitle": "Website vorübergehend nicht verfügbar",
-    "loadFailedBody": "Bitte versuchen Sie es in wenigen Minuten erneut oder schreiben Sie uns direkt per E-Mail."
+    "loadFailedBody": "Bitte versuchen Sie es in wenigen Minuten erneut oder schreiben Sie uns direkt per E-Mail.",
+    "impressumLink": "Impressum",
+    "datenschutzLink": "Datenschutz",
+    "legalNavLabel": "Rechtliche Informationen",
+    "legalBackHome": "Zur Startseite",
+    "legal": {
+      "impressum": {
+        "title": "Impressum",
+        "intro": "Angaben gemäß § 5 TMG für {companyName}.",
+        "sectionKeys": ["operator", "contact", "dispute"],
+        "sections": {
+          "operator": {
+            "heading": "Anbieter",
+            "body": "{companyName} — Dienstleistungen für Privat- und Gewerbekunden in der Region."
+          },
+          "contact": {
+            "heading": "Kontakt",
+            "body": "E-Mail: {email}. Telefon: {phone}."
+          },
+          "dispute": {
+            "heading": "EU-Streitschlichtung",
+            "body": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr/. Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen."
+          }
+        }
+      },
+      "datenschutz": {
+        "title": "Datenschutzerklärung",
+        "intro": "Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Nachfolgend informieren wir Sie über die Verarbeitung bei Kontakt und Chat auf der Website von {companyName}.",
+        "sectionKeys": [
+          "controller",
+          "dataCollected",
+          "purpose",
+          "legalBasis",
+          "processors",
+          "rights",
+          "changes"
+        ],
+        "sections": {
+          "controller": {
+            "heading": "Verantwortlicher",
+            "body": "Verantwortlich ist {companyName}. Kontakt: {email}, Telefon: {phone}."
+          },
+          "dataCollected": {
+            "heading": "Welche Daten wir verarbeiten",
+            "body": "Wenn Sie uns per Chat oder E-Mail kontaktieren, verarbeiten wir die von Ihnen mitgeteilten Angaben (z. B. Name, Telefon, E-Mail, Adresse/PLZ, Beschreibung Ihres Anliegens)."
+          },
+          "purpose": {
+            "heading": "Zweck der Verarbeitung",
+            "body": "Wir nutzen diese Daten, um Ihre Anfrage zu bearbeiten, Sie zu kontaktieren und ein Angebot bzw. einen Termin vorzubereiten."
+          },
+          "legalBasis": {
+            "heading": "Rechtsgrundlage",
+            "body": "Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) und Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung von Kundenanfragen)."
+          },
+          "processors": {
+            "heading": "Technische Dienstleister",
+            "body": "Für den Website-Chat und die sichere Übermittlung setzen wir technische Dienstleister ein (Hosting in der EU, E-Mail-Versand, KI-gestützte Chat-Verarbeitung). Mit diesen bestehen die erforderlichen Auftragsverarbeitungsverträge."
+          },
+          "rights": {
+            "heading": "Ihre Rechte",
+            "body": "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Beschwerden können Sie bei einer Datenschutz-Aufsichtsbehörde einreichen."
+          },
+          "changes": {
+            "heading": "Änderungen",
+            "body": "Wir passen diese Erklärung an, wenn sich Rechtslage oder unsere Dienste ändern. Die aktuelle Version finden Sie stets auf dieser Seite."
+          }
+        }
+      }
+    }
   },
   "errors": {
     "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",

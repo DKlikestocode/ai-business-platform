@@ -6,6 +6,7 @@ import {
   normalizePhoneHref,
   type PublicBusinessSite,
 } from "@/lib/business-site";
+import { getBusinessSitePublicBasePath } from "@/lib/site-config";
 
 interface BusinessSitePageProps {
   site: PublicBusinessSite;
@@ -19,6 +20,7 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
     site.service_radius_km,
   );
   const phone = site.phone?.trim() ?? "";
+  const basePath = getBusinessSitePublicBasePath();
 
   return (
     <div className="business-site">
@@ -153,6 +155,13 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
                 <a href={`tel:${normalizePhoneHref(phone)}`}>{phone}</a>
               </p>
             ) : null}
+            <nav
+              className="business-site-footer-legal"
+              aria-label={copy.legalNavLabel}
+            >
+              <a href={`${basePath}/impressum`}>{copy.impressumLink}</a>
+              <a href={`${basePath}/datenschutz`}>{copy.datenschutzLink}</a>
+            </nav>
             <p>© {site.company_name}</p>
           </div>
         </div>
