@@ -34,6 +34,7 @@ import {
   getDashboardCache,
   loadCachedCompanySettings,
 } from "@/lib/dashboard-cache";
+import { useGettingStartedNavVisibility } from "@/lib/use-getting-started-nav-visibility";
 import { translateWithTradeOverride } from "@/lib/trade-copy";
 import { tradeNamespace } from "@/lib/trades/types";
 import type { CompanySettings, Lead } from "@/lib/types";
@@ -46,6 +47,7 @@ function formatDate(value: string, locale: string): string {
 export function LeadsDashboard() {
   const locale = useLocale();
   const { loading: authLoading, error: authError } = useAuth();
+  const { showGettingStarted } = useGettingStartedNavVisibility();
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
   );
@@ -364,8 +366,8 @@ export function LeadsDashboard() {
           actionLabel={t("emptySetupCta")}
           secondaryActionHref="/demo-chat"
           secondaryActionLabel={t("emptyDemoCta")}
-          linkHref="/getting-started"
-          linkLabel={t("emptyChecklistLink")}
+          linkHref={showGettingStarted ? "/getting-started" : undefined}
+          linkLabel={showGettingStarted ? t("emptyChecklistLink") : undefined}
         />
       ) : null}
 
