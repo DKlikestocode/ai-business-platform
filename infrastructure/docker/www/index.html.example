@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Willkommen</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 40rem;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
+    h1 { font-size: 1.75rem; }
+    p { color: #374151; }
+  </style>
+</head>
+<body>
+  <h1>Willkommen</h1>
+  <p>Schreiben Sie uns im Chat unten rechts — wir melden uns schnellstmöglich.</p>
+
+  <!-- Copy the full snippet from Dashboard → Settings → Chat auf Ihrer Website -->
+  <div
+    id="ai-agent-widget"
+    data-company-slug="your-company-slug"
+    data-api-base="https://api.example.com"
+    data-install-token="your-install-token"
+    data-title="Chat mit uns"
+  ></div>
+  <script src="https://api.example.com/static/widget/widget.js?v=3"></script>
+</body>
+</html>

@@ -16,6 +16,7 @@ This guide covers deploying AI Anfragen-Assistent with Docker Compose for a pilo
 | `APP_ENV` | Must be `production` |
 | `APP_DOMAIN` | Public dashboard hostname (e.g. `app.example.com`) |
 | `API_DOMAIN` | Public API hostname (e.g. `api.example.com`) |
+| `SITE_DOMAIN` | Root marketing site with widget embed (e.g. `example.com, www.example.com`) |
 | `ACME_EMAIL` | Email for Let's Encrypt certificate notifications |
 | `JWT_SECRET_KEY` | Unique secret, at least 32 characters |
 | `OPENAI_API_KEY` | OpenAI API key for the Lead Capture Agent |
@@ -33,12 +34,14 @@ The backend refuses to start in production if `JWT_SECRET_KEY` is still the defa
 
 ## DNS setup
 
-Point both domains at the public IP of the server running Docker Compose.
+Point these domains at the public IP of the server running Docker Compose.
 
 | Type | Name | Value |
 |------|------|-------|
 | A | `app.example.com` | Your server public IP |
 | A | `api.example.com` | Your server public IP |
+| A | `@` (apex) | Your server public IP |
+| A | `www` | Your server public IP |
 
 Wait for DNS to propagate before starting the stack. Caddy requests Let's Encrypt certificates during startup and requires both hostnames to resolve to this server.
 
@@ -57,8 +60,9 @@ Production uses [Caddy](https://caddyserver.com/) as the reverse proxy with auto
 |------------|-----------|---------|
 | `https://app.example.com` | `frontend:3000` | Dashboard UI |
 | `https://api.example.com` | `backend:8000` | REST API and static assets |
+| `https://example.com` | `Caddy file_server` → `infrastructure/docker/www` | Pilot marketing site with widget |
 
-The Caddy configuration lives in `infrastructure/docker/Caddyfile.template`. Domain values are injected from `.env` at runtime using `{$APP_DOMAIN}`, `{$API_DOMAIN}`, and `{$ACME_EMAIL}`.
+The Caddy configuration lives in `infrastructure/docker/Caddyfile.template`. Domain values are injected from `.env` at runtime using `{$APP_DOMAIN}`, `{$API_DOMAIN}`, `{$SITE_DOMAIN}`, and `{$ACME_EMAIL}`.
 
 Backend and frontend are not published directly. Only Caddy exposes ports `80` and `443`.
 
@@ -77,6 +81,21 @@ Customer websites embed the widget from the API domain:
 ```
 
 Caddy forwards all `api.example.com` traffic to the backend, including `/static/widget/widget.js` and `/api/v1/public/*` widget message endpoints.
+
+### Pilot marketing site (`SITE_DOMAIN`)
+
+The root domain serves static files from `infrastructure/docker/www/`. The live `index.html` contains the install token and is **not** committed to git.
+
+Generate it after pilot setup:
+
+```bash
+cd infrastructure/docker
+chmod +x scripts/generate-www.sh
+./scripts/generate-www.sh
+docker compose --env-file ../../.env -f docker-compose.prod.yml up -d --force-recreate caddy
+```
+
+Or copy the embed snippet from **Dashboard → Settings → Chat auf Ihrer Website** into `www/index.html` (see `www/index.html.example`).
 
 ## Deploy
 

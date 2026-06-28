@@ -32,6 +32,7 @@ Thumbs.db
 
 # Docker
 *.log
+infrastructure/docker/www/index.html
 
 # Node / Next.js
 node_modules/

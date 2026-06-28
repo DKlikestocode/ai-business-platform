@@ -1,9 +1,16 @@
 # Production reverse proxy template for Caddy.
-# Copy values into .env: APP_DOMAIN, API_DOMAIN, ACME_EMAIL
+# Copy values into .env: APP_DOMAIN, API_DOMAIN, SITE_DOMAIN, ACME_EMAIL
 # Caddy substitutes {$VAR} from the container environment at runtime.
 
 {
 	email {$ACME_EMAIL}
+}
+
+# Marketing / pilot website with embedded widget (set SITE_DOMAIN in .env)
+{$SITE_DOMAIN} {
+	encode gzip
+	root * /srv/www
+	file_server
 }
 
 {$APP_DOMAIN} {
