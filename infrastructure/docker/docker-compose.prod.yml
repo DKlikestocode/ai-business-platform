@@ -66,9 +66,11 @@ services:
     environment:
       APP_DOMAIN: ${APP_DOMAIN}
       API_DOMAIN: ${API_DOMAIN}
+      SITE_DOMAIN: ${SITE_DOMAIN}
       ACME_EMAIL: ${ACME_EMAIL}
     volumes:
       - ./Caddyfile.template:/etc/caddy/Caddyfile:ro
+      - ./www:/srv/www:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
