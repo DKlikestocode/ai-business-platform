@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.api.dependencies import get_user_service, require_development_environment
+from app.api.dependencies import get_user_service, require_registration_enabled
 from app.api.schemas.users import UserCreateRequest, UserResponse, user_to_response
 from app.domain.exceptions import ConflictError, NotFoundError
 from app.services.tenant_service import UserService
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/users", tags=["users"])
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a user",
-    dependencies=[Depends(require_development_environment)],
+    dependencies=[Depends(require_registration_enabled)],
 )
 def create_user(
     payload: UserCreateRequest,

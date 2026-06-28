@@ -2,11 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.api.dependencies import (
-    get_company_service,
-    get_current_user,
-    require_development_environment,
-)
+from app.api.dependencies import get_company_service, get_current_user, require_registration_enabled
 from app.api.schemas.companies import CompanyCreateRequest, CompanyResponse, company_to_response
 from app.db.models.user import User
 from app.domain.exceptions import NotFoundError
@@ -20,7 +16,7 @@ router = APIRouter(prefix="/companies", tags=["companies"])
     response_model=CompanyResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a company",
-    dependencies=[Depends(require_development_environment)],
+    dependencies=[Depends(require_registration_enabled)],
 )
 def create_company(
     payload: CompanyCreateRequest,

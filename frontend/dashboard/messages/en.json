@@ -320,7 +320,9 @@
     "companyProfile": "Company profile",
     "companyProfileHint": "You can update name, email, and phone here anytime — not only during sign-up.",
     "name": "Name",
+    "emailHint": "Public contact email on your website (e.g. hello@your-domain.com). Notifications can be configured separately.",
     "phone": "Phone",
+    "phoneHint": "Shown on your public website in the header and contact section.",
     "trade": "Trade",
     "tradeHint": "Controls industry language in the website chat and trade-specific examples in the dashboard.",
     "tradeOptions": {
@@ -656,7 +658,75 @@
     "phoneLabel": "Phone",
     "contactChatHint": "Open the chat at the bottom right and briefly describe your issue, postal code, and how to reach you.",
     "loadFailedTitle": "Website temporarily unavailable",
-    "loadFailedBody": "Please try again in a few minutes or email us directly."
+    "loadFailedBody": "Please try again in a few minutes or email us directly.",
+    "impressumLink": "Legal notice",
+    "datenschutzLink": "Privacy policy",
+    "legalNavLabel": "Legal information",
+    "legalBackHome": "Back to home",
+    "legal": {
+      "impressum": {
+        "title": "Legal notice",
+        "intro": "Information pursuant to § 5 TMG for {companyName}.",
+        "sectionKeys": ["operator", "contact", "dispute"],
+        "sections": {
+          "operator": {
+            "heading": "Provider",
+            "body": "{companyName} — services for residential and commercial customers in the region."
+          },
+          "contact": {
+            "heading": "Contact",
+            "body": "Email: {email}. Phone: {phone}."
+          },
+          "dispute": {
+            "heading": "EU dispute resolution",
+            "body": "The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr/. We are not obliged or willing to participate in dispute resolution before a consumer arbitration board."
+          }
+        }
+      },
+      "datenschutz": {
+        "title": "Privacy policy",
+        "intro": "We take the protection of your personal data seriously. Below we explain how data is processed when you contact {companyName} via this website or chat.",
+        "sectionKeys": [
+          "controller",
+          "dataCollected",
+          "purpose",
+          "legalBasis",
+          "processors",
+          "rights",
+          "changes"
+        ],
+        "sections": {
+          "controller": {
+            "heading": "Controller",
+            "body": "The controller is {companyName}. Contact: {email}, phone: {phone}."
+          },
+          "dataCollected": {
+            "heading": "Data we process",
+            "body": "When you contact us via chat or email, we process the information you provide (e.g. name, phone, email, address/postal code, description of your request)."
+          },
+          "purpose": {
+            "heading": "Purpose",
+            "body": "We use this data to handle your request, contact you, and prepare a quote or appointment."
+          },
+          "legalBasis": {
+            "heading": "Legal basis",
+            "body": "Processing is based on Art. 6(1)(b) GDPR (pre-contractual measures) and Art. 6(1)(f) GDPR (legitimate interest in handling customer inquiries)."
+          },
+          "processors": {
+            "heading": "Processors",
+            "body": "We use technical service providers for the website chat and secure transmission (EU hosting, email delivery, AI-assisted chat processing) under appropriate data processing agreements."
+          },
+          "rights": {
+            "heading": "Your rights",
+            "body": "You have the right to access, rectification, erasure, restriction, portability, and objection. You may lodge a complaint with a supervisory authority."
+          },
+          "changes": {
+            "heading": "Changes",
+            "body": "We update this policy when legal requirements or our services change. The current version is always available on this page."
+          }
+        }
+      }
+    }
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",

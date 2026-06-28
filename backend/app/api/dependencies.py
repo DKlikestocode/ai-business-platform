@@ -44,6 +44,17 @@ def require_development_environment(
         )
 
 
+def require_registration_enabled(
+    settings: Settings = Depends(get_settings),
+) -> None:
+    if settings.is_development or settings.self_serve_registration_enabled:
+        return
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Self-service registration is disabled in production.",
+    )
+
+
 class RateLimit:
     def __init__(self, *, limit: int, window_seconds: int, scope: str) -> None:
         self.limit = limit
