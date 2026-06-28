@@ -26,6 +26,7 @@ from app.agents.lead_agent.models import (
 from app.agents.lead_agent.qualification import (
     build_qualification_hint,
     evaluate_qualification,
+    has_useful_context,
 )
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.urgency import sanitize_urgency_fields
@@ -202,10 +203,10 @@ class LeadCaptureService:
             )
         elif (
             not rejected_contacts.any_rejected
+            and self._channel == ConversationChannel.WEB
+            and has_useful_context(merged_data)
             and service_area_eval.status == ServiceAreaStatus.UNKNOWN
             and resolve_lead_postal_code(merged_data) is None
-            and self._channel
-            in {ConversationChannel.WEB, ConversationChannel.LANDING_DEMO}
         ):
             reply = append_missing_postal_code_reply_note(reply)
 
