@@ -103,6 +103,10 @@ export default function middleware(request: NextRequest) {
     return NextResponse.redirect(target);
   }
 
+  if (pathname === "/site" || pathname.startsWith("/site/")) {
+    return NextResponse.next();
+  }
+
   const locale = resolveLocale(pathname);
   const pathnameWithoutLocale = getPathnameWithoutLocale(pathname);
   const hasSession = Boolean(request.cookies.get(SESSION_COOKIE)?.value);
