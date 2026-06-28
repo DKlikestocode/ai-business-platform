@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { PilotBookingLink } from "@/components/pilot-booking-link";
 import { Link } from "@/i18n/navigation";
 
 interface MarketingShellClientProps {
@@ -27,9 +28,9 @@ export function MarketingShellClient({ children }: MarketingShellClientProps) {
           <Link href="/login" className="nav-link">
             {nav("signIn")}
           </Link>
-          <Link href="/onboarding" className="button">
-            {nav("startFreePilot")}
-          </Link>
+          <PilotBookingLink className="button">
+            {nav("bookPilot")}
+          </PilotBookingLink>
         </nav>
       </header>
       <main>{children}</main>

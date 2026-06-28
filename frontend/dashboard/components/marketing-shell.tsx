@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { PilotBookingLink } from "@/components/pilot-booking-link";
 
 interface MarketingShellProps {
   children: ReactNode;
@@ -26,9 +27,9 @@ export async function MarketingShell({ children }: MarketingShellProps) {
           <Link href="/login" className="nav-link">
             {nav("signIn")}
           </Link>
-          <Link href="/onboarding" className="button">
-            {nav("startFreePilot")}
-          </Link>
+          <PilotBookingLink className="button">
+            {nav("bookPilot")}
+          </PilotBookingLink>
         </nav>
       </header>
       <main>{children}</main>

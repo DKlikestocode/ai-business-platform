@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "AI Inquiry Assistant for small businesses",
-    "description": "Capture website inquiries automatically, prioritize important customers, and notify your team by email."
+    "title": "AuftragsPilot — AI inbox for trades and local service businesses",
+    "description": "Capture website inquiries automatically, prioritize what matters, and notify your team by email — for trades and local service providers."
   },
   "common": {
     "email": "Email",
@@ -29,23 +29,26 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "startFreePilot": "Start free",
+    "bookPilot": "Book a pilot call",
     "main": "Main navigation",
     "marketing": "Marketing navigation"
   },
   "brand": {
-    "name": "AI Inquiry Assistant",
-    "mark": "AI",
-    "tagline": "AI assistance for website inquiries — for trades and service businesses."
+    "name": "AuftragsPilot",
+    "mark": "AP",
+    "tagline": "The AI inbox for trades and local service businesses."
   },
   "appShell": {
-    "title": "AI Inquiry Assistant",
+    "title": "AuftragsPilot",
     "subtitle": "Your website inquiries in one place"
   },
   "landing": {
-    "eyebrow": "For trades and service businesses",
+    "eyebrow": "For trades and local service businesses",
     "heroTitle": "Your website captures inquiries — you focus on the job.",
-    "heroLead": "A chat on your website answers first questions, captures name, phone, and details — and alerts you when an inquiry matters.",
-    "heroTrustNote": "Start free · Set up in minutes · No credit card",
+    "heroLead": "AuftragsPilot answers first questions in chat, captures name, phone, and details — and alerts you when an inquiry matters.",
+    "heroTrustNote": "No-obligation pilot call · Live in minutes · GDPR-oriented · EU hosting",
+    "bookPilot": "Book a pilot call",
+    "tryDemo": "See live demo",
     "startPilot": "Start free",
     "signIn": "Sign in",
     "preview": {
@@ -80,10 +83,53 @@
     },
     "featuresTitle": "What you get",
     "featuresLead": "Less phone tag, more clear inquiries with everything you need for the callback.",
-    "ctaTitle": "Ready to let your website work for you?",
-    "ctaDescription": "Add your business, put chat on your website, and test with a message — see how it works for you.",
-    "ctaFootnote": "Free · No credit card · Live in minutes",
-    "createPilotAccount": "Start free now",
+    "ctaTitle": "Ready for a clear inbox instead of phone tag?",
+    "ctaDescription": "In a short call we walk through AuftragsPilot with your business — and how chat goes live on your website.",
+    "ctaFootnote": "30 minutes · No obligation · For trades and local service providers",
+    "createPilotAccount": "Book a pilot call",
+    "comparison": {
+      "title": "From phone chaos to a clear inbox",
+      "lead": "Fewer missed inquiries, more callbacks with full context — without a new CRM.",
+      "withoutTitle": "Without AuftragsPilot",
+      "withTitle": "With AuftragsPilot",
+      "without": {
+        "item1": "Inquiries via form, email, or phone — scattered everywhere",
+        "item2": "Back-and-forth before you can call back",
+        "item3": "Emergencies get lost when nobody picks up",
+        "item4": "Evenings and weekends: website is up, nobody responds"
+      },
+      "with": {
+        "item1": "All website inquiries in one inbox — complete, not just a subject line",
+        "item2": "Name, phone, request, and urgency before the first callback",
+        "item3": "Urgent cases are flagged first",
+        "item4": "Chat on your website — reachable outside office hours"
+      }
+    },
+    "industries": {
+      "title": "For trades and local service businesses",
+      "lead": "Industry-aware chat language — from plumbing to roofing to electrical.",
+      "items": {
+        "skh": {
+          "title": "Plumbing · Heating · HVAC",
+          "description": "Burst pipes, heating failures, bathroom upgrades — urgency and postal code captured."
+        },
+        "roof": {
+          "title": "Roofing · Facade · Carpentry",
+          "description": "Storm damage, leaks, quote requests — structured instead of photos-only WhatsApp threads."
+        },
+        "electrical": {
+          "title": "Electrical · Smart home · EV charger",
+          "description": "Install, fault, upgrade — the chat asks what your team needs for the callback."
+        }
+      }
+    },
+    "socialProof": {
+      "title": "From the field",
+      "quote": "Website inquiries no longer land in a generic inbox — they arrive as complete requests with phone and urgency. That saves follow-up questions every day.",
+      "attribution": "Dominik Kessling",
+      "role": "Owner, Dominik's Dienstleistungsbetrieb",
+      "context": "Plumbing · Hamburg"
+    },
     "howItWorks": {
       "title": "How it works",
       "lead": "Three steps — from sign-up to your first real inquiry. No IT skills required.",
@@ -129,7 +175,7 @@
         "roofer": "After the storm, roof tiles are missing. Water is dripping into the attic.",
         "electrician": "I'd like to have a wallbox installed. Can you provide a quote?"
       },
-      "startCta": "Get started free for my business",
+      "startCta": "Book a pilot call",
       "resetCta": "Start new demo"
     },
     "trustTitle": "Trust and privacy",
@@ -146,7 +192,7 @@
       "title": "Legal notice (Impressum)",
       "intro": "Information according to § 5 TMG (Germany).",
       "operatorHeading": "Operator",
-      "operatorBody": "AI Inquiry Assistant — AI-assisted capture and qualification of website inquiries for businesses.",
+      "operatorBody": "AuftragsPilot — AI-assisted capture and qualification of website inquiries for trades and local service businesses.",
       "contactHeading": "Contact",
       "contactBody": "For contractual, technical, and legal inquiries, please contact the platform operator using the contact details provided during registration or in your contract.",
       "disputeHeading": "EU dispute resolution",
@@ -156,7 +202,7 @@
       "title": "Privacy policy",
       "intro": "Protecting your personal data matters to us. Below we explain how we process personal data when you use this platform.",
       "controllerHeading": "Data controller",
-      "controllerBody": "The data controller under the GDPR is the operator of AI Inquiry Assistant. Please refer to the legal notice (Impressum) for contact details.",
+      "controllerBody": "The data controller under the GDPR is the operator of AuftragsPilot. Please refer to the legal notice (Impressum) for contact details.",
       "dataCollectedHeading": "Data we process",
       "dataCollectedBody": "We process data you provide when registering and using the dashboard (e.g. name, email, company details). Chat messages and lead details captured via the website widget (e.g. name, phone, location, service request) are stored to handle customer inquiries.",
       "purposeHeading": "Purpose of processing",
@@ -180,8 +226,8 @@
   "login": {
     "title": "Sign in",
     "description": "Sign in to manage your customer inquiries.",
-    "newCustomer": "Don't have an account yet?",
-    "startPilot": "Start free",
+    "newCustomer": "New to AuftragsPilot?",
+    "startPilot": "Book a pilot call",
     "signingIn": "Signing in...",
     "signIn": "Sign in",
     "signInFailed": "Sign in failed. Check your email and password.",
