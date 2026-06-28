@@ -246,7 +246,10 @@ export function CompanySettingsForm() {
                 )
               }
               placeholder={t("serviceAreaCenterPlaceholder")}
+              inputMode="text"
+              autoComplete="postal-code"
             />
+            <p className="muted field-hint">{t("serviceAreaCenterHint")}</p>
           </label>
           <label className="field">
             <span>{t("serviceRadiusKm")}</span>
