@@ -5,6 +5,7 @@ from app.services.service_area.evaluate import (
     append_missing_postal_code_reply_note,
     append_service_area_reply_note,
     evaluate_service_area,
+    is_service_area_configured,
     resolve_lead_postal_code,
 )
 from app.services.service_area.models import ServiceAreaStatus
@@ -116,6 +117,28 @@ def test_append_service_area_reply_note_out_of_range() -> None:
         radius_km=25,
     )
     assert "außerhalb" in note
+
+
+def test_is_service_area_configured_requires_coordinates_and_radius() -> None:
+    company = Company(
+        name="Acme",
+        slug="acme",
+        email="a@acme.co",
+        service_area_center="München",
+        service_radius_km=25,
+        service_area_latitude=48.137,
+        service_area_longitude=11.575,
+    )
+    assert is_service_area_configured(company) is True
+
+    incomplete = Company(
+        name="Acme",
+        slug="acme-2",
+        email="a@acme.co",
+        service_area_center="München",
+        service_radius_km=25,
+    )
+    assert is_service_area_configured(incomplete) is False
 
 
 def test_append_missing_postal_code_reply_note_appends_once() -> None:

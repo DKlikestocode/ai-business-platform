@@ -15,6 +15,19 @@ def resolve_lead_postal_code(data: LeadExtractedData) -> str | None:
     )
 
 
+def is_service_area_configured(company: Company | None) -> bool:
+    if company is None:
+        return False
+
+    radius = company.service_radius_km
+    return (
+        company.service_area_latitude is not None
+        and company.service_area_longitude is not None
+        and radius is not None
+        and radius > 0
+    )
+
+
 def evaluate_service_area(
     company: Company | None,
     data: LeadExtractedData,
