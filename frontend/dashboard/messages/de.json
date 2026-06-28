@@ -508,7 +508,10 @@
       "qualified": "Geprüft",
       "won": "Gewonnen",
       "lost": "Verloren"
-    }
+    },
+    "serviceAreaInRange": "Im Einsatzgebiet",
+    "serviceAreaOutOfRange": "Außerhalb",
+    "serviceAreaDistance": "ca. {km} km"
   },
   "leadDetail": {
     "loading": "Anfrage wird geladen...",
@@ -545,6 +548,7 @@
     "moreDetails": "Weitere Details",
     "company": "Unternehmen",
     "location": "Standort",
+    "postalCode": "Postleitzahl",
     "serviceRequested": "Angefragter Service",
     "description": "Beschreibung",
     "preferredCallback": "Bevorzugter Rückruf",

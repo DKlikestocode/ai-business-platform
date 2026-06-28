@@ -352,6 +352,16 @@ a {
   color: #1f3f6b;
 }
 
+.service-area-badge--in_range {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.service-area-badge--out_of_range {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
 .voice-setup-steps {
   margin: 0;
   padding-left: 1.25rem;

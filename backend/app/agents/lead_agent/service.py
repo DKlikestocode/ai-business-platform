@@ -44,6 +44,7 @@ from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
 from app.services.service_area.evaluate import (
+    append_missing_postal_code_reply_note,
     append_service_area_reply_note,
     evaluate_service_area,
     resolve_lead_postal_code,
@@ -199,6 +200,14 @@ class LeadCaptureService:
                 service_area_eval,
                 radius_km=company.service_radius_km if company is not None else None,
             )
+        elif (
+            not rejected_contacts.any_rejected
+            and service_area_eval.status == ServiceAreaStatus.UNKNOWN
+            and resolve_lead_postal_code(merged_data) is None
+            and self._channel
+            in {ConversationChannel.WEB, ConversationChannel.LANDING_DEMO}
+        ):
+            reply = append_missing_postal_code_reply_note(reply)
 
         self._conversation_repository.add_message(
             conversation.id,

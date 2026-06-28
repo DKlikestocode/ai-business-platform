@@ -1,5 +1,9 @@
-from app.agents.lead_agent.company_context import build_service_area_prompt
+from app.agents.lead_agent.company_context import (
+    build_service_area_prompt,
+    build_service_area_status_prompt,
+)
 from app.db.models.company import Company
+from app.services.service_area.models import ServiceAreaEvaluation, ServiceAreaStatus
 
 
 def test_build_service_area_prompt_with_center_and_radius() -> None:
@@ -27,3 +31,13 @@ def test_build_service_area_prompt_returns_none_when_unconfigured() -> None:
     )
 
     assert build_service_area_prompt(company) is None
+
+
+def test_build_service_area_status_prompt_unknown_explains_missing_plz() -> None:
+    prompt = build_service_area_status_prompt(
+        ServiceAreaEvaluation(status=ServiceAreaStatus.UNKNOWN),
+    )
+
+    assert prompt is not None
+    assert "keine Einschätzung" in prompt
+    assert "5-stelligen deutschen PLZ" in prompt
