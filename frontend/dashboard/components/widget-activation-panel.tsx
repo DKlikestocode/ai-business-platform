@@ -10,6 +10,10 @@ import { embedSnippetIncludesInstallToken } from "@/lib/activation-display";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import {
+  COMPANY_ACTIVATION_CACHE_KEY,
+  setDashboardCache,
+} from "@/lib/dashboard-cache";
+import {
   ActivationStatusView,
   activationRefreshLabel,
 } from "@/components/activation-status-view";
@@ -45,6 +49,7 @@ export function WidgetActivationPanel({
 
       try {
         const data = await fetchCompanyActivation();
+        setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, data);
         setActivation(data);
       } catch (err) {
         setError(formatUserFacingError(err, t("loadFailed"), errorMessages));

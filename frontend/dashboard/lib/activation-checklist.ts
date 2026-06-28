@@ -108,3 +108,15 @@ export function isAwaitingWebsiteLive(
     !progress.install_widget
   );
 }
+
+/** Hide Erste Schritte nav when setup is complete and the website chat is live. */
+export function shouldShowGettingStartedNav(
+  input: ActivationChecklistInput,
+): boolean {
+  if (!input.company || !input.user || !input.settings || !input.activation) {
+    return true;
+  }
+
+  const progress = evaluateActivationChecklist(input);
+  return !isActivationChecklistComplete(progress);
+}

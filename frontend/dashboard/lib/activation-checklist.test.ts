@@ -7,6 +7,7 @@ import {
   isActivationChecklistComplete,
   isAwaitingFirstWebsiteInquiry,
   isAwaitingWebsiteLive,
+  shouldShowGettingStartedNav,
 } from "@/lib/activation-checklist";
 import {
   isOnboardingComplete,
@@ -241,5 +242,47 @@ describe("activation checklist", () => {
     });
 
     expect(isAwaitingFirstWebsiteInquiry(progress)).toBe(true);
+  });
+
+  it("shows getting started nav while setup data is still loading", () => {
+    expect(
+      shouldShowGettingStartedNav({
+        company,
+        user,
+        settings,
+        activation: undefined,
+      }),
+    ).toBe(true);
+  });
+
+  it("hides getting started nav when checklist is complete and chat is live", () => {
+    expect(
+      shouldShowGettingStartedNav({
+        company,
+        user,
+        settings,
+        activation: buildActivation({
+          status: "live",
+          widget_last_seen_at: "2026-06-10T13:00:00Z",
+          widget_last_origin: "https://acme.co",
+          first_website_inquiry_at: "2026-06-11T10:00:00Z",
+        }),
+      }),
+    ).toBe(false);
+  });
+
+  it("keeps getting started nav visible when widget is live but inquiry is missing", () => {
+    expect(
+      shouldShowGettingStartedNav({
+        company,
+        user,
+        settings,
+        activation: buildActivation({
+          status: "live",
+          widget_last_seen_at: "2026-06-10T13:00:00Z",
+          widget_last_origin: "https://acme.co",
+        }),
+      }),
+    ).toBe(true);
   });
 });
