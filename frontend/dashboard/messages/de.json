@@ -637,6 +637,27 @@
       }
     }
   },
+  "businessSite": {
+    "requestCta": "Anfrage stellen",
+    "heroPrimaryCta": "Jetzt Anfrage senden",
+    "heroSecondaryCta": "Leistungen ansehen",
+    "benefitsTitle": "Warum Kunden uns wählen",
+    "servicesTitle": "Unsere Leistungen",
+    "servicesLead": "Von der schnellen Hilfe im Notfall bis zur geplanten Modernisierung — wir kümmern uns um Ihr Anliegen.",
+    "trustFastTitle": "Schnelle Hilfe",
+    "trustFastBody": "Notfälle nehmen wir ernst und melden uns zeitnah zurück.",
+    "trustFairTitle": "Faire Beratung",
+    "trustFairBody": "Transparente Kommunikation — ohne Fachchinesisch.",
+    "trustRegionalTitle": "Regional vor Ort",
+    "trustRegionalFallback": "Wir sind in Ihrer Nähe für Sie da.",
+    "contactTitle": "Kontakt & Anfrage",
+    "contactLead": "Beschreiben Sie Ihr Anliegen im Chat unten rechts — wir melden uns mit den wichtigsten nächsten Schritten.",
+    "emailLabel": "E-Mail",
+    "phoneLabel": "Telefon",
+    "contactChatHint": "Öffnen Sie den Chat unten rechts und schildern Sie kurz Ihr Problem, Ihre Postleitzahl und wie wir Sie erreichen können.",
+    "loadFailedTitle": "Website vorübergehend nicht verfügbar",
+    "loadFailedBody": "Bitte versuchen Sie es in wenigen Minuten erneut oder schreiben Sie uns direkt per E-Mail."
+  },
   "errors": {
     "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     "openai": "Der KI-Assistent ist noch nicht konfiguriert. Bitten Sie Ihren Administrator, OPENAI_API_KEY zu setzen.",

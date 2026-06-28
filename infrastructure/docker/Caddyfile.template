@@ -6,11 +6,16 @@
 	email {$ACME_EMAIL}
 }
 
-# Marketing / pilot website with embedded widget (set SITE_DOMAIN in .env)
+# Marketing / pilot website — Next.js business site (set SITE_DOMAIN in .env)
 {$SITE_DOMAIN} {
 	encode gzip
-	root * /srv/www
-	file_server
+
+	reverse_proxy frontend:3000 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
 }
 
 {$APP_DOMAIN} {
