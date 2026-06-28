@@ -17,6 +17,7 @@ This guide covers deploying AI Anfragen-Assistent with Docker Compose for a pilo
 | `APP_DOMAIN` | Public dashboard hostname (e.g. `app.example.com`) |
 | `API_DOMAIN` | Public API hostname (e.g. `api.example.com`) |
 | `SITE_DOMAIN` | Root marketing site with widget embed (e.g. `example.com, www.example.com`) |
+| `PILOT_COMPANY_SLUG` | Company slug for `generate-www.sh` (optional; skips placeholder companies) |
 | `ACME_EMAIL` | Email for Let's Encrypt certificate notifications |
 | `JWT_SECRET_KEY` | Unique secret, at least 32 characters |
 | `OPENAI_API_KEY` | OpenAI API key for the Lead Capture Agent |
