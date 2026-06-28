@@ -1,7 +1,8 @@
-import { fetchCompanySettings } from "@/lib/api";
-import type { CompanySettings } from "@/lib/types";
+import { fetchCompanySettings, fetchCompanyActivation } from "@/lib/api";
+import type { CompanyActivation, CompanySettings } from "@/lib/types";
 
 export const COMPANY_SETTINGS_CACHE_KEY = "company-settings";
+export const COMPANY_ACTIVATION_CACHE_KEY = "company-activation";
 
 const cache = new Map<string, unknown>();
 
@@ -41,5 +42,27 @@ export async function loadCachedCompanySettings(
 
   const data = await fetchCompanySettings();
   setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, data);
+  return data;
+}
+
+export async function loadCachedCompanyActivation(
+  onUpdate?: (data: CompanyActivation) => void,
+): Promise<CompanyActivation> {
+  const cached = getDashboardCache<CompanyActivation>(COMPANY_ACTIVATION_CACHE_KEY);
+
+  if (cached) {
+    void fetchCompanyActivation()
+      .then((data) => {
+        setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, data);
+        onUpdate?.(data);
+      })
+      .catch(() => {
+        // Keep showing cached data when background refresh fails.
+      });
+    return cached;
+  }
+
+  const data = await fetchCompanyActivation();
+  setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, data);
   return data;
 }

@@ -7,7 +7,12 @@ import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageHeader } from "@/components/ui/page-header";
-import { fetchCompanyActivation } from "@/lib/api";
+import {
+  COMPANY_SETTINGS_CACHE_KEY,
+  getDashboardCache,
+  loadCachedCompanyActivation,
+  loadCachedCompanySettings,
+} from "@/lib/dashboard-cache";
 import {
   ACTIVATION_CHECKLIST_STEPS,
   countActivationChecklistSteps,
@@ -21,20 +26,19 @@ import {
   ActivationStatusView,
   activationRefreshLabel,
 } from "@/components/activation-status-view";
-import {
-  COMPANY_SETTINGS_CACHE_KEY,
-  getDashboardCache,
-  loadCachedCompanySettings,
-} from "@/lib/dashboard-cache";
+import { useGettingStartedNavVisibility } from "@/lib/use-getting-started-nav-visibility";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import type { CompanyActivation, CompanySettings } from "@/lib/types";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { translateWithTradeOverride } from "@/lib/trade-copy";
 import { tradeNamespace } from "@/lib/trades/types";
 
 export function GettingStartedChecklist() {
+  const router = useRouter();
   const { user, company, loading: authLoading } = useAuth();
+  const { showGettingStarted, activationLoading } =
+    useGettingStartedNavVisibility();
   const locale = useLocale();
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
@@ -92,7 +96,7 @@ export function GettingStartedChecklist() {
       }
       setActivationError(null);
       try {
-        const data = await fetchCompanyActivation();
+        const data = await loadCachedCompanyActivation();
         setActivation(data);
       } catch (err) {
         setActivationError(
@@ -118,6 +122,13 @@ export function GettingStartedChecklist() {
     }
     void loadActivation();
   }, [authLoading, user, loadActivation, refreshKey]);
+
+  useEffect(() => {
+    if (authLoading || !user || activationLoading || showGettingStarted) {
+      return;
+    }
+    router.replace("/leads");
+  }, [authLoading, user, activationLoading, showGettingStarted, router]);
 
   const isContentLoading = authLoading || (loading && !settings);
   const isReady = Boolean(!authLoading && user && company && settings);
