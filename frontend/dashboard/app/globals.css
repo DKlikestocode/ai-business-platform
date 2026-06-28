@@ -2220,3 +2220,306 @@ code {
     gap: 4px;
   }
 }
+
+/* Customer business website (dominiksdomain.com / SITE_DOMAIN) */
+.business-site {
+  --business-primary: #1d4ed8;
+  --business-primary-dark: #1e3a8a;
+  --business-text: #111827;
+  --business-muted: #4b5563;
+  --business-border: #e5e7eb;
+  --business-surface: #ffffff;
+  --business-bg: #f8fafc;
+  --business-accent: #eff6ff;
+  --business-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+  --business-radius: 14px;
+  --business-max: 1120px;
+  background: var(--business-bg);
+  color: var(--business-text);
+  min-height: 100vh;
+}
+
+.business-site-container {
+  width: min(100% - 2rem, var(--business-max));
+  margin-inline: auto;
+}
+
+.business-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--business-border);
+}
+
+.business-site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.business-site-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.business-site-brand strong {
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.business-site-brand span {
+  color: var(--business-muted);
+  font-size: 0.85rem;
+}
+
+.business-site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.business-site-header-phone {
+  font-weight: 600;
+  color: var(--business-text);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.business-site-cta {
+  box-shadow: 0 8px 24px rgba(29, 78, 216, 0.22);
+}
+
+.business-site-cta-secondary {
+  box-shadow: none;
+}
+
+.business-site-hero {
+  padding: 4.5rem 0 3.5rem;
+}
+
+.business-site-hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.business-site-hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+  border: 1px solid var(--business-border);
+  border-radius: calc(var(--business-radius) + 6px);
+  padding: 2rem;
+  box-shadow: var(--business-shadow);
+}
+
+.business-site-eyebrow {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--business-accent);
+  color: var(--business-primary-dark);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.business-site-title {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.business-site-lead {
+  margin: 0;
+  color: var(--business-muted);
+  font-size: 1.05rem;
+  max-width: 38rem;
+}
+
+.business-site-hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.business-site-hero-panel {
+  background: var(--business-surface);
+  border: 1px solid var(--business-border);
+  border-radius: var(--business-radius);
+  padding: 1.5rem;
+  box-shadow: var(--business-shadow);
+}
+
+.business-site-hero-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.business-site-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.business-site-checklist li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  color: var(--business-muted);
+}
+
+.business-site-checklist li::before {
+  content: "✓";
+  color: var(--business-primary);
+  font-weight: 700;
+}
+
+.business-site-section {
+  padding: 3.5rem 0;
+}
+
+.business-site-section-header {
+  margin-bottom: 1.75rem;
+  max-width: 42rem;
+}
+
+.business-site-section-header h2 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.business-site-services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.business-site-service-card {
+  background: var(--business-surface);
+  border: 1px solid var(--business-border);
+  border-radius: var(--business-radius);
+  padding: 1.25rem;
+  min-height: 100%;
+}
+
+.business-site-service-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+}
+
+.business-site-service-card p {
+  margin: 0;
+  color: var(--business-muted);
+  font-size: 0.95rem;
+}
+
+.business-site-trust-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.business-site-trust-item {
+  background: var(--business-surface);
+  border: 1px solid var(--business-border);
+  border-radius: var(--business-radius);
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.business-site-trust-item strong {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.business-site-trust-item span {
+  color: var(--business-muted);
+  font-size: 0.92rem;
+}
+
+.business-site-contact-card {
+  background: var(--business-surface);
+  border: 1px solid var(--business-border);
+  border-radius: calc(var(--business-radius) + 4px);
+  padding: 2rem;
+  box-shadow: var(--business-shadow);
+  display: grid;
+  gap: 1rem;
+}
+
+.business-site-contact-card p {
+  margin: 0;
+}
+
+.business-site-service-area {
+  color: var(--business-primary-dark);
+  font-weight: 600;
+}
+
+.business-site-footer {
+  border-top: 1px solid var(--business-border);
+  background: #0f172a;
+  color: #cbd5e1;
+  padding: 2rem 0;
+  margin-top: 1rem;
+}
+
+.business-site-footer a {
+  color: #e2e8f0;
+}
+
+.business-site-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.business-site-footer strong {
+  color: #fff;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.business-site-footer p {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.business-site-error {
+  padding: 4rem 0;
+}
+
+@media (max-width: 960px) {
+  .business-site-hero-grid,
+  .business-site-services-grid,
+  .business-site-trust-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .business-site-hero {
+    padding-top: 3rem;
+  }
+
+  .business-site-hero-grid,
+  .business-site-services-grid,
+  .business-site-trust-strip {
+    grid-template-columns: 1fr;
+  }
+}

@@ -637,6 +637,27 @@
       }
     }
   },
+  "businessSite": {
+    "requestCta": "Send inquiry",
+    "heroPrimaryCta": "Send inquiry now",
+    "heroSecondaryCta": "View services",
+    "benefitsTitle": "Why customers choose us",
+    "servicesTitle": "Our services",
+    "servicesLead": "From emergency help to planned upgrades — we take care of your request.",
+    "trustFastTitle": "Fast response",
+    "trustFastBody": "We take emergencies seriously and get back to you quickly.",
+    "trustFairTitle": "Fair advice",
+    "trustFairBody": "Clear communication — without jargon.",
+    "trustRegionalTitle": "Local service",
+    "trustRegionalFallback": "We are nearby when you need us.",
+    "contactTitle": "Contact & inquiry",
+    "contactLead": "Describe your request in the chat at the bottom right — we will follow up with clear next steps.",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "contactChatHint": "Open the chat at the bottom right and briefly describe your issue, postal code, and how to reach you.",
+    "loadFailedTitle": "Website temporarily unavailable",
+    "loadFailedBody": "Please try again in a few minutes or email us directly."
+  },
   "errors": {
     "generic": "Something went wrong. Please try again.",
     "openai": "The AI assistant is not configured yet. Ask your administrator to set OPENAI_API_KEY.",

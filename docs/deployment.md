@@ -17,7 +17,8 @@ This guide covers deploying AI Anfragen-Assistent with Docker Compose for a pilo
 | `APP_DOMAIN` | Public dashboard hostname (e.g. `app.example.com`) |
 | `API_DOMAIN` | Public API hostname (e.g. `api.example.com`) |
 | `SITE_DOMAIN` | Root marketing site with widget embed (e.g. `example.com, www.example.com`) |
-| `PILOT_COMPANY_SLUG` | Company slug for `generate-www.sh` (optional; skips placeholder companies) |
+| `PILOT_COMPANY_SLUG` | Company slug for the public business website (`SITE_DOMAIN`) |
+| `SITE_COMPANY_SLUG` | Alias for `PILOT_COMPANY_SLUG` (frontend runtime) |
 | `ACME_EMAIL` | Email for Let's Encrypt certificate notifications |
 | `JWT_SECRET_KEY` | Unique secret, at least 32 characters |
 | `OPENAI_API_KEY` | OpenAI API key for the Lead Capture Agent |
@@ -85,18 +86,18 @@ Caddy forwards all `api.example.com` traffic to the backend, including `/static/
 
 ### Pilot marketing site (`SITE_DOMAIN`)
 
-The root domain serves static files from `infrastructure/docker/www/`. The live `index.html` contains the install token and is **not** committed to git.
+The root domain is served by the **Next.js business site** at `/site`, routed by hostname via middleware. Caddy proxies `SITE_DOMAIN` to the frontend container (same stack as the dashboard).
 
-Generate it after pilot setup:
+Configure in `.env`:
 
-```bash
-cd infrastructure/docker
-chmod +x scripts/generate-www.sh
-./scripts/generate-www.sh
-docker compose --env-file ../../.env -f docker-compose.prod.yml up -d --force-recreate caddy
+```env
+SITE_DOMAIN=example.com, www.example.com
+PILOT_COMPANY_SLUG=your-company-slug
 ```
 
-Or copy the embed snippet from **Dashboard → Settings → Chat auf Ihrer Website** into `www/index.html` (see `www/index.html.example`).
+Local preview without custom DNS: `http://localhost:3000/site`
+
+**Legacy fallback:** `infrastructure/docker/scripts/generate-www.sh` can still emit static HTML from the backend script if needed.
 
 ## Deploy
 

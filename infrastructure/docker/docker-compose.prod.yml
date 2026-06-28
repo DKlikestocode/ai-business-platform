@@ -53,6 +53,8 @@ services:
       API_INTERNAL_URL: http://backend:8000
       NEXT_PUBLIC_API_URL: https://${API_DOMAIN}
       NEXT_PUBLIC_APP_ENV: production
+      SITE_HOSTNAMES: ${SITE_DOMAIN}
+      SITE_COMPANY_SLUG: ${PILOT_COMPANY_SLUG}
     depends_on:
       backend:
         condition: service_healthy
@@ -70,7 +72,6 @@ services:
       ACME_EMAIL: ${ACME_EMAIL}
     volumes:
       - ./Caddyfile.template:/etc/caddy/Caddyfile:ro
-      - ./www:/srv/www:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { routing } from "@/i18n/routing";
+import {
+  getConfiguredSiteHostnames,
+  isBusinessSiteHostname,
+} from "@/lib/site-config";
 
 const SESSION_COOKIE = "auth-session";
 
@@ -55,11 +59,48 @@ function resolveLocale(pathname: string): string {
   return routing.defaultLocale;
 }
 
+function isBusinessSiteAssetPath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname === "/favicon.ico"
+  );
+}
+
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api")) {
     return NextResponse.next();
+  }
+
+  const siteHosts = getConfiguredSiteHostnames();
+  const onBusinessSite = isBusinessSiteHostname(
+    request.headers.get("host"),
+    siteHosts,
+  );
+
+  if (onBusinessSite) {
+    if (isBusinessSiteAssetPath(pathname)) {
+      return NextResponse.next();
+    }
+
+    if (pathname === "/site" || pathname.startsWith("/site/")) {
+      return NextResponse.next();
+    }
+
+    const target = request.nextUrl.clone();
+    target.pathname = "/site";
+    return NextResponse.rewrite(target);
+  }
+
+  if (
+    siteHosts.length > 0 &&
+    (pathname === "/site" || pathname.startsWith("/site/"))
+  ) {
+    const target = request.nextUrl.clone();
+    target.pathname = "/";
+    return NextResponse.redirect(target);
   }
 
   const locale = resolveLocale(pathname);
@@ -103,6 +144,8 @@ export default function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/",
+    "/site",
+    "/site/:path*",
     "/(de|en)/:path*",
     "/dashboard",
     "/dashboard/:path*",
