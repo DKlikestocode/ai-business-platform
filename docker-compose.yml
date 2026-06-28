@@ -58,6 +58,7 @@ services:
       API_INTERNAL_URL: ${API_INTERNAL_URL:-http://backend:8000}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
       NEXT_PUBLIC_APP_ENV: ${NEXT_PUBLIC_APP_ENV:-development}
+      NEXT_PUBLIC_PILOT_BOOKING_URL: ${NEXT_PUBLIC_PILOT_BOOKING_URL:-}
       SITE_COMPANY_SLUG: ${PILOT_COMPANY_SLUG:-}
     volumes:
       - ./frontend/dashboard:/app

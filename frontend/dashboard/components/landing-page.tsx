@@ -1,9 +1,13 @@
 import { getTranslations } from "next-intl/server";
 
 import { HeroWebsiteChatPreview } from "@/components/hero-website-chat-preview";
+import { LandingComparison } from "@/components/landing-comparison";
 import { LandingHowItWorks } from "@/components/landing-how-it-works";
+import { LandingIndustries } from "@/components/landing-industries";
 import { LandingPublicDemo } from "@/components/landing-public-demo";
+import { LandingSocialProof } from "@/components/landing-social-proof";
 import { MarketingShell } from "@/components/marketing-shell";
+import { PilotBookingLink } from "@/components/pilot-booking-link";
 import { Link } from "@/i18n/navigation";
 
 const FEATURE_KEYS = [
@@ -194,11 +198,11 @@ export async function LandingPage() {
           <h1 className="landing-hero-title">{t("heroTitle")}</h1>
           <p className="hero-lead">{t("heroLead")}</p>
           <div className="hero-actions">
-            <Link href="/onboarding" className="button button-lg">
-              {t("startPilot")}
-            </Link>
-            <Link href="/login" className="button secondary button-lg">
-              {t("signIn")}
+            <PilotBookingLink className="button button-lg">
+              {t("bookPilot")}
+            </PilotBookingLink>
+            <Link href="#live-demo" className="button secondary button-lg">
+              {t("tryDemo")}
             </Link>
           </div>
           <p className="hero-trust-note">{t("heroTrustNote")}</p>
@@ -223,7 +227,11 @@ export async function LandingPage() {
         </ul>
       </section>
 
+      <LandingComparison />
+
       <LandingHowItWorks />
+
+      <LandingIndustries />
 
       <section className="landing-section landing-section-alt shell">
         <header className="landing-section-header">
@@ -241,6 +249,8 @@ export async function LandingPage() {
         </div>
       </section>
 
+      <LandingSocialProof />
+
       <LandingPublicDemo />
 
       <section className="landing-section landing-cta shell">
@@ -248,9 +258,9 @@ export async function LandingPage() {
           <h2 className="landing-section-title">{t("ctaTitle")}</h2>
           <p className="cta-description">{t("ctaDescription")}</p>
           <div className="cta-actions">
-            <Link href="/onboarding" className="button button-lg">
+            <PilotBookingLink className="button button-lg">
               {t("createPilotAccount")}
-            </Link>
+            </PilotBookingLink>
             <p className="cta-footnote muted">{t("ctaFootnote")}</p>
           </div>
         </div>

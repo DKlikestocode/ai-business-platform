@@ -10,6 +10,7 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
+import { PilotBookingLink } from "@/components/pilot-booking-link";
 import { Link, useRouter } from "@/i18n/navigation";
 
 export function LoginForm() {
@@ -55,7 +56,8 @@ export function LoginForm() {
         <h1>{t("title")}</h1>
         <p className="muted">{t("description")}</p>
         <p className="muted onboarding-footer">
-          {t("newCustomer")} <Link href="/onboarding">{t("startPilot")}</Link>
+          {t("newCustomer")}{" "}
+          <PilotBookingLink>{t("startPilot")}</PilotBookingLink>
         </p>
 
         <form className="login-form" onSubmit={handleSubmit}>

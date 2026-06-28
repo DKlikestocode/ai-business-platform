@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Link } from "@/i18n/navigation";
+import { PilotBookingLink } from "@/components/pilot-booking-link";
 import {
   LandingDemoApiError,
   createLandingDemoConversationId,
@@ -106,6 +106,7 @@ export function LandingPublicDemo() {
 
   return (
     <section
+      id="live-demo"
       className="landing-section public-demo shell"
       aria-labelledby="public-demo-title"
     >
@@ -140,9 +141,9 @@ export function LandingPublicDemo() {
 
           {messages.length > 0 || limitReached ? (
             <div className="public-demo-actions">
-              <Link href="/onboarding" className="button">
+              <PilotBookingLink className="button">
                 {t("startCta")}
-              </Link>
+              </PilotBookingLink>
               <button
                 type="button"
                 className="button secondary"

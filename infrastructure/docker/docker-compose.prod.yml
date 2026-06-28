@@ -46,6 +46,7 @@ services:
       args:
         API_INTERNAL_URL: http://backend:8000
         NEXT_PUBLIC_API_URL: https://${API_DOMAIN}
+        NEXT_PUBLIC_PILOT_BOOKING_URL: ${NEXT_PUBLIC_PILOT_BOOKING_URL:-}
     restart: unless-stopped
     expose:
       - "3000"
