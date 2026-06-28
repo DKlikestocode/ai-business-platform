@@ -1,10 +1,12 @@
+from fastapi.testclient import TestClient
+
 from app.config import get_settings
-from app.db.models.company import Company
+from app.main import app
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 
 
-def test_get_public_business_site_returns_profile_and_widget_config(client, db_session):
+def test_get_public_business_site_returns_profile_and_widget_config(db_session):
     settings = get_settings()
     company_repo = CompanyRepository(db_session)
     company = company_repo.create(
@@ -19,6 +21,7 @@ def test_get_public_business_site_returns_profile_and_widget_config(client, db_s
         service_radius_km=30,
     )
     activation = CompanyActivationRepository(db_session).get_or_create(company.id)
+    client = TestClient(app)
 
     response = client.get(f"/api/v1/public/site/{company.slug}")
 
@@ -36,7 +39,8 @@ def test_get_public_business_site_returns_profile_and_widget_config(client, db_s
     assert body["widget_api_base"] == settings.public_api_base_url.rstrip("/")
 
 
-def test_get_public_business_site_unknown_slug_returns_404(client):
+def test_get_public_business_site_unknown_slug_returns_404():
+    client = TestClient(app)
     response = client.get("/api/v1/public/site/unknown-slug")
 
     assert response.status_code == 404
