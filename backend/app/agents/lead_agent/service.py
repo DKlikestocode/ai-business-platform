@@ -26,7 +26,6 @@ from app.agents.lead_agent.models import (
 from app.agents.lead_agent.qualification import (
     build_qualification_hint,
     evaluate_qualification,
-    has_useful_context,
 )
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.urgency import sanitize_urgency_fields
@@ -45,9 +44,9 @@ from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
 from app.services.service_area.evaluate import (
-    append_missing_postal_code_reply_note,
     append_service_area_reply_note,
     evaluate_service_area,
+    is_service_area_configured,
     resolve_lead_postal_code,
 )
 from app.services.service_area.models import ServiceAreaStatus
@@ -189,6 +188,7 @@ class LeadCaptureService:
                 merged_data=merged_data,
                 channel=self._channel,
                 llm_reply=reply,
+                service_area_configured=is_service_area_configured(company),
             )
         if (
             not rejected_contacts.any_rejected
@@ -201,14 +201,6 @@ class LeadCaptureService:
                 service_area_eval,
                 radius_km=company.service_radius_km if company is not None else None,
             )
-        elif (
-            not rejected_contacts.any_rejected
-            and self._channel == ConversationChannel.WEB
-            and has_useful_context(merged_data)
-            and service_area_eval.status == ServiceAreaStatus.UNKNOWN
-            and resolve_lead_postal_code(merged_data) is None
-        ):
-            reply = append_missing_postal_code_reply_note(reply)
 
         self._conversation_repository.add_message(
             conversation.id,
