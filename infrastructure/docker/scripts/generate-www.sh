@@ -5,7 +5,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+SLUG_ARGS=()
+if [[ -n "${PILOT_COMPANY_SLUG:-}" ]]; then
+  SLUG_ARGS=(--company-slug "$PILOT_COMPANY_SLUG")
+fi
+
 docker compose --env-file ../../.env -f docker-compose.prod.yml exec -T backend \
-  python -m app.scripts.write_pilot_website > www/index.html
+  python -m app.scripts.write_pilot_website "${SLUG_ARGS[@]}" > www/index.html
 
 echo "Wrote ${ROOT}/www/index.html"
