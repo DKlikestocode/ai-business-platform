@@ -342,6 +342,17 @@ Before shipping or reviewing UI, answer these five questions in the PR or design
 
 ## Design Principles
 
+### Visual surfaces (priority)
+
+| Surface | Visual bar | Goal |
+|---------|------------|------|
+| **Public** (landing, business site, widget) | **10/10** | First impression = trust + premium Handwerk |
+| **Dashboard** | 9/10 | Calm clarity; matches public brand tokens |
+
+Public pages require: real hero material (photo or logo), one primary CTA color, unified tokens (`--primary`, `--radius-*`, `--shadow-*`), display font for headings.
+
+### Principles
+
 1. **Calm and competent** — like a good office assistant, not a sci-fi dashboard
 2. **One primary action per screen** — secondary actions visually subdued (`.button.secondary`)
 3. **Progressive disclosure** — settings and advanced options behind clear sections

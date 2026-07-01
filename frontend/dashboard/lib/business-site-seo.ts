@@ -10,6 +10,7 @@ export function buildBusinessSiteMetadata(
   const profile = getBusinessSiteProfile(site);
   const title = `${site.company_name} | ${profile.titleSuffix}`;
   const description = `${site.company_name} in ${site.service_area_center ?? "Ihrer Region"} — ${profile.heroSubline.slice(0, 140)}…`;
+  const imageUrl = `${siteUrl}/business-site/hero.jpg`;
 
   return {
     title,
@@ -21,6 +22,14 @@ export function buildBusinessSiteMetadata(
       title,
       description,
       siteName: site.company_name,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 800,
+          alt: site.company_name,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
