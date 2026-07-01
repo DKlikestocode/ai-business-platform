@@ -105,6 +105,21 @@ def test_qualification_hint_prioritizes_problem_before_contact() -> None:
     assert "contact method" not in hint.lower() or "understood" in hint.lower()
 
 
+def test_qualification_hint_asks_postal_code_when_service_area_configured() -> None:
+    data = LeadExtractedData(description="Heizung defekt")
+    qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
+
+    hint = build_qualification_hint(
+        data,
+        qualification,
+        channel=ConversationChannel.WEB,
+        service_area_configured=True,
+    )
+
+    assert "postal code" in hint.lower()
+    assert "conversational" in hint.lower()
+
+
 def test_qualification_hint_asks_contact_after_context() -> None:
     data = LeadExtractedData(description="Heizung defekt")
     qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)

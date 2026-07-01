@@ -13,7 +13,6 @@ from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
 from tests.services.test_notification_service import MockEmailProvider
-from app.agents.lead_agent.conversation_flow import PROBLEM_FIRST_REPLY
 from tests.agents.lead_agent.conftest import MockLeadExtractionClient
 
 
@@ -64,7 +63,7 @@ def test_lead_message_endpoint_returns_expected_shape(
 
     assert response.status_code == 200
     body = response.json()
-    assert body["reply"] == PROBLEM_FIRST_REPLY
+    assert body["reply"] == "Thanks! What service do you need?"
     assert body["lead_complete"] is False
     assert "service_requested" in body["missing_fields"]
     assert body["extracted_data"]["name"] == "Jane Doe"

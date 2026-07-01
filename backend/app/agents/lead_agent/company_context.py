@@ -12,7 +12,8 @@ def build_service_area_prompt(company: Company) -> str | None:
         return None
 
     plz_instruction = (
-        "Fragen Sie für die Standortprüfung gezielt nach der 5-stelligen Postleitzahl (PLZ). "
+        "Fragen Sie für die Standortprüfung nach der 5-stelligen Postleitzahl (PLZ) — "
+        "am besten eingebettet, nachdem Sie das Anliegen kurz verstanden haben. "
         "Ergänzen Sie optional den Ort oder Stadtteil im Feld location."
     )
 

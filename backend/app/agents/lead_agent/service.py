@@ -141,6 +141,7 @@ class LeadCaptureService:
                     existing_data,
                     pre_qualification,
                     channel=self._channel,
+                    service_area_configured=is_service_area_configured(company),
                 ),
                 "service_area_prompt": service_area_prompt,
                 "service_area_status_prompt": service_area_status_prompt,
