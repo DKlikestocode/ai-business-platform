@@ -26,6 +26,12 @@ class QualificationStatus(StrEnum):
     QUALIFIED = "qualified"
 
 
+class InquiryKind(StrEnum):
+    APPOINTMENT_CONSULTATION = "appointment_consultation"
+    QUOTE = "quote"
+    UNKNOWN = "unknown"
+
+
 InquiryScope = Literal["in_scope", "out_of_scope", "unclear"]
 
 
@@ -57,6 +63,7 @@ class LeadExtractedData(BaseModel):
     description: str | None = None
     urgency: str | None = None
     preferred_callback_time: str | None = None
+    inquiry_kind: InquiryKind | None = None
 
 
 class LeadCaptureLLMOutput(BaseModel):
@@ -99,6 +106,17 @@ class LeadCaptureLLMOutput(BaseModel):
             "Nur setzen, wenn ein Branchen-Kontext im Prompt steht."
         ),
     )
+    inquiry_kind: InquiryKind | None = Field(
+        default=None,
+        description=(
+            "Art der Anfrage: "
+            "quote = Angebot, Kostenvoranschlag, Kostenschätzung, Offerte, Preis, "
+            "Planung ohne akuten Einsatz; "
+            "appointment_consultation = Termin, Besuch, Beratung, Rückruf, Einsatz vor Ort, "
+            "Reparatur, Notfall, Wartung; "
+            "unknown = noch unklar."
+        ),
+    )
 
     def to_extracted_data(self) -> LeadExtractedData:
         return LeadExtractedData(
@@ -112,6 +130,7 @@ class LeadCaptureLLMOutput(BaseModel):
             description=self.description,
             urgency=self.urgency,
             preferred_callback_time=self.preferred_callback_time,
+            inquiry_kind=self.inquiry_kind,
         )
 
 

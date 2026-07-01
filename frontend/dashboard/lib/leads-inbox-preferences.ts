@@ -3,6 +3,10 @@ import {
   setDashboardCache,
 } from "@/lib/dashboard-cache";
 import {
+  isInquiryKindFilter,
+  type InquiryKindFilter,
+} from "@/lib/inquiry-kind";
+import {
   LEAD_SORT_OPTIONS,
   type LeadSort,
 } from "@/lib/lead-qualification";
@@ -10,17 +14,20 @@ import {
 export const LEADS_INBOX_PREFERENCES_CACHE_KEY = "leads-inbox-preferences";
 
 export type LeadsInboxView = "active" | "contacted";
+export type { InquiryKindFilter };
 
 export type LeadsInboxPreferences = {
   sort: LeadSort;
   page: number;
   inboxView: LeadsInboxView;
+  inquiryKind: InquiryKindFilter;
 };
 
 export const DEFAULT_LEADS_INBOX_PREFERENCES: LeadsInboxPreferences = {
   sort: "urgency_desc",
   page: 1,
   inboxView: "active",
+  inquiryKind: "appointment_consultation",
 };
 
 function isLeadSort(value: unknown): value is LeadSort {
@@ -46,6 +53,10 @@ function migrateInboxView(value: unknown): LeadsInboxView {
   return "active";
 }
 
+function migrateInquiryKind(value: unknown): InquiryKindFilter {
+  return isInquiryKindFilter(value) ? value : "appointment_consultation";
+}
+
 export function normalizeLeadsInboxPreferences(
   raw: unknown,
 ): LeadsInboxPreferences {
@@ -60,11 +71,13 @@ export function normalizeLeadsInboxPreferences(
       : 1;
   const inboxView = migrateInboxView(value.inboxView);
   const sort = migrateSort(value.sort);
+  const inquiryKind = migrateInquiryKind(value.inquiryKind);
 
   return {
     sort,
     page,
     inboxView,
+    inquiryKind,
   };
 }
 

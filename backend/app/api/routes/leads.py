@@ -5,7 +5,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.agents.lead_agent.dashboard_service import LeadDashboardService
-from app.agents.lead_agent.models import LeadStatus, QualificationStatus
+from app.agents.lead_agent.models import InquiryKind, LeadStatus, QualificationStatus
 from app.api.dependencies import (
     get_current_tenant_id,
     get_current_user,
@@ -30,6 +30,13 @@ def list_leads(
     qualification_status: QualificationStatus | None = Query(None),
     contactable: bool | None = Query(None),
     sort: Literal["created_at_desc", "urgency_desc"] = Query("urgency_desc"),
+    inquiry_kind: InquiryKind | None = Query(
+        None,
+        description=(
+            "Filter by inquiry category. "
+            "appointment_consultation includes unknown/unclassified leads."
+        ),
+    ),
     archived: bool = Query(
         False,
         description="When true, return contacted inquiries (status != new).",
@@ -47,6 +54,7 @@ def list_leads(
         sort=sort,
         company_id=company_id,
         archived=archived,
+        inquiry_kind=inquiry_kind.value if inquiry_kind is not None else None,
     )
 
 

@@ -1,4 +1,5 @@
 export type LeadStatus = "new" | "contacted" | "qualified" | "won" | "lost";
+export type InquiryKind = "appointment_consultation" | "quote" | "unknown";
 
 export type QualificationStatus = "incomplete" | "contactable" | "qualified";
 
@@ -164,6 +165,7 @@ export interface Lead {
   contact_method: ContactMethod | null;
   lead_score: number;
   qualification_status: QualificationStatus;
+  inquiry_kind: InquiryKind;
   notification_sent_at: string | null;
   contacted_at: string | null;
   archived_at: string | null;

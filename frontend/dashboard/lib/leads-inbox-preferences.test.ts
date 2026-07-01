@@ -39,6 +39,7 @@ describe("leads inbox preferences", () => {
       sort: "created_at_desc",
       page: 2,
       inboxView: "active",
+      inquiryKind: "appointment_consultation",
     });
   });
 
@@ -58,11 +59,30 @@ describe("leads inbox preferences", () => {
     ).toBe("contacted");
   });
 
+  it("defaults inquiry kind to appointment_consultation", () => {
+    expect(
+      normalizeLeadsInboxPreferences({
+        sort: "created_at_desc",
+        page: 2,
+        inboxView: "active",
+      }).inquiryKind,
+    ).toBe("appointment_consultation");
+  });
+
+  it("persists valid inquiry kind selections", () => {
+    expect(
+      normalizeLeadsInboxPreferences({
+        inquiryKind: "quote",
+      }).inquiryKind,
+    ).toBe("quote");
+  });
+
   it("persists valid filter selections across reads", () => {
     const preferences = {
       sort: "urgency_desc" as const,
       page: 2,
       inboxView: "contacted" as const,
+      inquiryKind: "quote" as const,
     };
 
     setLeadsInboxPreferences(preferences);

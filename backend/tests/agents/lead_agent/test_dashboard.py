@@ -1,7 +1,7 @@
 import pytest
 
 from app.agents.lead_agent.dashboard_service import LeadDashboardService
-from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
+from app.agents.lead_agent.models import InquiryKind, LeadExtractedData, LeadStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.db.models.company import Company
 from app.repositories.company_activation_repository import CompanyActivationRepository
@@ -78,6 +78,80 @@ def test_repository_filters_by_status(
     assert total >= 1
     assert any(item.id == lead.id for item in items)
     assert items[0].status == LeadStatus.CONTACTED.value
+
+
+def test_repository_filters_by_inquiry_kind(
+    lead_repository: LeadRepository,
+    company: Company,
+) -> None:
+    appointment = lead_repository.create(
+        company_id=company.id,
+        conversation_id="repo-inq-appointment",
+        data=LeadExtractedData(
+            name="Appointment",
+            phone="555",
+            location="Berlin",
+            postal_code="10115",
+            service_requested="Heizung",
+            description="Termin",
+            urgency="mittel",
+            preferred_callback_time="morgen",
+            inquiry_kind=InquiryKind.APPOINTMENT_CONSULTATION,
+        ),
+        summary=None,
+    )
+    quote = lead_repository.create(
+        company_id=company.id,
+        conversation_id="repo-inq-quote",
+        data=LeadExtractedData(
+            name="Quote",
+            phone="556",
+            location="Berlin",
+            postal_code="10115",
+            service_requested="Bad",
+            description="Angebot",
+            urgency="niedrig",
+            preferred_callback_time="flexibel",
+            inquiry_kind=InquiryKind.QUOTE,
+        ),
+        summary=None,
+    )
+    unknown = lead_repository.create(
+        company_id=company.id,
+        conversation_id="repo-inq-unknown",
+        data=LeadExtractedData(
+            name="Unknown",
+            phone="557",
+            location="Berlin",
+            postal_code="10115",
+            service_requested="Sanitär",
+            description="Unklar",
+            urgency="mittel",
+            preferred_callback_time="bald",
+        ),
+        summary=None,
+    )
+
+    appointment_items, _ = lead_repository.list_leads(
+        page=1,
+        page_size=50,
+        company_id=company.id,
+        inquiry_kind=InquiryKind.APPOINTMENT_CONSULTATION.value,
+    )
+    appointment_ids = {item.id for item in appointment_items}
+    assert appointment.id in appointment_ids
+    assert unknown.id in appointment_ids
+    assert quote.id not in appointment_ids
+
+    quote_items, quote_total = lead_repository.list_leads(
+        page=1,
+        page_size=50,
+        company_id=company.id,
+        inquiry_kind=InquiryKind.QUOTE.value,
+    )
+    assert quote_total >= 1
+    assert all(item.inquiry_kind == InquiryKind.QUOTE.value for item in quote_items)
+    assert any(item.id == quote.id for item in quote_items)
 
 
 def test_dashboard_service_update_status(

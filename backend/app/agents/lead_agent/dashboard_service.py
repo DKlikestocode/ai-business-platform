@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from app.agents.lead_agent.models import LeadStatus, QualificationStatus
+from app.agents.lead_agent.models import InquiryKind, LeadStatus, QualificationStatus
 from app.agents.lead_agent.repository import LeadRepository
 from app.api.schemas.leads import (
     LeadResponse,
@@ -43,6 +43,7 @@ class LeadDashboardService:
         contactable: bool | None = None,
         sort: str = "created_at_desc",
         archived: bool = False,
+        inquiry_kind: str | None = None,
     ) -> PaginatedLeadResponse:
         items, total = self._repository.list_leads(
             page=page,
@@ -55,6 +56,7 @@ class LeadDashboardService:
             sort=sort,
             company_id=company_id,
             archived=archived,
+            inquiry_kind=inquiry_kind,
         )
         channels = self._conversation_repository.get_channels_by_external_ids(
             company_id=company_id,

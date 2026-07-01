@@ -10,7 +10,7 @@ from app.agents.lead_agent.inquiry_source import (
     InquirySource,
     channel_to_inquiry_source,
 )
-from app.agents.lead_agent.models import ContactMethod, LeadStatus, QualificationStatus
+from app.agents.lead_agent.models import ContactMethod, InquiryKind, LeadStatus, QualificationStatus
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
 from app.services.service_area.models import ServiceAreaStatus
@@ -40,6 +40,7 @@ class LeadResponse(BaseModel):
     contact_method: ContactMethod | None = None
     lead_score: int
     qualification_status: QualificationStatus
+    inquiry_kind: InquiryKind
     notification_sent_at: datetime | None
     contacted_at: datetime | None
     archived_at: datetime | None
@@ -112,6 +113,7 @@ def lead_to_response(
             "contact_method": lead.contact_method,
             "lead_score": lead.lead_score,
             "qualification_status": lead.qualification_status,
+            "inquiry_kind": lead.inquiry_kind or InquiryKind.UNKNOWN.value,
             "notification_sent_at": lead.notification_sent_at,
             "contacted_at": lead.contacted_at,
             "archived_at": lead.archived_at,

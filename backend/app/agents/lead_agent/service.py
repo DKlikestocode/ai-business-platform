@@ -158,8 +158,9 @@ class LeadCaptureService:
                 role="system",
                 content=(
                     f"{system_prompt}\n\n"
-                    "Return a structured response with a conversational reply, inquiry_scope "
-                    "(when trade context applies), and any lead fields mentioned in the conversation."
+                    "Return a structured response with a conversational reply, inquiry_kind, "
+                    "inquiry_scope (when trade context applies), and any lead fields "
+                    "mentioned in the conversation."
                 ),
             ),
             *history_messages[1:],

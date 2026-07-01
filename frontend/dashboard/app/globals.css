@@ -467,6 +467,21 @@ a {
   color: #1f3f6b;
 }
 
+.badge-inquiry-appointment {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-inquiry-quote {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-inquiry-unknown {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
 .service-area-badge--in_range {
   background: #ecfdf5;
   color: #047857;
