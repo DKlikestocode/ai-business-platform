@@ -21,15 +21,25 @@ import {
   setUnauthorizedHandler,
 } from "@/lib/api";
 import { getAccessToken, setAccessToken } from "@/lib/auth-storage";
+import {
+  clearDashboardCache,
+  loadCachedCompanyActivation,
+  loadCachedCompanySettings,
+} from "@/lib/dashboard-cache";
 import type { Company, CurrentUser } from "@/lib/types";
 import { useRouter } from "@/i18n/navigation";
+
+interface AuthSession {
+  user: CurrentUser;
+  company: Company;
+}
 
 interface AuthContextValue {
   user: CurrentUser | null;
   company: Company | null;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthSession>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -48,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setCompany(null);
     setError(null);
+    clearDashboardCache();
     try {
       await clearSession();
     } catch {
@@ -55,6 +66,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     router.replace("/login");
   }, [router]);
+
+  const prefetchDashboardData = useCallback(async () => {
+    await Promise.all([
+      loadCachedCompanySettings(),
+      loadCachedCompanyActivation(),
+    ]);
+  }, []);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -72,6 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const companyData = await fetchCompany(currentUser.company_id);
       setUser(currentUser);
       setCompany(companyData);
+      await prefetchDashboardData();
     } catch (err) {
       setUser(null);
       setCompany(null);
@@ -85,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [tAuth]);
+  }, [prefetchDashboardData, tAuth]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -95,7 +114,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const tokenResponse = await loginRequest({ email, password });
         setAccessToken(tokenResponse.access_token);
         await establishSession();
-        await refresh();
+        const currentUser = await fetchCurrentUser();
+        const companyData = await fetchCompany(currentUser.company_id);
+        setUser(currentUser);
+        setCompany(companyData);
+        await prefetchDashboardData();
+        return { user: currentUser, company: companyData };
       } catch (err) {
         setUser(null);
         setCompany(null);
@@ -105,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     },
-    [refresh, tAuth],
+    [prefetchDashboardData, tAuth],
   );
 
   useEffect(() => {

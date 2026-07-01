@@ -9,6 +9,7 @@ import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { formatUserFacingError } from "@/lib/errors";
+import { resolveAuthenticatedHomePath } from "@/lib/authenticated-home-path";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import { PilotBookingLink } from "@/components/pilot-booking-link";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -33,11 +34,13 @@ export function LoginForm() {
     setSubmitting(true);
 
     try {
-      await login(email.trim(), password);
+      const session = await login(email.trim(), password);
       const nextPath = searchParams.get("next");
-      router.replace(
-        nextPath && nextPath.startsWith("/") ? nextPath : "/getting-started",
-      );
+      const destination =
+        nextPath && nextPath.startsWith("/")
+          ? nextPath
+          : await resolveAuthenticatedHomePath(session.user, session.company);
+      router.replace(destination);
     } catch (err) {
       setFormError(
         formatUserFacingError(err, t("signInFailed"), errorMessages),
