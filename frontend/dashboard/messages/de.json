@@ -29,7 +29,7 @@
     "signIn": "Anmelden",
     "signOut": "Abmelden",
     "startFreePilot": "Kostenlos starten",
-    "bookPilot": "Pilot anfragen",
+    "bookPilot": "Demo anfragen",
     "main": "Hauptnavigation",
     "marketing": "Marketing-Navigation"
   },
@@ -46,8 +46,8 @@
     "eyebrow": "Für Handwerk und lokale Dienstleister",
     "heroTitle": "Ihre Website fängt Anfragen auf — Sie kümmern sich um den Auftrag.",
     "heroLead": "Der AI Anfragen-Assistent beantwortet erste Fragen im Chat, erfasst Name, Telefon und Anliegen — und meldet sich, wenn eine Anfrage wichtig ist.",
-    "heroTrustNote": "Unverbindliches Pilot-Gespräch · In Minuten live · DSGVO-orientiert · EU-Hosting",
-    "bookPilot": "Pilot-Gespräch buchen",
+    "heroTrustNote": "Unverbindliches Demo-Gespräch · In Minuten live · DSGVO-orientiert · EU-Hosting",
+    "bookPilot": "Demo-Gespräch buchen",
     "tryDemo": "Live-Demo ansehen",
     "startPilot": "Kostenlos starten",
     "signIn": "Anmelden",
@@ -86,7 +86,7 @@
     "ctaTitle": "Bereit für einen klaren Posteingang statt Telefon-Chaos?",
     "ctaDescription": "In einem kurzen Gespräch zeigen wir Ihnen den AI Anfragen-Assistenten an Ihrem Beispiel — und wie der Chat auf Ihrer Website live geht.",
     "ctaFootnote": "30 Minuten · Unverbindlich · Für Handwerk und lokale Dienstleister",
-    "createPilotAccount": "Pilot-Gespräch buchen",
+    "createPilotAccount": "Demo-Gespräch buchen",
     "comparison": {
       "title": "Vom Telefon-Chaos zum klaren Posteingang",
       "lead": "Weniger verpasste Anfragen, mehr Rückrufe mit allen Infos — ohne neues CRM.",
@@ -175,7 +175,7 @@
         "roofer": "Nach dem Sturm fehlen Dachziegel. Es tropft in den Dachboden.",
         "electrician": "Ich möchte eine Wallbox installieren lassen. Können Sie ein Angebot machen?"
       },
-      "startCta": "Pilot-Gespräch buchen",
+      "startCta": "Demo-Gespräch buchen",
       "resetCta": "Neue Demo starten"
     },
     "trustTitle": "Vertrauen und Datenschutz",
@@ -227,7 +227,7 @@
     "title": "Anmelden",
     "description": "Melden Sie sich an, um Ihre Kundenanfragen zu verwalten.",
     "newCustomer": "Noch kein Konto?",
-    "startPilot": "Pilot-Gespräch buchen",
+    "startPilot": "Demo-Gespräch buchen",
     "signingIn": "Anmeldung läuft...",
     "signIn": "Anmelden",
     "signInFailed": "Anmeldung fehlgeschlagen. Prüfen Sie E-Mail und Passwort.",

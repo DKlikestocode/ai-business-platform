@@ -29,7 +29,7 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "startFreePilot": "Start free",
-    "bookPilot": "Book a pilot call",
+    "bookPilot": "Book a demo call",
     "main": "Main navigation",
     "marketing": "Marketing navigation"
   },
@@ -46,8 +46,8 @@
     "eyebrow": "For trades and local service businesses",
     "heroTitle": "Your website captures inquiries — you focus on the job.",
     "heroLead": "The AI Inquiry Assistant answers first questions in chat, captures name, phone, and details — and alerts you when an inquiry matters.",
-    "heroTrustNote": "No-obligation pilot call · Live in minutes · GDPR-oriented · EU hosting",
-    "bookPilot": "Book a pilot call",
+    "heroTrustNote": "No-obligation demo call · Live in minutes · GDPR-oriented · EU hosting",
+    "bookPilot": "Book a demo call",
     "tryDemo": "See live demo",
     "startPilot": "Start free",
     "signIn": "Sign in",
@@ -86,7 +86,7 @@
     "ctaTitle": "Ready for a clear inbox instead of phone tag?",
     "ctaDescription": "In a short call we walk through the AI Inquiry Assistant with your business — and how chat goes live on your website.",
     "ctaFootnote": "30 minutes · No obligation · For trades and local service providers",
-    "createPilotAccount": "Book a pilot call",
+    "createPilotAccount": "Book a demo call",
     "comparison": {
       "title": "From phone chaos to a clear inbox",
       "lead": "Fewer missed inquiries, more callbacks with full context — without a new CRM.",
@@ -175,7 +175,7 @@
         "roofer": "After the storm, roof tiles are missing. Water is dripping into the attic.",
         "electrician": "I'd like to have a wallbox installed. Can you provide a quote?"
       },
-      "startCta": "Book a pilot call",
+      "startCta": "Book a demo call",
       "resetCta": "Start new demo"
     },
     "trustTitle": "Trust and privacy",
@@ -227,7 +227,7 @@
     "title": "Sign in",
     "description": "Sign in to manage your customer inquiries.",
     "newCustomer": "Don't have an account yet?",
-    "startPilot": "Book a pilot call",
+    "startPilot": "Book a demo call",
     "signingIn": "Signing in...",
     "signIn": "Sign in",
     "signInFailed": "Sign in failed. Check your email and password.",
