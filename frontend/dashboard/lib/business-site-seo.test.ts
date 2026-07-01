@@ -21,6 +21,9 @@ describe("business-site-seo", () => {
     const metadata = buildBusinessSiteMetadata(site, "https://dominiksdomain.com");
     expect(metadata.title).toContain("Dominik");
     expect(metadata.openGraph?.url).toBe("https://dominiksdomain.com");
+    expect(metadata.openGraph?.images?.[0]?.url).toBe(
+      "https://dominiksdomain.com/business-site/hero.jpg",
+    );
   });
 
   it("builds local business json-ld", () => {

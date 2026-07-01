@@ -8,6 +8,15 @@
   --primary-hover: #1d4ed8;
   --danger-bg: #fef2f2;
   --danger-text: #b91c1c;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 24px 48px rgba(15, 23, 42, 0.14);
+  --font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-body);
 }
 
 * {
@@ -1365,10 +1374,12 @@ code {
 }
 
 .marketing-page {
+  background:
+    radial-gradient(circle at top right, rgba(37, 99, 235, 0.06), transparent 28%),
+    var(--bg);
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  background: var(--bg);
 }
 
 .marketing-header,
@@ -2293,20 +2304,29 @@ code {
 
 /* Customer business website (dominiksdomain.com / SITE_DOMAIN) */
 .business-site {
-  --business-primary: #1d4ed8;
-  --business-primary-dark: #1e3a8a;
-  --business-text: #111827;
-  --business-muted: #4b5563;
-  --business-border: #e5e7eb;
+  --business-primary: var(--primary);
+  --business-primary-dark: var(--primary-hover);
+  --business-text: #0f172a;
+  --business-muted: #475569;
+  --business-border: #e2e8f0;
   --business-surface: #ffffff;
   --business-bg: #f8fafc;
   --business-accent: #eff6ff;
-  --business-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
-  --business-radius: 14px;
-  --business-max: 1120px;
+  --business-shadow: var(--shadow-md);
+  --business-radius: var(--radius-lg);
+  --business-max: 1140px;
+  font-family: var(--font-body);
   background: var(--business-bg);
   color: var(--business-text);
   min-height: 100vh;
+}
+
+.business-site h1,
+.business-site h2,
+.business-site h3,
+.business-site .business-site-brand strong {
+  font-family: var(--font-display), var(--font-body);
+  letter-spacing: -0.03em;
 }
 
 .business-site-container {
@@ -2317,10 +2337,11 @@ code {
 .business-site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--business-border);
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
 }
 
 .business-site-header-inner {
@@ -2400,63 +2421,76 @@ code {
 .business-site-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.35rem 0.7rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 999px;
-  background: #fff;
-  border: 1px solid #bfdbfe;
-  color: var(--business-primary-dark);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
+  backdrop-filter: blur(6px);
 }
 
-.business-site-hero-aside {
+.business-site-hero {
+  position: relative;
+}
+
+.business-site-hero-media {
+  min-height: clamp(520px, 72vh, 760px);
   display: grid;
-  gap: 1rem;
+  align-items: end;
+  overflow: hidden;
 }
 
-.business-site-hero-visual {
-  min-height: 180px;
-  border-radius: var(--business-radius);
+.business-site-hero-image {
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.business-site-hero-overlay {
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.18), transparent 45%),
-    linear-gradient(135deg, #dbeafe 0%, #eff6ff 55%, #ffffff 100%);
-  border: 1px solid var(--business-border);
+    linear-gradient(105deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.55) 42%, rgba(15, 23, 42, 0.18) 100%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.08) 0%, rgba(15, 23, 42, 0.42) 100%);
+}
+
+.business-site-hero-shell {
+  position: relative;
+  z-index: 1;
   display: grid;
-  place-items: center;
-  padding: 1.25rem;
-  box-shadow: var(--business-shadow);
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.5rem;
+  align-items: end;
+  padding: 4.5rem 0 3rem;
 }
 
-.business-site-hero-visual-card {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--business-border);
-  border-radius: 12px;
-  padding: 1rem 1.1rem;
-  max-width: 260px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+.business-site-hero-content {
+  max-width: 38rem;
+  color: #fff;
 }
 
-.business-site-hero-visual-card span {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--business-primary);
-  margin-bottom: 0.35rem;
+.business-site-hero-content .business-site-eyebrow {
+  background: rgba(37, 99, 235, 0.22);
+  color: #dbeafe;
+  border: 1px solid rgba(191, 219, 254, 0.35);
 }
 
-.business-site-hero-visual-card strong {
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 0.35rem;
+.business-site-hero-content .business-site-title {
+  color: #fff;
+  text-shadow: 0 8px 30px rgba(15, 23, 42, 0.35);
 }
 
-.business-site-hero-visual-card p {
-  margin: 0;
-  font-size: 0.88rem;
-  color: var(--business-muted);
-  line-height: 1.5;
+.business-site-hero-content .business-site-lead {
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 34rem;
+}
+
+.business-site-hero-panel-floating {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-lg);
 }
 
 .business-site-section-alt {
@@ -2520,16 +2554,43 @@ code {
   padding: 0.85rem 1rem 0.85rem 0.9rem;
   border: none;
   border-radius: 999px;
-  background: var(--business-primary);
+  background: linear-gradient(135deg, var(--business-primary) 0%, #1e40af 100%);
   color: #fff;
   font-weight: 700;
   font-size: 0.92rem;
   cursor: pointer;
-  box-shadow: 0 14px 36px rgba(29, 78, 216, 0.35);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.38);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.business-site-chat-launcher::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 999px;
+  border: 2px solid rgba(37, 99, 235, 0.28);
+  animation: business-site-launcher-pulse 2.5s ease-out infinite;
+  pointer-events: none;
 }
 
 .business-site-chat-launcher:hover {
-  background: var(--business-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(37, 99, 235, 0.45);
+}
+
+@keyframes business-site-launcher-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.08);
+    opacity: 0;
+  }
 }
 
 .business-site-chat-launcher-label {
@@ -2605,23 +2666,14 @@ code {
   box-shadow: none;
 }
 
-.business-site-hero {
-  padding: 4.5rem 0 3.5rem;
+.business-site-hero-content .business-site-cta-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.38);
+  color: #fff;
 }
 
-.business-site-hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 2rem;
-  align-items: center;
-}
-
-.business-site-hero-card {
-  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
-  border: 1px solid var(--business-border);
-  border-radius: calc(var(--business-radius) + 6px);
-  padding: 2rem;
-  box-shadow: var(--business-shadow);
+.business-site-hero-content .business-site-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .business-site-eyebrow {
@@ -2656,6 +2708,11 @@ code {
   gap: 0.75rem;
   flex-wrap: wrap;
   margin-top: 1.5rem;
+}
+
+.business-site-hero-actions .button {
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
 }
 
 .business-site-hero-panel {
@@ -2717,8 +2774,18 @@ code {
   background: var(--business-surface);
   border: 1px solid var(--business-border);
   border-radius: var(--business-radius);
-  padding: 1.25rem;
-  min-height: 100%;
+  padding: 1.35rem;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.business-site-service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: #bfdbfe;
 }
 
 .business-site-service-card h3 {
@@ -2833,7 +2900,7 @@ code {
 .business-site-legal-section p {
   margin: 0;
   line-height: 1.6;
-  color: var(--muted);
+  color: var(--business-muted);
 }
 
 .business-site-error {
@@ -2841,12 +2908,17 @@ code {
 }
 
 @media (max-width: 960px) {
-  .business-site-hero-grid,
+  .business-site-hero-shell,
   .business-site-services-grid,
   .business-site-trust-strip,
   .business-site-references-grid,
   .business-site-contact-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .business-site-hero-shell {
+    grid-template-columns: 1fr;
+    padding-top: 3.5rem;
   }
 
   .business-site-nav {
@@ -2856,11 +2928,11 @@ code {
 }
 
 @media (max-width: 720px) {
-  .business-site-hero {
-    padding-top: 3rem;
+  .business-site-hero-media {
+    min-height: 620px;
   }
 
-  .business-site-hero-grid,
+  .business-site-hero-shell,
   .business-site-services-grid,
   .business-site-trust-strip,
   .business-site-references-grid,
@@ -2875,6 +2947,21 @@ code {
 
   .business-site-header-actions {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .business-site-header-actions .button {
+    flex: 1 1 auto;
+    min-height: 44px;
+  }
+
+  .business-site-hero-actions .button {
+    flex: 1 1 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .business-site-chat-launcher-label {

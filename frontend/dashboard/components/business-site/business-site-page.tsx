@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { BusinessSiteChatLauncher } from "@/components/business-site/business-site-chat-launcher";
 import { BusinessSiteHeader } from "@/components/business-site/business-site-header";
 import { BusinessSiteJsonLd } from "@/components/business-site/business-site-json-ld";
@@ -48,9 +50,18 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
       />
 
       <main>
-        <section className="business-site-hero">
-          <div className="business-site-container business-site-hero-grid">
-            <div className="business-site-hero-card">
+        <section className="business-site-hero business-site-hero-media">
+          <Image
+            src="/business-site/hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="business-site-hero-image"
+          />
+          <div className="business-site-hero-overlay" aria-hidden="true" />
+          <div className="business-site-container business-site-hero-shell">
+            <div className="business-site-hero-content">
               <span className="business-site-eyebrow">{profile.heroKicker}</span>
               <h1 className="business-site-title">{site.company_name}</h1>
               <p className="business-site-lead">{profile.heroSubline}</p>
@@ -65,38 +76,31 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
                 <BusinessSiteOpenChatButton className="button business-site-cta">
                   {copy.heroPrimaryCta}
                 </BusinessSiteOpenChatButton>
-                <a
-                  className="button secondary business-site-cta-secondary"
-                  href="#leistungen"
-                >
-                  {copy.heroSecondaryCta}
-                </a>
+                {phoneHref ? (
+                  <a className="button secondary business-site-cta-secondary" href={phoneHref}>
+                    {phone}
+                  </a>
+                ) : (
+                  <a
+                    className="button secondary business-site-cta-secondary"
+                    href="#leistungen"
+                  >
+                    {copy.heroSecondaryCta}
+                  </a>
+                )}
               </div>
             </div>
-
-            <div className="business-site-hero-aside">
-              <div
-                className="business-site-hero-visual"
-                aria-hidden="true"
-              >
-                <div className="business-site-hero-visual-card">
-                  <span>{copy.visualChatLabel}</span>
-                  <strong>{copy.visualChatTitle}</strong>
-                  <p>{copy.visualChatBody}</p>
-                </div>
-              </div>
-              <aside
-                className="business-site-hero-panel"
-                aria-label={copy.benefitsTitle}
-              >
-                <h2>{copy.benefitsTitle}</h2>
-                <ul className="business-site-checklist">
-                  {profile.benefits.map((benefit) => (
-                    <li key={benefit}>{benefit}</li>
-                  ))}
-                </ul>
-              </aside>
-            </div>
+            <aside
+              className="business-site-hero-panel business-site-hero-panel-floating"
+              aria-label={copy.benefitsTitle}
+            >
+              <h2>{copy.benefitsTitle}</h2>
+              <ul className="business-site-checklist">
+                {profile.benefits.map((benefit) => (
+                  <li key={benefit}>{benefit}</li>
+                ))}
+              </ul>
+            </aside>
           </div>
         </section>
 

@@ -84,13 +84,13 @@
   sendHeartbeat();
 
   container.innerHTML = `
-    <div class="ai-agent-widget" style="font-family:Inter,system-ui,sans-serif;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;max-width:420px;background:#fff;">
-      <div style="padding:12px 16px;background:#2563eb;color:#fff;font-weight:600;">${title}</div>
-      <div class="ai-agent-widget-messages" style="height:280px;overflow:auto;padding:16px;background:#f9fafb;"></div>
-      <p class="ai-agent-widget-privacy" style="margin:0;padding:8px 12px 0;font-size:11px;line-height:1.4;color:#6b7280;">${privacyHint}</p>
-      <form class="ai-agent-widget-form" style="display:flex;gap:8px;padding:12px;border-top:1px solid #e5e7eb;">
-        <input class="ai-agent-widget-input" type="text" placeholder="${COPY.placeholder}" style="flex:1;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;" />
-        <button type="submit" class="ai-agent-widget-submit" style="padding:10px 14px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;">${COPY.send}</button>
+    <div class="ai-agent-widget" style="font-family:Inter,system-ui,sans-serif;border:none;border-radius:0;overflow:hidden;max-width:none;width:100%;background:#fff;">
+      <div style="padding:14px 16px;background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);color:#fff;font-weight:600;font-size:0.95rem;">${title}</div>
+      <div class="ai-agent-widget-messages" style="height:300px;overflow:auto;padding:16px;background:#f8fafc;"></div>
+      <p class="ai-agent-widget-privacy" style="margin:0;padding:10px 14px 0;font-size:11px;line-height:1.45;color:#64748b;">${privacyHint}</p>
+      <form class="ai-agent-widget-form" style="display:flex;gap:8px;padding:14px;border-top:1px solid #e2e8f0;background:#fff;">
+        <input class="ai-agent-widget-input" type="text" placeholder="${COPY.placeholder}" style="flex:1;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:0.92rem;" />
+        <button type="submit" class="ai-agent-widget-submit" style="padding:11px 16px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-weight:600;font-size:0.92rem;">${COPY.send}</button>
       </form>
     </div>
   `;
