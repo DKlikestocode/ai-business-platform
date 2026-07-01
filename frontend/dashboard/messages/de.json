@@ -232,6 +232,7 @@
     "signIn": "Anmelden",
     "signInFailed": "Anmeldung fehlgeschlagen. Prüfen Sie E-Mail und Passwort.",
     "forgotPassword": "Passwort vergessen?",
+    "backToHome": "Zur Startseite",
     "loading": "Laden..."
   },
   "forgotPassword": {

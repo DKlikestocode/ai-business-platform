@@ -232,6 +232,7 @@
     "signIn": "Sign in",
     "signInFailed": "Sign in failed. Check your email and password.",
     "forgotPassword": "Forgot password?",
+    "backToHome": "Back to home",
     "loading": "Loading..."
   },
   "forgotPassword": {
