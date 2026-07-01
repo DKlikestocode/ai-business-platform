@@ -1,12 +1,19 @@
+import { BusinessSiteChatLauncher } from "@/components/business-site/business-site-chat-launcher";
+import { BusinessSiteHeader } from "@/components/business-site/business-site-header";
+import { BusinessSiteJsonLd } from "@/components/business-site/business-site-json-ld";
+import { BusinessSiteOpenChatButton } from "@/components/business-site/business-site-open-chat-button";
 import { BusinessSiteWidgetEmbed } from "@/components/business-site/widget-embed";
 import { getBusinessSiteCopy } from "@/lib/business-site-copy";
 import {
   formatBusinessSiteServiceArea,
-  getBusinessSiteTradeProfile,
+  getBusinessSiteProfile,
   normalizePhoneHref,
   type PublicBusinessSite,
 } from "@/lib/business-site";
-import { getBusinessSitePublicBasePath } from "@/lib/site-config";
+import {
+  getBusinessSitePublicBasePath,
+  getBusinessSitePublicOrigin,
+} from "@/lib/site-config";
 
 interface BusinessSitePageProps {
   site: PublicBusinessSite;
@@ -14,37 +21,31 @@ interface BusinessSitePageProps {
 
 export function BusinessSitePage({ site }: BusinessSitePageProps) {
   const copy = getBusinessSiteCopy("de");
-  const profile = getBusinessSiteTradeProfile(site.trade);
+  const profile = getBusinessSiteProfile(site);
   const serviceArea = formatBusinessSiteServiceArea(
     site.service_area_center,
     site.service_radius_km,
   );
   const phone = site.phone?.trim() ?? "";
+  const phoneHref = phone ? `tel:${normalizePhoneHref(phone)}` : null;
   const basePath = getBusinessSitePublicBasePath();
+  const siteUrl = getBusinessSitePublicOrigin();
+  const privacyUrl = `${siteUrl}${basePath}/datenschutz`;
 
   return (
     <div className="business-site">
-      <header className="business-site-header">
-        <div className="business-site-container business-site-header-inner">
-          <div className="business-site-brand">
-            <strong>{site.company_name}</strong>
-            <span>{profile.titleSuffix}</span>
-          </div>
-          <div className="business-site-header-actions">
-            {phone ? (
-              <a
-                className="business-site-header-phone"
-                href={`tel:${normalizePhoneHref(phone)}`}
-              >
-                {phone}
-              </a>
-            ) : null}
-            <a className="button business-site-cta" href="#kontakt">
-              {copy.requestCta}
-            </a>
-          </div>
-        </div>
-      </header>
+      <BusinessSiteJsonLd site={site} siteUrl={siteUrl} />
+
+      <BusinessSiteHeader
+        companyName={site.company_name}
+        titleSuffix={profile.titleSuffix}
+        phone={phone || null}
+        phoneHref={phoneHref}
+        servicesNavLabel={copy.navServices}
+        contactNavLabel={copy.navContact}
+        chatNavLabel={copy.navChat}
+        requestCta={copy.requestCta}
+      />
 
       <main>
         <section className="business-site-hero">
@@ -53,10 +54,17 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
               <span className="business-site-eyebrow">{profile.heroKicker}</span>
               <h1 className="business-site-title">{site.company_name}</h1>
               <p className="business-site-lead">{profile.heroSubline}</p>
+              <div className="business-site-badges" aria-label={copy.badgesLabel}>
+                {copy.badges.map((badge) => (
+                  <span key={badge} className="business-site-badge">
+                    {badge}
+                  </span>
+                ))}
+              </div>
               <div className="business-site-hero-actions">
-                <a className="button business-site-cta" href="#kontakt">
+                <BusinessSiteOpenChatButton className="button business-site-cta">
                   {copy.heroPrimaryCta}
-                </a>
+                </BusinessSiteOpenChatButton>
                 <a
                   className="button secondary business-site-cta-secondary"
                   href="#leistungen"
@@ -65,17 +73,30 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
                 </a>
               </div>
             </div>
-            <aside
-              className="business-site-hero-panel"
-              aria-label={copy.benefitsTitle}
-            >
-              <h2>{copy.benefitsTitle}</h2>
-              <ul className="business-site-checklist">
-                {profile.benefits.map((benefit) => (
-                  <li key={benefit}>{benefit}</li>
-                ))}
-              </ul>
-            </aside>
+
+            <div className="business-site-hero-aside">
+              <div
+                className="business-site-hero-visual"
+                aria-hidden="true"
+              >
+                <div className="business-site-hero-visual-card">
+                  <span>{copy.visualChatLabel}</span>
+                  <strong>{copy.visualChatTitle}</strong>
+                  <p>{copy.visualChatBody}</p>
+                </div>
+              </div>
+              <aside
+                className="business-site-hero-panel"
+                aria-label={copy.benefitsTitle}
+              >
+                <h2>{copy.benefitsTitle}</h2>
+                <ul className="business-site-checklist">
+                  {profile.benefits.map((benefit) => (
+                    <li key={benefit}>{benefit}</li>
+                  ))}
+                </ul>
+              </aside>
+            </div>
           </div>
         </section>
 
@@ -95,6 +116,28 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
             </div>
           </div>
         </section>
+
+        {profile.references && profile.references.length > 0 ? (
+          <section className="business-site-section business-site-section-alt">
+            <div className="business-site-container">
+              <div className="business-site-section-header">
+                <h2>{copy.referencesTitle}</h2>
+                <p className="muted">{copy.referencesLead}</p>
+              </div>
+              <div className="business-site-references-grid">
+                {profile.references.map((item) => (
+                  <article
+                    key={item.title}
+                    className="business-site-reference-card"
+                  >
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section className="business-site-section">
           <div className="business-site-container business-site-trust-strip">
@@ -119,21 +162,32 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
               <h2>{copy.contactTitle}</h2>
               <p className="muted">{copy.contactLead}</p>
             </div>
-            <div className="business-site-contact-card">
-              <p>
-                <strong>{copy.emailLabel}:</strong>{" "}
-                <a href={`mailto:${site.email}`}>{site.email}</a>
-              </p>
-              {phone ? (
+            <div className="business-site-contact-grid">
+              <div className="business-site-contact-card">
                 <p>
-                  <strong>{copy.phoneLabel}:</strong>{" "}
-                  <a href={`tel:${normalizePhoneHref(phone)}`}>{phone}</a>
+                  <strong>{copy.emailLabel}:</strong>{" "}
+                  <a href={`mailto:${site.email}`}>{site.email}</a>
                 </p>
-              ) : null}
-              {serviceArea ? (
-                <p className="business-site-service-area">{serviceArea}</p>
-              ) : null}
-              <p className="muted">{copy.contactChatHint}</p>
+                {phone ? (
+                  <p>
+                    <strong>{copy.phoneLabel}:</strong>{" "}
+                    <a href={phoneHref!}>{phone}</a>
+                  </p>
+                ) : null}
+                {serviceArea ? (
+                  <p className="business-site-service-area">{serviceArea}</p>
+                ) : null}
+                <p className="muted">{copy.hoursLabel}</p>
+                <p className="muted">{copy.contactChatHint}</p>
+              </div>
+              <div className="business-site-chat-teaser card" id="anfrage">
+                <p className="business-site-eyebrow">{copy.chatTeaserEyebrow}</p>
+                <h3>{copy.chatTeaserTitle}</h3>
+                <p className="muted">{copy.chatTeaserBody}</p>
+                <BusinessSiteOpenChatButton className="button business-site-cta">
+                  {copy.chatTeaserCta}
+                </BusinessSiteOpenChatButton>
+              </div>
             </div>
           </div>
         </section>
@@ -151,8 +205,7 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
             </p>
             {phone ? (
               <p>
-                {copy.phoneLabel}:{" "}
-                <a href={`tel:${normalizePhoneHref(phone)}`}>{phone}</a>
+                {copy.phoneLabel}: <a href={phoneHref!}>{phone}</a>
               </p>
             ) : null}
             <nav
@@ -167,7 +220,13 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
         </div>
       </footer>
 
-      <BusinessSiteWidgetEmbed site={site} />
+      <BusinessSiteChatLauncher
+        title={site.widget_title || copy.chatLauncherTitle}
+        closeLabel={copy.chatCloseLabel}
+        launcherLabel={copy.chatLauncherLabel}
+      >
+        <BusinessSiteWidgetEmbed site={site} privacyUrl={privacyUrl} />
+      </BusinessSiteChatLauncher>
     </div>
   );
 }

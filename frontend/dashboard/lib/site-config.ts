@@ -41,3 +41,12 @@ export function getSiteCompanySlug(): string {
 export function getBusinessSitePublicBasePath(): string {
   return getConfiguredSiteHostnames().length > 0 ? "" : "/site";
 }
+
+/** Canonical public origin for SEO (first SITE hostname or localhost preview). */
+export function getBusinessSitePublicOrigin(): string {
+  const hosts = getConfiguredSiteHostnames();
+  if (hosts[0]) {
+    return `https://${hosts[0]}`;
+  }
+  return "http://localhost:3000/site";
+}

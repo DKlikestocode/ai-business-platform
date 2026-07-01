@@ -18,6 +18,63 @@ export interface BusinessSiteTradeProfile {
   heroSubline: string;
   services: Array<{ title: string; description: string }>;
   benefits: string[];
+  references?: Array<{ title: string; description: string }>;
+}
+
+const DEMO_BETRIEB_PROFILE: BusinessSiteTradeProfile = {
+  titleSuffix: "Service & Anfragen in Hamburg",
+  heroKicker: "Persönlich erreichbar — auch per Chat",
+  heroSubline:
+    "Ob Termin, Reparatur oder Beratung: Wir nehmen Ihre Anfrage entgegen und melden uns schnell mit den nächsten Schritten. Der Anfragen-Assistent hilft, alles Wichtige direkt festzuhalten.",
+  services: [
+    {
+      title: "Termin & Beratung",
+      description:
+        "Unverbindliche Erstberatung — per Chat, Telefon oder E-Mail",
+    },
+    {
+      title: "Reparatur & Service",
+      description: "Schnelle Hilfe bei akuten Problemen und Wartungsthemen",
+    },
+    {
+      title: "Gewerbe & Privat",
+      description: "Für Haushalte und kleine Betriebe in der Region",
+    },
+    {
+      title: "Anfrage per Chat",
+      description:
+        "Name, Telefon und Anliegen werden strukturiert erfasst — ohne Formular",
+    },
+  ],
+  benefits: [
+    "Rückmeldung in der Regel am selben Werktag",
+    "Klare Absprachen — ohne Fachchinesisch",
+    "Regional in Hamburg-Wandsbek und Umgebung",
+    "Chat auch außerhalb der Bürozeiten nutzbar",
+  ],
+  references: [
+    {
+      title: "Termin verschieben",
+      description: "„Können wir den Termin auf Donnerstag legen?“",
+    },
+    {
+      title: "Angebot anfragen",
+      description: "„Was kostet die Reparatur ungefähr?“",
+    },
+    {
+      title: "Dringender Fall",
+      description: "„Heute noch jemand vor Ort möglich?“",
+    },
+  ],
+};
+
+export function getBusinessSiteProfile(
+  site: Pick<PublicBusinessSite, "company_slug" | "trade">,
+): BusinessSiteTradeProfile {
+  if (site.company_slug === "demo-betrieb") {
+    return DEMO_BETRIEB_PROFILE;
+  }
+  return getBusinessSiteTradeProfile(site.trade);
 }
 
 export function getBusinessSiteTradeProfile(
