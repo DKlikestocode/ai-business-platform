@@ -13,7 +13,6 @@ from app.config import get_settings
 from app.db.models.enums import ConversationChannel
 from app.demo.seed import DEMO_COMPANY_SLUG
 from app.main import app
-from app.agents.lead_agent.conversation_flow import PROBLEM_FIRST_REPLY
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
@@ -88,7 +87,7 @@ def test_landing_demo_message_returns_live_reply(
 
     assert response.status_code == 200
     body = response.json()
-    assert body["reply"] == PROBLEM_FIRST_REPLY
+    assert body["reply"] == "Danke! Wie kann ich helfen?"
     assert body["lead_complete"] is False
 
 
