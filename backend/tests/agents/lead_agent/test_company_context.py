@@ -19,8 +19,9 @@ def test_build_service_area_prompt_with_center_and_radius() -> None:
 
     assert prompt is not None
     assert "Berlin" in prompt
-    assert "30 km" in prompt
+    assert "Umgebung" in prompt
     assert "Postleitzahl" in prompt
+    assert "keine Kilometer-Entfernungen" in prompt
 
 
 def test_build_service_area_prompt_returns_none_when_unconfigured() -> None:
@@ -31,6 +32,20 @@ def test_build_service_area_prompt_returns_none_when_unconfigured() -> None:
     )
 
     assert build_service_area_prompt(company) is None
+
+
+def test_build_service_area_status_prompt_in_range_without_distance() -> None:
+    prompt = build_service_area_status_prompt(
+        ServiceAreaEvaluation(
+            status=ServiceAreaStatus.IN_RANGE,
+            postal_code="22303",
+            distance_km=12.4,
+        ),
+    )
+
+    assert prompt is not None
+    assert "im Einsatzgebiet" in prompt
+    assert "km" not in prompt.lower()
 
 
 def test_build_service_area_status_prompt_unknown_explains_missing_plz() -> None:
