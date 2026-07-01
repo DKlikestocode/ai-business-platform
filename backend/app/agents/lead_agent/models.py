@@ -84,8 +84,9 @@ class LeadCaptureLLMOutput(BaseModel):
     preferred_callback_time: str | None = Field(
         default=None,
         description=(
-            "Bevorzugte Rückrufzeit in den Worten des Kunden, z. B. heute Nachmittag "
-            "oder morgen früh."
+            "Gewünschte Zeit in den Worten des Kunden für Termin/Besuch/Einsatz vor Ort "
+            "oder telefonischen Rückruf — z. B. nächsten Montag, heute Nachmittag, morgen früh. "
+            "Bei Wasserschaden/Reparatur meist Termin vor Ort, nicht nur Rückruf."
         ),
     )
     inquiry_scope: InquiryScope | None = Field(

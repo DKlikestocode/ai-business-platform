@@ -20,6 +20,7 @@ def test_build_trade_prompt_for_skh() -> None:
     assert "Heizung" in prompt
     assert "out_of_scope" in prompt
     assert "Elektro" in prompt
+    assert "Termin" in prompt
 
 
 @pytest.mark.asyncio

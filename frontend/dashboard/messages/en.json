@@ -540,7 +540,7 @@
     "noDescription": "No description",
     "unknownContact": "Unknown contact",
     "urgency": "Urgency",
-    "preferredCallback": "Preferred callback",
+    "preferredCallback": "Preferred appointment",
     "updateStatusAria": "Update inquiry status",
     "sortOptions": {
       "created_at_desc": "Newest first",
@@ -600,7 +600,7 @@
     "postalCode": "Postal code",
     "serviceRequested": "Service requested",
     "description": "Description",
-    "preferredCallback": "Preferred callback",
+    "preferredCallback": "Preferred appointment",
     "created": "Created",
     "summary": "Summary",
     "updateStatus": "Update status",

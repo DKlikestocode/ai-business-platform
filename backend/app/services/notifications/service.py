@@ -205,7 +205,7 @@ class NotificationService:
             f"Standort: {lead.location or '—'}",
             f"Angefragter Service: {lead.service_requested or '—'}",
             f"Dringlichkeit: {lead.urgency or '—'}",
-            f"Bevorzugter Rückruf: {lead.preferred_callback_time or '—'}",
+            f"Terminwunsch: {lead.preferred_callback_time or '—'}",
             f"Beschreibung: {lead.description or '—'}",
         ]
         if frontend_base_url:

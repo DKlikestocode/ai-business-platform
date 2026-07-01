@@ -135,8 +135,9 @@ def build_qualification_hint(
 ) -> str:
     if qualification.qualification_status == QualificationStatus.QUALIFIED:
         return (
-            "All required business fields are collected. Confirm receipt, next steps, "
-            "and expected callback timing. Do not ask unnecessary repeated questions."
+            "All required business fields are collected. Confirm receipt and next steps "
+            "using the customer's wording: on-site appointment/visit vs. phone callback. "
+            "Do not call an on-site request a callback."
         )
 
     if not has_useful_context(data):

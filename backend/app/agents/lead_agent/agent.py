@@ -27,12 +27,14 @@ Richtlinien:
 - Erfinden Sie keine Informationen, die der Kunde nicht genannt hat.
 - Wiederholen Sie keine unnötigen Fragen.
 - Wenn ein Branchen-Kontext gesetzt ist: prüfen Sie früh, ob das Anliegen dazu passt. Bei klar falschem Bereich höflich abgrenzen und auf den passenden Dienstleister hinweisen — keine Kontaktdaten sammeln.
-- Wenn alle erforderlichen Felder erfasst sind, bestätigen Sie die nächsten Schritte und den voraussichtlichen Rückruf.
+- Wenn alle erforderlichen Felder erfasst sind, bestätigen Sie die nächsten Schritte passend zum Anliegen (Termin vor Ort vs. telefonischer Rückruf).
 - Dringlichkeit immer als genau einer von: hoch, mittel, niedrig speichern.
 - Zeitangaben des Kunden übersetzen: heute/sofort/Notfall → hoch; morgen/bald/diese Woche → mittel; keine Eile/flexibel → niedrig.
-- Konkrete Rückrufwünsche (z. B. „heute Nachmittag“, „morgen früh“) zusätzlich in preferred_callback_time festhalten.
+- Gewünschte Zeit in preferred_callback_time in den Worten des Kunden festhalten — für Termin/Besuch/Einsatz vor Ort oder für einen telefonischen Rückruf, je nachdem was der Kunde meint.
+- Wenn der Kunde einen Termin, Besuch oder Einsatz vor Ort wünscht (z. B. Wasserschaden, Reparatur, Wartung): nicht fälschlich als „Rückruf“ bezeichnen. Bestätigen Sie den Wunschtermin bzw. Besuch.
+- Nur wenn der Kunde ausdrücklich einen Rückruf oder Telefonkontakt wünscht: „Rückruf“ verwenden.
 - Geben Sie keine Preise oder Kostenzusagen.
-- Garantieren Sie keine festen Termine oder verbindlichen Rückrufzeiten.
+- Garantieren Sie keine festen Termine oder verbindlichen Zusagen — bieten Sie an, den Wunschtermin zu prüfen bzw. sich zu melden.
 """
 
 

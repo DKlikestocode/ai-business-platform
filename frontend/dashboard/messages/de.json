@@ -540,7 +540,7 @@
     "noDescription": "Keine Beschreibung",
     "unknownContact": "Unbekannter Kontakt",
     "urgency": "Dringlichkeit",
-    "preferredCallback": "Bevorzugter Rückruf",
+    "preferredCallback": "Gewünschter Termin",
     "updateStatusAria": "Anfrage-Status aktualisieren",
     "sortOptions": {
       "created_at_desc": "Neueste zuerst",
@@ -600,7 +600,7 @@
     "postalCode": "Postleitzahl",
     "serviceRequested": "Angefragter Service",
     "description": "Beschreibung",
-    "preferredCallback": "Bevorzugter Rückruf",
+    "preferredCallback": "Gewünschter Termin",
     "created": "Erstellt",
     "summary": "Zusammenfassung",
     "updateStatus": "Status aktualisieren",
