@@ -150,9 +150,11 @@ export function LeadDetailView() {
     : false;
   const isContacted = lead ? lead.status !== "new" : false;
   const isNew = lead?.status === "new";
+  const hasUrgencySection = Boolean(urgencyLabel || preferredCallback);
+  const serviceLine = lead?.service_requested?.trim() || null;
 
   return (
-    <div className="stack">
+    <div className={`stack lead-detail${showContactActions ? " lead-detail--has-sticky-contact" : ""}`}>
       <Link href="/leads" className="back-link">
         {t("backToLeads")}
       </Link>
@@ -175,42 +177,24 @@ export function LeadDetailView() {
       ) : null}
 
       {!loading && lead ? (
-        <>
-          <div className="detail-header">
-            <h2>{t("handoffTitle")}</h2>
-            <div className="detail-header-badges">
-              {urgencyLabel || preferredCallback ? (
-                <div className="inquiry-card-corner-meta inquiry-detail-corner-meta">
-                  {urgencyLabel ? (
-                    <span className="inquiry-card-corner-item">
-                      <span className="inquiry-card-corner-label">{t("howUrgent")}</span>
-                      <span className="inquiry-card-corner-value">{urgencyLabel}</span>
-                    </span>
-                  ) : null}
-                  {preferredCallback ? (
-                    <span className="inquiry-card-corner-item">
-                      <span className="inquiry-card-corner-label">
-                        {t("preferredCallback")}
-                      </span>
-                      <span className="inquiry-card-corner-value">
-                        {preferredCallback}
-                      </span>
-                    </span>
-                  ) : null}
-                </div>
-              ) : null}
+        <div className="content-fade-in lead-detail-body">
+          <div className="detail-header lead-detail-header">
+            <h2 className="lead-detail-page-title">{t("handoffTitle")}</h2>
+            <div className="detail-header-badges lead-detail-badges">
+              <InquiryKindBadge inquiryKind={lead.inquiry_kind} />
               <ServiceAreaStatusBadge
                 status={lead.service_area_status}
                 distanceKm={lead.service_area_distance_km}
               />
-              <InquiryKindBadge inquiryKind={lead.inquiry_kind} />
               <StatusBadge status={lead.status} />
             </div>
           </div>
 
           {error ? <div className="alert">{error}</div> : null}
           {restoreSuccess ? (
-            <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
+            <div className="success-fade-in">
+              <AlertBanner variant="success">{t("restoreSuccess")}</AlertBanner>
+            </div>
           ) : null}
           {isContacted ? (
             <AlertBanner variant="info">
@@ -232,54 +216,106 @@ export function LeadDetailView() {
             <FirstWebsiteInquiryMarker variant="detail" />
           ) : null}
 
-          <div className="card inquiry-handoff-card">
-            <dl className="inquiry-handoff-list">
-              <div className="inquiry-handoff-row">
-                <dt>{t("who")}</dt>
-                <dd className="inquiry-handoff-value">
-                  {displayName(lead.name, t("unknownContact"))}
-                </dd>
-              </div>
-              <div className="inquiry-handoff-row">
-                <dt>{t("whatAbout")}</dt>
-                <dd className="inquiry-handoff-value">{preview}</dd>
-              </div>
-              <div className="inquiry-handoff-row">
-                <dt>{t("howToContact")}</dt>
-                <dd>
-                  {showContactActions ? (
-                    <div className="inquiry-card-contact">
-                      {phone ? (
-                        <a
-                          href={`tel:${phone}`}
-                          className="inquiry-card-contact-link"
-                        >
-                          {phone}
-                        </a>
-                      ) : null}
-                      {email ? (
-                        <a
-                          href={`mailto:${email}`}
-                          className="inquiry-card-contact-link"
-                        >
-                          {email}
-                        </a>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <span className="inquiry-handoff-missing-contact">
-                      {t("missingContact")}
+          <section className="card lead-detail-hero" aria-labelledby="lead-detail-who">
+            <p id="lead-detail-who" className="lead-detail-section-label">
+              {t("who")}
+            </p>
+            <h3 className="lead-detail-hero-name">
+              {displayName(lead.name, t("unknownContact"))}
+            </h3>
+          </section>
+
+          <section className="card lead-detail-section-card" aria-labelledby="lead-detail-anliegen">
+            <h3 id="lead-detail-anliegen" className="lead-detail-section-title">
+              {t("whatAbout")}
+            </h3>
+            {serviceLine ? (
+              <p className="lead-detail-service">{serviceLine}</p>
+            ) : null}
+            <p className="lead-detail-anliegen">{preview}</p>
+          </section>
+
+          {hasUrgencySection ? (
+            <section
+              className="card lead-detail-section-card lead-detail-urgency-card"
+              aria-labelledby="lead-detail-urgency"
+            >
+              <h3 id="lead-detail-urgency" className="lead-detail-section-title">
+                {t("howUrgent")}
+              </h3>
+              <div className="lead-detail-urgency-content">
+                {urgencyLabel ? (
+                  <span className="lead-detail-urgency-value">{urgencyLabel}</span>
+                ) : null}
+                {preferredCallback ? (
+                  <p className="lead-detail-callback muted">
+                    <span className="lead-detail-callback-label">
+                      {t("preferredCallback")}
                     </span>
-                  )}
-                </dd>
+                    <span className="lead-detail-callback-value">{preferredCallback}</span>
+                  </p>
+                ) : null}
               </div>
-              <div className="inquiry-handoff-row">
+            </section>
+          ) : null}
+
+          <section
+            className="card lead-detail-section-card lead-detail-contact-section"
+            aria-labelledby="lead-detail-contact"
+          >
+            <h3 id="lead-detail-contact" className="lead-detail-section-title">
+              {t("howToContact")}
+            </h3>
+            {isNew ? (
+              <InquiryCallbackActions
+                phone={phone}
+                email={email}
+                status={lead.status}
+                updating={updating}
+                showContactedSuccess={showContactedSuccess}
+                onMarkContacted={() => void handleMarkContacted()}
+              />
+            ) : showContactActions ? (
+              <div className="lead-detail-contact-actions">
+                {phone ? (
+                  <a
+                    href={`tel:${phone}`}
+                    className="button lead-detail-contact-btn lead-detail-contact-btn--call"
+                    aria-label={`${t("call")} ${phone}`}
+                  >
+                    {t("call")}
+                  </a>
+                ) : null}
+                {email ? (
+                  <a
+                    href={`mailto:${email}`}
+                    className="button secondary lead-detail-contact-btn"
+                    aria-label={`${t("emailAction")} ${email}`}
+                  >
+                    {t("emailAction")}
+                  </a>
+                ) : null}
+              </div>
+            ) : (
+              <p className="inquiry-handoff-missing-contact">{t("missingContact")}</p>
+            )}
+          </section>
+
+          <section
+            className="card lead-detail-section-card lead-detail-meta-card"
+            aria-labelledby="lead-detail-meta"
+          >
+            <h3 id="lead-detail-meta" className="lead-detail-section-title lead-detail-meta-title">
+              {t("moreDetails")}
+            </h3>
+            <dl className="lead-detail-meta-list">
+              <div className="lead-detail-meta-row">
                 <dt>{t("origin")}</dt>
                 <dd>
                   <InquirySourceBadge source={lead.source} />
                 </dd>
               </div>
-              <div className="inquiry-handoff-row">
+              <div className="lead-detail-meta-row">
                 <dt>{t("notificationLabel")}</dt>
                 <dd>
                   <InquiryNotificationIndicator
@@ -289,7 +325,7 @@ export function LeadDetailView() {
                 </dd>
               </div>
               {lead.contacted_at ? (
-                <div className="inquiry-handoff-row">
+                <div className="lead-detail-meta-row">
                   <dt>{t("contactedAtLabel")}</dt>
                   <dd>
                     <InquiryContactedIndicator
@@ -300,34 +336,11 @@ export function LeadDetailView() {
                 </div>
               ) : null}
             </dl>
-
-            {isNew ? (
-              <InquiryCallbackActions
-                phone={phone}
-                email={email}
-                status={lead.status}
-                updating={updating}
-                showContactedSuccess={showContactedSuccess}
-                onMarkContacted={() => void handleMarkContacted()}
-              />
-            ) : null}
-
-            <div className="inquiry-card-actions inquiry-detail-footer">
-              <button
-                type="button"
-                className="inquiry-card-delete"
-                disabled={updating}
-                aria-label={t("deleteAria")}
-                onClick={() => void handleDelete()}
-              >
-                {t("delete")}
-              </button>
-            </div>
-          </div>
+          </section>
 
           <details className="card inquiry-handoff-more">
             <summary className="inquiry-handoff-more-summary">
-              {t("moreDetails")}
+              {t("additionalDetails")}
             </summary>
             <dl className="detail-list inquiry-handoff-more-list">
               <DetailRow label={t("postalCode")} value={lead.postal_code} />
@@ -356,7 +369,46 @@ export function LeadDetailView() {
               ) : null}
             </dl>
           </details>
-        </>
+
+          <div className="inquiry-card-actions inquiry-detail-footer">
+            <button
+              type="button"
+              className="inquiry-card-delete"
+              disabled={updating}
+              aria-label={t("deleteAria")}
+              onClick={() => void handleDelete()}
+            >
+              {t("delete")}
+            </button>
+          </div>
+
+          {showContactActions ? (
+            <div
+              className="lead-detail-sticky-contact"
+              role="toolbar"
+              aria-label={t("contactNow")}
+            >
+              {phone ? (
+                <a
+                  href={`tel:${phone}`}
+                  className="button lead-detail-sticky-btn lead-detail-sticky-btn--call"
+                  aria-label={`${t("call")} ${phone}`}
+                >
+                  {t("call")}
+                </a>
+              ) : null}
+              {email ? (
+                <a
+                  href={`mailto:${email}`}
+                  className="button secondary lead-detail-sticky-btn"
+                  aria-label={`${t("emailAction")} ${email}`}
+                >
+                  {t("emailAction")}
+                </a>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );

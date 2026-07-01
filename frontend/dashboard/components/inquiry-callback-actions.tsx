@@ -76,7 +76,11 @@ export function InquiryCallbackActions({
       ) : null}
 
       {showContactedSuccess ? (
-        <p className="inquiry-callback-success" role="status" aria-live="polite">
+        <p
+          className="inquiry-callback-success success-fade-in"
+          role="status"
+          aria-live="polite"
+        >
           {t("markContactedSuccess")}
         </p>
       ) : null}
