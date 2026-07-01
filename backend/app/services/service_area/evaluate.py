@@ -90,19 +90,12 @@ def append_missing_postal_code_reply_note(reply: str) -> str:
 def append_service_area_reply_note(
     reply: str,
     evaluation: ServiceAreaEvaluation,
-    *,
-    radius_km: int | None,
 ) -> str:
-    if evaluation.status == ServiceAreaStatus.IN_RANGE and evaluation.distance_km is not None:
+    if evaluation.status == ServiceAreaStatus.IN_RANGE:
+        note = "Ihre Postleitzahl liegt in unserem Einsatzgebiet."
+    elif evaluation.status == ServiceAreaStatus.OUT_OF_RANGE:
         note = (
-            f"Ihre Postleitzahl liegt in unserem Einsatzgebiet "
-            f"(ca. {evaluation.distance_km:.0f} km Entfernung)."
-        )
-    elif evaluation.status == ServiceAreaStatus.OUT_OF_RANGE and evaluation.distance_km is not None:
-        radius_label = f"{radius_km} km" if radius_km else "unserem Einsatzgebiet"
-        note = (
-            f"Ihre Postleitzahl liegt vermutlich außerhalb unseres üblichen Einsatzgebiets "
-            f"(ca. {evaluation.distance_km:.0f} km, Grenze {radius_label}). "
+            "Ihre Postleitzahl liegt vermutlich außerhalb unseres üblichen Einsatzgebiets. "
             "Wir prüfen, ob wir Ihnen trotzdem helfen können."
         )
     else:

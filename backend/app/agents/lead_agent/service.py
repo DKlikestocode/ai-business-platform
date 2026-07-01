@@ -199,7 +199,6 @@ class LeadCaptureService:
             reply = append_service_area_reply_note(
                 reply,
                 service_area_eval,
-                radius_km=company.service_radius_km if company is not None else None,
             )
 
         self._conversation_repository.add_message(

@@ -16,24 +16,30 @@ def build_service_area_prompt(company: Company) -> str | None:
         "Ergänzen Sie optional den Ort oder Stadtteil im Feld location."
     )
 
+    no_distance_instruction = (
+        "Nennen Sie dem Kunden keine Kilometer-Entfernungen, Radius- oder Distanzangaben."
+    )
+
     if center and radius is not None and radius > 0:
         return (
-            f"Einsatzgebiet des Betriebs: {center} und Umgebung (ca. {radius} km). "
+            f"Einsatzgebiet des Betriebs: {center} und Umgebung. "
             f"{plz_instruction} "
             "Wenn die PLZ-Prüfung außerhalb des Gebiets liegt, weisen Sie freundlich darauf hin. "
-            "Erfinden Sie keine feste Zusage für entfernte Orte."
+            "Erfinden Sie keine feste Zusage für entfernte Orte. "
+            f"{no_distance_instruction}"
         )
 
     if center:
         return (
             f"Einsatzgebiet des Betriebs: {center}. "
             f"{plz_instruction} "
-            "Prüfen Sie anhand der PLZ, ob der Betrieb dort tätig ist."
+            "Prüfen Sie anhand der PLZ, ob der Betrieb dort tätig ist. "
+            f"{no_distance_instruction}"
         )
 
     return (
-        f"Der Betrieb nimmt Anfragen bis etwa {radius} km um den Standort an. "
-        f"{plz_instruction}"
+        "Der Betrieb hat ein begrenztes Einsatzgebiet um den Standort. "
+        f"{plz_instruction} {no_distance_instruction}"
     )
 
 
@@ -47,17 +53,17 @@ def build_service_area_status_prompt(evaluation: ServiceAreaEvaluation) -> str |
     if evaluation.status == ServiceAreaStatus.NOT_CONFIGURED:
         return None
 
-    if evaluation.status == ServiceAreaStatus.IN_RANGE and evaluation.distance_km is not None:
+    if evaluation.status == ServiceAreaStatus.IN_RANGE:
         return (
-            f"Standortprüfung (verbindlich): PLZ {evaluation.postal_code} liegt im Einsatzgebiet "
-            f"(ca. {evaluation.distance_km:.0f} km). Bestätigen Sie das kurz, wenn passend."
+            f"Standortprüfung (verbindlich): PLZ {evaluation.postal_code} liegt im Einsatzgebiet. "
+            "Bestätigen Sie das kurz und freundlich — ohne Kilometer- oder Entfernungsangaben."
         )
 
-    if evaluation.status == ServiceAreaStatus.OUT_OF_RANGE and evaluation.distance_km is not None:
+    if evaluation.status == ServiceAreaStatus.OUT_OF_RANGE:
         return (
             f"Standortprüfung (verbindlich): PLZ {evaluation.postal_code} liegt vermutlich "
-            f"außerhalb des Einsatzgebiets (ca. {evaluation.distance_km:.0f} km). "
-            "Weisen Sie freundlich darauf hin und nehmen Sie die Anfrage trotzdem auf."
+            "außerhalb des Einsatzgebiets. Weisen Sie freundlich darauf hin und nehmen Sie die "
+            "Anfrage trotzdem auf — ohne Kilometer- oder Entfernungsangaben."
         )
 
     return None
