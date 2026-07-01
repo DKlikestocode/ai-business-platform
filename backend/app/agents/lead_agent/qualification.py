@@ -4,6 +4,7 @@ from app.agents.lead_agent.contact_validation import is_valid_email, is_valid_ph
 from app.agents.lead_agent.models import ContactMethod, LeadExtractedData, QualificationStatus
 from app.agents.lead_agent.utils import is_lead_complete
 from app.db.models.enums import ConversationChannel
+from app.services.service_area.evaluate import resolve_lead_postal_code
 
 
 @dataclass(frozen=True)
@@ -130,6 +131,7 @@ def build_qualification_hint(
     qualification: QualificationResult,
     *,
     channel: ConversationChannel,
+    service_area_configured: bool = False,
 ) -> str:
     if qualification.qualification_status == QualificationStatus.QUALIFIED:
         return (
@@ -139,9 +141,20 @@ def build_qualification_hint(
 
     if not has_useful_context(data):
         return (
-            "The customer's request is not clear yet. Prioritize understanding the problem "
-            "or service needed before asking for phone or email. Ask one focused question "
-            "about what they need help with."
+            "The customer's request is not clear yet. Respond naturally to their message, "
+            "then ask one focused question about what they need help with. Do not ask for "
+            "phone or email before the problem or service is understood."
+        )
+
+    if (
+        service_area_configured
+        and channel == ConversationChannel.WEB
+        and resolve_lead_postal_code(data) is None
+    ):
+        return (
+            "The request is understood. Acknowledge what the customer shared, then ask for "
+            "their 5-digit German postal code to check service area coverage. Keep the tone "
+            "conversational — do not ignore their message or jump straight to contact details."
         )
 
     if not qualification.contactable:
