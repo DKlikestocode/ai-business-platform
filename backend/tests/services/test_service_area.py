@@ -3,7 +3,6 @@ from app.db.models.company import Company
 from app.services.service_area.distance import haversine_km
 from app.services.service_area.evaluate import (
     append_missing_postal_code_reply_note,
-    append_service_area_reply_note,
     evaluate_service_area,
     is_service_area_configured,
     resolve_lead_postal_code,
@@ -98,38 +97,6 @@ def test_evaluate_service_area_unknown_without_plz() -> None:
     result = evaluate_service_area(company, data)
 
     assert result.status == ServiceAreaStatus.UNKNOWN
-
-
-def test_append_service_area_reply_note_in_range_without_distance() -> None:
-    note = append_service_area_reply_note(
-        "Danke für Ihre Anfrage.",
-        ServiceAreaEvaluation(
-            status=ServiceAreaStatus.IN_RANGE,
-            postal_code="22303",
-            distance_km=8.2,
-        ),
-    )
-    assert "Einsatzgebiet" in note
-    assert "km" not in note.lower()
-
-
-def test_append_service_area_reply_note_out_of_range() -> None:
-    note = append_service_area_reply_note(
-        "Danke für Ihre Anfrage.",
-        evaluate_service_area(
-            Company(
-                name="Test",
-                slug="test",
-                email="test@example.com",
-                service_area_latitude=48.137,
-                service_area_longitude=11.576,
-                service_radius_km=25,
-            ),
-            LeadExtractedData(postal_code="10115"),
-        ),
-    )
-    assert "außerhalb" in note
-    assert "km" not in note.lower()
 
 
 def test_is_service_area_configured_requires_coordinates_and_radius() -> None:

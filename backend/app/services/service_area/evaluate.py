@@ -85,22 +85,3 @@ def append_missing_postal_code_reply_note(reply: str) -> str:
     if MISSING_POSTAL_CODE_REPLY_NOTE in reply:
         return reply
     return f"{reply.rstrip()}\n\n{MISSING_POSTAL_CODE_REPLY_NOTE}"
-
-
-def append_service_area_reply_note(
-    reply: str,
-    evaluation: ServiceAreaEvaluation,
-) -> str:
-    if evaluation.status == ServiceAreaStatus.IN_RANGE:
-        note = "Ihre Postleitzahl liegt in unserem Einsatzgebiet."
-    elif evaluation.status == ServiceAreaStatus.OUT_OF_RANGE:
-        note = (
-            "Ihre Postleitzahl liegt vermutlich außerhalb unseres üblichen Einsatzgebiets. "
-            "Wir prüfen, ob wir Ihnen trotzdem helfen können."
-        )
-    else:
-        return reply
-
-    if note in reply:
-        return reply
-    return f"{reply.rstrip()}\n\n{note}"
