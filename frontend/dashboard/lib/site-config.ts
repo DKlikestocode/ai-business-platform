@@ -1,4 +1,4 @@
-const DEFAULT_SITE_COMPANY_SLUG = "mikes-sanitarbetrieb";
+const DEFAULT_SITE_COMPANY_SLUG = "demo-betrieb";
 
 export function parseSiteHostnames(raw: string | undefined): string[] {
   if (!raw?.trim()) {

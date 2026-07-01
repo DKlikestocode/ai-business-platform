@@ -35,7 +35,7 @@ def test_build_pilot_website_html_includes_widget_embed() -> None:
 def test_build_pilot_website_html_for_company_uses_company_fields() -> None:
     company = Company(
         name="Dominik's Dienstleistungsbetrieb",
-        slug="mikes-sanitarbetrieb",
+        slug="demo-betrieb",
         email="kontakt@beispiel.de",
         phone=None,
         trade="skh",
@@ -49,7 +49,7 @@ def test_build_pilot_website_html_for_company_uses_company_fields() -> None:
         api_base="https://api.dominiksdomain.com",
     )
 
-    assert 'data-company-slug="mikes-sanitarbetrieb"' in html
+    assert 'data-company-slug="demo-betrieb"' in html
     assert "Dominik&#x27;s Dienstleistungsbetrieb" in html
     assert "22041 Hamburg-Wandsbek und Umgebung" in html
 
@@ -75,7 +75,7 @@ def test_resolve_pilot_company_skips_placeholder_slugs() -> None:
     companies = [
         Company(name="Default", slug="default", email="a@b.c"),
         Company(name="Demo", slug="demo-company", email="d@e.f"),
-        Company(name="Pilot", slug="mikes-sanitarbetrieb", email="p@q.r"),
+        Company(name="Pilot", slug="demo-betrieb", email="p@q.r"),
     ]
 
     resolved = resolve_pilot_company(
@@ -84,4 +84,4 @@ def test_resolve_pilot_company_skips_placeholder_slugs() -> None:
         company_slug=None,
     )
 
-    assert resolved.slug == "mikes-sanitarbetrieb"
+    assert resolved.slug == "demo-betrieb"
