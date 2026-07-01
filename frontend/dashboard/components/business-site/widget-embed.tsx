@@ -20,7 +20,7 @@ export function BusinessSiteWidgetEmbed({
   privacyUrl,
   welcomeMessage,
 }: BusinessSiteWidgetEmbedProps) {
-  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=6`;
+  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=7`;
 
   return (
     <>

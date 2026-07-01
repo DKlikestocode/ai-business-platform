@@ -2,7 +2,6 @@ from app.agents.lead_agent.models import LeadExtractedData
 from app.db.models.company import Company
 from app.services.service_area.distance import haversine_km
 from app.services.service_area.evaluate import (
-    append_missing_postal_code_reply_note,
     evaluate_service_area,
     is_service_area_configured,
     resolve_lead_postal_code,
@@ -120,11 +119,6 @@ def test_is_service_area_configured_requires_coordinates_and_radius() -> None:
     )
     assert is_service_area_configured(incomplete) is False
 
-
-def test_append_missing_postal_code_reply_note_appends_once() -> None:
-    reply = append_missing_postal_code_reply_note("Danke für Ihre Anfrage.")
-    assert "Ohne Ihre Postleitzahl" in reply
-    assert reply == append_missing_postal_code_reply_note(reply)
 
 
 def test_resolve_lead_postal_code_prefers_field() -> None:
