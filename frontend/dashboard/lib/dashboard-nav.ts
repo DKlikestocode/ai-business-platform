@@ -11,7 +11,7 @@ import type {
   CurrentUser,
 } from "@/lib/types";
 
-export type AuthenticatedHomePath = "/getting-started" | "/leads";
+export type AuthenticatedHomePath = "/leads";
 
 export interface DashboardNavState {
   ready: boolean;
@@ -47,13 +47,8 @@ export function readDashboardNavState(
 }
 
 export function resolveAuthenticatedHomePathFromCache(
-  user: CurrentUser,
-  company: Company,
+  _user: CurrentUser,
+  _company: Company,
 ): AuthenticatedHomePath {
-  const navState = readDashboardNavState(user, company);
-  if (!navState.ready || navState.showGettingStarted) {
-    return "/getting-started";
-  }
-
   return "/leads";
 }

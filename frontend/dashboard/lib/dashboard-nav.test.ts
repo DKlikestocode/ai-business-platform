@@ -105,16 +105,15 @@ describe("dashboard-nav", () => {
     expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe("/leads");
   });
 
-  it("routes incomplete setup to getting started", () => {
+  it("routes all accounts to the inbox", () => {
     setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, settings);
-    setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, buildActivation());
-
-    expect(readDashboardNavState(user, company)).toEqual({
-      ready: true,
-      showGettingStarted: true,
-    });
-    expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe(
-      "/getting-started",
+    setDashboardCache(
+      COMPANY_ACTIVATION_CACHE_KEY,
+      buildActivation({
+        status: "awaiting_widget",
+      }),
     );
+
+    expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe("/leads");
   });
 });

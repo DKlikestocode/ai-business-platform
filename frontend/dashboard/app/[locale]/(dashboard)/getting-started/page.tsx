@@ -1,5 +1,5 @@
-import { GettingStartedChecklist } from "@/components/getting-started-checklist";
+import { redirect } from "next/navigation";
 
 export default function GettingStartedPage() {
-  return <GettingStartedChecklist />;
+  redirect("/leads");
 }

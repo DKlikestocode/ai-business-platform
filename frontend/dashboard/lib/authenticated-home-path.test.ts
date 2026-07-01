@@ -111,7 +111,7 @@ describe("resolveAuthenticatedHomePath", () => {
     );
   });
 
-  it("routes incomplete setup to getting started", async () => {
+  it("routes incomplete setup to the inbox as well", async () => {
     const activation = buildActivation();
     vi.mocked(loadCachedCompanySettings).mockImplementation(async () => {
       setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, settings);
@@ -123,7 +123,7 @@ describe("resolveAuthenticatedHomePath", () => {
     });
 
     await expect(resolveAuthenticatedHomePath(user, company)).resolves.toBe(
-      "/getting-started",
+      "/leads",
     );
   });
 });

@@ -80,7 +80,7 @@ export function OnboardingForm() {
         role: "owner",
       });
       await login(userEmail.trim(), password);
-      router.replace("/getting-started");
+      router.replace("/leads");
     } catch (err) {
       setError(formatUserFacingError(err, t("createUserFailed"), errorMessages));
     } finally {

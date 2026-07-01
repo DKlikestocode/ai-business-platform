@@ -9,6 +9,7 @@ interface EmptyStateProps {
   secondaryActionLabel?: string;
   linkHref?: string;
   linkLabel?: string;
+  linkOnClick?: () => void;
 }
 
 export function EmptyState({
@@ -20,6 +21,7 @@ export function EmptyState({
   secondaryActionLabel,
   linkHref,
   linkLabel,
+  linkOnClick,
 }: EmptyStateProps) {
   const hasActions = actionHref && actionLabel;
   const hasSecondary = secondaryActionHref && secondaryActionLabel;
@@ -42,7 +44,11 @@ export function EmptyState({
           ) : null}
         </div>
       ) : null}
-      {linkHref && linkLabel ? (
+      {linkLabel && linkOnClick ? (
+        <button type="button" className="empty-state-link" onClick={linkOnClick}>
+          {linkLabel}
+        </button>
+      ) : linkHref && linkLabel ? (
         <Link href={linkHref} className="empty-state-link">
           {linkLabel}
         </Link>
