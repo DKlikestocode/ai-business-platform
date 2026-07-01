@@ -164,3 +164,14 @@ export function formatBusinessSiteServiceArea(
 export function normalizePhoneHref(phone: string): string {
   return phone.replace(/[^\d+]/g, "");
 }
+
+export const DEMO_BETRIEB_CONTACT_EMAIL = "Dominik.Kessling@gmail.com";
+
+export function getBusinessSiteContactEmail(
+  site: Pick<PublicBusinessSite, "company_slug" | "email">,
+): string {
+  if (site.company_slug === "demo-betrieb") {
+    return DEMO_BETRIEB_CONTACT_EMAIL;
+  }
+  return site.email;
+}

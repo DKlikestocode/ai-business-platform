@@ -1,4 +1,5 @@
 import type { PublicBusinessSite } from "@/lib/business-site";
+import { getBusinessSiteContactEmail } from "@/lib/business-site";
 import { getBusinessSiteCopy } from "@/lib/business-site-copy";
 
 export type BusinessSiteLegalVariant = "impressum" | "datenschutz";
@@ -15,9 +16,10 @@ type LegalPageCopy = {
 };
 
 function replaceTokens(template: string, site: PublicBusinessSite): string {
+  const email = getBusinessSiteContactEmail(site);
   return template
     .replaceAll("{companyName}", site.company_name)
-    .replaceAll("{email}", site.email)
+    .replaceAll("{email}", email)
     .replaceAll("{phone}", site.phone?.trim() || "—");
 }
 

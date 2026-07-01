@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import type { PublicBusinessSite } from "@/lib/business-site";
-import { getBusinessSiteProfile } from "@/lib/business-site";
+import { getBusinessSiteContactEmail, getBusinessSiteProfile } from "@/lib/business-site";
 
 export function buildBusinessSiteMetadata(
   site: PublicBusinessSite,
@@ -55,7 +55,7 @@ export function buildBusinessSiteJsonLd(
     name: site.company_name,
     description: profile.heroSubline,
     url: siteUrl,
-    email: site.email,
+    email: getBusinessSiteContactEmail(site),
     ...(phone ? { telephone: phone } : {}),
     ...(site.service_area_center
       ? {

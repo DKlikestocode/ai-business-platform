@@ -8,6 +8,8 @@ import {
 } from "react";
 
 const OPEN_CHAT_EVENT = "business-site:open-chat";
+const RESTART_WIDGET_EVENT = "ai-agent-widget-restart";
+const WIDGET_CONTAINER_ID = "ai-agent-widget";
 
 export function openBusinessSiteChat() {
   window.dispatchEvent(new Event(OPEN_CHAT_EVENT));
@@ -15,14 +17,18 @@ export function openBusinessSiteChat() {
 
 interface BusinessSiteChatLauncherProps {
   title: string;
+  subtitle: string;
   closeLabel: string;
+  restartLabel: string;
   launcherLabel: string;
   children: ReactNode;
 }
 
 export function BusinessSiteChatLauncher({
   title,
+  subtitle,
   closeLabel,
+  restartLabel,
   launcherLabel,
   children,
 }: BusinessSiteChatLauncherProps) {
@@ -30,6 +36,14 @@ export function BusinessSiteChatLauncher({
 
   const openChat = useCallback(() => setOpen(true), []);
   const closeChat = useCallback(() => setOpen(false), []);
+
+  const restartChat = useCallback(() => {
+    window.dispatchEvent(
+      new CustomEvent(RESTART_WIDGET_EVENT, {
+        detail: { containerId: WIDGET_CONTAINER_ID },
+      }),
+    );
+  }, []);
 
   useEffect(() => {
     const onOpen = () => openChat();
@@ -73,15 +87,27 @@ export function BusinessSiteChatLauncher({
         aria-hidden={!open}
       >
         <div className="business-site-chat-panel-header">
-          <strong>{title}</strong>
-          <button
-            type="button"
-            className="business-site-chat-panel-close"
-            onClick={closeChat}
-            aria-label={closeLabel}
-          >
-            ×
-          </button>
+          <div className="business-site-chat-panel-heading">
+            <strong>{title}</strong>
+            <span className="business-site-chat-panel-subtitle">{subtitle}</span>
+          </div>
+          <div className="business-site-chat-panel-actions">
+            <button
+              type="button"
+              className="business-site-chat-panel-restart"
+              onClick={restartChat}
+            >
+              {restartLabel}
+            </button>
+            <button
+              type="button"
+              className="business-site-chat-panel-close"
+              onClick={closeChat}
+              aria-label={closeLabel}
+            >
+              ×
+            </button>
+          </div>
         </div>
         <div className="business-site-chat-panel-body">{children}</div>
       </div>
@@ -94,7 +120,7 @@ export function BusinessSiteChatLauncher({
           aria-label={launcherLabel}
         >
           <ChatIcon />
-          <span className="business-site-chat-launcher-label">{title}</span>
+          <span className="business-site-chat-launcher-label">{launcherLabel}</span>
         </button>
       ) : null}
     </>

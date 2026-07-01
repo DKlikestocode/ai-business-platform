@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatBusinessSiteServiceArea,
+  getBusinessSiteContactEmail,
   getBusinessSiteProfile,
   getBusinessSiteTradeProfile,
 } from "@/lib/business-site";
@@ -26,5 +27,14 @@ describe("business-site", () => {
     expect(formatBusinessSiteServiceArea("22303 Hamburg", 30)).toBe(
       "22303 Hamburg und Umgebung (ca. 30 km)",
     );
+  });
+
+  it("uses demo contact email override for demo-betrieb", () => {
+    expect(
+      getBusinessSiteContactEmail({
+        company_slug: "demo-betrieb",
+        email: "hallo@dominiksdomain.com",
+      }),
+    ).toBe("Dominik.Kessling@gmail.com");
   });
 });
