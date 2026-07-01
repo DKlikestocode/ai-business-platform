@@ -244,7 +244,7 @@ describe("activation checklist", () => {
     expect(isAwaitingFirstWebsiteInquiry(progress)).toBe(true);
   });
 
-  it("shows getting started nav while setup data is still loading", () => {
+  it("hides getting started nav while setup data is still loading", () => {
     expect(
       shouldShowGettingStartedNav({
         company,
@@ -252,7 +252,7 @@ describe("activation checklist", () => {
         settings,
         activation: undefined,
       }),
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it("hides getting started nav when checklist is complete and chat is live", () => {

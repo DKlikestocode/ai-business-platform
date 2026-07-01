@@ -54,11 +54,12 @@ export function useGettingStartedNavVisibility() {
   }, [authLoading, user, load, pathname]);
 
   const activationLoading = Boolean(user) && activation === undefined;
+  const settingsLoading = Boolean(user) && settings === null;
+  const navDataLoading = activationLoading || settingsLoading;
   const showGettingStarted =
-    authLoading ||
-    !user ||
-    !company ||
-    activationLoading ||
+    !authLoading &&
+    Boolean(user && company) &&
+    !navDataLoading &&
     shouldShowGettingStartedNav({
       company,
       user,
@@ -68,6 +69,6 @@ export function useGettingStartedNavVisibility() {
 
   return {
     showGettingStarted,
-    activationLoading: authLoading || activationLoading,
+    activationLoading: authLoading || navDataLoading,
   };
 }

@@ -114,7 +114,7 @@ export function shouldShowGettingStartedNav(
   input: ActivationChecklistInput,
 ): boolean {
   if (!input.company || !input.user || !input.settings || !input.activation) {
-    return true;
+    return false;
   }
 
   const progress = evaluateActivationChecklist(input);
