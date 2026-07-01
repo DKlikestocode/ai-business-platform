@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "AuftragsPilot — KI-Posteingang für Handwerk und Dienstleister",
+    "title": "AI Anfragen-Assistent — KI-Posteingang für Handwerk und Dienstleister",
     "description": "Website-Anfragen automatisch erfassen, priorisieren und Ihr Team per E-Mail informieren — für Handwerk und lokale Dienstleister."
   },
   "common": {
@@ -29,25 +29,25 @@
     "signIn": "Anmelden",
     "signOut": "Abmelden",
     "startFreePilot": "Kostenlos starten",
-    "bookPilot": "Pilot anfragen",
+    "bookPilot": "Beratung anfragen",
     "main": "Hauptnavigation",
     "marketing": "Marketing-Navigation"
   },
   "brand": {
-    "name": "AuftragsPilot",
-    "mark": "AP",
-    "tagline": "Der KI-Posteingang für Handwerk und lokale Dienstleister."
+    "name": "AI Anfragen-Assistent",
+    "mark": "AI",
+    "tagline": "KI-Assistenz für Website-Anfragen — für Handwerk und Dienstleistung."
   },
   "appShell": {
-    "title": "AuftragsPilot",
+    "title": "AI Anfragen-Assistent",
     "subtitle": "Ihre Website-Anfragen an einem Ort"
   },
   "landing": {
     "eyebrow": "Für Handwerk und lokale Dienstleister",
     "heroTitle": "Ihre Website fängt Anfragen auf — Sie kümmern sich um den Auftrag.",
-    "heroLead": "AuftragsPilot beantwortet erste Fragen im Chat, erfasst Name, Telefon und Anliegen — und meldet sich, wenn eine Anfrage wichtig ist.",
-    "heroTrustNote": "Unverbindliches Pilot-Gespräch · In Minuten live · DSGVO-orientiert · EU-Hosting",
-    "bookPilot": "Pilot-Gespräch buchen",
+    "heroLead": "Der AI Anfragen-Assistent beantwortet erste Fragen im Chat, erfasst Name, Telefon und Anliegen — und meldet sich, wenn eine Anfrage wichtig ist.",
+    "heroTrustNote": "Unverbindliches Beratungsgespräch · In Minuten live · DSGVO-orientiert · EU-Hosting",
+    "bookPilot": "Beratungsgespräch buchen",
     "tryDemo": "Live-Demo ansehen",
     "startPilot": "Kostenlos starten",
     "signIn": "Anmelden",
@@ -84,14 +84,14 @@
     "featuresTitle": "Was Sie davon haben",
     "featuresLead": "Weniger Telefon-Ping-Pong, mehr klare Anfragen mit allen Infos für den Rückruf.",
     "ctaTitle": "Bereit für einen klaren Posteingang statt Telefon-Chaos?",
-    "ctaDescription": "In einem kurzen Gespräch zeigen wir Ihnen AuftragsPilot an Ihrem Beispiel — und wie der Chat auf Ihrer Website live geht.",
+    "ctaDescription": "In einem unverbindlichen Beratungsgespräch zeigen wir Ihnen den AI Anfragen-Assistenten an Ihrem Beispiel — und wie der Chat auf Ihrer Website live geht.",
     "ctaFootnote": "30 Minuten · Unverbindlich · Für Handwerk und lokale Dienstleister",
-    "createPilotAccount": "Pilot-Gespräch buchen",
+    "createPilotAccount": "Beratungsgespräch buchen",
     "comparison": {
       "title": "Vom Telefon-Chaos zum klaren Posteingang",
       "lead": "Weniger verpasste Anfragen, mehr Rückrufe mit allen Infos — ohne neues CRM.",
-      "withoutTitle": "Ohne AuftragsPilot",
-      "withTitle": "Mit AuftragsPilot",
+      "withoutTitle": "Ohne AI Anfragen-Assistent",
+      "withTitle": "Mit AI Anfragen-Assistent",
       "without": {
         "item1": "Anfragen per Formular, E-Mail oder Anruf — unübersichtlich verteilt",
         "item2": "Rückfragen, bevor Sie zurückrufen können",
@@ -175,7 +175,7 @@
         "roofer": "Nach dem Sturm fehlen Dachziegel. Es tropft in den Dachboden.",
         "electrician": "Ich möchte eine Wallbox installieren lassen. Können Sie ein Angebot machen?"
       },
-      "startCta": "Pilot-Gespräch buchen",
+      "startCta": "Beratungsgespräch buchen",
       "resetCta": "Neue Demo starten"
     },
     "trustTitle": "Vertrauen und Datenschutz",
@@ -192,7 +192,7 @@
       "title": "Impressum",
       "intro": "Angaben gemäß § 5 TMG.",
       "operatorHeading": "Betreiber",
-      "operatorBody": "AuftragsPilot — KI-gestützte Erfassung und Qualifizierung von Website-Anfragen für Handwerk und lokale Dienstleister.",
+      "operatorBody": "AI Anfragen-Assistent — KI-gestützte Erfassung und Qualifizierung von Website-Anfragen für Handwerk und lokale Dienstleister.",
       "contactHeading": "Kontakt",
       "contactBody": "Für vertragliche, technische und rechtliche Anfragen kontaktieren Sie bitte den Plattformbetreiber über die Ihnen im Rahmen der Registrierung oder des Vertrags mitgeteilten Kontaktdaten.",
       "disputeHeading": "EU-Streitschlichtung",
@@ -202,7 +202,7 @@
       "title": "Datenschutzerklärung",
       "intro": "Der Schutz Ihrer personenbezogenen Daten ist uns wichtig. Nachfolgend informieren wir Sie über die Verarbeitung personenbezogener Daten bei der Nutzung dieser Plattform.",
       "controllerHeading": "Verantwortlicher",
-      "controllerBody": "Verantwortlicher im Sinne der DSGVO ist der Betreiber von AuftragsPilot. Kontaktdaten entnehmen Sie bitte dem Impressum.",
+      "controllerBody": "Verantwortlicher im Sinne der DSGVO ist der Betreiber des AI Anfragen-Assistenten. Kontaktdaten entnehmen Sie bitte dem Impressum.",
       "dataCollectedHeading": "Welche Daten wir verarbeiten",
       "dataCollectedBody": "Wir verarbeiten Daten, die Sie uns bei der Registrierung und Nutzung des Dashboards angeben (z. B. Name, E-Mail, Unternehmensdaten). Über das Website-Widget erfasste Chat-Nachrichten und Lead-Angaben (z. B. Name, Telefon, Standort, Serviceanfrage) werden zur Bearbeitung von Kundenanfragen gespeichert.",
       "purposeHeading": "Zweck der Verarbeitung",
@@ -226,8 +226,8 @@
   "login": {
     "title": "Anmelden",
     "description": "Melden Sie sich an, um Ihre Kundenanfragen zu verwalten.",
-    "newCustomer": "Neu bei AuftragsPilot?",
-    "startPilot": "Pilot-Gespräch buchen",
+    "newCustomer": "Noch kein Konto?",
+    "startPilot": "Beratungsgespräch buchen",
     "signingIn": "Anmeldung läuft...",
     "signIn": "Anmelden",
     "signInFailed": "Anmeldung fehlgeschlagen. Prüfen Sie E-Mail und Passwort.",

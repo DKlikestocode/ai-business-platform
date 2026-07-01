@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "AuftragsPilot — AI inbox for trades and local service businesses",
+    "title": "AI Inquiry Assistant — AI inbox for trades and local service businesses",
     "description": "Capture website inquiries automatically, prioritize what matters, and notify your team by email — for trades and local service providers."
   },
   "common": {
@@ -29,25 +29,25 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "startFreePilot": "Start free",
-    "bookPilot": "Book a pilot call",
+    "bookPilot": "Book a consultation",
     "main": "Main navigation",
     "marketing": "Marketing navigation"
   },
   "brand": {
-    "name": "AuftragsPilot",
-    "mark": "AP",
-    "tagline": "The AI inbox for trades and local service businesses."
+    "name": "AI Inquiry Assistant",
+    "mark": "AI",
+    "tagline": "AI assistance for website inquiries — for trades and service businesses."
   },
   "appShell": {
-    "title": "AuftragsPilot",
+    "title": "AI Inquiry Assistant",
     "subtitle": "Your website inquiries in one place"
   },
   "landing": {
     "eyebrow": "For trades and local service businesses",
     "heroTitle": "Your website captures inquiries — you focus on the job.",
-    "heroLead": "AuftragsPilot answers first questions in chat, captures name, phone, and details — and alerts you when an inquiry matters.",
-    "heroTrustNote": "No-obligation pilot call · Live in minutes · GDPR-oriented · EU hosting",
-    "bookPilot": "Book a pilot call",
+    "heroLead": "The AI Inquiry Assistant answers first questions in chat, captures name, phone, and details — and alerts you when an inquiry matters.",
+    "heroTrustNote": "No-obligation consultation · Live in minutes · GDPR-oriented · EU hosting",
+    "bookPilot": "Book a consultation",
     "tryDemo": "See live demo",
     "startPilot": "Start free",
     "signIn": "Sign in",
@@ -84,14 +84,14 @@
     "featuresTitle": "What you get",
     "featuresLead": "Less phone tag, more clear inquiries with everything you need for the callback.",
     "ctaTitle": "Ready for a clear inbox instead of phone tag?",
-    "ctaDescription": "In a short call we walk through AuftragsPilot with your business — and how chat goes live on your website.",
+    "ctaDescription": "In a no-obligation consultation we walk through the AI Inquiry Assistant with your business — and how chat goes live on your website.",
     "ctaFootnote": "30 minutes · No obligation · For trades and local service providers",
-    "createPilotAccount": "Book a pilot call",
+    "createPilotAccount": "Book a consultation",
     "comparison": {
       "title": "From phone chaos to a clear inbox",
       "lead": "Fewer missed inquiries, more callbacks with full context — without a new CRM.",
-      "withoutTitle": "Without AuftragsPilot",
-      "withTitle": "With AuftragsPilot",
+      "withoutTitle": "Without AI Inquiry Assistant",
+      "withTitle": "With AI Inquiry Assistant",
       "without": {
         "item1": "Inquiries via form, email, or phone — scattered everywhere",
         "item2": "Back-and-forth before you can call back",
@@ -175,7 +175,7 @@
         "roofer": "After the storm, roof tiles are missing. Water is dripping into the attic.",
         "electrician": "I'd like to have a wallbox installed. Can you provide a quote?"
       },
-      "startCta": "Book a pilot call",
+      "startCta": "Book a consultation",
       "resetCta": "Start new demo"
     },
     "trustTitle": "Trust and privacy",
@@ -192,7 +192,7 @@
       "title": "Legal notice (Impressum)",
       "intro": "Information according to § 5 TMG (Germany).",
       "operatorHeading": "Operator",
-      "operatorBody": "AuftragsPilot — AI-assisted capture and qualification of website inquiries for trades and local service businesses.",
+      "operatorBody": "AI Inquiry Assistant — AI-assisted capture and qualification of website inquiries for trades and local service businesses.",
       "contactHeading": "Contact",
       "contactBody": "For contractual, technical, and legal inquiries, please contact the platform operator using the contact details provided during registration or in your contract.",
       "disputeHeading": "EU dispute resolution",
@@ -202,7 +202,7 @@
       "title": "Privacy policy",
       "intro": "Protecting your personal data matters to us. Below we explain how we process personal data when you use this platform.",
       "controllerHeading": "Data controller",
-      "controllerBody": "The data controller under the GDPR is the operator of AuftragsPilot. Please refer to the legal notice (Impressum) for contact details.",
+      "controllerBody": "The data controller under the GDPR is the operator of the AI Inquiry Assistant. Please refer to the legal notice (Impressum) for contact details.",
       "dataCollectedHeading": "Data we process",
       "dataCollectedBody": "We process data you provide when registering and using the dashboard (e.g. name, email, company details). Chat messages and lead details captured via the website widget (e.g. name, phone, location, service request) are stored to handle customer inquiries.",
       "purposeHeading": "Purpose of processing",
@@ -226,8 +226,8 @@
   "login": {
     "title": "Sign in",
     "description": "Sign in to manage your customer inquiries.",
-    "newCustomer": "New to AuftragsPilot?",
-    "startPilot": "Book a pilot call",
+    "newCustomer": "Don't have an account yet?",
+    "startPilot": "Book a consultation",
     "signingIn": "Signing in...",
     "signIn": "Sign in",
     "signInFailed": "Sign in failed. Check your email and password.",

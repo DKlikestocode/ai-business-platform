@@ -1,12 +1,16 @@
+const DEFAULT_PILOT_BOOKING_URL = "https://calendly.com/dominik-kessling";
 const DEFAULT_PILOT_BOOKING_MAILTO =
-  "mailto:hallo@dominiksdomain.com?subject=AuftragsPilot%20Pilot%20anfragen";
+  "mailto:Dominik.Kessling@gmail.com?subject=AI%20Anfragen-Assistent%20Beratung%20anfragen";
 
 export function getPilotBookingUrl(): string {
   const configured = process.env.NEXT_PUBLIC_PILOT_BOOKING_URL?.trim();
+  if (configured === "mailto") {
+    return DEFAULT_PILOT_BOOKING_MAILTO;
+  }
   if (configured) {
     return configured;
   }
-  return DEFAULT_PILOT_BOOKING_MAILTO;
+  return DEFAULT_PILOT_BOOKING_URL;
 }
 
 export function isExternalPilotBookingUrl(url: string): boolean {
