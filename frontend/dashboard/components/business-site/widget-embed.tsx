@@ -10,25 +10,28 @@ interface BusinessSiteWidgetEmbedProps {
     | "widget_company_slug"
     | "widget_api_base"
     | "widget_install_token"
-    | "widget_title"
   >;
   privacyUrl?: string;
+  welcomeMessage: string;
 }
 
 export function BusinessSiteWidgetEmbed({
   site,
   privacyUrl,
+  welcomeMessage,
 }: BusinessSiteWidgetEmbedProps) {
-  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=5`;
+  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=6`;
 
   return (
     <>
       <div
         id="ai-agent-widget"
+        data-ai-agent-widget="true"
         data-company-slug={site.widget_company_slug}
         data-api-base={site.widget_api_base}
         data-install-token={site.widget_install_token}
-        data-title={site.widget_title}
+        data-embed-mode="panel"
+        data-welcome-message={welcomeMessage}
         {...(privacyUrl ? { "data-privacy-url": privacyUrl } : {})}
       />
       <Script src={scriptSrc} strategy="afterInteractive" />

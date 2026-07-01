@@ -8,6 +8,7 @@ import { BusinessSiteWidgetEmbed } from "@/components/business-site/widget-embed
 import { getBusinessSiteCopy } from "@/lib/business-site-copy";
 import {
   formatBusinessSiteServiceArea,
+  getBusinessSiteContactEmail,
   getBusinessSiteProfile,
   normalizePhoneHref,
   type PublicBusinessSite,
@@ -30,6 +31,7 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
   );
   const phone = site.phone?.trim() ?? "";
   const phoneHref = phone ? `tel:${normalizePhoneHref(phone)}` : null;
+  const contactEmail = getBusinessSiteContactEmail(site);
   const basePath = getBusinessSitePublicBasePath();
   const siteUrl = getBusinessSitePublicOrigin();
   const privacyUrl = `${siteUrl}${basePath}/datenschutz`;
@@ -170,7 +172,7 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
               <div className="business-site-contact-card">
                 <p>
                   <strong>{copy.emailLabel}:</strong>{" "}
-                  <a href={`mailto:${site.email}`}>{site.email}</a>
+                  <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
                 </p>
                 {phone ? (
                   <p>
@@ -205,7 +207,7 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
           </div>
           <div>
             <p>
-              {copy.emailLabel}: <a href={`mailto:${site.email}`}>{site.email}</a>
+              {copy.emailLabel}: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
             </p>
             {phone ? (
               <p>
@@ -225,11 +227,17 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
       </footer>
 
       <BusinessSiteChatLauncher
-        title={site.widget_title || copy.chatLauncherTitle}
+        title={copy.chatPanelTitle}
+        subtitle={copy.chatPanelSubtitle}
         closeLabel={copy.chatCloseLabel}
+        restartLabel={copy.chatRestartLabel}
         launcherLabel={copy.chatLauncherLabel}
       >
-        <BusinessSiteWidgetEmbed site={site} privacyUrl={privacyUrl} />
+        <BusinessSiteWidgetEmbed
+          site={site}
+          privacyUrl={privacyUrl}
+          welcomeMessage={copy.chatWelcomeMessage}
+        />
       </BusinessSiteChatLauncher>
     </div>
   );
