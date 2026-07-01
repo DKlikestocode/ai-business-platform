@@ -6,7 +6,6 @@ import { useAuth } from "@/components/auth-provider";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link } from "@/i18n/navigation";
 import { isDevelopment } from "@/lib/env";
-import { useGettingStartedNavVisibility } from "@/lib/use-getting-started-nav-visibility";
 
 const links = [
   { href: "/getting-started", labelKey: "gettingStarted", setupOnly: true as const },
@@ -16,13 +15,13 @@ const links = [
 ] as const;
 
 export function SiteNav() {
-  const { logout, user } = useAuth();
-  const { showGettingStarted } = useGettingStartedNavVisibility();
+  const { logout, user, dashboardNavReady, showGettingStartedNav } = useAuth();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
 
   const visibleLinks = links.filter(
-    (link) => !link.setupOnly || showGettingStarted,
+    (link) =>
+      !link.setupOnly || (dashboardNavReady && showGettingStartedNav),
   );
 
   return (

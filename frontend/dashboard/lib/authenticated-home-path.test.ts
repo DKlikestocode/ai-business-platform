@@ -1,6 +1,12 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 
 import { resolveAuthenticatedHomePath } from "@/lib/authenticated-home-path";
+import {
+  clearDashboardCache,
+  setDashboardCache,
+  COMPANY_ACTIVATION_CACHE_KEY,
+  COMPANY_SETTINGS_CACHE_KEY,
+} from "@/lib/dashboard-cache";
 import type {
   Company,
   CompanyActivation,
@@ -8,10 +14,14 @@ import type {
   CurrentUser,
 } from "@/lib/types";
 
-vi.mock("@/lib/dashboard-cache", () => ({
-  loadCachedCompanySettings: vi.fn(),
-  loadCachedCompanyActivation: vi.fn(),
-}));
+vi.mock("@/lib/dashboard-cache", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/dashboard-cache")>();
+  return {
+    ...actual,
+    loadCachedCompanySettings: vi.fn(),
+    loadCachedCompanyActivation: vi.fn(),
+  };
+});
 
 import {
   loadCachedCompanyActivation,
@@ -76,16 +86,25 @@ function buildActivation(
 }
 
 describe("resolveAuthenticatedHomePath", () => {
+  beforeEach(() => {
+    clearDashboardCache();
+  });
+
   it("routes completed accounts to the inbox", async () => {
-    vi.mocked(loadCachedCompanySettings).mockResolvedValue(settings);
-    vi.mocked(loadCachedCompanyActivation).mockResolvedValue(
-      buildActivation({
-        status: "live",
-        widget_last_seen_at: "2026-06-10T13:00:00Z",
-        widget_last_origin: "https://acme.co",
-        first_website_inquiry_at: "2026-06-11T10:00:00Z",
-      }),
-    );
+    const activation = buildActivation({
+      status: "live",
+      widget_last_seen_at: "2026-06-10T13:00:00Z",
+      widget_last_origin: "https://acme.co",
+      first_website_inquiry_at: "2026-06-11T10:00:00Z",
+    });
+    vi.mocked(loadCachedCompanySettings).mockImplementation(async () => {
+      setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, settings);
+      return settings;
+    });
+    vi.mocked(loadCachedCompanyActivation).mockImplementation(async () => {
+      setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, activation);
+      return activation;
+    });
 
     await expect(resolveAuthenticatedHomePath(user, company)).resolves.toBe(
       "/leads",
@@ -93,8 +112,15 @@ describe("resolveAuthenticatedHomePath", () => {
   });
 
   it("routes incomplete setup to getting started", async () => {
-    vi.mocked(loadCachedCompanySettings).mockResolvedValue(settings);
-    vi.mocked(loadCachedCompanyActivation).mockResolvedValue(buildActivation());
+    const activation = buildActivation();
+    vi.mocked(loadCachedCompanySettings).mockImplementation(async () => {
+      setDashboardCache(COMPANY_SETTINGS_CACHE_KEY, settings);
+      return settings;
+    });
+    vi.mocked(loadCachedCompanyActivation).mockImplementation(async () => {
+      setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, activation);
+      return activation;
+    });
 
     await expect(resolveAuthenticatedHomePath(user, company)).resolves.toBe(
       "/getting-started",

@@ -37,7 +37,7 @@ import { tradeNamespace } from "@/lib/trades/types";
 export function GettingStartedChecklist() {
   const router = useRouter();
   const { user, company, loading: authLoading } = useAuth();
-  const { showGettingStarted, activationLoading } =
+  const { showGettingStarted, activationLoading, refreshDashboardNav } =
     useGettingStartedNavVisibility();
   const locale = useLocale();
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
@@ -98,6 +98,7 @@ export function GettingStartedChecklist() {
       try {
         const data = await loadCachedCompanyActivation();
         setActivation(data);
+        refreshDashboardNav();
       } catch (err) {
         setActivationError(
           formatUserFacingError(err, tActivation("loadFailed"), errorMessages),
@@ -106,7 +107,7 @@ export function GettingStartedChecklist() {
         setActivationRefreshing(false);
       }
     },
-    [user, tActivation, errorMessages],
+    [user, tActivation, errorMessages, refreshDashboardNav],
   );
 
   useEffect(() => {
