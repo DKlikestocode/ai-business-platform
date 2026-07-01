@@ -6,8 +6,6 @@
     placeholder: "Nachricht eingeben…",
     send: "Senden",
     sending: "Wird gesendet…",
-    leadComplete:
-      "Vielen Dank, wir haben alle nötigen Angaben. Wir melden uns in Kürze bei Ihnen.",
     genericError: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     privacyWithLink:
       'Ihre Angaben werden zur Bearbeitung Ihrer Anfrage verwendet. <a href="{url}" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>',
@@ -218,9 +216,6 @@
       const result = await sendMessage(message);
       appendMessage("assistant", result.reply);
       leadCompleted = Boolean(result.lead_complete);
-      if (leadCompleted) {
-        appendMessage("assistant", COPY.leadComplete);
-      }
     } catch (error) {
       appendMessage(
         "assistant",

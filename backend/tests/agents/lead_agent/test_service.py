@@ -1,7 +1,6 @@
 import pytest
 
 from app.agents.lead_agent.agent import LeadCaptureAgent
-from app.agents.lead_agent.conversation_flow import PROBLEM_FIRST_REPLY
 from app.agents.lead_agent.models import LeadCaptureLLMOutput, LeadMessageRequest
 from app.agents.lead_agent.repository import LeadRepository
 from app.agents.lead_agent.service import LeadCaptureService
@@ -33,26 +32,23 @@ def build_service(
 
 
 @pytest.mark.asyncio
-async def test_lead_capture_service_asks_problem_before_contact_on_greeting(
+async def test_lead_capture_service_keeps_llm_reply_on_greeting(
     conversation_repository: ConversationRepository,
     lead_repository,
     company_repository,
     company_activation_repository,
     company,
 ) -> None:
+    llm_reply = (
+        "Guten Tag! Damit wir Ihre Anfrage bearbeiten können, benötige ich "
+        "bitte zunächst Ihre Telefonnummer oder E-Mail-Adresse."
+    )
     service = build_service(
         conversation_repository=conversation_repository,
         lead_repository=lead_repository,
         company_repository=company_repository,
         company_activation_repository=company_activation_repository,
-        outputs=[
-            LeadCaptureLLMOutput(
-                reply=(
-                    "Guten Tag! Damit wir Ihre Anfrage bearbeiten können, benötige ich "
-                    "bitte zunächst Ihre Telefonnummer oder E-Mail-Adresse."
-                ),
-            ),
-        ],
+        outputs=[LeadCaptureLLMOutput(reply=llm_reply)],
     )
 
     response = await service.handle_message(
@@ -63,7 +59,7 @@ async def test_lead_capture_service_asks_problem_before_contact_on_greeting(
         company_id=company.id,
     )
 
-    assert response.reply == PROBLEM_FIRST_REPLY
+    assert response.reply == llm_reply
 
 
 @pytest.mark.asyncio

@@ -74,14 +74,3 @@ def evaluate_service_area(
         postal_code=postal_code,
     )
 
-
-MISSING_POSTAL_CODE_REPLY_NOTE = (
-    "Ohne Ihre Postleitzahl können wir leider nicht einschätzen, "
-    "ob Sie in unserem Einsatzgebiet liegen. Bitte nennen Sie Ihre 5-stellige PLZ."
-)
-
-
-def append_missing_postal_code_reply_note(reply: str) -> str:
-    if MISSING_POSTAL_CODE_REPLY_NOTE in reply:
-        return reply
-    return f"{reply.rstrip()}\n\n{MISSING_POSTAL_CODE_REPLY_NOTE}"
