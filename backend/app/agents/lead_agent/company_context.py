@@ -56,15 +56,15 @@ def build_service_area_status_prompt(evaluation: ServiceAreaEvaluation) -> str |
 
     if evaluation.status == ServiceAreaStatus.IN_RANGE:
         return (
-            f"Standortprüfung (verbindlich): PLZ {evaluation.postal_code} liegt im Einsatzgebiet. "
-            "Bestätigen Sie das kurz und freundlich — ohne Kilometer- oder Entfernungsangaben."
+            f"Standortprüfung (intern): PLZ {evaluation.postal_code} liegt im Einsatzgebiet. "
+            "Bauen Sie das natürlich in Ihre Antwort ein — keine separate Wiederholung oder Zusatzzeile."
         )
 
     if evaluation.status == ServiceAreaStatus.OUT_OF_RANGE:
         return (
-            f"Standortprüfung (verbindlich): PLZ {evaluation.postal_code} liegt vermutlich "
+            f"Standortprüfung (intern): PLZ {evaluation.postal_code} liegt vermutlich "
             "außerhalb des Einsatzgebiets. Weisen Sie freundlich darauf hin und nehmen Sie die "
-            "Anfrage trotzdem auf — ohne Kilometer- oder Entfernungsangaben."
+            "Anfrage trotzdem auf — ohne Kilometer-Angaben und ohne separate Zusatzzeile."
         )
 
     return None

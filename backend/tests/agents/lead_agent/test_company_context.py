@@ -45,6 +45,7 @@ def test_build_service_area_status_prompt_in_range_without_distance() -> None:
 
     assert prompt is not None
     assert "im Einsatzgebiet" in prompt
+    assert "Zusatzzeile" in prompt
     assert "km" not in prompt.lower()
 
 

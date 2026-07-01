@@ -45,7 +45,6 @@ from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
 from app.services.notifications.service import NotificationService
 from app.services.service_area.evaluate import (
-    append_service_area_reply_note,
     evaluate_service_area,
     is_service_area_configured,
     resolve_lead_postal_code,
@@ -196,17 +195,6 @@ class LeadCaptureService:
                 channel=self._channel,
                 llm_reply=reply,
                 service_area_configured=is_service_area_configured(company),
-            )
-        if (
-            not out_of_scope
-            and not rejected_contacts.any_rejected
-            and service_area_eval.status
-            in {ServiceAreaStatus.IN_RANGE, ServiceAreaStatus.OUT_OF_RANGE}
-            and resolve_lead_postal_code(existing_data) != service_area_eval.postal_code
-        ):
-            reply = append_service_area_reply_note(
-                reply,
-                service_area_eval,
             )
 
         self._conversation_repository.add_message(
