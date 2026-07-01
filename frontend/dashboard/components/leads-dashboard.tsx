@@ -437,7 +437,7 @@ export function LeadsDashboard() {
       ) : null}
 
       {useCardView ? (
-        <div className="inquiry-list">
+        <div className="inquiry-list content-fade-in">
           {leads.map((lead) => (
             <InquiryCard
               key={lead.id}
@@ -455,7 +455,7 @@ export function LeadsDashboard() {
       ) : null}
 
       {!isDataLoading && total > 10 ? (
-        <div className="table-wrap">
+        <div className="table-wrap content-fade-in">
           <table className="table">
             <thead>
               <tr>

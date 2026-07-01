@@ -88,7 +88,7 @@ export function WidgetActivationPanel({
   });
 
   return (
-    <div className="card stack">
+    <div className="card stack widget-activation-card">
       <div className="embed-header">
         <h3 className="card-title">{tSettings("widgetEmbed")}</h3>
         <div className="embed-header-actions">
@@ -138,7 +138,7 @@ export function WidgetActivationPanel({
             {!embedSnippetIncludesInstallToken(embedSnippet) ? (
               <AlertBanner variant="info">{t("embedMissingInstallKey")}</AlertBanner>
             ) : null}
-            <pre className="embed-snippet">
+            <pre className="embed-snippet embed-snippet-trust">
               <code>{embedSnippet}</code>
             </pre>
           </section>
