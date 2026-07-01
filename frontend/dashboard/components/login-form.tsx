@@ -49,7 +49,10 @@ export function LoginForm() {
   return (
     <div className="login-page">
       <div className="login-layout">
-        <div className="login-locale-row">
+        <div className="login-top-row">
+          <Link href="/" className="login-back-link">
+            ← {t("backToHome")}
+          </Link>
           <LocaleSwitcher />
         </div>
       <div className="login-card card">

@@ -867,6 +867,25 @@ code {
   width: min(100%, 420px);
 }
 
+.login-top-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.login-back-link {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.login-back-link:hover {
+  color: var(--primary);
+}
+
 .login-locale-row {
   width: 100%;
   display: flex;
