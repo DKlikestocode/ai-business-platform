@@ -18,6 +18,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const { login, loading, error } = useAuth();
   const t = useTranslations("login");
+  const tBrand = useTranslations("brand");
   const tCommon = useTranslations("common");
   const tErrors = useTranslations("errors");
   const errorMessages = getErrorMessages(tErrors);
@@ -49,6 +50,10 @@ export function LoginForm() {
   return (
     <div className="login-page">
       <div className="login-layout">
+        <Link href="/" className="brand-link login-brand">
+          <span className="brand-mark">{tBrand("mark")}</span>
+          <span>{tBrand("name")}</span>
+        </Link>
         <div className="login-top-row">
           <Link href="/" className="login-back-link">
             ← {t("backToHome")}
