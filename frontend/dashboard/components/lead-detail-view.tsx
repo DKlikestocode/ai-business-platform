@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
+import { InquiryKindBadge } from "@/components/inquiry-kind-badge";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
@@ -202,6 +203,7 @@ export function LeadDetailView() {
                 status={lead.service_area_status}
                 distanceKm={lead.service_area_distance_km}
               />
+              <InquiryKindBadge inquiryKind={lead.inquiry_kind} />
               <StatusBadge status={lead.status} />
             </div>
           </div>

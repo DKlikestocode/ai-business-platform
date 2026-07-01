@@ -1,11 +1,22 @@
 import pytest
 
-from app.agents.lead_agent.models import LeadCaptureLLMOutput, LeadExtractedData
+from app.agents.lead_agent.models import InquiryKind, LeadCaptureLLMOutput, LeadExtractedData
 from app.agents.lead_agent.utils import (
     get_missing_fields,
     is_lead_complete,
     merge_lead_data,
 )
+
+
+def test_to_extracted_data_includes_inquiry_kind() -> None:
+    output = LeadCaptureLLMOutput(
+        reply="Danke!",
+        inquiry_kind=InquiryKind.QUOTE,
+    )
+
+    extracted = output.to_extracted_data()
+
+    assert extracted.inquiry_kind == InquiryKind.QUOTE
 
 
 def test_merge_lead_data_preserves_existing_and_adds_new_fields() -> None:

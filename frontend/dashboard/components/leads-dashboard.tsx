@@ -27,8 +27,13 @@ import {
   DEFAULT_LEADS_INBOX_PREFERENCES,
   getLeadsInboxPreferences,
   setLeadsInboxPreferences,
+  type InquiryKindFilter,
   type LeadsInboxView,
 } from "@/lib/leads-inbox-preferences";
+import {
+  INQUIRY_KIND_CATEGORY_TAB_KEY,
+  INQUIRY_KIND_FILTER_OPTIONS,
+} from "@/lib/inquiry-kind";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
@@ -70,6 +75,9 @@ export function LeadsDashboard() {
   const [inboxView, setInboxView] = useState<LeadsInboxView>(
     initialPreferences.inboxView,
   );
+  const [inquiryKind, setInquiryKind] = useState<InquiryKindFilter>(
+    initialPreferences.inquiryKind,
+  );
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -92,6 +100,7 @@ export function LeadsDashboard() {
         contactable: true,
         sort,
         archived: isContactedView,
+        inquiry_kind: inquiryKind,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
       setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
@@ -101,7 +110,7 @@ export function LeadsDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [page, sort, isContactedView, t, errorMessages]);
+  }, [page, sort, isContactedView, inquiryKind, t, errorMessages]);
 
   useEffect(() => {
     void loadCachedCompanySettings(setSettings);
@@ -119,8 +128,9 @@ export function LeadsDashboard() {
       sort,
       page,
       inboxView,
+      inquiryKind,
     });
-  }, [sort, page, inboxView]);
+  }, [sort, page, inboxView, inquiryKind]);
 
   function applyLeadUpdate(updated: Lead) {
     if (!isContactedView && updated.status !== "new") {
@@ -214,6 +224,17 @@ export function LeadsDashboard() {
     })();
   }
 
+  function handleInquiryKindChange(nextKind: InquiryKindFilter) {
+    if (nextKind === inquiryKind) {
+      return;
+    }
+    setInquiryKind(nextKind);
+    setPage(1);
+    setRestoreSuccessId(null);
+    setContactedSuccessId(null);
+    setDeleteAllSuccess(false);
+  }
+
   function handleInboxViewChange(nextView: LeadsInboxView) {
     if (nextView === inboxView) {
       return;
@@ -241,6 +262,7 @@ export function LeadsDashboard() {
         contactable: true,
         sort,
         archived: false,
+        inquiry_kind: inquiryKind,
       });
       setLeads(Array.isArray(data.items) ? data.items : []);
       setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
@@ -263,7 +285,15 @@ export function LeadsDashboard() {
 
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
-    !isContactedView && !isDataLoading && leads.length === 0;
+    !isContactedView &&
+    inquiryKind === "appointment_consultation" &&
+    !isDataLoading &&
+    leads.length === 0;
+  const showCategoryFilterEmpty =
+    !isContactedView &&
+    inquiryKind === "quote" &&
+    !isDataLoading &&
+    leads.length === 0;
   const showContactedEmpty =
     isContactedView && !isDataLoading && leads.length === 0;
   const useCardView = !isDataLoading && total > 0 && total <= 10;
@@ -293,6 +323,24 @@ export function LeadsDashboard() {
         >
           {t("viewContacted")}
         </button>
+      </div>
+      <div
+        className="inbox-view-toggle inbox-category-toggle"
+        role="tablist"
+        aria-label={t("categoryToggleLabel")}
+      >
+        {INQUIRY_KIND_FILTER_OPTIONS.map((option) => (
+          <button
+            key={option}
+            type="button"
+            role="tab"
+            className={`button secondary${inquiryKind === option ? " is-active" : ""}`}
+            aria-selected={inquiryKind === option}
+            onClick={() => handleInquiryKindChange(option)}
+          >
+            {t(INQUIRY_KIND_CATEGORY_TAB_KEY[option])}
+          </button>
+        ))}
       </div>
       <div className="toolbar">
         <div className="toolbar-filters">
@@ -371,6 +419,13 @@ export function LeadsDashboard() {
           linkOnClick={
             showGettingStarted ? () => openGettingStartedOverlay() : undefined
           }
+        />
+      ) : null}
+
+      {showCategoryFilterEmpty ? (
+        <EmptyState
+          title={t("categoryEmptyTitle")}
+          description={t("filterEmptyDescription")}
         />
       ) : null}
 

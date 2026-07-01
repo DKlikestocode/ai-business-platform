@@ -35,6 +35,11 @@ Richtlinien:
 - Nur wenn der Kunde ausdrücklich einen Rückruf oder Telefonkontakt wünscht: „Rückruf“ verwenden.
 - Geben Sie keine Preise oder Kostenzusagen.
 - Garantieren Sie keine festen Termine oder verbindlichen Zusagen — bieten Sie an, den Wunschtermin zu prüfen bzw. sich zu melden.
+
+Anfrage-Art (inquiry_kind) klassifizieren:
+- quote: Angebot, Kostenvoranschlag, Kostenschätzung, Offerte, Preis, Planung ohne akuten Einsatz
+- appointment_consultation: Termin, Besuch, Beratung, Rückruf, Einsatz vor Ort, Reparatur, Notfall, Wartung
+- unknown: wenn noch unklar
 """
 
 

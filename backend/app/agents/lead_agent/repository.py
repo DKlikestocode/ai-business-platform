@@ -1,9 +1,10 @@
 from datetime import UTC, datetime
 from uuid import UUID
 
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
-from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
+from app.agents.lead_agent.models import InquiryKind, LeadExtractedData, LeadStatus
 from app.agents.lead_agent.urgency import urgency_sort_rank_expression
 from app.agents.lead_agent.qualification import QualificationResult, evaluate_qualification
 from app.db.models.enums import ConversationChannel
@@ -153,6 +154,7 @@ class LeadRepository:
         *,
         company_id: UUID,
         contactable: bool | None = None,
+        inquiry_kind: str | None = None,
     ) -> int:
         query = self._session.query(Lead).filter(
             Lead.company_id == company_id,
@@ -160,10 +162,29 @@ class LeadRepository:
         )
         if contactable is not None:
             query = query.filter(Lead.contactable == contactable)
+        query = self._apply_inquiry_kind_filter(query, inquiry_kind)
 
         deleted = query.delete(synchronize_session=False)
         self._session.commit()
         return deleted
+
+    @staticmethod
+    def _apply_inquiry_kind_filter(query, inquiry_kind: str | None):
+        if inquiry_kind == InquiryKind.APPOINTMENT_CONSULTATION.value:
+            return query.filter(
+                or_(
+                    Lead.inquiry_kind.in_(
+                        [
+                            InquiryKind.APPOINTMENT_CONSULTATION.value,
+                            InquiryKind.UNKNOWN.value,
+                        ]
+                    ),
+                    Lead.inquiry_kind.is_(None),
+                )
+            )
+        if inquiry_kind == InquiryKind.QUOTE.value:
+            return query.filter(Lead.inquiry_kind == InquiryKind.QUOTE.value)
+        return query
 
     def list_leads(
         self,
@@ -173,6 +194,7 @@ class LeadRepository:
         status: LeadStatus | None = None,
         qualification_status: str | None = None,
         contactable: bool | None = None,
+        inquiry_kind: str | None = None,
         sort: str = "created_at_desc",
         company_id: UUID | None = None,
         archived: bool = False,
@@ -190,6 +212,7 @@ class LeadRepository:
             query = query.filter(Lead.qualification_status == qualification_status)
         if contactable is not None:
             query = query.filter(Lead.contactable == contactable)
+        query = self._apply_inquiry_kind_filter(query, inquiry_kind)
 
         if sort == "urgency_desc":
             urgency_rank = urgency_sort_rank_expression(Lead.urgency)
@@ -287,6 +310,11 @@ class LeadRepository:
             contact_method=qualification.contact_method.value,
             lead_score=qualification.lead_score,
             qualification_status=qualification.qualification_status.value,
+            inquiry_kind=(
+                data.inquiry_kind.value
+                if data.inquiry_kind is not None
+                else InquiryKind.UNKNOWN.value
+            ),
         )
         return lead
 
@@ -320,3 +348,5 @@ class LeadRepository:
         lead.contact_method = qualification.contact_method.value
         lead.lead_score = qualification.lead_score
         lead.qualification_status = qualification.qualification_status.value
+        if data.inquiry_kind is not None:
+            lead.inquiry_kind = data.inquiry_kind.value

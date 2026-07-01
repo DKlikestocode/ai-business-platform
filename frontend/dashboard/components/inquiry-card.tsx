@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
+import { InquiryKindBadge } from "@/components/inquiry-kind-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
@@ -86,6 +87,7 @@ export function InquiryCard({
             </div>
           ) : null}
           <InquirySourceBadge source={lead.source} />
+          <InquiryKindBadge inquiryKind={lead.inquiry_kind} />
           <ServiceAreaStatusBadge
             status={lead.service_area_status}
             distanceKm={lead.service_area_distance_km}

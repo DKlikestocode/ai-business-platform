@@ -43,6 +43,11 @@ class Lead(Base):
         nullable=False,
         default="incomplete",
     )
+    inquiry_kind: Mapped[str | None] = mapped_column(
+        String(32),
+        nullable=True,
+        default="unknown",
+    )
     notification_sent_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,

@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.agents.lead_agent.models import LeadExtractedData, LeadStatus
+from app.agents.lead_agent.models import InquiryKind, LeadExtractedData, LeadStatus
 from app.agents.lead_agent.qualification import evaluate_qualification
 from app.agents.lead_agent.repository import LeadRepository
 from app.db.models.company import Company
@@ -288,6 +288,77 @@ def test_list_leads_sorted_by_urgency_descending(
         item for item in items if item["name"].startswith("Lead ")
     ]
     assert [item["urgency"] for item in test_items] == ["hoch", "mittel", "niedrig"]
+
+
+def test_list_leads_filters_by_inquiry_kind(
+    dashboard_client: TestClient,
+    lead_repository: LeadRepository,
+    company: Company,
+    auth_headers: dict[str, str],
+) -> None:
+    appointment_data = LeadExtractedData(
+        name="Appointment Lead",
+        phone="01701234801",
+        location="Berlin",
+        postal_code="10115",
+        service_requested="Heizung",
+        description="Wartungstermin",
+        urgency="mittel",
+        preferred_callback_time="nächste Woche",
+        inquiry_kind=InquiryKind.APPOINTMENT_CONSULTATION,
+    )
+    quote_data = LeadExtractedData(
+        name="Quote Lead",
+        phone="01701234802",
+        location="Berlin",
+        postal_code="10115",
+        service_requested="Badsanierung",
+        description="Kostenvoranschlag",
+        urgency="niedrig",
+        preferred_callback_time="flexibel",
+        inquiry_kind=InquiryKind.QUOTE,
+    )
+    unknown_data = LeadExtractedData(
+        name="Unknown Lead",
+        phone="01701234803",
+        location="Berlin",
+        postal_code="10115",
+        service_requested="Sanitär",
+        description="Noch unklar",
+        urgency="mittel",
+        preferred_callback_time="morgen",
+    )
+
+    for conversation_id, data in (
+        ("inq-kind-appointment", appointment_data),
+        ("inq-kind-quote", quote_data),
+        ("inq-kind-unknown", unknown_data),
+    ):
+        lead_repository.create(
+            company_id=company.id,
+            conversation_id=conversation_id,
+            data=data,
+            summary=data.name,
+            qualification=evaluate_qualification(data, channel=ConversationChannel.WEB),
+        )
+
+    appointment_response = dashboard_client.get(
+        "/api/v1/leads?inquiry_kind=appointment_consultation&page_size=50",
+        headers=auth_headers,
+    )
+    assert appointment_response.status_code == 200
+    appointment_names = {item["name"] for item in appointment_response.json()["items"]}
+    assert "Appointment Lead" in appointment_names
+    assert "Unknown Lead" in appointment_names
+    assert "Quote Lead" not in appointment_names
+
+    quote_response = dashboard_client.get(
+        "/api/v1/leads?inquiry_kind=quote&page_size=50",
+        headers=auth_headers,
+    )
+    assert quote_response.status_code == 200
+    quote_names = {item["name"] for item in quote_response.json()["items"]}
+    assert quote_names == {"Quote Lead"}
 
 
 def test_get_lead_includes_qualification_fields(

@@ -1,6 +1,7 @@
 import { buildApiUrl } from "@/lib/api-config";
 import { clearAccessToken, getAccessToken } from "@/lib/auth-storage";
 import type { LeadSort } from "@/lib/lead-qualification";
+import type { InquiryKindFilter } from "@/lib/inquiry-kind";
 import { formatUserFacingError } from "@/lib/errors";
 import type {
   Company,
@@ -218,6 +219,7 @@ export async function fetchLeads(params?: {
   contactable?: boolean | "";
   sort?: LeadSort;
   archived?: boolean;
+  inquiry_kind?: InquiryKindFilter;
 }): Promise<PaginatedLeads> {
   const search = new URLSearchParams();
   search.set("page", String(params?.page ?? 1));
@@ -236,6 +238,9 @@ export async function fetchLeads(params?: {
   }
   if (params?.sort) {
     search.set("sort", params.sort);
+  }
+  if (params?.inquiry_kind) {
+    search.set("inquiry_kind", params.inquiry_kind);
   }
   return request<PaginatedLeads>(`/api/v1/leads?${search.toString()}`);
 }
