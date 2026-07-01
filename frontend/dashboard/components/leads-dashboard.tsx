@@ -35,6 +35,7 @@ import {
   loadCachedCompanySettings,
 } from "@/lib/dashboard-cache";
 import { useGettingStartedNavVisibility } from "@/lib/use-getting-started-nav-visibility";
+import { openGettingStartedOverlay } from "@/lib/getting-started-overlay";
 import { translateWithTradeOverride } from "@/lib/trade-copy";
 import { tradeNamespace } from "@/lib/trades/types";
 import type { CompanySettings, Lead } from "@/lib/types";
@@ -366,8 +367,10 @@ export function LeadsDashboard() {
           actionLabel={t("emptySetupCta")}
           secondaryActionHref="/demo-chat"
           secondaryActionLabel={t("emptyDemoCta")}
-          linkHref={showGettingStarted ? "/getting-started" : undefined}
           linkLabel={showGettingStarted ? t("emptyChecklistLink") : undefined}
+          linkOnClick={
+            showGettingStarted ? () => openGettingStartedOverlay() : undefined
+          }
         />
       ) : null}
 

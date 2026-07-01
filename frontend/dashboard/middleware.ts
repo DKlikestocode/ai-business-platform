@@ -122,7 +122,14 @@ export default function middleware(request: NextRequest) {
 
   if (isDashboardAlias) {
     const target = request.nextUrl.clone();
-    target.pathname = buildLocalizedPath("/getting-started", locale);
+    target.pathname = buildLocalizedPath("/leads", locale);
+    target.search = "";
+    return NextResponse.redirect(target);
+  }
+
+  if (pathnameWithoutLocale === "/getting-started") {
+    const target = request.nextUrl.clone();
+    target.pathname = buildLocalizedPath("/leads", locale);
     target.search = "";
     return NextResponse.redirect(target);
   }

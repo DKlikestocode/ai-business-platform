@@ -6,8 +6,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/components/auth-provider";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { PageHeader } from "@/components/ui/page-header";
 import {
+  COMPANY_ACTIVATION_CACHE_KEY,
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
   loadCachedCompanyActivation,
@@ -15,7 +15,6 @@ import {
 } from "@/lib/dashboard-cache";
 import {
   ACTIVATION_CHECKLIST_STEPS,
-  countActivationChecklistSteps,
   evaluateActivationChecklist,
   isActivationChecklistComplete,
   isAwaitingFirstWebsiteInquiry,
@@ -27,18 +26,17 @@ import {
   activationRefreshLabel,
 } from "@/components/activation-status-view";
 import { useGettingStartedNavVisibility } from "@/lib/use-getting-started-nav-visibility";
+import { closeGettingStartedOverlay } from "@/lib/getting-started-overlay";
 import { formatUserFacingError } from "@/lib/errors";
 import { getErrorMessages } from "@/lib/i18n-error-messages";
 import type { CompanyActivation, CompanySettings } from "@/lib/types";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { translateWithTradeOverride } from "@/lib/trade-copy";
 import { tradeNamespace } from "@/lib/trades/types";
 
-export function GettingStartedChecklist() {
-  const router = useRouter();
+export function GettingStartedPanel() {
   const { user, company, loading: authLoading } = useAuth();
-  const { showGettingStarted, activationLoading, refreshDashboardNav } =
-    useGettingStartedNavVisibility();
+  const { refreshDashboardNav } = useGettingStartedNavVisibility();
   const locale = useLocale();
   const [settings, setSettings] = useState<CompanySettings | null>(() =>
     getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
@@ -124,13 +122,6 @@ export function GettingStartedChecklist() {
     void loadActivation();
   }, [authLoading, user, loadActivation, refreshKey]);
 
-  useEffect(() => {
-    if (authLoading || !user || activationLoading || showGettingStarted) {
-      return;
-    }
-    router.replace("/leads");
-  }, [authLoading, user, activationLoading, showGettingStarted, router]);
-
   const isContentLoading = authLoading || (loading && !settings);
   const isReady = Boolean(!authLoading && user && company && settings);
 
@@ -142,7 +133,6 @@ export function GettingStartedChecklist() {
         activation,
       })
     : null;
-  const completed = progress ? countActivationChecklistSteps(progress) : 0;
   const allDone = progress ? isActivationChecklistComplete(progress) : false;
   const awaitingFirstWebsiteInquiry =
     progress ? isAwaitingFirstWebsiteInquiry(progress) : false;
@@ -156,49 +146,25 @@ export function GettingStartedChecklist() {
       ? ACTIVATION_CHECKLIST_STEPS.find((step) => !progress[step.id])
       : undefined;
   const welcomeName =
-    isReady && company
-      ? company.name?.trim() || user!.first_name
-      : "";
+    isReady && company ? company.name?.trim() || user!.first_name : "";
   const activationRefreshLabelText = activationRefreshLabel(activation?.status, {
     refresh: tActivation("refresh"),
     refreshStale: tActivation("refreshStale"),
   });
 
-  return (
-    <div className="stack">
-      <PageHeader title={t("title")} description={tt("description")}>
-        {isReady ? (
-          <div className="progress-pill">
-            {t("progress", {
-              completed,
-              total: ACTIVATION_CHECKLIST_STEPS.length,
-            })}
-          </div>
-        ) : null}
-      </PageHeader>
+  function handleNavigateAway() {
+    closeGettingStartedOverlay();
+  }
 
-      {!authLoading && (!user || !company) ? (
-        <AlertBanner>{t("signInRequired")}</AlertBanner>
-      ) : null}
+  return (
+    <div className="getting-started-panel stack">
       {error ? <AlertBanner>{error}</AlertBanner> : null}
       {activationError ? <AlertBanner>{activationError}</AlertBanner> : null}
 
       {isContentLoading ? (
-        <>
-          <section className="welcome-banner card content-loading-panel">
-            <LoadingState label={t("loading")} />
-          </section>
-          <div className="checklist">
-            {ACTIVATION_CHECKLIST_STEPS.map((step, index) => (
-              <article key={step.id} className="checklist-item card">
-                <div className="checklist-index">{index + 1}</div>
-                <div className="checklist-body content-loading-panel">
-                  <LoadingState label={t("loading")} />
-                </div>
-              </article>
-            ))}
-          </div>
-        </>
+        <div className="content-loading-panel">
+          <LoadingState label={t("loading")} />
+        </div>
       ) : null}
 
       {isReady && progress && company && user ? (
@@ -209,32 +175,33 @@ export function GettingStartedChecklist() {
             <AlertBanner>{t("widgetLiveAwaitingInquiry")}</AlertBanner>
           ) : null}
 
-          <section
-            className="welcome-banner card"
-            aria-labelledby="welcome-banner-title"
-          >
-            <h3 id="welcome-banner-title" className="welcome-banner-title">
+          <section className="getting-started-panel-intro">
+            <h3 className="getting-started-panel-title">
               {t("welcomeTitle", { name: welcomeName })}
             </h3>
-            <p className="welcome-banner-lead muted">{tt("welcomeLead")}</p>
+            <p className="muted getting-started-panel-lead">{tt("welcomeLead")}</p>
             {nextStep ? (
-              <div className="welcome-banner-next">
-                <p className="welcome-banner-next-label">
+              <div className="getting-started-panel-next">
+                <p className="getting-started-panel-next-label">
                   {t("welcomeNextStepLabel")}
                 </p>
-                <p className="welcome-banner-next-title">
+                <p className="getting-started-panel-next-title">
                   {tOnboarding(`${nextStep.id}.title`)}
                 </p>
                 {nextStep.href ? (
-                  <Link href={nextStep.href} className="button">
+                  <Link
+                    href={nextStep.href}
+                    className="button"
+                    onClick={handleNavigateAway}
+                  >
                     {tOnboarding(`${nextStep.id}.action`)}
                   </Link>
                 ) : null}
               </div>
             ) : allDone ? (
-              <div className="welcome-banner-next">
+              <div className="getting-started-panel-next">
                 <p className="muted">{t("firstWebsiteInquiryReached")}</p>
-                <Link href="/leads" className="button">
+                <Link href="/leads" className="button" onClick={handleNavigateAway}>
                   {t("openLeads")}
                 </Link>
               </div>
@@ -246,11 +213,14 @@ export function GettingStartedChecklist() {
           </section>
 
           {activation ? (
-            <section className="card" aria-labelledby="getting-started-activation-title">
+            <section
+              className="getting-started-panel-activation card"
+              aria-labelledby="getting-started-activation-title"
+            >
               <div className="embed-header">
-                <h3 id="getting-started-activation-title" className="card-title">
+                <h4 id="getting-started-activation-title" className="card-title">
                   {t("activationStatusTitle")}
-                </h3>
+                </h4>
                 <button
                   type="button"
                   className="button secondary"
@@ -269,24 +239,32 @@ export function GettingStartedChecklist() {
             </section>
           ) : null}
 
-          <div className="checklist">
+          <ol className="getting-started-checklist">
             {ACTIVATION_CHECKLIST_STEPS.map((step, index) => {
               const done = progress[step.id];
               const stepKey = step.id as ActivationChecklistStepId;
               return (
-                <article
+                <li
                   key={step.id}
-                  className={`checklist-item card ${done ? "done" : ""}`}
+                  className={`getting-started-checklist-item card ${done ? "is-done" : ""}`}
                 >
-                  <div className="checklist-index">{index + 1}</div>
-                  <div className="checklist-body">
-                    <div className="checklist-title-row">
-                      <h3>{tOnboarding(`${stepKey}.title`)}</h3>
-                      <span className={`checklist-status ${done ? "done" : ""}`}>
+                  <div className="getting-started-checklist-index" aria-hidden="true">
+                    {done ? "✓" : index + 1}
+                  </div>
+                  <div className="getting-started-checklist-body">
+                    <div className="getting-started-checklist-title-row">
+                      <h4
+                        className={`getting-started-checklist-title${done ? " is-done" : ""}`}
+                      >
+                        {tOnboarding(`${stepKey}.title`)}
+                      </h4>
+                      <span
+                        className={`getting-started-checklist-status ${done ? "is-done" : ""}`}
+                      >
                         {done ? tCommon("done") : tCommon("todo")}
                       </span>
                     </div>
-                    <p className="muted">
+                    <p className={`muted getting-started-checklist-copy${done ? " is-done" : ""}`}>
                       {tOnboarding(`${stepKey}.description`)}
                     </p>
                     {step.id === "notification_email" ? (
@@ -306,34 +284,22 @@ export function GettingStartedChecklist() {
                         {t("companySlug")} <code>{company.slug}</code>
                       </p>
                     ) : null}
-                    <div className="checklist-actions">
-                      {step.href ? (
-                        <Link href={step.href} className="button secondary">
+                    {step.href && !done ? (
+                      <div className="getting-started-checklist-actions">
+                        <Link
+                          href={step.href}
+                          className="button secondary"
+                          onClick={handleNavigateAway}
+                        >
                           {tOnboarding(`${stepKey}.action`)}
                         </Link>
-                      ) : null}
-                    </div>
+                      </div>
+                    ) : null}
                   </div>
-                </article>
+                </li>
               );
             })}
-          </div>
-
-          <div className="card">
-            <h3 className="card-title">{t("nextStepsTitle")}</h3>
-            <p className="muted">{t("nextStepsDescription")}</p>
-            <div className="checklist-actions">
-              <Link href="/leads" className="button">
-                {t("openLeads")}
-              </Link>
-              <Link href="/settings" className="button secondary">
-                {t("companySettings")}
-              </Link>
-              <Link href="/demo-chat" className="button secondary">
-                {t("openSandboxChat")}
-              </Link>
-            </div>
-          </div>
+          </ol>
         </>
       ) : null}
     </div>

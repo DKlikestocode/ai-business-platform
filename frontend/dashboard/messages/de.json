@@ -353,7 +353,12 @@
     "awaitingFirstWebsiteInquiry": "Als Nächstes: Warten Sie auf die erste echte Anfrage von Ihrer Website. Test-Anfragen aus dem Test-Chat zählen nicht.",
     "notificationTestHint": "Speichern Sie die E-Mail-Adresse und klicken Sie auf „Test senden“, um die Zustellung zu prüfen.",
     "firstWebsiteInquiryReached": "Ihre erste echte Website-Anfrage ist eingegangen. Neue Anfragen finden Sie unter Anfragen.",
-    "openSandboxChat": "Test-Chat öffnen (Sandbox)"
+    "openSandboxChat": "Test-Chat öffnen (Sandbox)",
+    "overlayTitle": "Erste Schritte",
+    "overlaySubtitle": "So aktivieren Sie den Chat auf Ihrer Website",
+    "overlayClose": "Schließen",
+    "overlayLauncher": "Erste Schritte",
+    "overlayProgressFallback": "Setup fortsetzen"
   },
   "settings": {
     "pageTitle": "Einstellungen",

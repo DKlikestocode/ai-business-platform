@@ -353,7 +353,12 @@
     "awaitingFirstWebsiteInquiry": "Next: wait for the first real inquiry from your website. Test chat inquiries do not count.",
     "notificationTestHint": "Save the email address and click Send test to verify delivery.",
     "firstWebsiteInquiryReached": "Your first real website inquiry has arrived. Find new inquiries under Inquiries.",
-    "openSandboxChat": "Open test chat (sandbox)"
+    "openSandboxChat": "Open test chat (sandbox)",
+    "overlayTitle": "Getting started",
+    "overlaySubtitle": "Set up the chat on your website",
+    "overlayClose": "Close",
+    "overlayLauncher": "Getting started",
+    "overlayProgressFallback": "Continue setup"
   },
   "settings": {
     "pageTitle": "Settings",

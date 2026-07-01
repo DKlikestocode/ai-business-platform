@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { CompanyLabel } from "@/components/auth-provider";
+import { GettingStartedLauncher } from "@/components/getting-started-launcher";
 import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { SiteNav } from "@/components/site-nav";
 import { Link } from "@/i18n/navigation";
@@ -17,7 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="app-header">
         <div className="shell app-header-inner">
           <div className="app-header-brand">
-            <Link href="/getting-started" className="brand-link app-brand-link">
+            <Link href="/leads" className="brand-link app-brand-link">
               <span className="brand-mark">{brand("mark")}</span>
               <span className="app-brand-text">
                 <span className="app-brand-name">{t("title")}</span>
@@ -33,6 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <footer className="shell app-footer">
         <LegalFooterLinks />
       </footer>
+      <GettingStartedLauncher />
     </div>
   );
 }

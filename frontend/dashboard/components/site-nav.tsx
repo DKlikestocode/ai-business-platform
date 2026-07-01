@@ -8,26 +8,20 @@ import { Link } from "@/i18n/navigation";
 import { isDevelopment } from "@/lib/env";
 
 const links = [
-  { href: "/getting-started", labelKey: "gettingStarted", setupOnly: true as const },
-  { href: "/leads", labelKey: "leads", setupOnly: false as const },
-  { href: "/demo-chat", labelKey: "demoChat", setupOnly: false as const },
-  { href: "/settings", labelKey: "settings", setupOnly: false as const },
+  { href: "/leads", labelKey: "leads" },
+  { href: "/demo-chat", labelKey: "demoChat" },
+  { href: "/settings", labelKey: "settings" },
 ] as const;
 
 export function SiteNav() {
-  const { logout, user, dashboardNavReady, showGettingStartedNav } = useAuth();
+  const { logout, user } = useAuth();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
-
-  const visibleLinks = links.filter(
-    (link) =>
-      !link.setupOnly || (dashboardNavReady && showGettingStartedNav),
-  );
 
   return (
     <nav className="site-nav" aria-label={t("main")}>
       <LocaleSwitcher />
-      {visibleLinks.map((link) => (
+      {links.map((link) => (
         <Link key={link.href} href={link.href} className="nav-link">
           {t(link.labelKey)}
         </Link>
