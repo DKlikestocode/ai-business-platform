@@ -143,7 +143,7 @@ export default function middleware(request: NextRequest) {
 
   if (isLogin && hasSession) {
     const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = buildLocalizedPath("/getting-started", locale);
+    dashboardUrl.pathname = buildLocalizedPath("/leads", locale);
     dashboardUrl.search = "";
     return NextResponse.redirect(dashboardUrl);
   }

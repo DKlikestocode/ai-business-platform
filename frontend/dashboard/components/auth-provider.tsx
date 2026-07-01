@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -22,6 +23,12 @@ import {
 } from "@/lib/api";
 import { getAccessToken, setAccessToken } from "@/lib/auth-storage";
 import {
+  readDashboardNavState,
+  resolveAuthenticatedHomePathFromCache,
+  type AuthenticatedHomePath,
+  type DashboardNavState,
+} from "@/lib/dashboard-nav";
+import {
   clearDashboardCache,
   loadCachedCompanyActivation,
   loadCachedCompanySettings,
@@ -32,6 +39,7 @@ import { useRouter } from "@/i18n/navigation";
 interface AuthSession {
   user: CurrentUser;
   company: Company;
+  homePath: AuthenticatedHomePath;
 }
 
 interface AuthContextValue {
@@ -39,12 +47,20 @@ interface AuthContextValue {
   company: Company | null;
   loading: boolean;
   error: string | null;
+  dashboardNavReady: boolean;
+  showGettingStartedNav: boolean;
   login: (email: string, password: string) => Promise<AuthSession>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
+  refreshDashboardNav: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+const EMPTY_DASHBOARD_NAV: DashboardNavState = {
+  ready: false,
+  showGettingStarted: false,
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -53,11 +69,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [company, setCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [dashboardNav, setDashboardNav] =
+    useState<DashboardNavState>(EMPTY_DASHBOARD_NAV);
+  const userRef = useRef<CurrentUser | null>(null);
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
+  const syncDashboardNav = useCallback(
+    (
+      currentUser: CurrentUser | null,
+      companyData: Company | null,
+    ): DashboardNavState => {
+      const nextState = readDashboardNavState(currentUser, companyData);
+      setDashboardNav(nextState);
+      return nextState;
+    },
+    [],
+  );
+
+  const refreshDashboardNav = useCallback(() => {
+    syncDashboardNav(user, company);
+  }, [company, syncDashboardNav, user]);
 
   const logout = useCallback(async () => {
     setUser(null);
     setCompany(null);
     setError(null);
+    setDashboardNav(EMPTY_DASHBOARD_NAV);
     clearDashboardCache();
     try {
       await clearSession();
@@ -74,26 +114,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ]);
   }, []);
 
+  const establishAuthenticatedSession = useCallback(
+    async (
+      currentUser: CurrentUser,
+      companyData: Company,
+    ): Promise<AuthSession> => {
+      setUser(currentUser);
+      setCompany(companyData);
+      await prefetchDashboardData();
+      syncDashboardNav(currentUser, companyData);
+      return {
+        user: currentUser,
+        company: companyData,
+        homePath: resolveAuthenticatedHomePathFromCache(
+          currentUser,
+          companyData,
+        ),
+      };
+    },
+    [prefetchDashboardData, syncDashboardNav],
+  );
+
   const refresh = useCallback(async () => {
     const token = getAccessToken();
     if (!token) {
       setUser(null);
       setCompany(null);
+      setDashboardNav(EMPTY_DASHBOARD_NAV);
       setLoading(false);
       return;
     }
 
-    setLoading(true);
+    const hasExistingSession = Boolean(userRef.current);
+    if (!hasExistingSession) {
+      setLoading(true);
+    }
     setError(null);
     try {
       const currentUser = await fetchCurrentUser();
       const companyData = await fetchCompany(currentUser.company_id);
-      setUser(currentUser);
-      setCompany(companyData);
-      await prefetchDashboardData();
+      await establishAuthenticatedSession(currentUser, companyData);
     } catch (err) {
       setUser(null);
       setCompany(null);
+      setDashboardNav(EMPTY_DASHBOARD_NAV);
       if (err instanceof ApiError && err.status === 401) {
         await clearSession();
       } else {
@@ -104,7 +168,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [prefetchDashboardData, tAuth]);
+  }, [establishAuthenticatedSession, tAuth]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -116,20 +180,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await establishSession();
         const currentUser = await fetchCurrentUser();
         const companyData = await fetchCompany(currentUser.company_id);
-        setUser(currentUser);
-        setCompany(companyData);
-        await prefetchDashboardData();
-        return { user: currentUser, company: companyData };
+        return await establishAuthenticatedSession(currentUser, companyData);
       } catch (err) {
         setUser(null);
         setCompany(null);
+        setDashboardNav(EMPTY_DASHBOARD_NAV);
         setError(err instanceof Error ? err.message : tAuth("loginFailed"));
         throw err;
       } finally {
         setLoading(false);
       }
     },
-    [prefetchDashboardData, tAuth],
+    [establishAuthenticatedSession, tAuth],
   );
 
   useEffect(() => {
@@ -147,8 +209,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   const value = useMemo(
-    () => ({ user, company, loading, error, login, logout, refresh }),
-    [user, company, loading, error, login, logout, refresh],
+    () => ({
+      user,
+      company,
+      loading,
+      error,
+      dashboardNavReady: dashboardNav.ready,
+      showGettingStartedNav: dashboardNav.showGettingStarted,
+      login,
+      logout,
+      refresh,
+      refreshDashboardNav,
+    }),
+    [
+      user,
+      company,
+      loading,
+      error,
+      dashboardNav.ready,
+      dashboardNav.showGettingStarted,
+      login,
+      logout,
+      refresh,
+      refreshDashboardNav,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -166,12 +250,12 @@ export function CompanyLabel() {
   const { company, user, loading } = useAuth();
   const t = useTranslations("auth");
 
-  if (loading) {
-    return <p className="company-label muted">{t("loadingAccount")}</p>;
-  }
-
   if (!user || !company) {
-    return null;
+    return loading ? (
+      <p className="company-label muted" aria-hidden="true">
+        {"\u00a0"}
+      </p>
+    ) : null;
   }
 
   return (
