@@ -12,10 +12,14 @@ interface BusinessSiteWidgetEmbedProps {
     | "widget_install_token"
     | "widget_title"
   >;
+  privacyUrl?: string;
 }
 
-export function BusinessSiteWidgetEmbed({ site }: BusinessSiteWidgetEmbedProps) {
-  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=3`;
+export function BusinessSiteWidgetEmbed({
+  site,
+  privacyUrl,
+}: BusinessSiteWidgetEmbedProps) {
+  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=4`;
 
   return (
     <>
@@ -25,6 +29,7 @@ export function BusinessSiteWidgetEmbed({ site }: BusinessSiteWidgetEmbedProps) 
         data-api-base={site.widget_api_base}
         data-install-token={site.widget_install_token}
         data-title={site.widget_title}
+        {...(privacyUrl ? { "data-privacy-url": privacyUrl } : {})}
       />
       <Script src={scriptSrc} strategy="afterInteractive" />
     </>

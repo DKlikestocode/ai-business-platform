@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatBusinessSiteServiceArea,
+  getBusinessSiteProfile,
   getBusinessSiteTradeProfile,
 } from "@/lib/business-site";
 
@@ -10,6 +11,15 @@ describe("business-site", () => {
     const profile = getBusinessSiteTradeProfile("skh");
     expect(profile.titleSuffix).toContain("Sanitär");
     expect(profile.services).toHaveLength(4);
+  });
+
+  it("returns demo-betrieb profile for platform demo slug", () => {
+    const profile = getBusinessSiteProfile({
+      company_slug: "demo-betrieb",
+      trade: "skh",
+    });
+    expect(profile.titleSuffix).toContain("Hamburg");
+    expect(profile.references).toHaveLength(3);
   });
 
   it("formats service area with radius", () => {
