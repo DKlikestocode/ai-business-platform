@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -23,6 +24,9 @@ class QualificationStatus(StrEnum):
     INCOMPLETE = "incomplete"
     CONTACTABLE = "contactable"
     QUALIFIED = "qualified"
+
+
+InquiryScope = Literal["in_scope", "out_of_scope", "unclear"]
 
 
 REQUIRED_LEAD_FIELDS: tuple[str, ...] = (
@@ -82,6 +86,16 @@ class LeadCaptureLLMOutput(BaseModel):
         description=(
             "Bevorzugte Rückrufzeit in den Worten des Kunden, z. B. heute Nachmittag "
             "oder morgen früh."
+        ),
+    )
+    inquiry_scope: InquiryScope | None = Field(
+        default=None,
+        description=(
+            "Passt das Anliegen zum Leistungsspektrum des Betriebs? "
+            "in_scope = konkretes Anliegen im Spektrum; "
+            "out_of_scope = klar anderer Bereich/Gewerk; "
+            "unclear = noch unklar, kurze Rückfrage nötig. "
+            "Nur setzen, wenn ein Branchen-Kontext im Prompt steht."
         ),
     )
 

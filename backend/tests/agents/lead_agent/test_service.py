@@ -103,6 +103,50 @@ async def test_lead_capture_service_tracks_missing_fields(
 
 
 @pytest.mark.asyncio
+async def test_lead_capture_service_skips_persistence_for_out_of_scope_inquiry(
+    conversation_repository: ConversationRepository,
+    lead_repository,
+    company_repository,
+    company_activation_repository,
+    company,
+) -> None:
+    company_repository.update_settings(company, trade="skh")
+    out_of_scope_reply = (
+        "Das klingt nach einem elektrischen Problem. Dafür ist ein Elektrobetrieb "
+        "der richtige Ansprechpartner — wir sind auf Sanitär, Heizung und Klima spezialisiert."
+    )
+    service = build_service(
+        conversation_repository=conversation_repository,
+        lead_repository=lead_repository,
+        company_repository=company_repository,
+        company_activation_repository=company_activation_repository,
+        outputs=[
+            LeadCaptureLLMOutput(
+                reply=out_of_scope_reply,
+                inquiry_scope="out_of_scope",
+                description="Sicherung fliegt raus",
+                phone="01701234567",
+            ),
+        ],
+    )
+
+    response = await service.handle_message(
+        LeadMessageRequest(
+            conversation_id="lead-conv-out-of-scope",
+            message="Bei uns fliegt ständig die Sicherung raus.",
+        ),
+        company_id=company.id,
+    )
+
+    assert response.reply == out_of_scope_reply
+    assert response.lead_id is None
+    assert lead_repository.get_by_conversation(
+        "lead-conv-out-of-scope",
+        company_id=company.id,
+    ) is None
+
+
+@pytest.mark.asyncio
 async def test_lead_capture_service_persists_complete_lead(
     conversation_repository: ConversationRepository,
     lead_repository,

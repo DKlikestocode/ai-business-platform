@@ -17,6 +17,7 @@ from app.agents.lead_agent.contact_validation import (
 )
 from app.agents.lead_agent.conversation_flow import resolve_qualification_reply
 from app.agents.lead_agent.extraction import LeadExtractionClient
+from app.agents.lead_agent.inquiry_scope import is_inquiry_out_of_scope
 from app.agents.lead_agent.models import (
     LeadCaptureResult,
     LeadExtractedData,
@@ -119,12 +120,13 @@ class LeadCaptureService:
         pre_qualification = evaluate_qualification(existing_data, channel=self._channel)
 
         company = self._company_repository.get_by_id(company_id)
+        company_trade = company.trade if company is not None else None
         service_area_prompt = (
             build_service_area_prompt(company) if company is not None else None
         )
         pre_service_area_eval = evaluate_service_area(company, existing_data)
         service_area_status_prompt = build_service_area_status_prompt(pre_service_area_eval)
-        trade_prompt = build_trade_prompt(company.trade) if company is not None else None
+        trade_prompt = build_trade_prompt(company_trade) if company is not None else None
 
         self._conversation_repository.add_message(
             conversation.id,
@@ -157,8 +159,8 @@ class LeadCaptureService:
                 role="system",
                 content=(
                     f"{system_prompt}\n\n"
-                    "Return a structured response with a conversational reply and any "
-                    "lead fields mentioned in the conversation."
+                    "Return a structured response with a conversational reply, inquiry_scope "
+                    "(when trade context applies), and any lead fields mentioned in the conversation."
                 ),
             ),
             *history_messages[1:],
@@ -181,10 +183,14 @@ class LeadCaptureService:
         qualification = evaluate_qualification(merged_data, channel=self._channel)
         missing_fields = get_missing_fields(merged_data)
         lead_complete = is_lead_complete(merged_data)
+        out_of_scope = is_inquiry_out_of_scope(
+            llm_output.inquiry_scope,
+            trade=company_trade,
+        )
         reply = llm_output.reply
         if rejected_contacts.any_rejected:
             reply = build_invalid_contact_reply(rejected_contacts)
-        else:
+        elif not out_of_scope:
             reply = resolve_qualification_reply(
                 merged_data=merged_data,
                 channel=self._channel,
@@ -192,7 +198,8 @@ class LeadCaptureService:
                 service_area_configured=is_service_area_configured(company),
             )
         if (
-            not rejected_contacts.any_rejected
+            not out_of_scope
+            and not rejected_contacts.any_rejected
             and service_area_eval.status
             in {ServiceAreaStatus.IN_RANGE, ServiceAreaStatus.OUT_OF_RANGE}
             and resolve_lead_postal_code(existing_data) != service_area_eval.postal_code
@@ -210,13 +217,15 @@ class LeadCaptureService:
                 LEAD_DATA_METADATA_KEY: merged_data.model_dump(mode="json"),
                 "qualification_status": qualification.qualification_status.value,
                 "lead_score": qualification.lead_score,
+                "inquiry_scope": llm_output.inquiry_scope,
             },
         )
 
         lead_id: str | None = None
         summary = llm_output.summary
         if (
-            qualification.should_persist
+            not out_of_scope
+            and qualification.should_persist
             and self._channel != ConversationChannel.LANDING_DEMO
         ):
             existing_lead = self._repository.get_by_conversation(
