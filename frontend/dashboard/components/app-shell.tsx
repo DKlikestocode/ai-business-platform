@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { CompanyLabel } from "@/components/auth-provider";
 import { GettingStartedLauncher } from "@/components/getting-started-launcher";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { LegalFooterLinks } from "@/components/legal-footer-links";
 import { SiteNav } from "@/components/site-nav";
 import { Link } from "@/i18n/navigation";
@@ -16,6 +17,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="app-page">
       <header className="app-header">
+        <LocaleSwitcher />
         <div className="shell app-header-inner">
           <div className="app-header-brand">
             <Link href="/leads" className="brand-link app-brand-link">
