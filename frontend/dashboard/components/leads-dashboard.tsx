@@ -33,6 +33,7 @@ import {
 import {
   INQUIRY_KIND_CATEGORY_TAB_KEY,
   INQUIRY_KIND_FILTER_OPTIONS,
+  type InquiryKindFilter,
 } from "@/lib/inquiry-kind";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
@@ -48,6 +49,27 @@ import { Link } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "medium") ?? "";
+}
+
+type CategoryCounts = Record<InquiryKindFilter, number>;
+
+async function fetchActiveCategoryCounts(): Promise<CategoryCounts> {
+  const results = await Promise.all(
+    INQUIRY_KIND_FILTER_OPTIONS.map((kind) =>
+      fetchLeads({
+        page: 1,
+        page_size: 1,
+        contactable: true,
+        archived: false,
+        inquiry_kind: kind,
+      }),
+    ),
+  );
+
+  return {
+    appointment_consultation: results[0]?.total ?? 0,
+    quote: results[1]?.total ?? 0,
+  };
 }
 
 export function LeadsDashboard() {
@@ -80,6 +102,7 @@ export function LeadsDashboard() {
   );
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [categoryCounts, setCategoryCounts] = useState<CategoryCounts | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -94,7 +117,7 @@ export function LeadsDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchLeads({
+      const listRequest = fetchLeads({
         page,
         page_size: 20,
         contactable: true,
@@ -102,9 +125,17 @@ export function LeadsDashboard() {
         archived: isContactedView,
         inquiry_kind: inquiryKind,
       });
+      const countsRequest = isContactedView ? null : fetchActiveCategoryCounts();
+
+      const [data, counts] = await Promise.all([
+        listRequest,
+        countsRequest,
+      ]);
+
       setLeads(Array.isArray(data.items) ? data.items : []);
       setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
       setTotal(typeof data.total === "number" ? data.total : 0);
+      setCategoryCounts(isContactedView ? null : counts);
     } catch (err) {
       setError(formatUserFacingError(err, t("loadFailed"), errorMessages));
     } finally {
@@ -136,6 +167,15 @@ export function LeadsDashboard() {
     if (!isContactedView && updated.status !== "new") {
       setLeads((current) => current.filter((lead) => lead.id !== updated.id));
       setTotal((current) => Math.max(0, current - 1));
+      setCategoryCounts((current) => {
+        if (current === null) {
+          return current;
+        }
+        return {
+          ...current,
+          [inquiryKind]: Math.max(0, current[inquiryKind] - 1),
+        };
+      });
       return;
     }
 
@@ -256,17 +296,21 @@ export function LeadsDashboard() {
 
       await seedDemoData();
 
-      const data = await fetchLeads({
-        page: 1,
-        page_size: 20,
-        contactable: true,
-        sort,
-        archived: false,
-        inquiry_kind: inquiryKind,
-      });
+      const [data, counts] = await Promise.all([
+        fetchLeads({
+          page: 1,
+          page_size: 20,
+          contactable: true,
+          sort,
+          archived: false,
+          inquiry_kind: inquiryKind,
+        }),
+        fetchActiveCategoryCounts(),
+      ]);
       setLeads(Array.isArray(data.items) ? data.items : []);
       setTotalPages(typeof data.total_pages === "number" ? data.total_pages : 1);
       setTotal(typeof data.total === "number" ? data.total : 0);
+      setCategoryCounts(counts);
     } catch (err) {
       setError(formatUserFacingError(err, t("seedFailed"), errorMessages));
     } finally {
@@ -329,18 +373,34 @@ export function LeadsDashboard() {
         role="tablist"
         aria-label={t("categoryToggleLabel")}
       >
-        {INQUIRY_KIND_FILTER_OPTIONS.map((option) => (
+        {INQUIRY_KIND_FILTER_OPTIONS.map((option) => {
+          const label = t(INQUIRY_KIND_CATEGORY_TAB_KEY[option]);
+          const count = !isContactedView ? categoryCounts?.[option] : undefined;
+          return (
           <button
             key={option}
             type="button"
             role="tab"
             className={`button secondary${inquiryKind === option ? " is-active" : ""}`}
             aria-selected={inquiryKind === option}
+            aria-label={
+              typeof count === "number"
+                ? t("categoryTabAria", { label, count })
+                : label
+            }
             onClick={() => handleInquiryKindChange(option)}
           >
-            {t(INQUIRY_KIND_CATEGORY_TAB_KEY[option])}
+            <span className="inbox-category-tab-label">
+              <span>{label}</span>
+              {typeof count === "number" ? (
+                <span className="inbox-category-count" aria-hidden="true">
+                  {count}
+                </span>
+              ) : null}
+            </span>
           </button>
-        ))}
+          );
+        })}
       </div>
       <div className="toolbar">
         <div className="toolbar-filters">
@@ -437,7 +497,7 @@ export function LeadsDashboard() {
       ) : null}
 
       {useCardView ? (
-        <div className="inquiry-list content-fade-in">
+        <div className="inquiry-list">
           {leads.map((lead) => (
             <InquiryCard
               key={lead.id}
@@ -455,7 +515,7 @@ export function LeadsDashboard() {
       ) : null}
 
       {!isDataLoading && total > 10 ? (
-        <div className="table-wrap content-fade-in">
+        <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
