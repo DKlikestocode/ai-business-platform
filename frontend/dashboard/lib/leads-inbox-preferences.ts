@@ -3,8 +3,8 @@ import {
   setDashboardCache,
 } from "@/lib/dashboard-cache";
 import {
-  isInquiryKindFilter,
-  type InquiryKindFilter,
+  isInboxCategoryFilter,
+  type InboxCategoryFilter,
 } from "@/lib/inquiry-kind";
 import {
   LEAD_SORT_OPTIONS,
@@ -14,20 +14,20 @@ import {
 export const LEADS_INBOX_PREFERENCES_CACHE_KEY = "leads-inbox-preferences";
 
 export type LeadsInboxView = "active" | "contacted";
-export type { InquiryKindFilter };
+export type { InboxCategoryFilter };
 
 export type LeadsInboxPreferences = {
   sort: LeadSort;
   page: number;
   inboxView: LeadsInboxView;
-  inquiryKind: InquiryKindFilter;
+  inboxCategory: InboxCategoryFilter;
 };
 
 export const DEFAULT_LEADS_INBOX_PREFERENCES: LeadsInboxPreferences = {
   sort: "urgency_desc",
   page: 1,
   inboxView: "active",
-  inquiryKind: "appointment_consultation",
+  inboxCategory: "all",
 };
 
 function isLeadSort(value: unknown): value is LeadSort {
@@ -53,8 +53,17 @@ function migrateInboxView(value: unknown): LeadsInboxView {
   return "active";
 }
 
-function migrateInquiryKind(value: unknown): InquiryKindFilter {
-  return isInquiryKindFilter(value) ? value : "appointment_consultation";
+function migrateInboxCategory(
+  value: unknown,
+  legacyInquiryKind: unknown,
+): InboxCategoryFilter {
+  if (isInboxCategoryFilter(value)) {
+    return value;
+  }
+  if (isInboxCategoryFilter(legacyInquiryKind)) {
+    return legacyInquiryKind;
+  }
+  return "all";
 }
 
 export function normalizeLeadsInboxPreferences(
@@ -71,13 +80,13 @@ export function normalizeLeadsInboxPreferences(
       : 1;
   const inboxView = migrateInboxView(value.inboxView);
   const sort = migrateSort(value.sort);
-  const inquiryKind = migrateInquiryKind(value.inquiryKind);
+  const inboxCategory = migrateInboxCategory(value.inboxCategory, value.inquiryKind);
 
   return {
     sort,
     page,
     inboxView,
-    inquiryKind,
+    inboxCategory,
   };
 }
 
