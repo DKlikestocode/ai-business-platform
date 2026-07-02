@@ -274,6 +274,32 @@ a {
   color: #ffffff;
 }
 
+.inbox-category-tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inbox-category-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--primary);
+}
+
+.inbox-view-toggle .button.is-active .inbox-category-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
 .toolbar {
   display: flex;
   align-items: center;
