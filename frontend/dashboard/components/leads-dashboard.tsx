@@ -352,20 +352,35 @@ export function LeadsDashboard() {
     return tContactMethod(value);
   }
 
-  const isDataLoading = authLoading || loading;
+  const inboxCategorySizerLabel = useMemo(() => {
+    return INBOX_CATEGORY_OPTIONS.reduce((widest, option) => {
+      const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
+      const formatted = t("categoryOptionCount", { label, count: 99 });
+      return formatted.length > widest.length ? formatted : widest;
+    }, "");
+  }, [t]);
+
+  const isInitialLoading = authLoading || (loading && leads.length === 0);
+  const isRefreshing = !authLoading && loading && leads.length > 0;
+  const isToolbarBusy = authLoading || loading;
   const showFirstRunEmpty =
     !isContactedView &&
     inboxCategory === "all" &&
-    !isDataLoading &&
+    !loading &&
+    !authLoading &&
     leads.length === 0;
   const showCategoryFilterEmpty =
     !isContactedView &&
     inboxCategory !== "all" &&
-    !isDataLoading &&
+    !loading &&
+    !authLoading &&
     leads.length === 0;
   const showContactedEmpty =
-    isContactedView && !isDataLoading && leads.length === 0;
-  const useCardView = !isDataLoading && total > 0 && total <= 10;
+    isContactedView && !loading && !authLoading && leads.length === 0;
+  const useCardView = total > 0 && total <= 10;
+  const listRegionClassName = `inbox-results${
+    isRefreshing ? " inbox-results-refreshing" : ""
+  }${!isInitialLoading && (useCardView || total > 10) ? " content-fade-in" : ""}`;
 
   return (
     <div className="stack">
@@ -398,26 +413,31 @@ export function LeadsDashboard() {
           {!isContactedView ? (
             <label className="field-inline inbox-category-field">
               <span>{t("inboxCategoryLabel")}</span>
-              <select
-                className="select inbox-category-select"
-                value={inboxCategory}
-                disabled={isDataLoading}
-                onChange={(event) => {
-                  handleInboxCategoryChange(event.target.value as InboxCategoryFilter);
-                }}
-              >
-                {INBOX_CATEGORY_OPTIONS.map((option) => {
-                  const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
-                  const count = categoryCounts?.[option];
-                  return (
-                    <option key={option} value={option}>
-                      {typeof count === "number"
-                        ? t("categoryOptionCount", { label, count })
-                        : label}
-                    </option>
-                  );
-                })}
-              </select>
+              <div className="inbox-category-select-shell">
+                <span className="inbox-category-select-sizer" aria-hidden="true">
+                  {inboxCategorySizerLabel}
+                </span>
+                <select
+                  className="select inbox-category-select"
+                  value={inboxCategory}
+                  disabled={isToolbarBusy}
+                  onChange={(event) => {
+                    handleInboxCategoryChange(event.target.value as InboxCategoryFilter);
+                  }}
+                >
+                  {INBOX_CATEGORY_OPTIONS.map((option) => {
+                    const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
+                    const count = categoryCounts?.[option];
+                    return (
+                      <option key={option} value={option}>
+                        {typeof count === "number"
+                          ? t("categoryOptionCount", { label, count })
+                          : label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
             </label>
           ) : null}
           <label className="field-inline">
@@ -425,7 +445,7 @@ export function LeadsDashboard() {
             <select
               className="select"
               value={sort}
-              disabled={isDataLoading}
+              disabled={isToolbarBusy}
               onChange={(event) => {
                 setPage(1);
                 setSort(event.target.value as LeadSort);
@@ -444,7 +464,7 @@ export function LeadsDashboard() {
             <button
               type="button"
               className="button secondary"
-              disabled={isDataLoading || deletingAll || updatingId !== null}
+              disabled={isToolbarBusy || deletingAll || updatingId !== null}
               onClick={handleDeleteAllContacted}
             >
               {deletingAll ? t("deletingAllContacted") : t("deleteAllContacted")}
@@ -454,14 +474,14 @@ export function LeadsDashboard() {
             <button
               type="button"
               className="button dev"
-              disabled={seeding || isDataLoading}
+              disabled={seeding || isToolbarBusy}
               onClick={() => void handleSeedDemoData()}
             >
               {seeding ? t("creatingDemo") : t("createDemo")}
             </button>
           ) : null}
           <p className="muted">
-            {isDataLoading ? tCommon("dash") : t("leadCount", { count: total })}
+            {isRefreshing ? tCommon("dash") : t("leadCount", { count: total })}
           </p>
         </div>
       </div>
@@ -477,14 +497,15 @@ export function LeadsDashboard() {
       {authError ? <AlertBanner>{authError}</AlertBanner> : null}
       {error ? <AlertBanner>{error}</AlertBanner> : null}
 
-      {isDataLoading ? (
+      {isInitialLoading ? (
         <div className="card content-loading-panel">
           <LoadingState label={t("loading")} />
         </div>
       ) : null}
 
       {showFirstRunEmpty ? (
-        <EmptyState
+        <div className="inbox-empty-panel">
+          <EmptyState
           title={tt("emptyTitle")}
           description={tt("emptyDescription")}
           actionHref="/settings"
@@ -496,10 +517,12 @@ export function LeadsDashboard() {
             showGettingStarted ? () => openGettingStartedOverlay() : undefined
           }
         />
+        </div>
       ) : null}
 
       {showCategoryFilterEmpty ? (
-        <EmptyState
+        <div className="inbox-empty-panel">
+          <EmptyState
           title={
             inboxCategory === "quote"
               ? t("categoryEmptyTitle")
@@ -507,35 +530,47 @@ export function LeadsDashboard() {
           }
           description={t("filterEmptyDescription")}
         />
-      ) : null}
-
-      {showContactedEmpty ? (
-        <EmptyState
-          title={t("emptyContactedTitle")}
-          description={t("emptyContactedDescription")}
-        />
-      ) : null}
-
-      {useCardView ? (
-        <div className="inquiry-list">
-          {leads.map((lead) => (
-            <InquiryCard
-              key={lead.id}
-              lead={lead}
-              createdLabel={formatDate(lead.created_at, locale)}
-              statusUpdating={updatingId === lead.id}
-              showContactedSuccess={contactedSuccessId === lead.id}
-              contactedMode={isContactedView}
-              onMarkContacted={() => void handleMarkContacted(lead.id)}
-              onRestore={() => void handleRestoreLead(lead.id)}
-              onDelete={() => handleDeleteLead(lead.id)}
-            />
-          ))}
         </div>
       ) : null}
 
-      {!isDataLoading && total > 10 ? (
-        <div className="table-wrap">
+      {showContactedEmpty ? (
+        <div className="inbox-empty-panel">
+          <EmptyState
+          title={t("emptyContactedTitle")}
+          description={t("emptyContactedDescription")}
+        />
+        </div>
+      ) : null}
+
+      {useCardView ? (
+        <div
+          className={listRegionClassName}
+          aria-busy={isRefreshing}
+        >
+          <div className="inquiry-list">
+            {leads.map((lead) => (
+              <InquiryCard
+                key={lead.id}
+                lead={lead}
+                createdLabel={formatDate(lead.created_at, locale)}
+                statusUpdating={updatingId === lead.id}
+                showContactedSuccess={contactedSuccessId === lead.id}
+                contactedMode={isContactedView}
+                onMarkContacted={() => void handleMarkContacted(lead.id)}
+                onRestore={() => void handleRestoreLead(lead.id)}
+                onDelete={() => handleDeleteLead(lead.id)}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {total > 10 ? (
+        <div
+          className={listRegionClassName}
+          aria-busy={isRefreshing}
+        >
+          <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
@@ -585,6 +620,7 @@ export function LeadsDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       ) : null}
 
