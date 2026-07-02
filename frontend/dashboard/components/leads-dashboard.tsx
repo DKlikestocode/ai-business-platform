@@ -33,7 +33,6 @@ import {
 import {
   INQUIRY_KIND_CATEGORY_TAB_KEY,
   INQUIRY_KIND_FILTER_OPTIONS,
-  type InquiryKindFilter,
 } from "@/lib/inquiry-kind";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
