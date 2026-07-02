@@ -66,6 +66,20 @@ a {
   backdrop-filter: blur(12px);
 }
 
+.locale-switcher-anchor {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 60;
+}
+
+.app-header > .locale-switcher-anchor,
+.marketing-header > .locale-switcher-anchor {
+  position: absolute;
+  top: 12px;
+  right: 24px;
+}
+
 .app-header-inner {
   display: flex;
   align-items: center;
@@ -74,6 +88,7 @@ a {
   flex-wrap: wrap;
   padding-top: 16px;
   padding-bottom: 16px;
+  padding-right: 52px;
 }
 
 .app-header-brand {
@@ -158,43 +173,69 @@ a {
 
 .locale-switcher {
   display: inline-flex;
-  align-items: stretch;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  overflow: hidden;
-  background: var(--surface);
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.locale-switcher-separator {
+  color: #d1d5db;
+  font-size: 0.7rem;
+  line-height: 1;
+  user-select: none;
 }
 
 .locale-switcher-option {
-  min-width: 44px;
-  min-height: 44px;
-  padding: 8px 12px;
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px 7px;
   border: none;
+  border-radius: 4px;
   background: transparent;
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--muted);
   line-height: 1;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .locale-switcher-option:hover {
-  color: var(--primary);
+  color: var(--text);
 }
 
 .locale-switcher-option.is-active {
-  background: var(--primary);
-  color: #ffffff;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .locale-switcher-option.is-active:hover {
-  color: #ffffff;
+  color: var(--primary);
 }
 
 .locale-switcher-option:focus-visible {
   outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  z-index: 1;
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locale-switcher-option {
+    transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .locale-switcher-option {
+    min-height: 36px;
+    padding: 6px 8px;
+  }
 }
 
 .nav-link {
@@ -1266,15 +1307,9 @@ code {
   width: min(100%, 440px);
 }
 
-.login-top-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
 .login-back-link {
+  justify-self: start;
+  width: 100%;
   font-size: 0.92rem;
   font-weight: 600;
   color: var(--muted);
@@ -2325,6 +2360,7 @@ code {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  margin-right: 44px;
 }
 
 .brand-link {

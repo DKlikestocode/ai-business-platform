@@ -24,8 +24,8 @@ export function MarketingShellClient({ children }: MarketingShellClientProps) {
           <span className="brand-mark">{brand("mark")}</span>
           <span>{brand("name")}</span>
         </Link>
+        <LocaleSwitcher />
         <nav className="marketing-nav" aria-label={nav("marketing")}>
-          <LocaleSwitcher />
           <Link href="/login" className="nav-link">
             {nav("signIn")}
           </Link>
