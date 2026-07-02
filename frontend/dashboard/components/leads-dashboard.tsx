@@ -396,7 +396,7 @@ export function LeadsDashboard() {
       <div className="toolbar">
         <div className="toolbar-filters">
           {!isContactedView ? (
-            <label className="field-inline">
+            <label className="field-inline inbox-category-field">
               <span>{t("inboxCategoryLabel")}</span>
               <select
                 className="select inbox-category-select"
