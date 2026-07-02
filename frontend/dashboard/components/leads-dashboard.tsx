@@ -352,14 +352,6 @@ export function LeadsDashboard() {
     return tContactMethod(value);
   }
 
-  const inboxCategorySizerLabel = useMemo(() => {
-    return INBOX_CATEGORY_OPTIONS.reduce((widest, option) => {
-      const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
-      const formatted = t("categoryOptionCount", { label, count: 99 });
-      return formatted.length > widest.length ? formatted : widest;
-    }, "");
-  }, [t]);
-
   const isInitialLoading = authLoading || (loading && leads.length === 0);
   const isRefreshing = !authLoading && loading && leads.length > 0;
   const isToolbarBusy = authLoading || loading;
@@ -411,33 +403,28 @@ export function LeadsDashboard() {
       <div className="toolbar">
         <div className="toolbar-filters">
           {!isContactedView ? (
-            <label className="field-inline inbox-category-field">
+            <label className="field-inline">
               <span>{t("inboxCategoryLabel")}</span>
-              <div className="inbox-category-select-shell">
-                <span className="inbox-category-select-sizer" aria-hidden="true">
-                  {inboxCategorySizerLabel}
-                </span>
-                <select
-                  className="select inbox-category-select"
-                  value={inboxCategory}
-                  disabled={isToolbarBusy}
-                  onChange={(event) => {
-                    handleInboxCategoryChange(event.target.value as InboxCategoryFilter);
-                  }}
-                >
-                  {INBOX_CATEGORY_OPTIONS.map((option) => {
-                    const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
-                    const count = categoryCounts?.[option];
-                    return (
-                      <option key={option} value={option}>
-                        {typeof count === "number"
-                          ? t("categoryOptionCount", { label, count })
-                          : label}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
+              <select
+                className="select"
+                value={inboxCategory}
+                disabled={isToolbarBusy}
+                onChange={(event) => {
+                  handleInboxCategoryChange(event.target.value as InboxCategoryFilter);
+                }}
+              >
+                {INBOX_CATEGORY_OPTIONS.map((option) => {
+                  const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
+                  const count = categoryCounts?.[option];
+                  return (
+                    <option key={option} value={option}>
+                      {typeof count === "number"
+                        ? t("categoryOptionCount", { label, count })
+                        : label}
+                    </option>
+                  );
+                })}
+              </select>
             </label>
           ) : null}
           <label className="field-inline">

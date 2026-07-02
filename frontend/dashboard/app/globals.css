@@ -274,36 +274,6 @@ a {
   color: #ffffff;
 }
 
-.inbox-category-field {
-  grid-template-columns: auto auto;
-  flex-shrink: 0;
-}
-
-.inbox-category-select-shell {
-  display: inline-grid;
-  vertical-align: top;
-}
-
-.inbox-category-select-sizer {
-  visibility: hidden;
-  white-space: nowrap;
-  padding: 8px 2.25rem 8px 12px;
-  font: inherit;
-  font-size: 0.875rem;
-  line-height: 1.25;
-  grid-area: 1 / 1;
-  pointer-events: none;
-}
-
-.inbox-category-select {
-  grid-area: 1 / 1;
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-}
-
 .inbox-results {
   min-height: 12rem;
 }
@@ -317,18 +287,6 @@ a {
   min-height: 12rem;
   display: grid;
   align-content: center;
-}
-
-@media (max-width: 640px) {
-  .inbox-category-field {
-    flex: 1 1 100%;
-    width: 100%;
-    grid-template-columns: auto 1fr;
-  }
-
-  .inbox-category-select-shell {
-    width: 100%;
-  }
 }
 
 .toolbar {
