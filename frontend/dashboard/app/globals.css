@@ -274,8 +274,29 @@ a {
   color: #ffffff;
 }
 
+.inbox-category-field {
+  grid-template-columns: auto auto;
+  flex-shrink: 0;
+}
+
 .inbox-category-select {
-  min-width: min(100%, 240px);
+  width: 19rem;
+  min-width: 19rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .inbox-category-field {
+    flex: 1 1 100%;
+    width: 100%;
+    grid-template-columns: auto 1fr;
+  }
+
+  .inbox-category-select {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 .toolbar {
