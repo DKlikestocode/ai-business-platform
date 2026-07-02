@@ -27,12 +27,14 @@ import {
   DEFAULT_LEADS_INBOX_PREFERENCES,
   getLeadsInboxPreferences,
   setLeadsInboxPreferences,
-  type InquiryKindFilter,
+  type InboxCategoryFilter,
   type LeadsInboxView,
 } from "@/lib/leads-inbox-preferences";
 import {
-  INQUIRY_KIND_CATEGORY_TAB_KEY,
+  INBOX_CATEGORY_LABEL_KEY,
+  INBOX_CATEGORY_OPTIONS,
   INQUIRY_KIND_FILTER_OPTIONS,
+  normalizeInquiryKind,
 } from "@/lib/inquiry-kind";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
@@ -50,11 +52,29 @@ function formatDate(value: string, locale: string): string {
   return formatDateTime(value, locale, "medium") ?? "";
 }
 
-type CategoryCounts = Record<InquiryKindFilter, number>;
+type CategoryCounts = Record<InboxCategoryFilter, number>;
+
+function resolveListInquiryKind(
+  inboxCategory: InboxCategoryFilter,
+): "appointment_consultation" | "quote" | undefined {
+  return inboxCategory === "all" ? undefined : inboxCategory;
+}
+
+function resolveLeadCategory(lead: Lead): "appointment_consultation" | "quote" {
+  return normalizeInquiryKind(lead.inquiry_kind) === "quote"
+    ? "quote"
+    : "appointment_consultation";
+}
 
 async function fetchActiveCategoryCounts(): Promise<CategoryCounts> {
-  const results = await Promise.all(
-    INQUIRY_KIND_FILTER_OPTIONS.map((kind) =>
+  const [all, ...categoryResults] = await Promise.all([
+    fetchLeads({
+      page: 1,
+      page_size: 1,
+      contactable: true,
+      archived: false,
+    }),
+    ...INQUIRY_KIND_FILTER_OPTIONS.map((kind) =>
       fetchLeads({
         page: 1,
         page_size: 1,
@@ -63,11 +83,12 @@ async function fetchActiveCategoryCounts(): Promise<CategoryCounts> {
         inquiry_kind: kind,
       }),
     ),
-  );
+  ]);
 
   return {
-    appointment_consultation: results[0]?.total ?? 0,
-    quote: results[1]?.total ?? 0,
+    all: all?.total ?? 0,
+    appointment_consultation: categoryResults[0]?.total ?? 0,
+    quote: categoryResults[1]?.total ?? 0,
   };
 }
 
@@ -96,8 +117,8 @@ export function LeadsDashboard() {
   const [inboxView, setInboxView] = useState<LeadsInboxView>(
     initialPreferences.inboxView,
   );
-  const [inquiryKind, setInquiryKind] = useState<InquiryKindFilter>(
-    initialPreferences.inquiryKind,
+  const [inboxCategory, setInboxCategory] = useState<InboxCategoryFilter>(
+    initialPreferences.inboxCategory,
   );
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
@@ -116,13 +137,16 @@ export function LeadsDashboard() {
     setLoading(true);
     setError(null);
     try {
+      const listInquiryKind = isContactedView
+        ? undefined
+        : resolveListInquiryKind(inboxCategory);
       const listRequest = fetchLeads({
         page,
         page_size: 20,
         contactable: true,
         sort,
         archived: isContactedView,
-        inquiry_kind: inquiryKind,
+        inquiry_kind: listInquiryKind,
       });
       const countsRequest = isContactedView ? null : fetchActiveCategoryCounts();
 
@@ -140,7 +164,7 @@ export function LeadsDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [page, sort, isContactedView, inquiryKind, t, errorMessages]);
+  }, [page, sort, isContactedView, inboxCategory, t, errorMessages]);
 
   useEffect(() => {
     void loadCachedCompanySettings(setSettings);
@@ -158,9 +182,9 @@ export function LeadsDashboard() {
       sort,
       page,
       inboxView,
-      inquiryKind,
+      inboxCategory,
     });
-  }, [sort, page, inboxView, inquiryKind]);
+  }, [sort, page, inboxView, inboxCategory]);
 
   function applyLeadUpdate(updated: Lead) {
     if (!isContactedView && updated.status !== "new") {
@@ -170,9 +194,11 @@ export function LeadsDashboard() {
         if (current === null) {
           return current;
         }
+        const leadCategory = resolveLeadCategory(updated);
         return {
           ...current,
-          [inquiryKind]: Math.max(0, current[inquiryKind] - 1),
+          all: Math.max(0, current.all - 1),
+          [leadCategory]: Math.max(0, current[leadCategory] - 1),
         };
       });
       return;
@@ -263,11 +289,11 @@ export function LeadsDashboard() {
     })();
   }
 
-  function handleInquiryKindChange(nextKind: InquiryKindFilter) {
-    if (nextKind === inquiryKind) {
+  function handleInboxCategoryChange(nextCategory: InboxCategoryFilter) {
+    if (nextCategory === inboxCategory) {
       return;
     }
-    setInquiryKind(nextKind);
+    setInboxCategory(nextCategory);
     setPage(1);
     setRestoreSuccessId(null);
     setContactedSuccessId(null);
@@ -302,7 +328,7 @@ export function LeadsDashboard() {
           contactable: true,
           sort,
           archived: false,
-          inquiry_kind: inquiryKind,
+          inquiry_kind: resolveListInquiryKind(inboxCategory),
         }),
         fetchActiveCategoryCounts(),
       ]);
@@ -329,12 +355,12 @@ export function LeadsDashboard() {
   const isDataLoading = authLoading || loading;
   const showFirstRunEmpty =
     !isContactedView &&
-    inquiryKind === "appointment_consultation" &&
+    inboxCategory === "all" &&
     !isDataLoading &&
     leads.length === 0;
   const showCategoryFilterEmpty =
     !isContactedView &&
-    inquiryKind === "quote" &&
+    inboxCategory !== "all" &&
     !isDataLoading &&
     leads.length === 0;
   const showContactedEmpty =
@@ -367,42 +393,33 @@ export function LeadsDashboard() {
           {t("viewContacted")}
         </button>
       </div>
-      <div
-        className="inbox-view-toggle inbox-category-toggle"
-        role="tablist"
-        aria-label={t("categoryToggleLabel")}
-      >
-        {INQUIRY_KIND_FILTER_OPTIONS.map((option) => {
-          const label = t(INQUIRY_KIND_CATEGORY_TAB_KEY[option]);
-          const count = !isContactedView ? categoryCounts?.[option] : undefined;
-          return (
-          <button
-            key={option}
-            type="button"
-            role="tab"
-            className={`button secondary${inquiryKind === option ? " is-active" : ""}`}
-            aria-selected={inquiryKind === option}
-            aria-label={
-              typeof count === "number"
-                ? t("categoryTabAria", { label, count })
-                : label
-            }
-            onClick={() => handleInquiryKindChange(option)}
-          >
-            <span className="inbox-category-tab-label">
-              <span>{label}</span>
-              {typeof count === "number" ? (
-                <span className="inbox-category-count" aria-hidden="true">
-                  {count}
-                </span>
-              ) : null}
-            </span>
-          </button>
-          );
-        })}
-      </div>
       <div className="toolbar">
         <div className="toolbar-filters">
+          {!isContactedView ? (
+            <label className="field-inline">
+              <span>{t("inboxCategoryLabel")}</span>
+              <select
+                className="select inbox-category-select"
+                value={inboxCategory}
+                disabled={isDataLoading}
+                onChange={(event) => {
+                  handleInboxCategoryChange(event.target.value as InboxCategoryFilter);
+                }}
+              >
+                {INBOX_CATEGORY_OPTIONS.map((option) => {
+                  const label = t(INBOX_CATEGORY_LABEL_KEY[option]);
+                  const count = categoryCounts?.[option];
+                  return (
+                    <option key={option} value={option}>
+                      {typeof count === "number"
+                        ? t("categoryOptionCount", { label, count })
+                        : label}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+          ) : null}
           <label className="field-inline">
             <span>{t("sort")}</span>
             <select
@@ -483,7 +500,11 @@ export function LeadsDashboard() {
 
       {showCategoryFilterEmpty ? (
         <EmptyState
-          title={t("categoryEmptyTitle")}
+          title={
+            inboxCategory === "quote"
+              ? t("categoryEmptyTitle")
+              : t("categoryEmptyTitleAppointment")
+          }
           description={t("filterEmptyDescription")}
         />
       ) : null}

@@ -39,7 +39,7 @@ describe("leads inbox preferences", () => {
       sort: "created_at_desc",
       page: 2,
       inboxView: "active",
-      inquiryKind: "appointment_consultation",
+      inboxCategory: "all",
     });
   });
 
@@ -59,22 +59,30 @@ describe("leads inbox preferences", () => {
     ).toBe("contacted");
   });
 
-  it("defaults inquiry kind to appointment_consultation", () => {
+  it("defaults inbox category to all", () => {
     expect(
       normalizeLeadsInboxPreferences({
         sort: "created_at_desc",
         page: 2,
         inboxView: "active",
-      }).inquiryKind,
-    ).toBe("appointment_consultation");
+      }).inboxCategory,
+    ).toBe("all");
   });
 
-  it("persists valid inquiry kind selections", () => {
+  it("migrates legacy inquiryKind to inboxCategory", () => {
     expect(
       normalizeLeadsInboxPreferences({
         inquiryKind: "quote",
-      }).inquiryKind,
+      }).inboxCategory,
     ).toBe("quote");
+  });
+
+  it("persists valid inbox category selections", () => {
+    expect(
+      normalizeLeadsInboxPreferences({
+        inboxCategory: "appointment_consultation",
+      }).inboxCategory,
+    ).toBe("appointment_consultation");
   });
 
   it("persists valid filter selections across reads", () => {
@@ -82,7 +90,7 @@ describe("leads inbox preferences", () => {
       sort: "urgency_desc" as const,
       page: 2,
       inboxView: "contacted" as const,
-      inquiryKind: "quote" as const,
+      inboxCategory: "quote" as const,
     };
 
     setLeadsInboxPreferences(preferences);
