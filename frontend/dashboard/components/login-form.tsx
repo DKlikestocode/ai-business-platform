@@ -49,14 +49,16 @@ export function LoginForm() {
 
   return (
     <div className="login-page">
-      <LocaleSwitcher />
       <div className="login-layout">
+        <div className="login-topbar">
+          <Link href="/" className="login-back-link">
+            ← {t("backToHome")}
+          </Link>
+          <LocaleSwitcher />
+        </div>
         <Link href="/" className="brand-link login-brand">
           <span className="brand-mark">{tBrand("mark")}</span>
           <span>{tBrand("name")}</span>
-        </Link>
-        <Link href="/" className="login-back-link">
-          ← {t("backToHome")}
         </Link>
         <div className="login-card card">
         <h1>{t("title")}</h1>
