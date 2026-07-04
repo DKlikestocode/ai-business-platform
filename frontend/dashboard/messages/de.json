@@ -19,7 +19,9 @@
     "devMode": "Entwicklungsmodus",
     "language": "Sprache",
     "localeDe": "DE",
-    "localeEn": "EN"
+    "localeEn": "EN",
+    "localeNameDe": "Deutsch",
+    "localeNameEn": "Englisch"
   },
   "nav": {
     "gettingStarted": "Erste Schritte",
