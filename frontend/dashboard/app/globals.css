@@ -73,12 +73,18 @@ a {
   z-index: 60;
 }
 
-.app-header > .locale-switcher-anchor,
-.marketing-header > .locale-switcher-anchor {
+.app-header > .locale-switcher-anchor {
   position: absolute;
   top: 12px;
   right: 24px;
   z-index: 2;
+}
+
+.marketing-header .locale-switcher-anchor {
+  position: static;
+  top: auto;
+  right: auto;
+  flex-shrink: 0;
 }
 
 .locale-switcher-select {
@@ -2146,15 +2152,31 @@ code {
     max-width: calc(100% - 4.75rem);
   }
 
-  .app-header > .locale-switcher-anchor,
-  .marketing-header > .locale-switcher-anchor {
+  .app-header > .locale-switcher-anchor {
     right: 16px;
   }
 
-  .marketing-nav {
-    margin-right: 0;
+  .marketing-header {
+    align-items: stretch;
+  }
+
+  .marketing-header-brand {
+    flex: 1 1 100%;
     max-width: 100%;
+  }
+
+  .marketing-nav {
     width: 100%;
+    justify-content: stretch;
+    gap: 8px;
+  }
+
+  .marketing-nav-cta {
+    flex: 1 1 auto;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .site-nav {
@@ -2377,6 +2399,18 @@ code {
   border-bottom: 1px solid var(--border);
 }
 
+.marketing-header-brand {
+  min-width: 0;
+  flex: 1 1 auto;
+  max-width: 100%;
+}
+
+.marketing-header-brand span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .marketing-footer {
   padding-top: 32px;
   padding-bottom: 40px;
@@ -2403,10 +2437,16 @@ code {
 .marketing-nav {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
-  margin-right: 5.5rem;
-  max-width: calc(100% - 5.5rem);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.marketing-nav-cta {
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .brand-link {
