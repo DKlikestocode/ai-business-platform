@@ -78,19 +78,25 @@ a {
   position: absolute;
   top: 12px;
   right: 24px;
+  z-index: 2;
 }
 
 .locale-switcher-select {
-  min-width: 7.5rem;
-  padding: 6px 2rem 6px 10px;
+  width: 4.25rem;
+  min-width: 4.25rem;
+  max-width: 4.25rem;
+  padding: 6px 1.75rem 6px 8px;
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .login-page .locale-switcher-anchor {
   position: static;
   top: auto;
   right: auto;
+  flex-shrink: 0;
 }
 
 .sr-only {
@@ -113,13 +119,14 @@ a {
   flex-wrap: wrap;
   padding-top: 16px;
   padding-bottom: 16px;
-  padding-right: 8.5rem;
+  padding-right: 5.5rem;
 }
 
 .app-header-brand {
   display: grid;
   gap: 6px;
   min-width: 0;
+  max-width: calc(100% - 5.5rem);
 }
 
 .app-brand-link {
@@ -136,11 +143,17 @@ a {
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-brand-subtitle {
   font-size: 0.85rem;
   line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .app-main {
@@ -1299,6 +1312,9 @@ code {
 .login-back-link {
   flex: 1 1 auto;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.92rem;
   font-weight: 600;
   color: var(--muted);
@@ -2123,6 +2139,22 @@ code {
 
   .app-header-inner {
     gap: 12px;
+    padding-right: 5rem;
+  }
+
+  .app-header-brand {
+    max-width: calc(100% - 4.75rem);
+  }
+
+  .app-header > .locale-switcher-anchor,
+  .marketing-header > .locale-switcher-anchor {
+    right: 16px;
+  }
+
+  .marketing-nav {
+    margin-right: 0;
+    max-width: 100%;
+    width: 100%;
   }
 
   .site-nav {
@@ -2373,7 +2405,8 @@ code {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  margin-right: 8.5rem;
+  margin-right: 5.5rem;
+  max-width: calc(100% - 5.5rem);
 }
 
 .brand-link {

@@ -6,9 +6,9 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing, type AppLocale } from "@/i18n/routing";
 
 const LOCALE_OPTION_KEYS = {
-  de: "localeNameDe",
-  en: "localeNameEn",
-} as const satisfies Record<AppLocale, "localeNameDe" | "localeNameEn">;
+  de: "localeDe",
+  en: "localeEn",
+} as const satisfies Record<AppLocale, "localeDe" | "localeEn">;
 
 export function LocaleSwitcher() {
   const locale = useLocale() as AppLocale;
