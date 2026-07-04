@@ -18,18 +18,18 @@ export async function MarketingShell({ children }: MarketingShellProps) {
   return (
     <div className="marketing-page">
       <header className="marketing-header shell">
-        <Link href="/" className="brand-link">
+        <Link href="/" className="brand-link marketing-header-brand">
           <span className="brand-mark">{brand("mark")}</span>
           <span>{brand("name")}</span>
         </Link>
-        <LocaleSwitcher />
         <nav className="marketing-nav" aria-label={nav("marketing")}>
           <Link href="/login" className="nav-link">
             {nav("signIn")}
           </Link>
-          <PilotBookingLink className="button">
+          <PilotBookingLink className="button marketing-nav-cta">
             {nav("bookPilot")}
           </PilotBookingLink>
+          <LocaleSwitcher />
         </nav>
       </header>
       <main>{children}</main>
