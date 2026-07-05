@@ -100,6 +100,9 @@ export function CompanySettingsForm() {
         service_area_center: settings.service_area_center,
         service_radius_km: settings.service_radius_km,
         trade: settings.trade,
+        send_customer_confirmation: settings.send_customer_confirmation,
+        chat_share_phone: settings.chat_share_phone,
+        chat_share_email: settings.chat_share_email,
       });
       setSettings(updated);
       setSavedNotificationEmail(updated.notification_email);
@@ -235,6 +238,49 @@ export function CompanySettingsForm() {
                 <option value="skh">{t("tradeOptions.skh")}</option>
               </select>
               <p className="muted field-hint">{t("tradeHint")}</p>
+            </label>
+          </div>
+        </section>
+
+        <section className="settings-section" aria-labelledby="settings-chat-title">
+          <h3 id="settings-chat-title" className="settings-section-title">
+            {t("websiteChat")}
+          </h3>
+          <p className="muted field-hint settings-section-intro">{t("websiteChatHint")}</p>
+          <div className="settings-grid">
+            <label className="field checkbox-field">
+              <input
+                type="checkbox"
+                checked={settings.send_customer_confirmation}
+                onChange={(event) =>
+                  updateField("send_customer_confirmation", event.target.checked)
+                }
+              />
+              <span>{t("sendCustomerConfirmation")}</span>
+              <p className="muted field-hint">{t("sendCustomerConfirmationHint")}</p>
+            </label>
+            <label className="field checkbox-field">
+              <input
+                type="checkbox"
+                checked={settings.chat_share_phone}
+                onChange={(event) =>
+                  updateField("chat_share_phone", event.target.checked)
+                }
+                disabled={!settings.phone}
+              />
+              <span>{t("chatSharePhone")}</span>
+              <p className="muted field-hint">{t("chatSharePhoneHint")}</p>
+            </label>
+            <label className="field checkbox-field">
+              <input
+                type="checkbox"
+                checked={settings.chat_share_email}
+                onChange={(event) =>
+                  updateField("chat_share_email", event.target.checked)
+                }
+              />
+              <span>{t("chatShareEmail")}</span>
+              <p className="muted field-hint">{t("chatShareEmailHint")}</p>
             </label>
           </div>
         </section>

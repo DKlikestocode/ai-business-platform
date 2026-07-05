@@ -237,6 +237,8 @@ export function BusinessSitePage({ site }: BusinessSitePageProps) {
           site={site}
           privacyUrl={privacyUrl}
           welcomeMessage={copy.chatWelcomeMessage}
+          requirementsTitle={copy.chatRequirementsTitle}
+          requirementsList={copy.chatRequirementsList}
         />
       </BusinessSiteChatLauncher>
     </div>

@@ -3772,6 +3772,21 @@ code {
   font-size: 0.95rem;
 }
 
+.ai-agent-widget-requirements {
+  padding: 0.65rem 1rem;
+  background: #eff6ff;
+  border-bottom: 1px solid #dbeafe;
+  color: #1e3a8a;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.ai-agent-widget-requirements strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.8rem;
+}
+
 .ai-agent-widget--embedded {
   min-height: 360px;
   background: transparent;

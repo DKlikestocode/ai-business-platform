@@ -81,6 +81,9 @@ export interface CompanySettings {
   service_area_center: string | null;
   service_radius_km: number | null;
   trade: CompanyTradeId | null;
+  send_customer_confirmation: boolean;
+  chat_share_phone: boolean;
+  chat_share_email: boolean;
   email_delivery_provider: string;
   email_delivery_ready: boolean;
   email_delivery_sends_real_email: boolean;
@@ -96,6 +99,9 @@ export interface CompanySettingsUpdate {
   service_area_center?: string | null;
   service_radius_km?: number | null;
   trade?: CompanyTradeId | null;
+  send_customer_confirmation?: boolean;
+  chat_share_phone?: boolean;
+  chat_share_email?: boolean;
 }
 
 export interface CurrentUser {

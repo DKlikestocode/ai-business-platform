@@ -376,7 +376,15 @@
     "name": "Name",
     "emailHint": "Public contact email on your website (e.g. hello@your-domain.com). Notifications can be configured separately.",
     "phone": "Phone",
-    "phoneHint": "Shown on your public website in the header and contact section.",
+    "phoneHint": "Shown on your public website in the header and contact section. Optionally, the chat may share your phone number when enabled below.",
+    "websiteChat": "Website chat",
+    "websiteChatHint": "Control what the chat may tell customers — and whether a confirmation is sent after a complete inquiry.",
+    "sendCustomerConfirmation": "Send confirmation to customers",
+    "sendCustomerConfirmationHint": "After a complete inquiry, customers receive confirmation by email and/or SMS (SMS is logged on the server in development mode).",
+    "chatSharePhone": "Allow sharing phone number in chat",
+    "chatSharePhoneHint": "The assistant may share your phone number when the customer asks or wants direct contact.",
+    "chatShareEmail": "Allow sharing email address in chat",
+    "chatShareEmailHint": "The assistant may share your email address when the customer asks or wants direct contact.",
     "trade": "Trade",
     "tradeHint": "Controls industry language in the website chat and trade-specific examples in the dashboard.",
     "tradeOptions": {
@@ -741,11 +749,13 @@
     "chatTeaserTitle": "Appointment or request via chat",
     "chatTeaserBody": "Open the chat and briefly describe your request, postal code, and how to reach you.",
     "chatTeaserCta": "Open chat",
-    "chatLauncherTitle": "Request appointment",
-    "chatLauncherLabel": "Open chat",
-    "chatPanelTitle": "Inquiry assistant",
+    "chatLauncherTitle": "Send inquiry",
+    "chatLauncherLabel": "Send inquiry",
+    "chatPanelTitle": "Send inquiry",
     "chatPanelSubtitle": "Appointment or request — we will get back to you",
     "chatWelcomeMessage": "Hello! Briefly describe your request — we help with appointments and service inquiries.",
+    "chatRequirementsTitle": "For a complete inquiry we need:",
+    "chatRequirementsList": "Name · Phone number · Postal code · Location · Service · Short description · Urgency · Preferred time",
     "chatRestartLabel": "Start over",
     "chatCloseLabel": "Close chat",
     "loadFailedTitle": "Website temporarily unavailable",
@@ -805,7 +815,7 @@
           },
           "processors": {
             "heading": "Processors",
-            "body": "We use technical service providers for the website chat and secure transmission (EU hosting, email delivery, AI-assisted chat processing) under appropriate data processing agreements."
+            "body": "We use technical service providers for the website chat and secure transmission (EU hosting, email delivery, AI-assisted chat processing via OpenAI) under appropriate data processing agreements. Customer data is not used to train AI models."
           },
           "rights": {
             "heading": "Your rights",

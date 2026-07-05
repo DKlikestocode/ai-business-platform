@@ -127,3 +127,16 @@ def test_qualification_hint_asks_contact_after_context() -> None:
     hint = build_qualification_hint(data, qualification, channel=ConversationChannel.WEB)
 
     assert "phone" in hint.lower() or "email" in hint.lower()
+
+
+def test_qualification_hint_asks_name_when_contactable() -> None:
+    data = LeadExtractedData(
+        phone="01701234567",
+        description="Heizung defekt",
+        location="Berlin",
+    )
+    qualification = evaluate_qualification(data, channel=ConversationChannel.WEB)
+
+    hint = build_qualification_hint(data, qualification, channel=ConversationChannel.WEB)
+
+    assert "name" in hint.lower()

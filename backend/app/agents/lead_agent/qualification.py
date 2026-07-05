@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from app.agents.lead_agent.contact_validation import is_valid_email, is_valid_phone
 from app.agents.lead_agent.models import ContactMethod, LeadExtractedData, QualificationStatus
-from app.agents.lead_agent.utils import is_lead_complete
+from app.agents.lead_agent.utils import get_missing_fields, is_lead_complete
 from app.db.models.enums import ConversationChannel
 from app.services.service_area.evaluate import resolve_lead_postal_code
 
@@ -165,6 +165,13 @@ def build_qualification_hint(
             "provided an invalid phone number or email, ask again and give a short example format."
         )
 
+    if not _has_value(data.name):
+        return (
+            "The request is understood and a contact method is available, but the customer's "
+            "name is still missing. Ask naturally for their name (first and last name) before "
+            "asking for other missing details."
+        )
+
     if not _has_value(data.description) and not _has_value(data.service_requested):
         return (
             "A contact method is available, but the problem or service is still unclear. "
@@ -172,9 +179,11 @@ def build_qualification_hint(
         )
 
     if qualification.qualification_status == QualificationStatus.CONTACTABLE:
+        missing = get_missing_fields(data)
+        missing_labels = ", ".join(missing) if missing else "none"
         return (
             "The lead is contactable with useful context. Confirm the request was received "
-            "and only ask for missing high-value details."
+            f"and ask for the next missing required fields only: {missing_labels}."
         )
 
     if channel == ConversationChannel.WHATSAPP:

@@ -1,5 +1,6 @@
 import logging
 
+from app.agents.lead_agent.contact_validation import is_valid_email, is_valid_phone
 from app.agents.lead_agent.urgency import meets_notification_min_urgency
 from app.agents.lead_agent.models import QualificationStatus
 from app.agents.lead_agent.repository import LeadRepository
@@ -8,6 +9,7 @@ from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
 from app.services.notifications.interface import EmailMessage, EmailProvider
 from app.services.notifications.recipient import resolve_notification_recipient
+from app.services.notifications.sms_interface import SmsMessage, SmsProvider
 
 logger = logging.getLogger(__name__)
 
@@ -33,10 +35,12 @@ class NotificationService:
         provider: EmailProvider,
         lead_repository: LeadRepository,
         *,
+        sms_provider: SmsProvider | None = None,
         frontend_base_url: str | None = None,
     ) -> None:
         self._provider = provider
         self._lead_repository = lead_repository
+        self._sms_provider = sms_provider
         self._frontend_base_url = frontend_base_url
 
     def should_notify_lead(
@@ -101,6 +105,56 @@ class NotificationService:
         self._lead_repository.mark_notification_sent(lead.id)
         logger.info("Sent lead notification for lead %s to %s", lead.id, recipient)
         return True
+
+    def should_send_customer_confirmation(
+        self,
+        company: Company,
+        lead: Lead,
+    ) -> bool:
+        if not company.send_customer_confirmation:
+            return False
+        if lead.customer_confirmation_sent_at is not None:
+            return False
+        if lead.qualification_status != QualificationStatus.QUALIFIED.value:
+            return False
+        return is_valid_email(lead.email) or is_valid_phone(lead.phone)
+
+    async def maybe_send_customer_confirmation(
+        self,
+        company: Company,
+        lead: Lead,
+    ) -> bool:
+        if not self.should_send_customer_confirmation(company, lead):
+            logger.info(
+                "Skipping customer confirmation for lead %s (status=%s).",
+                lead.id,
+                lead.qualification_status,
+            )
+            return False
+
+        sent_any = False
+        if is_valid_email(lead.email):
+            message = EmailMessage(
+                to=lead.email,
+                subject=f"Ihre Anfrage bei {company.name}",
+                body=self._build_customer_confirmation_email_body(company=company, lead=lead),
+            )
+            await self._provider.send_email(message)
+            sent_any = True
+            logger.info("Sent customer confirmation email for lead %s to %s", lead.id, lead.email)
+
+        if is_valid_phone(lead.phone) and self._sms_provider is not None:
+            sms = SmsMessage(
+                to=lead.phone,
+                body=self._build_customer_confirmation_sms_body(company=company, lead=lead),
+            )
+            await self._sms_provider.send_sms(sms)
+            sent_any = True
+            logger.info("Sent customer confirmation SMS for lead %s to %s", lead.id, lead.phone)
+
+        if sent_any:
+            self._lead_repository.mark_customer_confirmation_sent(lead.id)
+        return sent_any
 
     async def send_lead_created(
         self,
@@ -192,12 +246,10 @@ class NotificationService:
                 "Qualifizierungsstatus: "
                 f"{NotificationService._qualification_label(lead.qualification_status)}"
             ),
-            f"Priorität: {lead.lead_score}",
             (
                 "Kontaktmethode: "
                 f"{NotificationService._contact_method_label(lead.contact_method)}"
             ),
-            f"Kontaktierbar: {'Ja' if lead.contactable else 'Nein'}",
             "",
             f"Name: {lead.name or '—'}",
             f"Telefon: {lead.phone or '—'}",
@@ -212,3 +264,41 @@ class NotificationService:
             dashboard_url = f"{frontend_base_url.rstrip('/')}/leads/{lead.id}"
             lines.extend(["", f"Im Dashboard anzeigen: {dashboard_url}"])
         return "\n".join(lines)
+
+    @staticmethod
+    def _build_customer_confirmation_email_body(*, company: Company, lead: Lead) -> str:
+        if lead.name and lead.name.strip():
+            greeting = f"Guten Tag {lead.name.strip()},"
+        else:
+            greeting = "Guten Tag,"
+
+        lines = [
+            greeting,
+            "",
+            f"vielen Dank für Ihre Anfrage bei {company.name}.",
+            "Wir haben alle Angaben erhalten und melden uns in Kürze bei Ihnen.",
+            "",
+            f"Zusammenfassung: {lead.summary or lead.description or lead.service_requested or 'Ihr Anliegen'}",
+        ]
+        if lead.preferred_callback_time:
+            lines.append(f"Terminwunsch: {lead.preferred_callback_time}")
+        if company.phone:
+            lines.append(f"Telefon: {company.phone}")
+        if company.email:
+            lines.append(f"E-Mail: {company.email}")
+        lines.extend(
+            [
+                "",
+                "Mit freundlichen Grüßen",
+                company.name,
+            ],
+        )
+        return "\n".join(lines)
+
+    @staticmethod
+    def _build_customer_confirmation_sms_body(*, company: Company, lead: Lead) -> str:
+        summary = lead.summary or lead.description or lead.service_requested or "Ihr Anliegen"
+        return (
+            f"{company.name}: Vielen Dank für Ihre Anfrage. "
+            f"Wir haben alles erhalten ({summary}) und melden uns in Kürze."
+        )

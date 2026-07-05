@@ -3,7 +3,7 @@ def build_widget_embed_snippet(
     company_slug: str,
     api_base: str,
     install_token: str,
-    title: str = "Chat mit uns",
+    title: str = "Anfrage senden",
 ) -> str:
     base = api_base.rstrip("/")
     return (

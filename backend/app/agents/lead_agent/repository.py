@@ -274,6 +274,16 @@ class LeadRepository:
         self._session.refresh(lead)
         return lead
 
+    def mark_customer_confirmation_sent(self, lead_id: UUID) -> Lead | None:
+        lead = self._session.get(Lead, lead_id)
+        if lead is None or lead.customer_confirmation_sent_at is not None:
+            return lead
+
+        lead.customer_confirmation_sent_at = datetime.now(UTC)
+        self._session.commit()
+        self._session.refresh(lead)
+        return lead
+
     @staticmethod
     def _build_lead(
         *,
