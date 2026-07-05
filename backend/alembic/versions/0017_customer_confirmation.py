@@ -1,6 +1,6 @@
 """Add customer confirmation tracking and chat contact settings.
 
-Revision ID: 0017_customer_confirmation_chat_settings
+Revision ID: 0017_customer_confirmation
 Revises: 0016_lead_inquiry_kind
 """
 
@@ -9,7 +9,7 @@ from typing import Sequence, Union
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "0017_customer_confirmation_chat_settings"
+revision: str = "0017_customer_confirmation"
 down_revision: Union[str, Sequence[str], None] = "0016_lead_inquiry_kind"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
