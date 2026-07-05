@@ -12,4 +12,4 @@ class PublicBusinessSiteResponse(BaseModel):
     widget_company_slug: str
     widget_api_base: str
     widget_install_token: str
-    widget_title: str = "Chat mit uns"
+    widget_title: str = "Anfrage senden"

@@ -28,6 +28,7 @@ from app.services.activation.service import ActivationService
 from app.services.auth_service import AuthService
 from app.services.notifications.factory import build_email_provider
 from app.services.notifications.service import NotificationService
+from app.services.notifications.sms_factory import build_sms_provider
 from app.services.tenant_service import CompanyService, UserService
 
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -82,6 +83,7 @@ def get_notification_service(
     return NotificationService(
         provider=build_email_provider(settings),
         lead_repository=LeadRepository(db),
+        sms_provider=build_sms_provider(settings),
         frontend_base_url=settings.frontend_base_url,
     )
 

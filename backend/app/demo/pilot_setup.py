@@ -80,7 +80,7 @@ def setup_pilot_customer(
         f'  id="ai-agent-widget"\n'
         f'  data-company-slug="{company.slug}"\n'
         f'  data-api-base="{api_base}"\n'
-        f'  data-title="Chat mit uns"\n'
+        f'  data-title="Anfrage senden"\n'
         f'></div>\n'
         f'<script src="{api_base}/static/widget/widget.js"></script>'
     )

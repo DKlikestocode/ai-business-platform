@@ -10,6 +10,7 @@ from app.db.models.company import Company
 from app.db.models.enums import ConversationChannel
 from app.services.notifications.interface import EmailMessage
 from app.services.notifications.service import NotificationService
+from app.services.notifications.sms_interface import SmsMessage
 
 
 @dataclass
@@ -17,6 +18,14 @@ class MockEmailProvider:
     messages: list[EmailMessage] = field(default_factory=list)
 
     async def send_email(self, message: EmailMessage) -> None:
+        self.messages.append(message)
+
+
+@dataclass
+class MockSmsProvider:
+    messages: list[SmsMessage] = field(default_factory=list)
+
+    async def send_sms(self, message: SmsMessage) -> None:
         self.messages.append(message)
 
 
@@ -140,7 +149,8 @@ async def test_notification_email_includes_dashboard_link_when_configured(
     body = provider.messages[0].body
     assert "Zusammenfassung: Jane needs roof repair." in body
     assert "Qualifizierungsstatus: Qualifiziert" in body
-    assert "Priorität:" in body
+    assert "Priorität:" not in body
+    assert "Kontaktierbar:" not in body
     assert "Lead" not in body
     assert "Kontaktmethode:" in body
     assert f"Im Dashboard anzeigen: http://localhost:3000/leads/{lead.id}" in body
@@ -176,3 +186,51 @@ async def test_contactable_notification_skipped_when_disabled(
 
     assert sent is False
     assert qualification.qualification_status == QualificationStatus.CONTACTABLE
+
+
+@pytest.mark.asyncio
+async def test_customer_confirmation_sent_for_qualified_lead(
+    lead_repository: LeadRepository,
+    company: Company,
+) -> None:
+    email_provider = MockEmailProvider()
+    sms_provider = MockSmsProvider()
+    service = NotificationService(
+        email_provider,
+        lead_repository,
+        sms_provider=sms_provider,
+    )
+    lead = _create_lead(lead_repository, company)
+    lead.email = "customer@example.com"
+    lead_repository._session.commit()
+    lead_repository._session.refresh(lead)
+
+    sent = await service.maybe_send_customer_confirmation(company, lead)
+
+    assert sent is True
+    assert len(email_provider.messages) == 1
+    assert email_provider.messages[0].to == "customer@example.com"
+    assert len(sms_provider.messages) == 1
+    refreshed = lead_repository.get_by_id(lead.id)
+    assert refreshed is not None
+    assert refreshed.customer_confirmation_sent_at is not None
+
+
+@pytest.mark.asyncio
+async def test_customer_confirmation_not_duplicated(
+    lead_repository: LeadRepository,
+    company: Company,
+) -> None:
+    email_provider = MockEmailProvider()
+    service = NotificationService(email_provider, lead_repository, sms_provider=MockSmsProvider())
+    lead = _create_lead(lead_repository, company)
+    lead.email = "customer@example.com"
+    lead_repository._session.commit()
+    lead_repository._session.refresh(lead)
+
+    first = await service.maybe_send_customer_confirmation(company, lead)
+    second = await service.maybe_send_customer_confirmation(company, lead)
+
+    assert first is True
+    assert second is False
+    assert len(email_provider.messages) == 1

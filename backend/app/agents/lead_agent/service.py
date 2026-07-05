@@ -2,6 +2,7 @@ import logging
 from uuid import UUID
 
 from app.agents.lead_agent.company_context import (
+    build_business_contact_prompt,
     build_service_area_prompt,
     build_service_area_status_prompt,
 )
@@ -126,6 +127,9 @@ class LeadCaptureService:
         pre_service_area_eval = evaluate_service_area(company, existing_data)
         service_area_status_prompt = build_service_area_status_prompt(pre_service_area_eval)
         trade_prompt = build_trade_prompt(company_trade) if company is not None else None
+        business_contact_prompt = (
+            build_business_contact_prompt(company) if company is not None else None
+        )
 
         self._conversation_repository.add_message(
             conversation.id,
@@ -148,6 +152,7 @@ class LeadCaptureService:
                 "service_area_status_prompt": service_area_status_prompt,
                 "channel_voice_prompt": self._channel == ConversationChannel.VOICE,
                 "trade_prompt": trade_prompt,
+                "business_contact_prompt": business_contact_prompt,
             },
         )
         system_prompt = await self._agent.build_system_prompt(agent_context)
@@ -250,6 +255,10 @@ class LeadCaptureService:
                     company,
                     lead,
                     channel=self._channel,
+                )
+                await self._notification_service.maybe_send_customer_confirmation(
+                    company,
+                    lead,
                 )
 
         return LeadCaptureResult(

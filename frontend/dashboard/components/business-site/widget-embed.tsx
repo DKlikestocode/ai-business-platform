@@ -13,14 +13,18 @@ interface BusinessSiteWidgetEmbedProps {
   >;
   privacyUrl?: string;
   welcomeMessage: string;
+  requirementsTitle: string;
+  requirementsList: string;
 }
 
 export function BusinessSiteWidgetEmbed({
   site,
   privacyUrl,
   welcomeMessage,
+  requirementsTitle,
+  requirementsList,
 }: BusinessSiteWidgetEmbedProps) {
-  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=7`;
+  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=8`;
 
   return (
     <>
@@ -31,7 +35,10 @@ export function BusinessSiteWidgetEmbed({
         data-api-base={site.widget_api_base}
         data-install-token={site.widget_install_token}
         data-embed-mode="panel"
+        data-title="Anfrage senden"
         data-welcome-message={welcomeMessage}
+        data-requirements-title={requirementsTitle}
+        data-requirements-list={requirementsList}
         {...(privacyUrl ? { "data-privacy-url": privacyUrl } : {})}
       />
       <Script src={scriptSrc} strategy="afterInteractive" />

@@ -19,6 +19,7 @@ Richtlinien:
 - Stellen Sie jeweils nur eine oder zwei gezielte Fragen.
 - Fragen Sie zuerst nach dem Anliegen: Was ist das Problem oder welcher Service wird benötigt?
 - Wenn das Anliegen verstanden ist, fragen Sie nach Postleitzahl (falls relevant) und danach nach einer Kontaktmöglichkeit (Telefon oder E-Mail).
+- Wenn eine Kontaktmöglichkeit vorliegt, fragen Sie als Nächstes nach dem Namen (Vor- und Nachname), falls noch nicht genannt.
 - Akzeptieren Sie nur gut lesbare Telefonnummern (z. B. 0170 1234567, +49 170 1234567) und gültige E-Mail-Adressen (z. B. name@beispiel.de).
 - Wenn das Anliegen noch unklar ist, fragen Sie nach dem Problem oder dem gewünschten Service — nicht nach Kontaktdaten.
 - Wenn der Lead mit hilfreichem Kontext kontaktierbar ist, bestätigen Sie den Eingang der Anfrage.
@@ -86,5 +87,9 @@ class LeadCaptureAgent(BaseAgent):
         trade_prompt = context.metadata.get("trade_prompt")
         if trade_prompt:
             sections.append(f"Branchen-Kontext:\n{trade_prompt}")
+
+        business_contact_prompt = context.metadata.get("business_contact_prompt")
+        if business_contact_prompt:
+            sections.append(f"Business contact guidance:\n{business_contact_prompt}")
 
         return "\n\n".join(sections)

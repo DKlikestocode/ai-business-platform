@@ -41,6 +41,13 @@ class Company(Base):
     service_area_latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     service_area_longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     trade: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    send_customer_confirmation: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+    chat_share_phone: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    chat_share_email: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

@@ -14,7 +14,7 @@ describe("buildWidgetEmbedSnippet", () => {
     expect(snippet).toContain(
       '<script src="https://api.example.com/static/widget/widget.js"></script>',
     );
-    expect(snippet).toContain('data-title="Chat mit uns"');
+    expect(snippet).toContain('data-title="Anfrage senden"');
   });
 
   it("strips trailing slashes from the api base", () => {

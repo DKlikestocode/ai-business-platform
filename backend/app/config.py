@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     notification_provider: str = "logging"
     resend_api_key: str = ""
     notification_from_email: str = ""
+    sms_provider: str = "logging"
     frontend_base_url: str | None = None
     public_api_base_url: str = "http://localhost:8000"
     widget_stale_after_hours: int = 168

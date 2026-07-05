@@ -68,3 +68,25 @@ def build_service_area_status_prompt(evaluation: ServiceAreaEvaluation) -> str |
         )
 
     return None
+
+
+def build_business_contact_prompt(company: Company) -> str | None:
+    share_phone = company.chat_share_phone and bool((company.phone or "").strip())
+    share_email = company.chat_share_email and bool((company.email or "").strip())
+
+    if not share_phone and not share_email:
+        return None
+
+    lines = [
+        "Der Betrieb erlaubt, folgende Kontaktdaten im Chat zu nennen, wenn der Kunde "
+        "danach fragt oder direkten Kontakt wünscht:",
+    ]
+    if share_phone:
+        lines.append(f"- Telefon: {company.phone}")
+    if share_email:
+        lines.append(f"- E-Mail: {company.email}")
+    lines.append(
+        "Nennen Sie diese Angaben nur auf Nachfrage oder am Ende bei der Bestätigung — "
+        "nicht zu Beginn des Gesprächs."
+    )
+    return "\n".join(lines)

@@ -376,7 +376,15 @@
     "name": "Name",
     "emailHint": "Öffentliche Kontakt-E-Mail auf Ihrer Website (z. B. hallo@ihre-domain.de). Benachrichtigungen können separat eingestellt werden.",
     "phone": "Telefon",
-    "phoneHint": "Wird auf Ihrer öffentlichen Website im Kopfbereich und unter Kontakt angezeigt.",
+    "phoneHint": "Wird auf Ihrer öffentlichen Website im Kopfbereich und unter Kontakt angezeigt. Optional kann der Chat Ihre Telefonnummer nennen, wenn Sie das unten erlauben.",
+    "websiteChat": "Website-Chat",
+    "websiteChatHint": "Steuern Sie, was der Chat Kunden mitteilen darf — und ob eine Bestätigung nach vollständiger Anfrage gesendet wird.",
+    "sendCustomerConfirmation": "Bestätigung an Kunden senden",
+    "sendCustomerConfirmationHint": "Nach vollständiger Anfrage erhalten Kunden eine Bestätigung per E-Mail und/oder SMS (SMS im Entwicklungsmodus nur im Server-Log).",
+    "chatSharePhone": "Telefonnummer im Chat nennen dürfen",
+    "chatSharePhoneHint": "Der Assistent darf Ihre Telefonnummer nennen, wenn der Kunde danach fragt oder direkten Kontakt wünscht.",
+    "chatShareEmail": "E-Mail-Adresse im Chat nennen dürfen",
+    "chatShareEmailHint": "Der Assistent darf Ihre E-Mail-Adresse nennen, wenn der Kunde danach fragt oder direkten Kontakt wünscht.",
     "trade": "Branche",
     "tradeHint": "Steuert Fachsprache im Website-Chat und branchenspezifische Beispiele im Dashboard.",
     "tradeOptions": {
@@ -741,11 +749,13 @@
     "chatTeaserTitle": "Termin oder Anliegen per Chat",
     "chatTeaserBody": "Öffnen Sie den Chat und schildern Sie kurz Ihr Anliegen, Ihre PLZ und wie wir Sie erreichen.",
     "chatTeaserCta": "Chat öffnen",
-    "chatLauncherTitle": "Terminanfrage stellen",
-    "chatLauncherLabel": "Chat öffnen",
-    "chatPanelTitle": "Anfragen-Assistent",
+    "chatLauncherTitle": "Anfrage senden",
+    "chatLauncherLabel": "Anfrage senden",
+    "chatPanelTitle": "Anfrage senden",
     "chatPanelSubtitle": "Termin oder Anliegen — wir melden uns zurück",
     "chatWelcomeMessage": "Hallo! Beschreiben Sie kurz Ihr Anliegen — wir helfen bei Termin- oder Serviceanfragen.",
+    "chatRequirementsTitle": "Für eine vollständige Anfrage benötigen wir:",
+    "chatRequirementsList": "Name · Telefonnummer · Postleitzahl · Ort · Anliegen · Kurzbeschreibung · Dringlichkeit · Terminwunsch",
     "chatRestartLabel": "Neu starten",
     "chatCloseLabel": "Chat schließen",
     "loadFailedTitle": "Website vorübergehend nicht verfügbar",
@@ -805,7 +815,7 @@
           },
           "processors": {
             "heading": "Technische Dienstleister",
-            "body": "Für den Website-Chat und die sichere Übermittlung setzen wir technische Dienstleister ein (Hosting in der EU, E-Mail-Versand, KI-gestützte Chat-Verarbeitung). Mit diesen bestehen die erforderlichen Auftragsverarbeitungsverträge."
+            "body": "Für den Website-Chat und die sichere Übermittlung setzen wir technische Dienstleister ein (Hosting in der EU, E-Mail-Versand, KI-gestützte Chat-Verarbeitung über OpenAI). Mit diesen bestehen die erforderlichen Auftragsverarbeitungsverträge. Kundendaten werden nicht zum Training von KI-Modellen verwendet."
           },
           "rights": {
             "heading": "Ihre Rechte",

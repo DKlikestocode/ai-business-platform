@@ -39,6 +39,9 @@ class CompanySettingsResponse(BaseModel):
     service_area_center: str | None
     service_radius_km: int | None
     trade: CompanyTrade | None
+    send_customer_confirmation: bool
+    chat_share_phone: bool
+    chat_share_email: bool
     email_delivery_provider: str
     email_delivery_ready: bool
     email_delivery_sends_real_email: bool
@@ -56,6 +59,9 @@ class CompanySettingsUpdateRequest(BaseModel):
     service_area_center: str | None = Field(default=None, max_length=255)
     service_radius_km: int | None = Field(default=None, ge=1, le=500)
     trade: CompanyTrade | None = None
+    send_customer_confirmation: bool | None = None
+    chat_share_phone: bool | None = None
+    chat_share_email: bool | None = None
 
     @field_validator("trade")
     @classmethod
@@ -89,6 +95,9 @@ def company_to_settings_response(
         service_area_center=company.service_area_center,
         service_radius_km=company.service_radius_km,
         trade=company.trade,  # type: ignore[arg-type]
+        send_customer_confirmation=company.send_customer_confirmation,
+        chat_share_phone=company.chat_share_phone,
+        chat_share_email=company.chat_share_email,
         created_at=company.created_at,
         **delivery.as_dict(),
     )
