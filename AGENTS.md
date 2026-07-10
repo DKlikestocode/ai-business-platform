@@ -750,3 +750,17 @@ Omit empty sections. Skip sections that do not apply (e.g. analysis-only tasks: 
 ---
 
 *Last updated: reflects repository state including Next.js 15 dashboard, Lead Capture Agent, widget embed, company settings cache, inquiry cards, and dev `.next` cleanup. Update this file when architecture or DX contracts change.*
+
+---
+
+## Cursor Cloud specific instructions
+
+This project runs as a Docker Compose stack (`postgres` + `backend` + `frontend`). The backend requires **Python 3.14**, which only comes cleanly from the `python:3.14-slim` image, so use Docker rather than a host Python install. Standard commands live in the README and the **Developer Experience Rules** / **Testing Rules** sections above — reference those; the notes below only cover non-obvious cloud caveats.
+
+- **Docker daemon is not auto-started.** Each session, start it before any `docker` command: `sudo dockerd > /tmp/dockerd.log 2>&1 &` then wait until `sudo docker info` succeeds. The update script already starts it on VM boot, so it is usually already running.
+- **Use `sudo` for docker.** The `ubuntu` user is in the `docker` group, but that only applies to fresh login shells; `sudo docker ...` / `sudo docker compose ...` always works.
+- **Docker Engine 29 + fuse-overlayfs:** `/etc/docker/daemon.json` sets `storage-driver: fuse-overlayfs` and `features.containerd-snapshotter: false`. Do not remove these — the VM kernel needs them for image builds to succeed.
+- **Bring up the stack:** `sudo docker compose up -d` (from `/workspace`). Backend waits for `postgres` healthy and runs `alembic upgrade head` on start; frontend runs `npm ci` then `next dev` on first boot (~10–20s before port 3000 responds). Verify with `curl http://localhost:8000/api/v1/health/ready` and `curl -so /dev/null -w '%{http_code}' http://localhost:3000/login`.
+- **`OPENAI_API_KEY` must be non-empty for the backend test suite.** `.env.example` ships it empty; set `OPENAI_API_KEY=test-key` in `.env` (matches CI) or 2 tests fail at OpenAI-client construction. A *real* key is required only for live Lead Agent / widget chat responses — without one the AI chat and the public widget message endpoint will error, but login, inbox, lead detail, and status updates all work.
+- **Known pre-existing test failure:** `tests/test_production_config.py::test_registration_disabled_in_production` fails deterministically (dependency-override interaction in the `dev_client` fixture) — unrelated to environment setup. Everything else passes (frontend 146/146, backend 295/296).
+- **Seed inbox data without OpenAI:** `sudo docker compose exec backend python -m app.scripts.setup_pilot_customer --company-name "..." --admin-email "..." --admin-password "..."` creates a login, and `app.demo.seed.seed_demo_leads(..., company_id=<company>)` (or the `/api/v1/dev/seed-demo-data` dev endpoint) populates leads directly in the DB.
