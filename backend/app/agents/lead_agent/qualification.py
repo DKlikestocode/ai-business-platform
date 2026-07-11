@@ -154,8 +154,9 @@ def build_qualification_hint(
     ):
         return (
             "The request is understood. Acknowledge what the customer shared, then ask for "
-            "their 5-digit German postal code to check service area coverage. Keep the tone "
-            "conversational — do not ignore their message or jump straight to contact details."
+            "their 5-digit German postal code. Keep the tone conversational — do not confirm "
+            "whether they are inside the service area when they are; only mention service area "
+            "if they are clearly outside and a radius is configured."
         )
 
     if not qualification.contactable:

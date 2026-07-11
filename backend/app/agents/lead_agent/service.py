@@ -126,7 +126,10 @@ class LeadCaptureService:
             build_service_area_prompt(company) if company is not None else None
         )
         pre_service_area_eval = evaluate_service_area(company, existing_data)
-        service_area_status_prompt = build_service_area_status_prompt(pre_service_area_eval)
+        service_area_status_prompt = build_service_area_status_prompt(
+            pre_service_area_eval,
+            company=company,
+        )
         trade_prompt = build_trade_prompt(company_trade) if company is not None else None
         business_contact_prompt = (
             build_business_contact_prompt(company) if company is not None else None

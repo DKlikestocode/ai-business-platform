@@ -1,14 +1,15 @@
 """Build company-specific context for lead capture prompts."""
 
 from app.db.models.company import Company
+from app.services.service_area.evaluate import is_service_area_configured
 from app.services.service_area.models import ServiceAreaEvaluation, ServiceAreaStatus
 
 
 def build_service_area_prompt(company: Company) -> str | None:
     center = (company.service_area_center or "").strip()
-    radius = company.service_radius_km
+    radius_configured = is_service_area_configured(company)
 
-    if not center and radius is None:
+    if not center and not radius_configured:
         return None
 
     plz_instruction = (
@@ -21,31 +22,41 @@ def build_service_area_prompt(company: Company) -> str | None:
         "Nennen Sie dem Kunden keine Kilometer-Entfernungen, Radius- oder Distanzangaben."
     )
 
-    if center and radius is not None and radius > 0:
+    never_confirm_in_range = (
+        "Wenn die Postleitzahl im Einsatzgebiet liegt: keine Bestätigung an den Kunden — "
+        "nicht erwähnen, dass der Ort im Einsatzgebiet ist. Einfach mit der Anfrage fortfahren."
+    )
+
+    if radius_configured:
         return (
-            f"Einsatzgebiet des Betriebs: {center} und Umgebung. "
+            f"Einsatzgebiet des Betriebs: {center or 'konfigurierter Standort'} und Umgebung. "
             f"{plz_instruction} "
-            "Wenn die PLZ-Prüfung außerhalb des Gebiets liegt, weisen Sie freundlich darauf hin. "
-            "Erfinden Sie keine feste Zusage für entfernte Orte. "
+            "Liegt die PLZ außerhalb des Einsatzgebiets, weisen Sie freundlich darauf hin "
+            "und nehmen Sie die Anfrage trotzdem auf. "
+            f"{never_confirm_in_range} "
             f"{no_distance_instruction}"
         )
 
     if center:
         return (
-            f"Einsatzgebiet des Betriebs: {center}. "
+            f"Standort des Betriebs: {center}. "
             f"{plz_instruction} "
-            "Prüfen Sie anhand der PLZ, ob der Betrieb dort tätig ist. "
+            "Ohne eingestellten Umkreis-Radius keine Einsatzgebiet-Bestätigung oder "
+            "-Ablehnung an den Kunden. "
             f"{no_distance_instruction}"
         )
 
-    return (
-        "Der Betrieb hat ein begrenztes Einsatzgebiet um den Standort. "
-        f"{plz_instruction} {no_distance_instruction}"
-    )
+    return None
 
 
-def build_service_area_status_prompt(evaluation: ServiceAreaEvaluation) -> str | None:
+def build_service_area_status_prompt(
+    evaluation: ServiceAreaEvaluation,
+    *,
+    company: Company | None = None,
+) -> str | None:
     if evaluation.status == ServiceAreaStatus.UNKNOWN:
+        if company is not None and not is_service_area_configured(company):
+            return None
         return (
             "Standortprüfung: Ohne gültige Postleitzahl ist keine Einschätzung zum "
             "Einsatzgebiet möglich. Fragen Sie nach der 5-stelligen deutschen PLZ."
@@ -55,16 +66,15 @@ def build_service_area_status_prompt(evaluation: ServiceAreaEvaluation) -> str |
         return None
 
     if evaluation.status == ServiceAreaStatus.IN_RANGE:
-        return (
-            f"Standortprüfung (intern): PLZ {evaluation.postal_code} liegt im Einsatzgebiet. "
-            "Bauen Sie das natürlich in Ihre Antwort ein — keine separate Wiederholung oder Zusatzzeile."
-        )
+        return None
 
     if evaluation.status == ServiceAreaStatus.OUT_OF_RANGE:
+        if company is not None and not is_service_area_configured(company):
+            return None
         return (
             f"Standortprüfung (intern): PLZ {evaluation.postal_code} liegt vermutlich "
             "außerhalb des Einsatzgebiets. Weisen Sie freundlich darauf hin und nehmen Sie die "
-            "Anfrage trotzdem auf — ohne Kilometer-Angaben und ohne separate Zusatzzeile."
+            "Anfrage trotzdem auf — ohne Kilometer-Angaben."
         )
 
     return None
