@@ -1,37 +1,44 @@
 ---
-description: Hybrid workflow — Dominik ships, agent implements
+description: Agent-owned delivery — implement, ship, and deploy by default
 alwaysApply: true
 ---
 
-# Hybrid workflow (Dominik + Cursor)
+# Agent-owned delivery (Dominik + Cursor)
 
 ## Roles
 
 | Dominik | Cursor agent |
 |---------|----------------|
-| Commit, push, merge PRs | Implement features and fixes |
-| Production deploy (`scripts/deploy-prod.sh`) | Run tests/build in Docker |
-| 30s smoke test on phone/desktop | Report changed files + ship checklist |
-| Product/scope calls | DE/EN copy, i18n, minimal diff |
+| Product and scope decisions | Implement features and fixes end-to-end |
+| Optional production smoke test | Commit, push, PR, merge after CI green |
+| | Run tests/build; deploy via `scripts/deploy-prod.sh` |
+| | DE/EN copy, i18n, minimal diff |
 
-## Agent must NOT
+## Agent ships by default
 
-- `git commit`, `git push`, `gh pr merge`, or SSH deploy — unless Dominik explicitly says *"commit and deploy for me"* in that turn.
+After implementation and tests pass, the agent **commits, pushes, opens a PR, merges when CI is green, and deploys** — without waiting for a separate “commit for me” instruction.
 
-## Every implementation ends with a **Ship** block
+Pause before ship only when:
 
-```markdown
-## Ship
-**Files:** …
-**Commit message:** …
-**Local check:** `docker compose run --rm frontend npm test && npm run build`
-**Deploy:** `./scripts/deploy-prod.sh` (or `frontend` / `backend` arg)
-**Smoke:** 1–3 concrete clicks (DE)
-```
+- Scope is ambiguous (auth, migrations, API contract) — ask first
+- Destructive git ops (force push, hard reset) — ask first
+- Dominik explicitly says “don’t deploy yet”, “plan only”, or “just explain” in that turn
 
-## Git note
+## Git and workspace
 
-Desktop folder may have a broken `.git`. Dominik commits from a healthy clone (`git pull origin main` first). Agent edits files in the workspace path; Dominik copies or commits from clone if needed.
+- **Git operations:** `~/dev/ai-business-platform` (healthy clone)
+- **Edits:** Desktop workspace or dev clone; run `./scripts/sync-from-desktop.sh` (desktop → dev) before commit if editing on desktop
+- `git pull origin main` before branching
+
+## Deploy
+
+- `./scripts/deploy-prod.sh` — full stack
+- `./scripts/deploy-prod.sh backend` or `frontend` — scoped when change is one-sided
+- Production: `app.dominiksdomain.com`
+
+## Task handoff
+
+Brief confirmation: what shipped, PR link, deploy scope, 1–3 DE smoke-test bullets.
 
 ## Default PR size
 
