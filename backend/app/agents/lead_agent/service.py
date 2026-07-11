@@ -24,6 +24,7 @@ from app.agents.lead_agent.models import (
     LeadExtractedData,
     LeadMessageRequest,
     LeadMessageResponse,
+    QualificationStatus,
 )
 from app.agents.lead_agent.qualification import (
     build_qualification_hint,
@@ -251,15 +252,20 @@ class LeadCaptureService:
 
             company = self._company_repository.get_by_id(company_id)
             if company is not None:
+                became_qualified = (
+                    pre_qualification.qualification_status != QualificationStatus.QUALIFIED
+                    and qualification.qualification_status == QualificationStatus.QUALIFIED
+                )
                 await self._notification_service.maybe_notify_lead(
                     company,
                     lead,
                     channel=self._channel,
                 )
-                await self._notification_service.maybe_send_customer_confirmation(
-                    company,
-                    lead,
-                )
+                if became_qualified:
+                    await self._notification_service.maybe_send_customer_confirmation(
+                        company,
+                        lead,
+                    )
 
         return LeadCaptureResult(
             reply=reply,

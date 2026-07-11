@@ -24,7 +24,7 @@ export function BusinessSiteWidgetEmbed({
   requirementsTitle,
   requirementsList,
 }: BusinessSiteWidgetEmbedProps) {
-  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=8`;
+  const scriptSrc = `${site.widget_api_base.replace(/\/$/, "")}/static/widget/widget.js?v=9`;
 
   return (
     <>

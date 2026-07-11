@@ -74,7 +74,7 @@ async def test_non_contactable_urgent_message_does_not_notify(
 
 
 @pytest.mark.asyncio
-async def test_contactable_partial_lead_notifies_at_default_min_urgency(
+async def test_contactable_partial_lead_does_not_notify_until_qualified(
     conversation_repository: ConversationRepository,
     lead_repository: LeadRepository,
     company_repository: CompanyRepository,
@@ -110,10 +110,10 @@ async def test_contactable_partial_lead_notifies_at_default_min_urgency(
     assert response.contactable is True
     assert response.qualification_status == QualificationStatus.CONTACTABLE
     assert response.lead_score >= 50
-    assert len(provider.messages) == 1
+    assert provider.messages == []
     lead = lead_repository.get_by_conversation("notify-contactable-partial", company_id=company.id)
     assert lead is not None
-    assert lead.notification_sent_at is not None
+    assert lead.notification_sent_at is None
 
 
 @pytest.mark.asyncio
