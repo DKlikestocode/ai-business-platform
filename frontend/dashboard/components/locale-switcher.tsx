@@ -1,11 +1,12 @@
 "use client";
 
+import { Fragment } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { routing, type AppLocale } from "@/i18n/routing";
 
-const LOCALE_OPTION_KEYS = {
+const LOCALE_LABEL_KEYS = {
   de: "localeDe",
   en: "localeEn",
 } as const satisfies Record<AppLocale, "localeDe" | "localeEn">;
@@ -26,22 +27,27 @@ export function LocaleSwitcher() {
 
   return (
     <div className="locale-switcher-anchor">
-      <label className="sr-only" htmlFor="locale-switcher-select">
-        {t("language")}
-      </label>
-      <select
-        id="locale-switcher-select"
-        className="select locale-switcher-select"
-        value={locale}
-        aria-label={t("language")}
-        onChange={(event) => switchLocale(event.target.value as AppLocale)}
-      >
-        {routing.locales.map((code) => (
-          <option key={code} value={code}>
-            {t(LOCALE_OPTION_KEYS[code])}
-          </option>
+      <div className="locale-switcher" role="group" aria-label={t("language")}>
+        {routing.locales.map((code, index) => (
+          <Fragment key={code}>
+            {index > 0 ? (
+              <span className="locale-switcher-separator" aria-hidden="true">
+                ·
+              </span>
+            ) : null}
+            <button
+              type="button"
+              className={`locale-switcher-option${
+                code === locale ? " is-active" : ""
+              }`}
+              aria-pressed={code === locale}
+              onClick={() => switchLocale(code)}
+            >
+              {t(LOCALE_LABEL_KEYS[code])}
+            </button>
+          </Fragment>
         ))}
-      </select>
+      </div>
     </div>
   );
 }
