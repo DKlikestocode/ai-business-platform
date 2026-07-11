@@ -1,0 +1,38 @@
+---
+description: Hybrid workflow — Dominik ships, agent implements
+alwaysApply: true
+---
+
+# Hybrid workflow (Dominik + Cursor)
+
+## Roles
+
+| Dominik | Cursor agent |
+|---------|----------------|
+| Commit, push, merge PRs | Implement features and fixes |
+| Production deploy (`scripts/deploy-prod.sh`) | Run tests/build in Docker |
+| 30s smoke test on phone/desktop | Report changed files + ship checklist |
+| Product/scope calls | DE/EN copy, i18n, minimal diff |
+
+## Agent must NOT
+
+- `git commit`, `git push`, `gh pr merge`, or SSH deploy — unless Dominik explicitly says *"commit and deploy for me"* in that turn.
+
+## Every implementation ends with a **Ship** block
+
+```markdown
+## Ship
+**Files:** …
+**Commit message:** …
+**Local check:** `docker compose run --rm frontend npm test && npm run build`
+**Deploy:** `./scripts/deploy-prod.sh` (or `frontend` / `backend` arg)
+**Smoke:** 1–3 concrete clicks (DE)
+```
+
+## Git note
+
+Desktop folder may have a broken `.git`. Dominik commits from a healthy clone (`git pull origin main` first). Agent edits files in the workspace path; Dominik copies or commits from clone if needed.
+
+## Default PR size
+
+One owner-visible outcome per change. No drive-by refactors.
