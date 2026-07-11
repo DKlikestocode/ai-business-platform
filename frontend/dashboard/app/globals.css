@@ -87,22 +87,73 @@ a {
   flex-shrink: 0;
 }
 
-.locale-switcher-select {
-  width: 4.25rem;
-  min-width: 4.25rem;
-  max-width: 4.25rem;
-  padding: 6px 1.75rem 6px 8px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .login-page .locale-switcher-anchor {
   position: static;
   top: auto;
   right: auto;
   flex-shrink: 0;
+}
+
+.locale-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+.locale-switcher-separator {
+  color: #d1d5db;
+  font-size: 0.7rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.locale-switcher-option {
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px 7px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1;
+  box-shadow: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.locale-switcher-option:hover {
+  color: var(--text);
+}
+
+.locale-switcher-option.is-active {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.locale-switcher-option.is-active:hover {
+  color: var(--primary);
+}
+
+.locale-switcher-option:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locale-switcher-option {
+    transition: none;
+  }
 }
 
 .sr-only {
@@ -125,14 +176,14 @@ a {
   flex-wrap: wrap;
   padding-top: 16px;
   padding-bottom: 16px;
-  padding-right: 5.5rem;
+  padding-right: 3.25rem;
 }
 
 .app-header-brand {
   display: grid;
   gap: 6px;
   min-width: 0;
-  max-width: calc(100% - 5.5rem);
+  max-width: calc(100% - 3.25rem);
 }
 
 .app-brand-link {
@@ -2145,11 +2196,16 @@ code {
 
   .app-header-inner {
     gap: 12px;
-    padding-right: 5rem;
+    padding-right: 3.25rem;
   }
 
   .app-header-brand {
-    max-width: calc(100% - 4.75rem);
+    max-width: calc(100% - 3rem);
+  }
+
+  .locale-switcher-option {
+    min-height: 36px;
+    padding: 6px 8px;
   }
 
   .app-header > .locale-switcher-anchor {
@@ -3770,21 +3826,6 @@ code {
   color: #fff;
   font-weight: 600;
   font-size: 0.95rem;
-}
-
-.ai-agent-widget-requirements {
-  padding: 0.65rem 1rem;
-  background: #eff6ff;
-  border-bottom: 1px solid #dbeafe;
-  color: #1e3a8a;
-  font-size: 0.78rem;
-  line-height: 1.45;
-}
-
-.ai-agent-widget-requirements strong {
-  display: block;
-  margin-bottom: 0.2rem;
-  font-size: 0.8rem;
 }
 
 .ai-agent-widget--embedded {
