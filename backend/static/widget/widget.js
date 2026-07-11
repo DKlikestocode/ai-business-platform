@@ -3,9 +3,6 @@
     title: "Anfrage senden",
     welcome:
       "Hallo! Beschreiben Sie kurz Ihr Anliegen — wir helfen bei Termin- oder Serviceanfragen.",
-    requirementsTitle: "Für eine vollständige Anfrage benötigen wir:",
-    requirementsList:
-      "Name · Telefonnummer · Postleitzahl · Ort · Anliegen · Kurzbeschreibung · Dringlichkeit · Terminwunsch",
     placeholder: "Nachricht eingeben…",
     send: "Anfrage senden",
     sending: "Wird gesendet…",
@@ -45,11 +42,6 @@
   const privacyUrl = container.dataset.privacyUrl || "";
   const embedMode = container.dataset.embedMode === "panel";
   const welcomeMessage = container.dataset.welcomeMessage || COPY.welcome;
-  const requirementsTitle =
-    container.dataset.requirementsTitle || COPY.requirementsTitle;
-  const requirementsList =
-    container.dataset.requirementsList || COPY.requirementsList;
-  const showRequirements = container.dataset.showRequirements !== "false";
 
   let conversationId =
     container.dataset.conversationId ||
@@ -108,14 +100,6 @@
         embedMode
           ? ""
           : `<div class="ai-agent-widget-header">${title}</div>`
-      }
-      ${
-        showRequirements
-          ? `<div class="ai-agent-widget-requirements" role="note">
-        <strong>${requirementsTitle}</strong>
-        <span>${requirementsList}</span>
-      </div>`
-          : ""
       }
       <div class="ai-agent-widget-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
       <p class="ai-agent-widget-privacy">${privacyHint}</p>

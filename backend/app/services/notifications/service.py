@@ -53,9 +53,13 @@ class NotificationService:
         if lead.notification_sent_at is not None:
             return False
 
-        contactable_allowed = lead.contactable or channel == ConversationChannel.WHATSAPP
-        if not contactable_allowed:
-            return False
+        if channel == ConversationChannel.WEB:
+            if lead.qualification_status != QualificationStatus.QUALIFIED.value:
+                return False
+        else:
+            contactable_allowed = lead.contactable or channel == ConversationChannel.WHATSAPP
+            if not contactable_allowed:
+                return False
 
         return meets_notification_min_urgency(
             lead.urgency,
