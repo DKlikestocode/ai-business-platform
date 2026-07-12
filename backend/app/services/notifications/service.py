@@ -10,23 +10,11 @@ from app.db.models.company import Company
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
 from app.services.notifications.interface import EmailMessage, EmailProvider
+from app.services.notifications.lead_email_template import build_owner_lead_notification
 from app.services.notifications.recipient import resolve_notification_recipient
 from app.services.notifications.sms_interface import SmsMessage, SmsProvider
 
 logger = logging.getLogger(__name__)
-
-_QUALIFICATION_LABELS = {
-    QualificationStatus.QUALIFIED.value: "Qualifiziert",
-    QualificationStatus.CONTACTABLE.value: "Kontaktierbar",
-    QualificationStatus.INCOMPLETE.value: "Unvollständig",
-}
-
-_CONTACT_METHOD_LABELS = {
-    "phone": "Telefon",
-    "email": "E-Mail",
-    "channel": "Kanal",
-    "unknown": "Unbekannt",
-}
 
 
 class NotificationService:
@@ -98,14 +86,16 @@ class NotificationService:
             if lead.qualification_status == QualificationStatus.QUALIFIED.value
             else f"Neue kontaktierbare Anfrage: {lead_name}"
         )
+        plain_body, html_body = build_owner_lead_notification(
+            company=company,
+            lead=lead,
+            frontend_base_url=self._frontend_base_url,
+        )
         message = EmailMessage(
             to=recipient,
             subject=subject,
-            body=self._build_lead_email_body(
-                company=company,
-                lead=lead,
-                frontend_base_url=self._frontend_base_url,
-            ),
+            body=plain_body,
+            html=html_body,
         )
         await self._provider.send_email(message)
         self._lead_repository.mark_notification_sent(lead.id)
@@ -242,16 +232,6 @@ class NotificationService:
         logger.info("Sent password reset email to %s", to)
 
     @staticmethod
-    def _qualification_label(status: str) -> str:
-        return _QUALIFICATION_LABELS.get(status, status)
-
-    @staticmethod
-    def _contact_method_label(method: str | None) -> str:
-        if not method:
-            return _CONTACT_METHOD_LABELS["unknown"]
-        return _CONTACT_METHOD_LABELS.get(method, method)
-
-    @staticmethod
     def _build_test_inquiry_email_body(*, company: Company) -> str:
         return "\n".join(
             [
@@ -274,40 +254,6 @@ class NotificationService:
                 "Dringlichkeit: Hoch",
             ],
         )
-
-    @staticmethod
-    def _build_lead_email_body(
-        *,
-        company: Company,
-        lead: Lead,
-        frontend_base_url: str | None = None,
-    ) -> str:
-        lines = [
-            f"Es wurde eine neue Anfrage für {company.name} erfasst.",
-            "",
-            f"Zusammenfassung: {lead.summary or '—'}",
-            (
-                "Qualifizierungsstatus: "
-                f"{NotificationService._qualification_label(lead.qualification_status)}"
-            ),
-            (
-                "Kontaktmethode: "
-                f"{NotificationService._contact_method_label(lead.contact_method)}"
-            ),
-            "",
-            f"Name: {lead.name or '—'}",
-            f"Telefon: {lead.phone or '—'}",
-            f"E-Mail: {lead.email or '—'}",
-            f"Standort: {lead.location or '—'}",
-            f"Angefragter Service: {lead.service_requested or '—'}",
-            f"Dringlichkeit: {lead.urgency or '—'}",
-            f"Terminwunsch: {lead.preferred_callback_time or '—'}",
-            f"Beschreibung: {lead.description or '—'}",
-        ]
-        if frontend_base_url:
-            dashboard_url = f"{frontend_base_url.rstrip('/')}/leads/{lead.id}"
-            lines.extend(["", f"Im Dashboard anzeigen: {dashboard_url}"])
-        return "\n".join(lines)
 
     @staticmethod
     def _build_customer_confirmation_email_body(*, company: Company, lead: Lead) -> str:

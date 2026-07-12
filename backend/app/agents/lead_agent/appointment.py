@@ -20,11 +20,8 @@ def has_appointment_time_window(data: LeadExtractedData) -> bool:
 
 
 def should_ask_appointment_confirmation_preference(data: LeadExtractedData) -> bool:
-    if not is_appointment_inquiry(data):
-        return False
-    if not has_appointment_time_window(data):
-        return False
-    return data.appointment_confirmation_preference is None
+    # Disabled until SMS/phone appointment confirmation is product-ready.
+    return False
 
 
 def sanitize_appointment_confirmation_preference(

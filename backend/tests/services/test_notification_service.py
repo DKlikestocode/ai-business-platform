@@ -146,14 +146,16 @@ async def test_notification_email_includes_dashboard_link_when_configured(
     await service.maybe_notify_lead(company, lead, channel=ConversationChannel.WEB)
 
     assert len(provider.messages) == 1
-    body = provider.messages[0].body
-    assert "Zusammenfassung: Jane needs roof repair." in body
-    assert "Qualifizierungsstatus: Qualifiziert" in body
-    assert "Priorität:" not in body
-    assert "Kontaktierbar:" not in body
-    assert "Lead" not in body
-    assert "Kontaktmethode:" in body
-    assert f"Im Dashboard anzeigen: http://localhost:3000/leads/{lead.id}" in body
+    message = provider.messages[0]
+    assert "Rohrbruch" in message.body or "Jane needs roof repair." in message.body
+    assert "Qualifizierungsstatus" not in message.body
+    assert "Kontaktmethode" not in message.body
+    assert "Priorität:" not in message.body
+    assert "Kontaktierbar:" not in message.body
+    assert "Lead" not in message.body
+    assert message.html is not None
+    assert "Neue Anfrage" in message.html
+    assert f"http://localhost:3000/leads/{lead.id}" in message.body
 
 
 @pytest.mark.asyncio
