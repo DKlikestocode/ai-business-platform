@@ -16,7 +16,7 @@ alwaysApply: true
 
 ## Agent ships by default
 
-After implementation and tests pass, the agent **commits, pushes, opens a PR, merges when CI is green, and deploys** — without waiting for a separate “commit for me” instruction.
+After implementation and tests pass, the agent **commits, pushes, opens a PR, and merges when CI is green** — without waiting for a separate “commit for me” instruction.
 
 Pause before ship only when:
 
@@ -24,21 +24,25 @@ Pause before ship only when:
 - Destructive git ops (force push, hard reset) — ask first
 - Dominik explicitly says “don’t deploy yet”, “plan only”, or “just explain” in that turn
 
+## Deploy policy
+
+| Change type | Merge to main | Deploy to production |
+|-------------|---------------|----------------------|
+| Backend, migration, widget, notifications | Yes | **Immediately** after merge |
+| Feature with user-visible behavior (inbox, settings, chat) | Yes | **Immediately** after merge |
+| UI/copy/i18n-only fix (no runtime logic) | Yes | **Batch** — deploy when 2+ small fixes are on `main`, or Dominik asks to deploy |
+
+Bundled deploy: `./scripts/deploy-prod.sh frontend` for frontend-only batch; full deploy when backend is included.
+
 ## Git and workspace
 
 - **Git operations:** `~/dev/ai-business-platform` (healthy clone)
 - **Edits:** Desktop workspace or dev clone; run `./scripts/sync-from-desktop.sh` (desktop → dev) before commit if editing on desktop
 - `git pull origin main` before branching
 
-## Deploy
-
-- `./scripts/deploy-prod.sh` — full stack
-- `./scripts/deploy-prod.sh backend` or `frontend` — scoped when change is one-sided
-- Production: `app.dominiksdomain.com`
-
 ## Task handoff
 
-Brief confirmation: what shipped, PR link, deploy scope, 1–3 DE smoke-test bullets.
+Brief confirmation: what shipped, PR link, deploy now or batched, 1–3 DE smoke-test bullets when deployed.
 
 ## Default PR size
 
