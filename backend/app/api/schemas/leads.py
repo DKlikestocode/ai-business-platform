@@ -10,7 +10,13 @@ from app.agents.lead_agent.inquiry_source import (
     InquirySource,
     channel_to_inquiry_source,
 )
-from app.agents.lead_agent.models import ContactMethod, InquiryKind, LeadStatus, QualificationStatus
+from app.agents.lead_agent.models import (
+    AppointmentConfirmationPreference,
+    ContactMethod,
+    InquiryKind,
+    LeadStatus,
+    QualificationStatus,
+)
 from app.db.models.enums import ConversationChannel
 from app.db.models.lead import Lead
 from app.services.service_area.models import ServiceAreaStatus
@@ -43,6 +49,8 @@ class LeadResponse(BaseModel):
     inquiry_kind: InquiryKind
     notification_sent_at: datetime | None
     customer_confirmation_sent_at: datetime | None
+    appointment_confirmation_preference: AppointmentConfirmationPreference | None = None
+    appointment_confirmation_sent_at: datetime | None
     contacted_at: datetime | None
     archived_at: datetime | None
     created_at: datetime
@@ -60,6 +68,15 @@ class PaginatedLeadResponse(BaseModel):
 
 class LeadStatusUpdateRequest(BaseModel):
     status: Literal[LeadStatus.NEW, LeadStatus.CONTACTED]
+
+
+class AppointmentConfirmationRequest(BaseModel):
+    channel: Literal["email", "sms"]
+
+
+class AppointmentConfirmationResponse(BaseModel):
+    sent: bool
+    appointment_confirmation_sent_at: datetime | None
 
 
 class BulkDeleteLeadsResponse(BaseModel):
@@ -117,6 +134,8 @@ def lead_to_response(
             "inquiry_kind": lead.inquiry_kind or InquiryKind.UNKNOWN.value,
             "notification_sent_at": lead.notification_sent_at,
             "customer_confirmation_sent_at": lead.customer_confirmation_sent_at,
+            "appointment_confirmation_preference": lead.appointment_confirmation_preference,
+            "appointment_confirmation_sent_at": lead.appointment_confirmation_sent_at,
             "contacted_at": lead.contacted_at,
             "archived_at": lead.archived_at,
             "created_at": lead.created_at,

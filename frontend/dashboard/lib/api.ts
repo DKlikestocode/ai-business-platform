@@ -249,6 +249,53 @@ export async function fetchLead(leadId: string): Promise<Lead> {
   return request<Lead>(`/api/v1/leads/${leadId}`);
 }
 
+export async function downloadLeadCalendarIcs(leadId: string): Promise<void> {
+  const url = buildApiUrl(`/api/v1/leads/${leadId}/calendar.ics`);
+  const token = getAccessToken();
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers,
+    cache: "no-store",
+    credentials: "same-origin",
+  });
+
+  if (!response.ok) {
+    const detail = await readErrorDetail(response);
+    const message = formatErrorDetail(response.status, detail);
+    throw new ApiError(formatUserFacingError(new ApiError(message, response.status)), response.status);
+  }
+
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = objectUrl;
+  anchor.download = `termin-${leadId}.ics`;
+  anchor.click();
+  URL.revokeObjectURL(objectUrl);
+}
+
+export interface AppointmentConfirmationResult {
+  sent: boolean;
+  appointment_confirmation_sent_at: string | null;
+}
+
+export async function sendAppointmentConfirmation(
+  leadId: string,
+): Promise<AppointmentConfirmationResult> {
+  return request<AppointmentConfirmationResult>(
+    `/api/v1/leads/${leadId}/appointment-confirmation`,
+    {
+      method: "POST",
+      body: JSON.stringify({ channel: "email" }),
+    },
+  );
+}
+
 export async function updateLeadStatus(
   leadId: string,
   status: LeadStatus,

@@ -1,6 +1,8 @@
 export type LeadStatus = "new" | "contacted" | "qualified" | "won" | "lost";
 export type InquiryKind = "appointment_consultation" | "quote" | "unknown";
 
+export type AppointmentConfirmationPreference = "email" | "sms" | "none";
+
 export type QualificationStatus = "incomplete" | "contactable" | "qualified";
 
 export type ContactMethod = "phone" | "email" | "channel" | "unknown";
@@ -174,6 +176,8 @@ export interface Lead {
   inquiry_kind: InquiryKind;
   notification_sent_at: string | null;
   customer_confirmation_sent_at: string | null;
+  appointment_confirmation_preference: AppointmentConfirmationPreference | null;
+  appointment_confirmation_sent_at: string | null;
   contacted_at: string | null;
   archived_at: string | null;
   created_at: string;

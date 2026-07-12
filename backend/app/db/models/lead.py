@@ -56,6 +56,14 @@ class Lead(Base):
         DateTime(timezone=True),
         nullable=True,
     )
+    appointment_confirmation_preference: Mapped[str | None] = mapped_column(
+        String(16),
+        nullable=True,
+    )
+    appointment_confirmation_sent_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
     contacted_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
         nullable=True,

@@ -565,6 +565,7 @@
     "notificationNotSentShort": "Not notified by email",
     "customerConfirmationSentShort": "Customer confirmation sent",
     "customerConfirmationNotSentShort": "Customer confirmation pending",
+    "appointmentConfirmationSent": "Appointment confirmation sent",
     "contactedAtShort": "Contacted",
     "noDescription": "No description",
     "unknownContact": "Unknown contact",
@@ -638,7 +639,27 @@
     "updateStatus": "Update status",
     "markContacted": "Mark as contacted",
     "markContactedHint": "After contacting the customer, you can mark this inquiry as contacted.",
-    "markContactedSuccess": "Marked as contacted"
+    "markContactedSuccess": "Marked as contacted",
+    "appointmentSectionTitle": "Appointment",
+    "appointmentPreferenceLabel": "Confirmation preference",
+    "appointmentPreference": {
+      "email": "Email",
+      "sms": "SMS / phone",
+      "none": "None",
+      "pending": "Pending"
+    },
+    "saveToCalendar": "Save to calendar",
+    "calendarDownloading": "Preparing calendar file…",
+    "calendarDownloadFailed": "Could not download the calendar file.",
+    "sendAppointmentConfirmationEmail": "Send appointment confirmation by email",
+    "appointmentConfirmationSending": "Sending appointment confirmation…",
+    "appointmentConfirmationFailed": "Could not send appointment confirmation.",
+    "appointmentConfirmationUnavailable": "No email address available for an appointment confirmation.",
+    "appointmentConfirmationSuccess": "Appointment confirmation was sent to the customer.",
+    "appointmentConfirmationSentLabel": "Appointment confirmation",
+    "appointmentConfirmationSentDetail": "Sent on {date}",
+    "appointmentConfirmationSmsSoon": "SMS (coming soon)",
+    "appointmentConfirmationSmsSoonHint": "SMS appointment confirmation will be available in a later release."
   },
   "demoChat": {
     "title": "Test chat",
