@@ -42,6 +42,7 @@ class LeadResponse(BaseModel):
     qualification_status: QualificationStatus
     inquiry_kind: InquiryKind
     notification_sent_at: datetime | None
+    customer_confirmation_sent_at: datetime | None
     contacted_at: datetime | None
     archived_at: datetime | None
     created_at: datetime
@@ -115,6 +116,7 @@ def lead_to_response(
             "qualification_status": lead.qualification_status,
             "inquiry_kind": lead.inquiry_kind or InquiryKind.UNKNOWN.value,
             "notification_sent_at": lead.notification_sent_at,
+            "customer_confirmation_sent_at": lead.customer_confirmation_sent_at,
             "contacted_at": lead.contacted_at,
             "archived_at": lead.archived_at,
             "created_at": lead.created_at,

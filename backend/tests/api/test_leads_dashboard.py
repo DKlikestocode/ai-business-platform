@@ -379,6 +379,7 @@ def test_get_lead_includes_qualification_fields(
     assert "lead_score" in body
     assert "qualification_status" in body
     assert "notification_sent_at" in body
+    assert "customer_confirmation_sent_at" in body
 
 
 def test_update_lead_status_rejects_invalid_status(

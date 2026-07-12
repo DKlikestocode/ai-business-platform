@@ -542,6 +542,7 @@ export function LeadsDashboard() {
                 createdLabel={formatDate(lead.created_at, locale)}
                 statusUpdating={updatingId === lead.id}
                 showContactedSuccess={contactedSuccessId === lead.id}
+                sendCustomerConfirmation={settings?.send_customer_confirmation ?? false}
                 contactedMode={isContactedView}
                 onMarkContacted={() => void handleMarkContacted(lead.id)}
                 onRestore={() => void handleRestoreLead(lead.id)}

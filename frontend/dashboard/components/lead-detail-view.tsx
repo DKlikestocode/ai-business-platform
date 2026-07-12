@@ -9,12 +9,18 @@ import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
+import { InquiryCustomerConfirmationIndicator } from "@/components/inquiry-customer-confirmation-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
 import { fetchLead, deleteLead, restoreLead, updateLeadStatus } from "@/lib/api";
+import {
+  COMPANY_SETTINGS_CACHE_KEY,
+  getDashboardCache,
+  loadCachedCompanySettings,
+} from "@/lib/dashboard-cache";
 import { formatDateTime } from "@/lib/format-datetime";
 import {
   displayName,
@@ -24,8 +30,9 @@ import {
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
+import { shouldShowCustomerConfirmationIndicator } from "@/lib/inquiry-customer-confirmation";
 import { formatUrgencyLabel } from "@/lib/urgency-level";
-import type { Lead } from "@/lib/types";
+import type { CompanySettings, Lead } from "@/lib/types";
 import { Link, useRouter } from "@/i18n/navigation";
 
 function formatDate(value: string, locale: string): string {
@@ -51,6 +58,9 @@ export function LeadDetailView() {
   const tLeads = useTranslations("leads");
   const router = useRouter();
   const [lead, setLead] = useState<Lead | null>(null);
+  const [settings, setSettings] = useState<CompanySettings | null>(() =>
+    getDashboardCache<CompanySettings>(COMPANY_SETTINGS_CACHE_KEY),
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
@@ -80,6 +90,10 @@ export function LeadDetailView() {
   useEffect(() => {
     void loadLead();
   }, [loadLead]);
+
+  useEffect(() => {
+    void loadCachedCompanySettings(setSettings);
+  }, []);
 
   useEffect(() => {
     setShowContactedSuccess(false);
@@ -147,6 +161,12 @@ export function LeadDetailView() {
   const showContactActions = lead ? hasContactData(lead) : false;
   const showFirstWebsiteMarker = lead
     ? shouldShowFirstWebsiteInquiryMarker(lead)
+    : false;
+  const showCustomerConfirmation = lead
+    ? shouldShowCustomerConfirmationIndicator(
+        settings?.send_customer_confirmation ?? false,
+        lead.customer_confirmation_sent_at,
+      )
     : false;
   const isContacted = lead ? lead.status !== "new" : false;
   const isNew = lead?.status === "new";
@@ -324,6 +344,17 @@ export function LeadDetailView() {
                   />
                 </dd>
               </div>
+              {showCustomerConfirmation ? (
+                <div className="lead-detail-meta-row">
+                  <dt>{t("customerConfirmationLabel")}</dt>
+                  <dd>
+                    <InquiryCustomerConfirmationIndicator
+                      customerConfirmationSentAt={lead.customer_confirmation_sent_at}
+                      variant="detail"
+                    />
+                  </dd>
+                </div>
+              ) : null}
               {lead.contacted_at ? (
                 <div className="lead-detail-meta-row">
                   <dt>{t("contactedAtLabel")}</dt>
