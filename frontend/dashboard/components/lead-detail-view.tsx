@@ -371,7 +371,7 @@ export function LeadDetailView() {
 
           <details className="card inquiry-handoff-more">
             <summary className="inquiry-handoff-more-summary">
-              {t("additionalDetails")}
+              {t("moreDetails")}
             </summary>
             <dl className="detail-list inquiry-handoff-more-list">
               <DetailRow label={t("postalCode")} value={lead.postal_code} />
