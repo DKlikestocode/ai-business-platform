@@ -32,6 +32,12 @@ class InquiryKind(StrEnum):
     UNKNOWN = "unknown"
 
 
+class AppointmentConfirmationPreference(StrEnum):
+    EMAIL = "email"
+    SMS = "sms"
+    NONE = "none"
+
+
 InquiryScope = Literal["in_scope", "out_of_scope", "unclear"]
 
 
@@ -64,6 +70,7 @@ class LeadExtractedData(BaseModel):
     urgency: str | None = None
     preferred_callback_time: str | None = None
     inquiry_kind: InquiryKind | None = None
+    appointment_confirmation_preference: AppointmentConfirmationPreference | None = None
 
 
 class LeadCaptureLLMOutput(BaseModel):
@@ -117,6 +124,15 @@ class LeadCaptureLLMOutput(BaseModel):
             "unknown = noch unklar."
         ),
     )
+    appointment_confirmation_preference: AppointmentConfirmationPreference | None = Field(
+        default=None,
+        description=(
+            "Wunsch des Kunden für eine Terminbestätigung: "
+            "email = per E-Mail; sms = per SMS oder Telefon; "
+            "none = keine Bestätigung gewünscht. "
+            "Nur setzen, wenn der Kunde explizit geantwortet hat."
+        ),
+    )
 
     def to_extracted_data(self) -> LeadExtractedData:
         return LeadExtractedData(
@@ -131,6 +147,7 @@ class LeadCaptureLLMOutput(BaseModel):
             urgency=self.urgency,
             preferred_callback_time=self.preferred_callback_time,
             inquiry_kind=self.inquiry_kind,
+            appointment_confirmation_preference=self.appointment_confirmation_preference,
         )
 
 

@@ -18,6 +18,7 @@ import {
   normalizeEmail,
   normalizePhone,
 } from "@/lib/inquiry-handoff";
+import { isAppointmentConfirmationSent } from "@/lib/appointment-confirmation";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
 import { shouldShowCustomerConfirmationIndicator } from "@/lib/inquiry-customer-confirmation";
 import { formatUrgencyLabel } from "@/lib/urgency-level";
@@ -58,6 +59,9 @@ export function InquiryCard({
   const showCustomerConfirmation = shouldShowCustomerConfirmationIndicator(
     sendCustomerConfirmation,
     lead.customer_confirmation_sent_at,
+  );
+  const showAppointmentConfirmationSent = isAppointmentConfirmationSent(
+    lead.appointment_confirmation_sent_at,
   );
   const hasCornerMeta = Boolean(urgencyLabel || preferredCallback);
 
@@ -115,6 +119,12 @@ export function InquiryCard({
         <InquiryCustomerConfirmationIndicator
           customerConfirmationSentAt={lead.customer_confirmation_sent_at}
         />
+      ) : null}
+
+      {showAppointmentConfirmationSent ? (
+        <p className="inquiry-card-appointment-sent muted">
+          {t("appointmentConfirmationSent")}
+        </p>
       ) : null}
 
       <InquiryContactedIndicator contactedAt={lead.contacted_at} />

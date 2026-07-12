@@ -1,6 +1,7 @@
 import logging
 from uuid import UUID
 
+from app.agents.lead_agent.appointment import sanitize_appointment_confirmation_preference
 from app.agents.lead_agent.company_context import (
     build_business_contact_prompt,
     build_service_area_prompt,
@@ -183,6 +184,7 @@ class LeadCaptureService:
             merge_lead_data(existing_data, incoming_data),
         )
         merged_data = sanitize_urgency_fields(merged_data)
+        merged_data = sanitize_appointment_confirmation_preference(merged_data)
         if merged_data.postal_code is None:
             resolved_plz = resolve_lead_postal_code(merged_data)
             if resolved_plz is not None:

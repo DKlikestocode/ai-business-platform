@@ -1,5 +1,7 @@
 import logging
 
+from datetime import datetime
+
 from app.agents.lead_agent.contact_validation import is_valid_email, is_valid_phone
 from app.agents.lead_agent.urgency import meets_notification_min_urgency
 from app.agents.lead_agent.models import QualificationStatus
@@ -160,6 +162,44 @@ class NotificationService:
             self._lead_repository.mark_customer_confirmation_sent(lead.id)
         return sent_any
 
+    async def send_appointment_confirmation_email(
+        self,
+        company: Company,
+        lead: Lead,
+    ) -> datetime | None:
+        if lead.appointment_confirmation_sent_at is not None:
+            return lead.appointment_confirmation_sent_at
+        if not is_valid_email(lead.email):
+            return None
+
+        message = EmailMessage(
+            to=lead.email,
+            subject=f"Terminbestätigung — {company.name}",
+            body=self._build_appointment_confirmation_email_body(company=company, lead=lead),
+        )
+        await self._provider.send_email(message)
+        marked = self._lead_repository.mark_appointment_confirmation_sent(lead.id)
+        if marked is None:
+            return None
+        logger.info(
+            "Sent appointment confirmation email for lead %s to %s",
+            lead.id,
+            lead.email,
+        )
+        return marked.appointment_confirmation_sent_at
+
+    async def send_appointment_confirmation_sms(
+        self,
+        company: Company,
+        lead: Lead,
+    ) -> bool:
+        logger.info(
+            "Appointment confirmation SMS not implemented for lead %s (company %s).",
+            lead.id,
+            company.id,
+        )
+        return False
+
     async def send_lead_created(
         self,
         company: Company,
@@ -306,3 +346,32 @@ class NotificationService:
             f"{company.name}: Vielen Dank für Ihre Anfrage. "
             f"Wir haben alles erhalten ({summary}) und melden uns in Kürze."
         )
+
+    @staticmethod
+    def _build_appointment_confirmation_email_body(*, company: Company, lead: Lead) -> str:
+        if lead.name and lead.name.strip():
+            greeting = f"Guten Tag {lead.name.strip()},"
+        else:
+            greeting = "Guten Tag,"
+
+        lines = [
+            greeting,
+            "",
+            f"vielen Dank für Ihre Terminanfrage bei {company.name}.",
+            "Wir haben Ihren Terminwunsch erhalten und melden uns zur Bestätigung.",
+            "",
+            f"Terminwunsch: {lead.preferred_callback_time or '—'}",
+            f"Anliegen: {lead.summary or lead.description or lead.service_requested or '—'}",
+        ]
+        if company.phone:
+            lines.append(f"Telefon: {company.phone}")
+        if company.email:
+            lines.append(f"E-Mail: {company.email}")
+        lines.extend(
+            [
+                "",
+                "Mit freundlichen Grüßen",
+                company.name,
+            ],
+        )
+        return "\n".join(lines)

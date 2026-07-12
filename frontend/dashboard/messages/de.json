@@ -565,6 +565,7 @@
     "notificationNotSentShort": "Nicht per E-Mail benachrichtigt",
     "customerConfirmationSentShort": "Kundenbestätigung gesendet",
     "customerConfirmationNotSentShort": "Kundenbestätigung ausstehend",
+    "appointmentConfirmationSent": "Terminbestätigung gesendet",
     "contactedAtShort": "Kontaktiert",
     "noDescription": "Keine Beschreibung",
     "unknownContact": "Unbekannter Kontakt",
@@ -638,7 +639,27 @@
     "updateStatus": "Status aktualisieren",
     "markContacted": "Als kontaktiert markieren",
     "markContactedHint": "Nach dem Kontakt können Sie die Anfrage als kontaktiert markieren.",
-    "markContactedSuccess": "Als kontaktiert markiert"
+    "markContactedSuccess": "Als kontaktiert markiert",
+    "appointmentSectionTitle": "Termin",
+    "appointmentPreferenceLabel": "Bestätigung gewünscht",
+    "appointmentPreference": {
+      "email": "E-Mail",
+      "sms": "SMS / Telefon",
+      "none": "Keine",
+      "pending": "Ausstehend"
+    },
+    "saveToCalendar": "In Kalender speichern",
+    "calendarDownloading": "Kalenderdatei wird erstellt…",
+    "calendarDownloadFailed": "Kalenderdatei konnte nicht heruntergeladen werden.",
+    "sendAppointmentConfirmationEmail": "Terminbestätigung per E-Mail senden",
+    "appointmentConfirmationSending": "Terminbestätigung wird gesendet…",
+    "appointmentConfirmationFailed": "Terminbestätigung konnte nicht gesendet werden.",
+    "appointmentConfirmationUnavailable": "Keine E-Mail-Adresse für eine Terminbestätigung vorhanden.",
+    "appointmentConfirmationSuccess": "Terminbestätigung wurde an den Kunden gesendet.",
+    "appointmentConfirmationSentLabel": "Terminbestätigung",
+    "appointmentConfirmationSentDetail": "Gesendet am {date}",
+    "appointmentConfirmationSmsSoon": "SMS (demnächst)",
+    "appointmentConfirmationSmsSoonHint": "SMS-Terminbestätigung folgt in einer späteren Version."
   },
   "demoChat": {
     "title": "Test-Chat",

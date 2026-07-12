@@ -15,7 +15,7 @@ import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
 import { StatusBadge } from "@/components/status-badge";
 import { AlertBanner } from "@/components/ui/alert-banner";
 import { LoadingState } from "@/components/ui/loading-state";
-import { fetchLead, deleteLead, restoreLead, updateLeadStatus } from "@/lib/api";
+import { fetchLead, deleteLead, restoreLead, updateLeadStatus, downloadLeadCalendarIcs, sendAppointmentConfirmation } from "@/lib/api";
 import {
   COMPANY_SETTINGS_CACHE_KEY,
   getDashboardCache,
@@ -31,6 +31,13 @@ import {
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
 import { shouldShowCustomerConfirmationIndicator } from "@/lib/inquiry-customer-confirmation";
+import {
+  canSendAppointmentConfirmationEmail,
+  formatAppointmentConfirmationPreference,
+  formatAppointmentConfirmationSentAt,
+  isAppointmentConfirmationSent,
+  isAppointmentInquiry,
+} from "@/lib/appointment-confirmation";
 import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { CompanySettings, Lead } from "@/lib/types";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -66,6 +73,9 @@ export function LeadDetailView() {
   const [updating, setUpdating] = useState(false);
   const [showContactedSuccess, setShowContactedSuccess] = useState(false);
   const [restoreSuccess, setRestoreSuccess] = useState(false);
+  const [calendarDownloading, setCalendarDownloading] = useState(false);
+  const [appointmentSending, setAppointmentSending] = useState(false);
+  const [appointmentSendSuccess, setAppointmentSendSuccess] = useState(false);
 
   const loadLead = useCallback(async () => {
     if (!leadId) {
@@ -98,6 +108,7 @@ export function LeadDetailView() {
   useEffect(() => {
     setShowContactedSuccess(false);
     setRestoreSuccess(false);
+    setAppointmentSendSuccess(false);
   }, [leadId]);
 
   async function handleRestore() {
@@ -129,6 +140,38 @@ export function LeadDetailView() {
       setError(err instanceof Error ? err.message : t("updateFailed"));
     } finally {
       setUpdating(false);
+    }
+  }
+
+  async function handleDownloadCalendar() {
+    if (!lead) return;
+    setCalendarDownloading(true);
+    setError(null);
+    try {
+      await downloadLeadCalendarIcs(lead.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("calendarDownloadFailed"));
+    } finally {
+      setCalendarDownloading(false);
+    }
+  }
+
+  async function handleSendAppointmentConfirmation() {
+    if (!lead) return;
+    setAppointmentSending(true);
+    setError(null);
+    setAppointmentSendSuccess(false);
+    try {
+      const result = await sendAppointmentConfirmation(lead.id);
+      setLead({
+        ...lead,
+        appointment_confirmation_sent_at: result.appointment_confirmation_sent_at,
+      });
+      setAppointmentSendSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("appointmentConfirmationFailed"));
+    } finally {
+      setAppointmentSending(false);
     }
   }
 
@@ -171,6 +214,20 @@ export function LeadDetailView() {
   const isContacted = lead ? lead.status !== "new" : false;
   const isNew = lead?.status === "new";
   const hasUrgencySection = Boolean(urgencyLabel || preferredCallback);
+  const showAppointmentSection = lead ? isAppointmentInquiry(lead) : false;
+  const appointmentPreferenceLabel = lead
+    ? formatAppointmentConfirmationPreference(
+        lead.appointment_confirmation_preference,
+        (key) => t(`appointmentPreference.${key}`),
+      )
+    : null;
+  const appointmentSentAt = lead
+    ? formatAppointmentConfirmationSentAt(lead.appointment_confirmation_sent_at, locale)
+    : null;
+  const canSendAppointmentEmail = lead ? canSendAppointmentConfirmationEmail(lead) : false;
+  const appointmentAlreadySent = lead
+    ? isAppointmentConfirmationSent(lead.appointment_confirmation_sent_at)
+    : false;
   const serviceLine = lead?.service_requested?.trim() || null;
 
   return (
@@ -275,6 +332,74 @@ export function LeadDetailView() {
                     <span className="lead-detail-callback-value">{preferredCallback}</span>
                   </p>
                 ) : null}
+              </div>
+            </section>
+          ) : null}
+
+          {showAppointmentSection ? (
+            <section
+              className="card lead-detail-section-card lead-detail-appointment-card"
+              aria-labelledby="lead-detail-appointment"
+            >
+              <h3 id="lead-detail-appointment" className="lead-detail-section-title">
+                {t("appointmentSectionTitle")}
+              </h3>
+              <dl className="lead-detail-meta-list">
+                {preferredCallback ? (
+                  <div className="lead-detail-meta-row">
+                    <dt>{t("preferredCallback")}</dt>
+                    <dd>{preferredCallback}</dd>
+                  </div>
+                ) : null}
+                <div className="lead-detail-meta-row">
+                  <dt>{t("appointmentPreferenceLabel")}</dt>
+                  <dd>{appointmentPreferenceLabel}</dd>
+                </div>
+                {appointmentAlreadySent && appointmentSentAt ? (
+                  <div className="lead-detail-meta-row">
+                    <dt>{t("appointmentConfirmationSentLabel")}</dt>
+                    <dd>{t("appointmentConfirmationSentDetail", { date: appointmentSentAt })}</dd>
+                  </div>
+                ) : null}
+              </dl>
+              <div className="lead-detail-appointment-actions stack">
+                <button
+                  type="button"
+                  className="button secondary"
+                  disabled={calendarDownloading || updating}
+                  onClick={() => void handleDownloadCalendar()}
+                >
+                  {calendarDownloading ? t("calendarDownloading") : t("saveToCalendar")}
+                </button>
+                {canSendAppointmentEmail ? (
+                  <button
+                    type="button"
+                    className="button"
+                    disabled={appointmentSending || updating}
+                    onClick={() => void handleSendAppointmentConfirmation()}
+                  >
+                    {appointmentSending
+                      ? t("appointmentConfirmationSending")
+                      : t("sendAppointmentConfirmationEmail")}
+                  </button>
+                ) : null}
+                {!canSendAppointmentEmail && !appointmentAlreadySent ? (
+                  <p className="muted">{t("appointmentConfirmationUnavailable")}</p>
+                ) : null}
+                {appointmentAlreadySent || appointmentSendSuccess ? (
+                  <AlertBanner variant="success">
+                    {t("appointmentConfirmationSuccess")}
+                  </AlertBanner>
+                ) : null}
+                <button
+                  type="button"
+                  className="button secondary"
+                  disabled
+                  aria-disabled="true"
+                  title={t("appointmentConfirmationSmsSoonHint")}
+                >
+                  {t("appointmentConfirmationSmsSoon")}
+                </button>
               </div>
             </section>
           ) : null}

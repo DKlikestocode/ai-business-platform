@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from app.agents.lead_agent.appointment import should_ask_appointment_confirmation_preference
 from app.agents.lead_agent.contact_validation import is_valid_email, is_valid_phone
 from app.agents.lead_agent.models import ContactMethod, LeadExtractedData, QualificationStatus
 from app.agents.lead_agent.utils import get_missing_fields, is_lead_complete
@@ -134,6 +135,13 @@ def build_qualification_hint(
     service_area_configured: bool = False,
 ) -> str:
     if qualification.qualification_status == QualificationStatus.QUALIFIED:
+        if should_ask_appointment_confirmation_preference(data):
+            return (
+                "All required business fields are collected. Before confirming next steps, "
+                "ask once in plain German whether the customer wants an appointment "
+                "confirmation by email or by SMS/phone. Do not guarantee a fixed appointment. "
+                "If they decline, set appointment_confirmation_preference to none."
+            )
         return (
             "All required business fields are collected. Confirm receipt and next steps "
             "using the customer's wording: on-site appointment/visit vs. phone callback. "
@@ -182,6 +190,13 @@ def build_qualification_hint(
     if qualification.qualification_status == QualificationStatus.CONTACTABLE:
         missing = get_missing_fields(data)
         missing_labels = ", ".join(missing) if missing else "none"
+        if should_ask_appointment_confirmation_preference(data):
+            return (
+                "The lead is contactable with useful context and has an appointment time "
+                "window. Ask once in plain German whether they want confirmation by email "
+                "or SMS/phone. Do not block qualification if they skip. "
+                f"Still missing required fields: {missing_labels}."
+            )
         return (
             "The lead is contactable with useful context. Confirm the request was received "
             f"and ask for the next missing required fields only: {missing_labels}."

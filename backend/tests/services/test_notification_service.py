@@ -234,3 +234,28 @@ async def test_customer_confirmation_not_duplicated(
     assert first is True
     assert second is False
     assert len(email_provider.messages) == 1
+
+
+@pytest.mark.asyncio
+async def test_appointment_confirmation_email_sent_once(
+    lead_repository: LeadRepository,
+    company: Company,
+) -> None:
+    provider = MockEmailProvider()
+    service = NotificationService(provider, lead_repository)
+    lead = _create_lead(lead_repository, company)
+    lead.email = "customer@example.com"
+    lead.preferred_callback_time = "Morgen Vormittag"
+    lead_repository._session.commit()
+    lead_repository._session.refresh(lead)
+
+    first = await service.send_appointment_confirmation_email(company, lead)
+    second = await service.send_appointment_confirmation_email(company, lead)
+
+    assert first is not None
+    assert second == first
+    assert len(provider.messages) == 1
+    assert "Terminbestätigung" in provider.messages[0].subject
+    refreshed = lead_repository.get_by_id(lead.id)
+    assert refreshed is not None
+    assert refreshed.appointment_confirmation_sent_at is not None
