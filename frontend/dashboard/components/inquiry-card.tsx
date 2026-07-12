@@ -2,15 +2,11 @@
 
 import { useTranslations } from "next-intl";
 
-import { InquiryKindBadge } from "@/components/inquiry-kind-badge";
-import { StatusBadge } from "@/components/status-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
 import { InquiryCustomerConfirmationIndicator } from "@/components/inquiry-customer-confirmation-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
-import { InquirySourceBadge } from "@/components/inquiry-source-badge";
-import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
 import { Link } from "@/i18n/navigation";
 import {
   displayName,
@@ -21,7 +17,6 @@ import {
 import { isAppointmentConfirmationSent } from "@/lib/appointment-confirmation";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
 import { shouldShowCustomerConfirmationIndicator } from "@/lib/inquiry-customer-confirmation";
-import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { Lead } from "@/lib/types";
 
 interface InquiryCardProps {
@@ -38,7 +33,7 @@ interface InquiryCardProps {
 
 export function InquiryCard({
   lead,
-  createdLabel,
+  createdLabel: _createdLabel,
   statusUpdating,
   showContactedSuccess,
   sendCustomerConfirmation = false,
@@ -50,10 +45,6 @@ export function InquiryCard({
   const t = useTranslations("leads");
   const phone = normalizePhone(lead);
   const email = normalizeEmail(lead);
-  const urgencyLabel = formatUrgencyLabel(lead.urgency, (level) =>
-    t(`urgencyLevels.${level}`),
-  );
-  const preferredCallback = lead.preferred_callback_time?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
   const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
   const showCustomerConfirmation = shouldShowCustomerConfirmationIndicator(
@@ -63,7 +54,6 @@ export function InquiryCard({
   const showAppointmentConfirmationSent = isAppointmentConfirmationSent(
     lead.appointment_confirmation_sent_at,
   );
-  const hasCornerMeta = Boolean(urgencyLabel || preferredCallback);
 
   return (
     <article className="inquiry-card card">
@@ -78,36 +68,6 @@ export function InquiryCard({
           {lead.service_requested ? (
             <p className="inquiry-card-service">{lead.service_requested}</p>
           ) : null}
-        </div>
-        <div className="inquiry-card-meta">
-          {hasCornerMeta ? (
-            <div className="inquiry-card-corner-meta">
-              {urgencyLabel ? (
-                <span className="inquiry-card-corner-item">
-                  <span className="inquiry-card-corner-label">{t("urgency")}</span>
-                  <span className="inquiry-card-corner-value">{urgencyLabel}</span>
-                </span>
-              ) : null}
-              {preferredCallback ? (
-                <span className="inquiry-card-corner-item">
-                  <span className="inquiry-card-corner-label">
-                    {t("preferredCallback")}
-                  </span>
-                  <span className="inquiry-card-corner-value">{preferredCallback}</span>
-                </span>
-              ) : null}
-            </div>
-          ) : null}
-          <InquirySourceBadge source={lead.source} />
-          <InquiryKindBadge inquiryKind={lead.inquiry_kind} />
-          <ServiceAreaStatusBadge
-            status={lead.service_area_status}
-            distanceKm={lead.service_area_distance_km}
-          />
-          <StatusBadge status={lead.status} />
-          <time className="inquiry-card-date muted" dateTime={lead.created_at}>
-            {createdLabel}
-          </time>
         </div>
       </div>
 

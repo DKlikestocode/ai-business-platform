@@ -1517,11 +1517,7 @@ code {
 }
 
 .inquiry-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  display: block;
 }
 
 .inquiry-card-intro {

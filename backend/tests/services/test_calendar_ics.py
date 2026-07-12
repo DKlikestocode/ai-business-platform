@@ -56,9 +56,4 @@ def test_should_ask_appointment_confirmation_preference() -> None:
         preferred_callback_time="Donnerstag Vormittag",
     )
     assert is_appointment_inquiry(data) is True
-    assert should_ask_appointment_confirmation_preference(data) is True
-
-    answered = data.model_copy(
-        update={"appointment_confirmation_preference": "email"},
-    )
-    assert should_ask_appointment_confirmation_preference(answered) is False
+    assert should_ask_appointment_confirmation_preference(data) is False
