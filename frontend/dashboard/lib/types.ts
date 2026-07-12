@@ -173,6 +173,7 @@ export interface Lead {
   qualification_status: QualificationStatus;
   inquiry_kind: InquiryKind;
   notification_sent_at: string | null;
+  customer_confirmation_sent_at: string | null;
   contacted_at: string | null;
   archived_at: string | null;
   created_at: string;

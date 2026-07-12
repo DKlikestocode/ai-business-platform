@@ -29,6 +29,7 @@ function buildLead(overrides: Partial<Lead> = {}): Lead {
     lead_score: 80,
     qualification_status: "qualified",
     notification_sent_at: null,
+    customer_confirmation_sent_at: null,
     contacted_at: null,
     archived_at: null,
     created_at: "2026-06-21T10:00:00Z",

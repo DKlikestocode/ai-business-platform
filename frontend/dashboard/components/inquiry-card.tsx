@@ -7,6 +7,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { FirstWebsiteInquiryMarker } from "@/components/first-website-inquiry-marker";
 import { InquiryCallbackActions } from "@/components/inquiry-callback-actions";
 import { InquiryContactedIndicator } from "@/components/inquiry-contacted-indicator";
+import { InquiryCustomerConfirmationIndicator } from "@/components/inquiry-customer-confirmation-indicator";
 import { InquiryNotificationIndicator } from "@/components/inquiry-notification-indicator";
 import { InquirySourceBadge } from "@/components/inquiry-source-badge";
 import { ServiceAreaStatusBadge } from "@/components/service-area-status-badge";
@@ -18,6 +19,7 @@ import {
   normalizePhone,
 } from "@/lib/inquiry-handoff";
 import { shouldShowFirstWebsiteInquiryMarker } from "@/lib/first-website-inquiry";
+import { shouldShowCustomerConfirmationIndicator } from "@/lib/inquiry-customer-confirmation";
 import { formatUrgencyLabel } from "@/lib/urgency-level";
 import type { Lead } from "@/lib/types";
 
@@ -26,6 +28,7 @@ interface InquiryCardProps {
   createdLabel: string;
   statusUpdating: boolean;
   showContactedSuccess: boolean;
+  sendCustomerConfirmation?: boolean;
   contactedMode?: boolean;
   onMarkContacted: () => void;
   onRestore?: () => void;
@@ -37,6 +40,7 @@ export function InquiryCard({
   createdLabel,
   statusUpdating,
   showContactedSuccess,
+  sendCustomerConfirmation = false,
   contactedMode = false,
   onMarkContacted,
   onRestore,
@@ -51,6 +55,10 @@ export function InquiryCard({
   const preferredCallback = lead.preferred_callback_time?.trim() || null;
   const preview = handoffPreviewText(lead, t("noDescription"));
   const showFirstWebsiteMarker = shouldShowFirstWebsiteInquiryMarker(lead);
+  const showCustomerConfirmation = shouldShowCustomerConfirmationIndicator(
+    sendCustomerConfirmation,
+    lead.customer_confirmation_sent_at,
+  );
   const hasCornerMeta = Boolean(urgencyLabel || preferredCallback);
 
   return (
@@ -102,6 +110,12 @@ export function InquiryCard({
       <InquiryNotificationIndicator
         notificationSentAt={lead.notification_sent_at}
       />
+
+      {showCustomerConfirmation ? (
+        <InquiryCustomerConfirmationIndicator
+          customerConfirmationSentAt={lead.customer_confirmation_sent_at}
+        />
+      ) : null}
 
       <InquiryContactedIndicator contactedAt={lead.contacted_at} />
 
