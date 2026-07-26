@@ -12,7 +12,9 @@ import {
   getDashboardCache,
   loadCachedCompanyActivation,
   loadCachedCompanySettings,
+  setDashboardCache,
 } from "@/lib/dashboard-cache";
+import { fetchCompanyActivation } from "@/lib/api";
 import {
   ACTIVATION_CHECKLIST_STEPS,
   evaluateActivationChecklist,
@@ -83,20 +85,38 @@ export function GettingStartedPanel() {
     }
   }, [user, t, errorMessages]);
 
+  const applyActivation = useCallback(
+    (data: CompanyActivation) => {
+      setActivation(data);
+      refreshDashboardNav();
+    },
+    [refreshDashboardNav],
+  );
+
   const loadActivation = useCallback(
     async (options?: { showRefreshing?: boolean }) => {
       if (!user) {
         return;
       }
 
-      if (options?.showRefreshing) {
+      const forceFresh = options?.showRefreshing ?? false;
+      if (forceFresh) {
         setActivationRefreshing(true);
       }
       setActivationError(null);
       try {
-        const data = await loadCachedCompanyActivation();
-        setActivation(data);
-        refreshDashboardNav();
+        if (forceFresh) {
+          // Explicit refresh must reflect the latest server state (e.g. the
+          // first real website inquiry) instead of the cached snapshot.
+          const data = await fetchCompanyActivation();
+          setDashboardCache(COMPANY_ACTIVATION_CACHE_KEY, data);
+          applyActivation(data);
+        } else {
+          // Reflect the background refresh so a milestone reached after the
+          // cache was populated (first website inquiry) surfaces here.
+          const data = await loadCachedCompanyActivation(applyActivation);
+          applyActivation(data);
+        }
       } catch (err) {
         setActivationError(
           formatUserFacingError(err, tActivation("loadFailed"), errorMessages),
@@ -105,7 +125,7 @@ export function GettingStartedPanel() {
         setActivationRefreshing(false);
       }
     },
-    [user, tActivation, errorMessages, refreshDashboardNav],
+    [user, tActivation, errorMessages, applyActivation],
   );
 
   useEffect(() => {
