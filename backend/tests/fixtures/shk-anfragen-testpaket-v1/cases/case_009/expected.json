@@ -1,0 +1,36 @@
+{
+  "case_id": "case_009",
+  "title": "Reklamation zu bestehender Rechnung",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Peter Vogt",
+    "company": null,
+    "email": "peter.vogt@example.com",
+    "phone": null,
+    "service_address": {
+      "street": null,
+      "postal_code": null,
+      "city": null
+    },
+    "service_requested": "Rechnungspruefung RE-2026-1048",
+    "description": "Kunde beanstandet zwei berechnete Monteurstunden.",
+    "urgency": "low",
+    "preferred_time": "Rueckmeldung per E-Mail",
+    "inquiry_kind": "other",
+    "inquiry_scope": "out_of_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "manual_route",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.0,
+      "service_address": 0.35,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

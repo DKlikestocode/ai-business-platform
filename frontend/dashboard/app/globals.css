@@ -4252,3 +4252,269 @@ code {
     bottom: 0.75rem;
   }
 }
+
+/* Unified email and PDF intake */
+.intake-address-card,
+.intake-source-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.intake-address-card p,
+.intake-source-card p,
+.intake-address-card code {
+  margin: 6px 0 0;
+}
+
+.intake-address-card code {
+  padding: 10px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  background: var(--primary-subtle);
+  color: #1e40af;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.intake-list {
+  display: grid;
+  gap: 12px;
+}
+
+.intake-card {
+  display: grid;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.intake-card:hover {
+  border-color: #bfdbfe;
+  box-shadow: var(--shadow-md);
+}
+
+.intake-card-topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.intake-card h3,
+.intake-card-customer,
+.intake-card-service,
+.intake-detail-eyebrow,
+.intake-review-reasons h3,
+.intake-contact-card h3,
+.intake-source-card h3,
+.intake-review-form h3,
+.intake-review-form p {
+  margin: 0;
+}
+
+.intake-card h3 {
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+.intake-card-customer {
+  font-weight: 700;
+}
+
+.intake-card-service {
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.intake-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 0.82rem;
+}
+
+.intake-card-warning {
+  color: var(--danger-text);
+  font-weight: 700;
+}
+
+.intake-status-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.intake-status-ready {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.intake-status-needs_review {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.intake-status-processing,
+.intake-status-received {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.intake-status-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.intake-status-exported {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.intake-status-discarded {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.intake-detail-header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.intake-detail-header h2 {
+  margin-top: 5px;
+}
+
+.intake-review-reasons ul {
+  margin: 12px 0 0;
+  padding-left: 22px;
+}
+
+.intake-contact-card,
+.intake-contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.intake-contact-actions .button {
+  text-decoration: none;
+}
+
+.intake-attachment-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.intake-attachment-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.intake-attachment-button:hover:not(:disabled) {
+  border-color: #bfdbfe;
+  color: var(--primary);
+}
+
+.intake-review-form {
+  display: grid;
+  gap: 20px;
+}
+
+.intake-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.intake-address-grid {
+  grid-template-columns: 2fr 0.7fr 1.2fr;
+}
+
+.intake-select-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.intake-select-grid .select {
+  width: 100%;
+}
+
+.intake-fieldset {
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.intake-fieldset legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.intake-textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.intake-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.button.intake-danger-button {
+  background: #b91c1c;
+}
+
+.button.intake-danger-button:hover:not(:disabled) {
+  background: #991b1b;
+}
+
+@media (max-width: 760px) {
+  .intake-address-card,
+  .intake-source-card,
+  .intake-card-topline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .intake-form-grid,
+  .intake-address-grid,
+  .intake-select-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intake-form-actions .button,
+  .intake-source-card .button,
+  .intake-contact-actions,
+  .intake-contact-actions .button {
+    width: 100%;
+  }
+}

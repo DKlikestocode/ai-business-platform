@@ -1,0 +1,38 @@
+{
+  "case_id": "case_018",
+  "title": "Fussbodenheizung mit technischer Fehlerdokumentation",
+  "source": "email",
+  "attachments": [
+    "fehlerdokumentation_fussbodenheizung.pdf"
+  ],
+  "expected": {
+    "customer_name": "Eva Lindner",
+    "company": null,
+    "email": "eva.lindner@example.com",
+    "phone": "+49 171 00000018",
+    "service_address": {
+      "street": "Diagnoseweg 17",
+      "postal_code": "22337",
+      "city": "Hamburg"
+    },
+    "service_requested": "Fussbodenheizung diagnostizieren und reparieren",
+    "description": "Zwei Heizkreise bleiben kalt; 0,0 l/min Durchfluss trotz Heizanforderung, moegliche Stellantriebs- oder Ventilstoerung.",
+    "urgency": "medium",
+    "preferred_time": "Rueckruf nach 15 Uhr",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "schedule_visit",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

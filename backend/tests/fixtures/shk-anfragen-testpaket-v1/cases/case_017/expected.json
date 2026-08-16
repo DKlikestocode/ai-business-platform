@@ -1,0 +1,36 @@
+{
+  "case_id": "case_017",
+  "title": "Wasserzaehlerwechsel mit festem Terminfenster",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Kai Brand",
+    "company": null,
+    "email": "kai.brand@example.com",
+    "phone": "+49 152 00000017",
+    "service_address": {
+      "street": "Zaehlergasse 4, 3. OG rechts",
+      "postal_code": "20099",
+      "city": "Hamburg"
+    },
+    "service_requested": "Kaltwasserzaehler austauschen",
+    "description": "Abgelaufener Wohnungswasserzaehler soll bis Ende August gewechselt werden.",
+    "urgency": "medium",
+    "preferred_time": "24. oder 26.08., jeweils 9 bis 13 Uhr",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "schedule_visit",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

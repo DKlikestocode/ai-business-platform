@@ -1,0 +1,36 @@
+{
+  "case_id": "case_003",
+  "title": "Leckage ohne Telefonnummer",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Mira Scholz",
+    "company": null,
+    "email": "mira.scholz@example.com",
+    "phone": null,
+    "service_address": {
+      "street": "Teststrasse 31",
+      "postal_code": "22111",
+      "city": "Hamburg"
+    },
+    "service_requested": "Leckage unter Kuechenspuele beheben",
+    "description": "Wasser tritt bei Benutzung des Wasserhahns unter der Spuele aus; Eckventil geschlossen.",
+    "urgency": "medium",
+    "preferred_time": "heute ab 13 Uhr; Kontakt per E-Mail",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "schedule_visit",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.0,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

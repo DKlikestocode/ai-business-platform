@@ -20,7 +20,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <LocaleSwitcher />
         <div className="shell app-header-inner">
           <div className="app-header-brand">
-            <Link href="/leads" className="brand-link app-brand-link">
+            <Link href="/intake" className="brand-link app-brand-link">
               <span className="brand-mark">{brand("mark")}</span>
               <span className="app-brand-text">
                 <span className="app-brand-name">{t("title")}</span>

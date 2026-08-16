@@ -1,0 +1,36 @@
+{
+  "case_id": "case_008",
+  "title": "Fachfremde Elektroanfrage",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Katrin Sommer",
+    "company": null,
+    "email": "katrin.sommer@example.com",
+    "phone": "+49 151 00000008",
+    "service_address": {
+      "street": null,
+      "postal_code": "22415",
+      "city": "Hamburg"
+    },
+    "service_requested": "Elektrische Stoerung am Backofen",
+    "description": "Sicherung loest beim Einschalten des Backofens aus.",
+    "urgency": "medium",
+    "preferred_time": "morgen",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "out_of_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "manual_route",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

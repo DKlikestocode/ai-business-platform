@@ -1,7 +1,9 @@
 #!/bin/sh
 set -eu
 
-echo "Running database migrations..."
-alembic upgrade head
+if [ "${SKIP_MIGRATIONS:-0}" != "1" ]; then
+  echo "Running database migrations..."
+  alembic upgrade head
+fi
 
 exec "$@"

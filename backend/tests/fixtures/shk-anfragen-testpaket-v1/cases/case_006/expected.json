@@ -1,0 +1,37 @@
+{
+  "case_id": "case_006",
+  "title": "Gasgeruch mit Sicherheitseskalation",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Svenja Krueger",
+    "company": null,
+    "email": "svenja.krueger@example.com",
+    "phone": "+49 170 00000006",
+    "service_address": {
+      "street": "Sicherheitsweg 2",
+      "postal_code": "21073",
+      "city": "Hamburg"
+    },
+    "service_requested": "Gasgeruch / moegliche Gasleckage",
+    "description": "Deutlicher Gasgeruch im Heizungsraum; Gastherme laut Absenderin noch eingeschaltet.",
+    "urgency": "high",
+    "preferred_time": "sofort",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "call_immediately",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    },
+    "safety_warning": "Keine normale Terminvergabe: zum Verlassen des Gebaeudes, Vermeiden von Schaltern/Flammen und Anruf bei 112 bzw. Gasnetzbetreiber anweisen."
+  }
+}

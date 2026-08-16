@@ -14,15 +14,16 @@ We are not building software for its own sake.
 
 The AI employee's job:
 
-1. **Capture** website inquiries without forms or friction
+1. **Capture** inquiries from email, PDF, website chat, phone, and future channels
 2. **Understand** what the customer needs, how urgent it is, and how to reach them
-3. **Notify** the business when an inquiry matters
-4. **Hand off** a complete, actionable request to a human — not a raw chat log
+3. **Consolidate** every channel into one trustworthy intake inbox
+4. **Hand off** a complete, actionable request to a human — not a raw message or document
 
 Success is measured by:
 
-- Time from sign-up to **first real website inquiry** in the dashboard
+- Time from connecting the first channel to a **real inquiry** in the dashboard
 - Inquiry quality (contactable, complete, actionable)
+- Honest visibility of missing, contradictory, or uncertain information
 - Business owner comprehension without training or IT support
 - Retention after the first week
 
@@ -50,7 +51,7 @@ If a change does not improve activation, comprehension, or trust for a service b
 
 ### Product truths
 
-1. **The website widget is the product.** Dashboard and onboarding exist to make the widget work on the customer's site.
+1. **The intake inbox is the product.** Website chat is one input channel alongside email, PDF, phone, and future channels.
 2. **Test chat ≠ website chat.** Never imply success when only the in-dashboard demo ran.
 3. **Every screen answers:** Who asked? What do they need? How urgent? How do I contact them?
 4. **Hide implementation detail** (UUIDs, slugs, scores as raw numbers) unless the user explicitly needs it.
@@ -59,8 +60,8 @@ If a change does not improve activation, comprehension, or trust for a service b
 ### North-star flow
 
 ```
-Landing → Onboarding → Login → Getting Started → Settings (embed chat)
-  → Real website inquiry → Inbox → Detail → Contact customer
+Landing → Onboarding → Login → Connect first channel
+  → Real inquiry → Intake inbox → Review → Contact customer / Export
 ```
 
 Any work that does not strengthen this loop is secondary.
@@ -154,11 +155,11 @@ Default to **clean architecture**: routes thin, services own business rules, rep
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Customer website (embed widget)                            │
-│       ↓ public API                                          │
+│  Email · PDF · Website chat · Phone                         │
+│       ↓ channel adapters                                    │
 ├─────────────────────────────────────────────────────────────┤
 │  Backend (FastAPI)                                          │
-│    Lead Capture Agent · Qualification · Notifications       │
+│    Intake Processing · Lead Capture · Review · Notifications│
 │    PostgreSQL · Alembic migrations                          │
 ├─────────────────────────────────────────────────────────────┤
 │  Dashboard (Next.js 15, App Router)                         │
@@ -724,7 +725,7 @@ Omit empty sections. Skip sections that do not apply (e.g. analysis-only tasks: 
 
 ### Priority stack (when choosing work)
 
-1. **P0 — Activation:** Customer embeds chat → real inquiry appears in inbox
+1. **P0 — Activation:** Customer connects one channel → real inquiry appears in inbox
 2. **P1 — Comprehension:** Owner understands every screen without training
 3. **P2 — Speed:** No perceived hang on navigation; snappy inbox
 4. **P3 — Trust:** Brand consistency, legal, notifications that work
@@ -739,7 +740,9 @@ Omit empty sections. Skip sections that do not apply (e.g. analysis-only tasks: 
 | Auth (frontend) | `components/auth-provider.tsx` |
 | API client | `lib/api.ts` |
 | Session cache | `lib/dashboard-cache.ts` |
-| Inbox | `components/leads-dashboard.tsx`, `components/inquiry-card.tsx` |
+| Unified intake | `components/intake-dashboard.tsx`, `components/intake-detail-view.tsx` |
+| Website chat inbox | `components/leads-dashboard.tsx`, `components/inquiry-card.tsx` |
+| Intake processing | `backend/app/services/intake/`, `backend/app/db/models/intake.py` |
 | Widget embed | `lib/widget-embed.ts`, `backend/static/widget/widget.js` |
 | Lead agent | `backend/app/agents/lead_agent/` |
 | i18n DE/EN | `messages/de.json`, `messages/en.json` |
@@ -749,7 +752,7 @@ Omit empty sections. Skip sections that do not apply (e.g. analysis-only tasks: 
 
 ---
 
-*Last updated: reflects repository state including Next.js 15 dashboard, Lead Capture Agent, widget embed, company settings cache, inquiry cards, and dev `.next` cleanup. Update this file when architecture or DX contracts change.*
+*Last updated: reflects the channel-neutral intake architecture, Next.js 15 dashboard, Lead Capture Agent, widget embed, company settings cache, inquiry cards, and dev `.next` cleanup. Update this file when architecture or DX contracts change.*
 
 ---
 

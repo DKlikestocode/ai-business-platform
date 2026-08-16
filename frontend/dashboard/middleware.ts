@@ -11,6 +11,7 @@ import {
 const SESSION_COOKIE = "auth-session";
 
 const protectedPaths = [
+  "/intake",
   "/leads",
   "/demo-chat",
   "/settings",
@@ -122,14 +123,14 @@ export default function middleware(request: NextRequest) {
 
   if (isDashboardAlias) {
     const target = request.nextUrl.clone();
-    target.pathname = buildLocalizedPath("/leads", locale);
+    target.pathname = buildLocalizedPath("/intake", locale);
     target.search = "";
     return NextResponse.redirect(target);
   }
 
   if (pathnameWithoutLocale === "/getting-started") {
     const target = request.nextUrl.clone();
-    target.pathname = buildLocalizedPath("/leads", locale);
+    target.pathname = buildLocalizedPath("/intake", locale);
     target.search = "";
     return NextResponse.redirect(target);
   }
@@ -150,7 +151,7 @@ export default function middleware(request: NextRequest) {
 
   if (isLogin && hasSession) {
     const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = buildLocalizedPath("/leads", locale);
+    dashboardUrl.pathname = buildLocalizedPath("/intake", locale);
     dashboardUrl.search = "";
     return NextResponse.redirect(dashboardUrl);
   }
@@ -172,6 +173,7 @@ export const config = {
     "/forgot-password",
     "/reset-password",
     "/onboarding",
+    "/intake/:path*",
     "/leads/:path*",
     "/demo-chat/:path*",
     "/settings/:path*",

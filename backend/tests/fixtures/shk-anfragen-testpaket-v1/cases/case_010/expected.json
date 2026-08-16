@@ -1,0 +1,36 @@
+{
+  "case_id": "case_010",
+  "title": "Routinewartung einer Gastherme",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Helga Weiss",
+    "company": null,
+    "email": "helga.weiss@example.com",
+    "phone": "+49 40 00000010",
+    "service_address": {
+      "street": "Routineweg 19",
+      "postal_code": "22529",
+      "city": "Hamburg"
+    },
+    "service_requested": "Jaehrliche Wartung einer Junkers-Gastherme",
+    "description": "Planmaessige Wartung; keine Stoerung vorhanden.",
+    "urgency": "low",
+    "preferred_time": "im September vormittags, ausser mittwochs",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "schedule_visit",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

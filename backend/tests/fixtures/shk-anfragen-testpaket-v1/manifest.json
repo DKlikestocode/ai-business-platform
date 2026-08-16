@@ -1,0 +1,225 @@
+{
+  "dataset": "shk-anfragen-testpaket-v1",
+  "language": "de",
+  "synthetic": true,
+  "case_count": 20,
+  "pdf_attachment_count": 8,
+  "cases": [
+    {
+      "case_id": "case_001",
+      "title": "Heizungsausfall mit vollständigen Kontaktdaten",
+      "subject": "Heizung und Warmwasser seit heute Morgen ausgefallen",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "high",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_002",
+      "title": "Badsanierung mit Leistungsbeschreibung als PDF",
+      "subject": "Angebot fuer komplette Badsanierung erbeten",
+      "attachments": [
+        "leistungsbeschreibung_bad.pdf"
+      ],
+      "inquiry_kind": "quote",
+      "urgency": "low",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_003",
+      "title": "Leckage ohne Telefonnummer",
+      "subject": "Wasser unter der Spuele - bitte heute melden",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "medium",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_004",
+      "title": "Hausverwaltung mit mehreren Wartungsobjekten",
+      "subject": "Rahmenangebot Heizungswartung fuer drei Mehrfamilienhaeuser",
+      "attachments": [
+        "anlagenliste_heizung.pdf"
+      ],
+      "inquiry_kind": "quote",
+      "urgency": "low",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": true
+    },
+    {
+      "case_id": "case_005",
+      "title": "Waermepumpenberatung ohne Objektadresse",
+      "subject": "Interesse an Waermepumpe fuer Altbau",
+      "attachments": [],
+      "inquiry_kind": "quote",
+      "urgency": "low",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": true
+    },
+    {
+      "case_id": "case_006",
+      "title": "Gasgeruch mit Sicherheitseskalation",
+      "subject": "DRINGEND Gasgeruch im Keller",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "high",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_007",
+      "title": "Weitergeleitete Anfrage mit widerspruechlicher Postleitzahl",
+      "subject": "WG: Sanitaertermin Gewerbeeinheit - Adresse bitte beachten",
+      "attachments": [
+        "weiterleitungsvermerk.pdf"
+      ],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "medium",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": true
+    },
+    {
+      "case_id": "case_008",
+      "title": "Fachfremde Elektroanfrage",
+      "subject": "Sicherung fliegt bei Backofen raus",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "medium",
+      "inquiry_scope": "out_of_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_009",
+      "title": "Reklamation zu bestehender Rechnung",
+      "subject": "Rueckfrage zu Rechnung RE-2026-1048",
+      "attachments": [],
+      "inquiry_kind": "other",
+      "urgency": "low",
+      "inquiry_scope": "out_of_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_010",
+      "title": "Routinewartung einer Gastherme",
+      "subject": "Termin fuer jaehrliche Thermenwartung",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "low",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_011",
+      "title": "Akute Rohrverstopfung",
+      "subject": "Abfluss verstopft - Wasser steigt hoch",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "high",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_012",
+      "title": "Neubauangebot mit Planungsdaten",
+      "subject": "LV-Anfrage SHK fuer EFH-Neubau in Hamburg",
+      "attachments": [
+        "projektsteckbrief_neubau.pdf"
+      ],
+      "inquiry_kind": "quote",
+      "urgency": "medium",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_013",
+      "title": "Gewerbliche Pumpenwartung mit Anlagenliste",
+      "subject": "Wartungsvertrag fuer Hebeanlagen und Pumpen",
+      "attachments": [
+        "pumpen_anlagenliste.pdf"
+      ],
+      "inquiry_kind": "quote",
+      "urgency": "low",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_014",
+      "title": "Mieter meldet Schaden, Eigentuemer muss freigeben",
+      "subject": "Heizkoerperventil undicht - Mietwohnung",
+      "attachments": [
+        "freigabe_eigentuemerin.pdf"
+      ],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "medium",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": true
+    },
+    {
+      "case_id": "case_015",
+      "title": "Sehr unvollstaendige Stoerungsmeldung",
+      "subject": "Heizung geht nicht",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "unknown",
+      "inquiry_scope": "unclear",
+      "needs_human_review": true
+    },
+    {
+      "case_id": "case_016",
+      "title": "Vertriebs-Spam statt Kundenanfrage",
+      "subject": "Wir bringen Ihren Betrieb auf Platz 1 bei Google",
+      "attachments": [],
+      "inquiry_kind": "other",
+      "urgency": "low",
+      "inquiry_scope": "out_of_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_017",
+      "title": "Wasserzaehlerwechsel mit festem Terminfenster",
+      "subject": "Austausch Wohnungswasserzaehler vor Monatsende",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "medium",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_018",
+      "title": "Fussbodenheizung mit technischer Fehlerdokumentation",
+      "subject": "Fussbodenheizung - zwei Raeume bleiben kalt",
+      "attachments": [
+        "fehlerdokumentation_fussbodenheizung.pdf"
+      ],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "medium",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": false
+    },
+    {
+      "case_id": "case_019",
+      "title": "Material- und Preisabfrage mit mehreren Positionen",
+      "subject": "Preisanfrage Sanitaermaterial Projekt BW-88",
+      "attachments": [
+        "materialanfrage_bw88.pdf"
+      ],
+      "inquiry_kind": "quote",
+      "urgency": "medium",
+      "inquiry_scope": "unclear",
+      "needs_human_review": true
+    },
+    {
+      "case_id": "case_020",
+      "title": "Doppelt gesendete dringende Anfrage",
+      "subject": "AW: Abfluss verstopft - Wasser steigt hoch (noch aktuell)",
+      "attachments": [],
+      "inquiry_kind": "appointment_consultation",
+      "urgency": "high",
+      "inquiry_scope": "in_scope",
+      "needs_human_review": true
+    }
+  ]
+}

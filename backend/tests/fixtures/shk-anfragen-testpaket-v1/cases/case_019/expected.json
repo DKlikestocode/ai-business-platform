@@ -1,0 +1,41 @@
+{
+  "case_id": "case_019",
+  "title": "Material- und Preisabfrage mit mehreren Positionen",
+  "source": "email",
+  "attachments": [
+    "materialanfrage_bw88.pdf"
+  ],
+  "expected": {
+    "customer_name": "Daniela Lorenz",
+    "company": "Bauprojekt West",
+    "email": "einkauf@bauprojekt-west.example",
+    "phone": "+49 40 00000019",
+    "service_address": {
+      "street": "Baustellenweg 88",
+      "postal_code": "22547",
+      "city": "Hamburg"
+    },
+    "service_requested": "Preisangebot fuer Sanitaermaterial",
+    "description": "Materialangebot fuer 5 Positionen inklusive Lieferung; Alternativfabrikate zulaessig.",
+    "urgency": "medium",
+    "preferred_time": "Angebotsfrist 02.09.2026; Lieferung bis 30.11.2026",
+    "inquiry_kind": "quote",
+    "inquiry_scope": "unclear",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Pruefen, ob reiner Materialhandel zum Leistungsumfang des SHK-Betriebs gehoert.",
+      "Positionen muessen als Angebotszeilen uebernommen werden."
+    ],
+    "recommended_action": "prepare_quote",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

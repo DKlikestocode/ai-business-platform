@@ -1,0 +1,39 @@
+{
+  "case_id": "case_015",
+  "title": "Sehr unvollstaendige Stoerungsmeldung",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": null,
+    "company": null,
+    "email": "lm@example.com",
+    "phone": null,
+    "service_address": {
+      "street": null,
+      "postal_code": null,
+      "city": null
+    },
+    "service_requested": "Heizungsstoerung",
+    "description": "Heizung funktioniert laut Absender nicht; keine weiteren Angaben.",
+    "urgency": "unknown",
+    "preferred_time": null,
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "unclear",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Name, Telefonnummer, Objektadresse, Fehlerbild und Terminfenster fehlen.",
+      "Dringlichkeit ist nicht sicher ableitbar."
+    ],
+    "recommended_action": "request_missing_information",
+    "field_confidence": {
+      "customer_name": 0.0,
+      "email": 0.99,
+      "phone": 0.0,
+      "service_address": 0.0,
+      "service_requested": 0.72,
+      "urgency": 0.25,
+      "preferred_time": 0.0
+    }
+  }
+}

@@ -15,11 +15,16 @@ import type {
   LeadMessageRequest,
   LeadMessageResponse,
   LeadStatus,
+  IntakeItem,
+  IntakeReviewRequest,
+  IntakeSetup,
+  IntakeStatus,
   LoginRequest,
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   ResetPasswordRequest,
   PaginatedLeads,
+  PaginatedIntakeItems,
   QualificationStatus,
   SeedDemoDataResponse,
   TokenResponse,
@@ -247,6 +252,104 @@ export async function fetchLeads(params?: {
 
 export async function fetchLead(leadId: string): Promise<Lead> {
   return request<Lead>(`/api/v1/leads/${leadId}`);
+}
+
+export async function fetchIntakeItems(params?: {
+  page?: number;
+  page_size?: number;
+  status?: IntakeStatus | "";
+}): Promise<PaginatedIntakeItems> {
+  const search = new URLSearchParams();
+  search.set("page", String(params?.page ?? 1));
+  search.set("page_size", String(params?.page_size ?? 20));
+  if (params?.status) {
+    search.set("status", params.status);
+  }
+  return request<PaginatedIntakeItems>(
+    `/api/v1/intake-items?${search.toString()}`,
+  );
+}
+
+export async function fetchIntakeItem(itemId: string): Promise<IntakeItem> {
+  return request<IntakeItem>(`/api/v1/intake-items/${itemId}`);
+}
+
+export async function fetchIntakeSetup(): Promise<IntakeSetup> {
+  return request<IntakeSetup>("/api/v1/intake-items/setup");
+}
+
+export async function reviewIntakeItem(
+  itemId: string,
+  payload: IntakeReviewRequest,
+): Promise<IntakeItem> {
+  return request<IntakeItem>(`/api/v1/intake-items/${itemId}/review`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function retryIntakeItem(itemId: string): Promise<IntakeItem> {
+  return request<IntakeItem>(`/api/v1/intake-items/${itemId}/retry`, {
+    method: "POST",
+  });
+}
+
+export async function downloadIntakeSource(itemId: string): Promise<void> {
+  return downloadAuthenticatedFile(
+    `/api/v1/intake-items/${itemId}/source.eml`,
+    `anfrage-${itemId}.eml`,
+  );
+}
+
+export async function downloadIntakeAttachment(
+  itemId: string,
+  attachmentId: string,
+  filename: string,
+): Promise<void> {
+  return downloadAuthenticatedFile(
+    `/api/v1/intake-items/${itemId}/attachments/${attachmentId}`,
+    filename,
+  );
+}
+
+export async function exportIntakeCsv(itemId: string): Promise<void> {
+  return downloadAuthenticatedFile(
+    `/api/v1/intake-items/${itemId}/export.csv`,
+    `auftrag-${itemId}.csv`,
+  );
+}
+
+async function downloadAuthenticatedFile(
+  path: string,
+  filename: string,
+): Promise<void> {
+  const url = buildApiUrl(path);
+  const response = await fetch(url, {
+    method: "GET",
+    headers: buildAuthHeaders({ headers: { Accept: "*/*" } }),
+    cache: "no-store",
+    credentials: "same-origin",
+  });
+
+  if (response.status === 401 && unauthorizedHandler) {
+    unauthorizedHandler();
+  }
+  if (!response.ok) {
+    const detail = await readErrorDetail(response);
+    const message = formatErrorDetail(response.status, detail);
+    throw new ApiError(
+      formatUserFacingError(new ApiError(message, response.status)),
+      response.status,
+    );
+  }
+
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = objectUrl;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(objectUrl);
 }
 
 export async function downloadLeadCalendarIcs(leadId: string): Promise<void> {

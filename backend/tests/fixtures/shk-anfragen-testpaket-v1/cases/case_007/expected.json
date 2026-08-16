@@ -1,0 +1,40 @@
+{
+  "case_id": "case_007",
+  "title": "Weitergeleitete Anfrage mit widerspruechlicher Postleitzahl",
+  "source": "email",
+  "attachments": [
+    "weiterleitungsvermerk.pdf"
+  ],
+  "expected": {
+    "customer_name": "Mehmet Kaya",
+    "company": null,
+    "email": "mehmet.kaya@example.com",
+    "phone": "+49 157 00000007",
+    "service_address": {
+      "street": "Korrekturstrasse 5",
+      "postal_code": "22089",
+      "city": "Hamburg"
+    },
+    "service_requested": "WC-Spuelung reparieren",
+    "description": "WC-Spuelung in einer Gewerbeeinheit laeuft dauerhaft.",
+    "urgency": "medium",
+    "preferred_time": "Freitag vor 10 Uhr",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Im E-Mail-Verlauf stehen die PLZ 22087 und 22089; der Nachtrag und Anhang bestaetigen 22089."
+    ],
+    "recommended_action": "schedule_visit",
+    "field_confidence": {
+      "customer_name": 0.96,
+      "email": 0.96,
+      "phone": 0.98,
+      "service_address": 0.78,
+      "service_requested": 0.96,
+      "urgency": 0.82,
+      "preferred_time": 0.95
+    }
+  }
+}

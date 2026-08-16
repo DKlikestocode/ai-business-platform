@@ -51,6 +51,34 @@ def test_validate_production_settings_requires_resend() -> None:
         )
 
 
+def test_inbound_email_requires_webhook_secret_and_domain() -> None:
+    with pytest.raises(RuntimeError, match="RESEND_WEBHOOK_SECRET"):
+        validate_production_settings(
+            make_production_settings(intake_email_enabled=True)
+        )
+
+
+def test_inbound_email_accepts_complete_configuration() -> None:
+    validate_production_settings(
+        make_production_settings(
+            intake_email_enabled=True,
+            resend_webhook_secret="whsec_test",
+            resend_inbound_domain="inbound.example.com",
+        )
+    )
+
+
+def test_inbound_email_rejects_invalid_domain() -> None:
+    with pytest.raises(RuntimeError, match="valid domain"):
+        validate_production_settings(
+            make_production_settings(
+                intake_email_enabled=True,
+                resend_webhook_secret="whsec_test",
+                resend_inbound_domain="invalid..example.com",
+            )
+        )
+
+
 def test_openapi_disabled_in_production() -> None:
     settings = make_production_settings()
     production_app = create_app(settings)

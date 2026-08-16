@@ -1,0 +1,36 @@
+{
+  "case_id": "case_011",
+  "title": "Akute Rohrverstopfung",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Nora Frank",
+    "company": null,
+    "email": "nora.frank@example.com",
+    "phone": "+49 176 00000011",
+    "service_address": {
+      "street": "Engpassring 6",
+      "postal_code": "21109",
+      "city": "Hamburg"
+    },
+    "service_requested": "Rohr- oder Abflussverstopfung beseitigen",
+    "description": "Kueche und Bad laufen nicht ab; Wasser tritt in der Dusche hoch.",
+    "urgency": "high",
+    "preferred_time": "heute",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "call_immediately",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

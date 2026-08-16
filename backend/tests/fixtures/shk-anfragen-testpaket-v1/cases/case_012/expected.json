@@ -1,0 +1,38 @@
+{
+  "case_id": "case_012",
+  "title": "Neubauangebot mit Planungsdaten",
+  "source": "email",
+  "attachments": [
+    "projektsteckbrief_neubau.pdf"
+  ],
+  "expected": {
+    "customer_name": "Frau Brandt",
+    "company": "Bauplanung Alster GmbH",
+    "email": "anfrage@bauplanung-alster.example",
+    "phone": "+49 40 00000012",
+    "service_address": {
+      "street": "Planstrasse 44",
+      "postal_code": "22393",
+      "city": "Hamburg"
+    },
+    "service_requested": "Pauschalangebot SHK fuer EFH-Neubau",
+    "description": "SHK-Komplettleistung fuer 182 m2 EFH mit Luft-Wasser-Waermepumpe, Fussbodenheizung und Sanitaerinstallation.",
+    "urgency": "medium",
+    "preferred_time": "Angebotsabgabe bis 15.09.2026",
+    "inquiry_kind": "quote",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "prepare_quote",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

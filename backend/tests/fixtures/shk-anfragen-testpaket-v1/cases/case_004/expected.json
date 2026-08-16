@@ -1,0 +1,40 @@
+{
+  "case_id": "case_004",
+  "title": "Hausverwaltung mit mehreren Wartungsobjekten",
+  "source": "email",
+  "attachments": [
+    "anlagenliste_heizung.pdf"
+  ],
+  "expected": {
+    "customer_name": "Leonie Wagner",
+    "company": "Elbe Objektverwaltung GmbH",
+    "email": "leonie.wagner@elbe-objekt.example",
+    "phone": "+49 40 00000004",
+    "service_address": {
+      "street": null,
+      "postal_code": null,
+      "city": "Hamburg"
+    },
+    "service_requested": "Rahmenangebot fuer jaehrliche Heizungswartung",
+    "description": "Wartungsvertrag ab 2027 fuer drei Mehrfamilienhaeuser mit insgesamt 39 Wohneinheiten.",
+    "urgency": "low",
+    "preferred_time": "Vor-Ort-Termin in KW 38 oder 39",
+    "inquiry_kind": "quote",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Mehrere Leistungsorte muessen als eigene Objekte erfasst werden."
+    ],
+    "recommended_action": "prepare_quote",
+    "field_confidence": {
+      "customer_name": 0.99,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.82,
+      "service_requested": 0.96,
+      "urgency": 0.91,
+      "preferred_time": 0.92
+    }
+  }
+}
