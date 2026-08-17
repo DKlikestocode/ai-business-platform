@@ -1,0 +1,38 @@
+{
+  "case_id": "case_002",
+  "title": "Badsanierung mit Leistungsbeschreibung als PDF",
+  "source": "email",
+  "attachments": [
+    "leistungsbeschreibung_bad.pdf"
+  ],
+  "expected": {
+    "customer_name": "Tobias Hahn",
+    "company": null,
+    "email": "tobias.hahn@example.com",
+    "phone": "+49 152 00000002",
+    "service_address": {
+      "street": "Musterallee 7",
+      "postal_code": "22041",
+      "city": "Hamburg"
+    },
+    "service_requested": "Komplette Badsanierung",
+    "description": "Bad ca. 8,5 m2 komplett sanieren; Sanitaerobjekte, Leitungspruefung und Handtuchheizkoerper.",
+    "urgency": "low",
+    "preferred_time": "Besichtigung Dienstag oder Donnerstag ab 16 Uhr; Ausfuehrung Oktober 2026",
+    "inquiry_kind": "quote",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "prepare_quote",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

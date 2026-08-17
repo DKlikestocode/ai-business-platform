@@ -1,0 +1,39 @@
+{
+  "case_id": "case_020",
+  "title": "Doppelt gesendete dringende Anfrage",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Nora Frank",
+    "company": null,
+    "email": "nora.frank@example.com",
+    "phone": "+49 176 00000011",
+    "service_address": {
+      "street": "Engpassring 6",
+      "postal_code": "21109",
+      "city": "Hamburg"
+    },
+    "service_requested": "Rohr- oder Abflussverstopfung beseitigen",
+    "description": "Erneute Nachricht zur weiterhin bestehenden Verstopfung aus case_011.",
+    "urgency": "high",
+    "preferred_time": "sofort / heute",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Wahrscheinliches Duplikat anhand Absender, Telefonnummer, Adresse und kurzer Zeitspanne."
+    ],
+    "recommended_action": "merge_duplicate",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    },
+    "duplicate_of": "case_011"
+  }
+}

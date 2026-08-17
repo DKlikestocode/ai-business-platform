@@ -22,10 +22,13 @@ from app.db.session import get_db
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
+from app.repositories.intake_repository import IntakeRepository
 from app.repositories.password_reset_repository import PasswordResetRepository
 from app.repositories.user_repository import UserRepository
 from app.services.activation.service import ActivationService
 from app.services.auth_service import AuthService
+from app.services.intake.resend import ResendReceivedEmailClient, ResendWebhookVerifier
+from app.services.intake.service import IntakeService
 from app.services.notifications.factory import build_email_provider
 from app.services.notifications.service import NotificationService
 from app.services.notifications.sms_factory import build_sms_provider
@@ -162,11 +165,47 @@ def _build_lead_capture_service(
         activation_repository=CompanyActivationRepository(db),
         notification_service=notification_service,
         channel=channel,
+        intake_repository=IntakeRepository(db),
     )
 
 
 def get_lead_repository(db: Session = Depends(get_db)) -> LeadRepository:
     return LeadRepository(db)
+
+
+def get_intake_repository(db: Session = Depends(get_db)) -> IntakeRepository:
+    return IntakeRepository(db)
+
+
+def get_intake_service(
+    repository: IntakeRepository = Depends(get_intake_repository),
+) -> IntakeService:
+    return IntakeService(repository)
+
+
+def get_resend_webhook_verifier(
+    settings: Settings = Depends(get_settings),
+) -> ResendWebhookVerifier:
+    if not settings.intake_email_enabled or not settings.resend_webhook_secret.strip():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Inbound email intake is not configured.",
+        )
+    return ResendWebhookVerifier(settings.resend_webhook_secret)
+
+
+def get_resend_received_email_client(
+    settings: Settings = Depends(get_settings),
+) -> ResendReceivedEmailClient:
+    if not settings.intake_email_enabled or not settings.resend_api_key.strip():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Inbound email intake is not configured.",
+        )
+    return ResendReceivedEmailClient(
+        api_key=settings.resend_api_key,
+        timeout=settings.resend_receive_timeout,
+    )
 
 
 def get_conversation_repository(db: Session = Depends(get_db)) -> ConversationRepository:

@@ -1,0 +1,38 @@
+{
+  "case_id": "case_013",
+  "title": "Gewerbliche Pumpenwartung mit Anlagenliste",
+  "source": "email",
+  "attachments": [
+    "pumpen_anlagenliste.pdf"
+  ],
+  "expected": {
+    "customer_name": "Ralf Neumann",
+    "company": "Hafenlogistik Nord KG",
+    "email": "ralf.neumann@hafenlogistik.example",
+    "phone": "+49 40 00000013",
+    "service_address": {
+      "street": "Logistikring 80",
+      "postal_code": "20457",
+      "city": "Hamburg"
+    },
+    "service_requested": "Wartungsvertrag fuer Hebeanlagen und Pumpen",
+    "description": "Halbjaehrliche Wartung von zwei Hebeanlagen und vier Zirkulationspumpen; Rufbereitschaft optional.",
+    "urgency": "low",
+    "preferred_time": "Begehung in der Woche ab 05.10.",
+    "inquiry_kind": "quote",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "prepare_quote",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

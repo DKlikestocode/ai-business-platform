@@ -1,0 +1,40 @@
+{
+  "case_id": "case_014",
+  "title": "Mieter meldet Schaden, Eigentuemer muss freigeben",
+  "source": "email",
+  "attachments": [
+    "freigabe_eigentuemerin.pdf"
+  ],
+  "expected": {
+    "customer_name": "Lukas Kern",
+    "company": null,
+    "email": "lukas.kern@example.com",
+    "phone": "+49 155 00000014",
+    "service_address": {
+      "street": "Mietweg 9, 2. OG links",
+      "postal_code": "22767",
+      "city": "Hamburg"
+    },
+    "service_requested": "Undichtes Heizkoerperventil pruefen und reparieren",
+    "description": "Kleine Leckage am Heizkoerperventil im Schlafzimmer; Eigentuemerfreigabe bis 250 EUR vorhanden.",
+    "urgency": "medium",
+    "preferred_time": "Montag 8 bis 12 Uhr",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Mieter ist Ansprechpartner, Eigentuemerin ist Auftraggeberin; Freigabegrenze 250 EUR beachten."
+    ],
+    "recommended_action": "schedule_visit",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

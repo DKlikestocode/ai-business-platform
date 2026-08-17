@@ -1,6 +1,7 @@
+import re
 from functools import lru_cache
 
-from pydantic import computed_field
+from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_JWT_SECRET = "change-me-in-production-use-a-long-random-secret"
@@ -41,6 +42,13 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000"
     notification_provider: str = "logging"
     resend_api_key: str = ""
+    intake_email_enabled: bool = False
+    resend_webhook_secret: str = ""
+    resend_inbound_domain: str = ""
+    resend_receive_timeout: float = Field(default=30.0, gt=0, le=120)
+    intake_worker_poll_seconds: float = Field(default=5.0, gt=0)
+    intake_worker_lease_seconds: int = Field(default=300, ge=30)
+    intake_max_processing_attempts: int = Field(default=3, ge=1, le=10)
     notification_from_email: str = ""
     sms_provider: str = "logging"
     frontend_base_url: str | None = None
@@ -86,12 +94,35 @@ def validate_production_settings(settings: Settings) -> None:
         errors.append("NOTIFICATION_FROM_EMAIL is required in production")
     if not (settings.frontend_base_url or "").strip():
         errors.append("FRONTEND_BASE_URL is required in production")
+    if settings.intake_email_enabled:
+        if not settings.resend_webhook_secret.strip():
+            errors.append(
+                "RESEND_WEBHOOK_SECRET is required when INTAKE_EMAIL_ENABLED is true"
+            )
+        if not settings.resend_inbound_domain.strip():
+            errors.append(
+                "RESEND_INBOUND_DOMAIN is required when INTAKE_EMAIL_ENABLED is true"
+            )
+        elif not _is_valid_domain(settings.resend_inbound_domain):
+            errors.append("RESEND_INBOUND_DOMAIN must be a valid domain name")
 
     if errors:
         message = "Production configuration is invalid:\n" + "\n".join(
             f"  - {error}" for error in errors
         )
         raise RuntimeError(message)
+
+
+def _is_valid_domain(value: str) -> bool:
+    domain = value.strip().lower().rstrip(".")
+    if not domain or len(domain) > 253:
+        return False
+    labels = domain.split(".")
+    return all(
+        len(label) <= 63
+        and re.fullmatch(r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", label)
+        for label in labels
+    )
 
 
 @lru_cache

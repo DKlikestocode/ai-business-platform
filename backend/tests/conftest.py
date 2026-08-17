@@ -189,6 +189,13 @@ def lead_repository(db_session):
 
 
 @pytest.fixture
+def intake_repository(db_session):
+    from app.repositories.intake_repository import IntakeRepository
+
+    return IntakeRepository(db_session)
+
+
+@pytest.fixture
 def company_activation_repository(db_session):
     from app.repositories.company_activation_repository import CompanyActivationRepository
 

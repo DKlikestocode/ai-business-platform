@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { isDevelopment } from "@/lib/env";
 
 const links = [
+  { href: "/intake", labelKey: "intake" },
   { href: "/leads", labelKey: "leads" },
   { href: "/demo-chat", labelKey: "demoChat" },
   { href: "/settings", labelKey: "settings" },

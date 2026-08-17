@@ -11,7 +11,7 @@ import type {
   CurrentUser,
 } from "@/lib/types";
 
-export type AuthenticatedHomePath = "/leads";
+export type AuthenticatedHomePath = "/intake";
 
 export interface DashboardNavState {
   ready: boolean;
@@ -50,5 +50,5 @@ export function resolveAuthenticatedHomePathFromCache(
   _user: CurrentUser,
   _company: Company,
 ): AuthenticatedHomePath {
-  return "/leads";
+  return "/intake";
 }

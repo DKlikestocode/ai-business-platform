@@ -107,7 +107,7 @@ describe("resolveAuthenticatedHomePath", () => {
     });
 
     await expect(resolveAuthenticatedHomePath(user, company)).resolves.toBe(
-      "/leads",
+      "/intake",
     );
   });
 
@@ -123,7 +123,7 @@ describe("resolveAuthenticatedHomePath", () => {
     });
 
     await expect(resolveAuthenticatedHomePath(user, company)).resolves.toBe(
-      "/leads",
+      "/intake",
     );
   });
 });

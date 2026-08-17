@@ -102,7 +102,7 @@ describe("dashboard-nav", () => {
       ready: true,
       showGettingStarted: false,
     });
-    expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe("/leads");
+    expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe("/intake");
   });
 
   it("routes all accounts to the inbox", () => {
@@ -114,6 +114,6 @@ describe("dashboard-nav", () => {
       }),
     );
 
-    expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe("/leads");
+    expect(resolveAuthenticatedHomePathFromCache(user, company)).toBe("/intake");
   });
 });

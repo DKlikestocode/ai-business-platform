@@ -46,6 +46,7 @@ from app.db.models.enums import ConversationChannel, MessageRole
 from app.repositories.company_activation_repository import CompanyActivationRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.conversation_repository import ConversationRepository
+from app.repositories.intake_repository import IntakeRepository
 from app.services.notifications.service import NotificationService
 from app.services.service_area.evaluate import (
     evaluate_service_area,
@@ -72,6 +73,7 @@ class LeadCaptureService:
         activation_repository: CompanyActivationRepository,
         notification_service: NotificationService,
         channel: ConversationChannel = ConversationChannel.WEB,
+        intake_repository: IntakeRepository | None = None,
     ) -> None:
         self._agent = agent
         self._conversation_repository = conversation_repository
@@ -81,6 +83,7 @@ class LeadCaptureService:
         self._activation_repository = activation_repository
         self._notification_service = notification_service
         self._channel = channel
+        self._intake_repository = intake_repository
 
     async def handle_message(
         self,
@@ -248,6 +251,11 @@ class LeadCaptureService:
                 request.conversation_id,
                 qualification.qualification_status.value,
             )
+            if self._intake_repository is not None:
+                self._intake_repository.sync_lead(
+                    lead,
+                    conversation_channel=self._channel,
+                )
             if self._channel == ConversationChannel.WEB:
                 self._activation_repository.record_first_website_inquiry(
                     company_id,

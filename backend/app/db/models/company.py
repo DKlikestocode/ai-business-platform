@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from app.db.models.agent import Agent
     from app.db.models.company_activation import CompanyActivation
     from app.db.models.conversation import Conversation
+    from app.db.models.intake import IntakeItem
     from app.db.models.lead import Lead
     from app.db.models.user import User
 
@@ -62,6 +63,11 @@ class Company(Base):
     leads: Mapped[list["Lead"]] = relationship(
         "Lead",
         back_populates="tenant",
+        cascade="all, delete-orphan",
+    )
+    intake_items: Mapped[list["IntakeItem"]] = relationship(
+        "IntakeItem",
+        back_populates="company",
         cascade="all, delete-orphan",
     )
     conversations: Mapped[list["Conversation"]] = relationship(

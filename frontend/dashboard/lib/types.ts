@@ -191,6 +191,116 @@ export interface PaginatedLeads {
   total_pages: number;
 }
 
+export type IntakeChannel =
+  | "email"
+  | "website"
+  | "voice"
+  | "whatsapp"
+  | "manual";
+
+export type IntakeStatus =
+  | "received"
+  | "processing"
+  | "ready"
+  | "needs_review"
+  | "failed"
+  | "exported"
+  | "discarded";
+
+export type IntakeUrgency = "high" | "medium" | "low" | "unknown";
+export type IntakeKind = "appointment_consultation" | "quote" | "other";
+export type IntakeScope = "in_scope" | "out_of_scope" | "unclear";
+export type IntakeReviewDecision = "approve" | "save_for_review" | "discard";
+
+export type IntakeRecommendedAction =
+  | "call_immediately"
+  | "schedule_visit"
+  | "prepare_quote"
+  | "request_missing_information"
+  | "manual_route"
+  | "discard_spam"
+  | "merge_duplicate";
+
+export interface IntakeServiceAddress {
+  street: string | null;
+  postal_code: string | null;
+  city: string | null;
+}
+
+export interface IntakeAttachment {
+  id: string;
+  filename: string;
+  content_type: string;
+  size_bytes: number;
+  sha256: string;
+  created_at: string;
+}
+
+export interface IntakeItem {
+  id: string;
+  company_id: string;
+  channel: IntakeChannel;
+  status: IntakeStatus;
+  subject: string;
+  sender_name: string | null;
+  sender_email: string | null;
+  received_at: string | null;
+  customer_name: string | null;
+  customer_company: string | null;
+  customer_email: string | null;
+  customer_phone: string | null;
+  service_address: IntakeServiceAddress | null;
+  service_requested: string | null;
+  description: string | null;
+  urgency: IntakeUrgency | null;
+  preferred_time: string | null;
+  inquiry_kind: IntakeKind | null;
+  inquiry_scope: IntakeScope | null;
+  contactable: boolean;
+  needs_human_review: boolean;
+  review_reasons: string[];
+  recommended_action: IntakeRecommendedAction | null;
+  field_confidence: Record<string, number>;
+  safety_warning: string | null;
+  processing_error: string | null;
+  processing_attempts: number;
+  processed_at: string | null;
+  exported_at: string | null;
+  duplicate_of_id: string | null;
+  attachments: IntakeAttachment[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedIntakeItems {
+  items: IntakeItem[];
+  page: number;
+  page_size: number;
+  total: number;
+  total_pages: number;
+}
+
+export interface IntakeSetup {
+  email_enabled: boolean;
+  inbound_email: string | null;
+}
+
+export interface IntakeReviewRequest {
+  decision: IntakeReviewDecision;
+  customer_name?: string | null;
+  customer_company?: string | null;
+  customer_email?: string | null;
+  customer_phone?: string | null;
+  service_address?: IntakeServiceAddress | null;
+  service_requested?: string | null;
+  description?: string | null;
+  urgency?: IntakeUrgency | null;
+  preferred_time?: string | null;
+  inquiry_kind?: IntakeKind | null;
+  inquiry_scope?: IntakeScope | null;
+  recommended_action?: IntakeRecommendedAction | null;
+}
+
 export interface SeedDemoDataResponse {
   created: number;
   skipped: number;

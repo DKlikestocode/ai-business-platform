@@ -1,0 +1,38 @@
+{
+  "case_id": "case_005",
+  "title": "Waermepumpenberatung ohne Objektadresse",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Jan Petersen",
+    "company": null,
+    "email": "jan.petersen@example.com",
+    "phone": "+49 160 00000005",
+    "service_address": {
+      "street": null,
+      "postal_code": null,
+      "city": null
+    },
+    "service_requested": "Waermepumpenberatung und Angebot",
+    "description": "Altbau aus den 1960ern, ca. 145 m2, bestehende Oelheizung und Heizkoerper, Dach gedaemmt.",
+    "urgency": "low",
+    "preferred_time": "werktags 17 bis 19 Uhr",
+    "inquiry_kind": "quote",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": true,
+    "review_reasons": [
+      "Objektadresse und Postleitzahl fehlen."
+    ],
+    "recommended_action": "request_missing_information",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.35,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}

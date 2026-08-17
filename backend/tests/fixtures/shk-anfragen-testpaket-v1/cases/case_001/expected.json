@@ -1,0 +1,36 @@
+{
+  "case_id": "case_001",
+  "title": "Heizungsausfall mit vollständigen Kontaktdaten",
+  "source": "email",
+  "attachments": [],
+  "expected": {
+    "customer_name": "Anna Berger",
+    "company": null,
+    "email": "anna.berger@example.com",
+    "phone": "+49 151 00000001",
+    "service_address": {
+      "street": "Beispielweg 14",
+      "postal_code": "22305",
+      "city": "Hamburg"
+    },
+    "service_requested": "Heizungsstoerung beheben",
+    "description": "Heizung und Warmwasser seit ca. 06:00 Uhr ausgefallen; Viessmann Vitodens, Fehler F4.",
+    "urgency": "high",
+    "preferred_time": "sofort; heute durchgehend erreichbar",
+    "inquiry_kind": "appointment_consultation",
+    "inquiry_scope": "in_scope",
+    "contactable": true,
+    "needs_human_review": false,
+    "review_reasons": [],
+    "recommended_action": "call_immediately",
+    "field_confidence": {
+      "customer_name": 0.98,
+      "email": 0.99,
+      "phone": 0.98,
+      "service_address": 0.95,
+      "service_requested": 0.94,
+      "urgency": 0.9,
+      "preferred_time": 0.9
+    }
+  }
+}
