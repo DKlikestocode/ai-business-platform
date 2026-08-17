@@ -31,8 +31,11 @@ This guide covers deploying AI Anfragen-Assistent with Docker Compose for a pilo
 | `NOTIFICATION_PROVIDER` | Set to `resend` in production |
 | `RESEND_API_KEY` | Resend API key |
 | `NOTIFICATION_FROM_EMAIL` | Verified sender address in Resend |
+| `INTAKE_EMAIL_ENABLED` | Set to `true` after the inbound domain and webhook are ready |
+| `RESEND_WEBHOOK_SECRET` | Signing secret of the Resend `email.received` webhook |
+| `RESEND_INBOUND_DOMAIN` | Dedicated receiving subdomain, e.g. `inbox.example.com` |
 
-The backend refuses to start in production if `JWT_SECRET_KEY` is still the default value or if `OPENAI_API_KEY` is missing.
+The backend refuses to start in production if `JWT_SECRET_KEY` is still the default value or if `OPENAI_API_KEY` is missing. When inbound email is enabled, it also requires the webhook secret and a valid inbound domain.
 
 ## DNS setup
 
@@ -53,6 +56,14 @@ Verify DNS:
 dig +short app.example.com
 dig +short api.example.com
 ```
+
+Configure the dedicated `RESEND_INBOUND_DOMAIN` separately in Resend Receiving using the DNS records shown there. Subscribe a webhook to the `email.received` event and point it to:
+
+```text
+https://api.example.com/api/v1/webhooks/resend
+```
+
+Do not point the inbound email subdomain at Caddy unless Resend explicitly asks for such a record.
 
 ## Reverse proxy and HTTPS
 
@@ -112,6 +123,7 @@ The production stack runs:
 
 - PostgreSQL with a persistent volume
 - Backend (migrations on startup, single Uvicorn worker, non-root user)
+- Intake worker for durable email/PDF processing and retries
 - Frontend (`next build` + `next start`)
 - Caddy (TLS termination and reverse proxy)
 
