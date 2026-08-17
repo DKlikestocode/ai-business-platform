@@ -30,6 +30,15 @@ def test_rejects_confidence_outside_zero_to_one() -> None:
         IntakeExtraction(field_confidence={"customer_name": 1.1})
 
 
+def test_confidence_uses_closed_structured_output_schema() -> None:
+    schema = IntakeExtraction.model_json_schema()
+    confidence_schema = schema["$defs"]["IntakeFieldConfidence"]
+
+    assert confidence_schema["additionalProperties"] is False
+    assert "customer_name" in confidence_schema["properties"]
+    assert "service_requested" in confidence_schema["properties"]
+
+
 def test_csv_export_neutralizes_spreadsheet_formulas() -> None:
     assert _csv_safe("=HYPERLINK(\"https://example.test\")") == (
         "'=HYPERLINK(\"https://example.test\")"
