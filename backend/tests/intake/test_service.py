@@ -80,6 +80,7 @@ async def test_ingests_email_pdf_and_applies_extraction(
     assert result.item.source_storage_key == "companies/test/emails/case_002.eml"
     assert len(result.item.attachments) == 1
     assert result.item.attachments[0].storage_key == "companies/test/pdfs/case_002.pdf"
+    assert result.item.field_confidence == extraction.field_confidence.as_dict()
     assert extraction_client.calls == 1
 
 
