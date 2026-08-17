@@ -231,7 +231,7 @@ class IntakeRepository:
         item.needs_human_review = extraction.needs_human_review
         item.review_reasons = extraction.review_reasons
         item.recommended_action = extraction.recommended_action.value
-        item.field_confidence = extraction.field_confidence
+        item.field_confidence = extraction.field_confidence.as_dict()
         item.safety_warning = extraction.safety_warning
         item.extraction_model = model_name
         item.processing_error = None
