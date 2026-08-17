@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class IntakeChannel(StrEnum):
@@ -58,12 +58,49 @@ class IntakeReviewDecision(StrEnum):
 
 
 class ServiceAddress(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     street: str | None = None
     postal_code: str | None = None
     city: str | None = None
 
 
+class IntakeFieldConfidence(BaseModel):
+    """Closed confidence schema compatible with OpenAI Structured Outputs."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    customer_name: float | None = None
+    company: float | None = None
+    email: float | None = None
+    phone: float | None = None
+    service_address: float | None = None
+    service_requested: float | None = None
+    description: float | None = None
+    urgency: float | None = None
+    preferred_time: float | None = None
+    inquiry_kind: float | None = None
+    inquiry_scope: float | None = None
+    contactable: float | None = None
+    needs_human_review: float | None = None
+    recommended_action: float | None = None
+    safety_warning: float | None = None
+    duplicate_of: float | None = None
+
+    @field_validator("*")
+    @classmethod
+    def validate_confidence(cls, value: float | None) -> float | None:
+        if value is not None and not 0 <= value <= 1:
+            raise ValueError("field confidence must be between 0 and 1")
+        return value
+
+    def as_dict(self) -> dict[str, float]:
+        return self.model_dump(mode="json", exclude_none=True)
+
+
 class IntakeExtraction(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     customer_name: str | None = None
     company: str | None = None
     email: str | None = None
@@ -79,17 +116,11 @@ class IntakeExtraction(BaseModel):
     needs_human_review: bool = True
     review_reasons: list[str] = Field(default_factory=list)
     recommended_action: RecommendedAction = RecommendedAction.MANUAL_ROUTE
-    field_confidence: dict[str, float] = Field(default_factory=dict)
+    field_confidence: IntakeFieldConfidence = Field(
+        default_factory=IntakeFieldConfidence
+    )
     safety_warning: str | None = None
     duplicate_of: str | None = None
-
-    @field_validator("field_confidence")
-    @classmethod
-    def validate_confidence(cls, value: dict[str, float]) -> dict[str, float]:
-        invalid = [key for key, confidence in value.items() if not 0 <= confidence <= 1]
-        if invalid:
-            raise ValueError("field confidence must be between 0 and 1")
-        return value
 
 
 class ParsedAttachment(BaseModel):
