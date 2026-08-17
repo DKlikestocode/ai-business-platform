@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 from app.core.exceptions import LLMServiceError
 from app.db.models.company import Company
+from app.db.models.intake import IntakeItem
 from app.repositories.intake_repository import IntakeRepository
 from app.services.intake.models import IntakeExtraction, IntakeStatus, ParsedEmail
 from app.services.intake.service import IntakeService
@@ -36,6 +37,19 @@ class FailingExtractionClient:
 def _raw_email(case_id: str) -> tuple[Path, bytes]:
     directory = FIXTURE_ROOT / "cases" / case_id
     return directory, (directory / "inquiry.eml").read_bytes()
+
+
+@pytest.fixture
+def isolated_intake_queue(db_session) -> None:
+    db_session.query(IntakeItem).filter(
+        IntakeItem.status.in_(
+            [IntakeStatus.RECEIVED.value, IntakeStatus.PROCESSING.value]
+        )
+    ).update(
+        {IntakeItem.status: IntakeStatus.DISCARDED.value},
+        synchronize_session=False,
+    )
+    db_session.commit()
 
 
 @pytest.mark.asyncio
@@ -128,6 +142,7 @@ async def test_preserves_item_when_extraction_fails(
 async def test_queue_processes_durably_stored_email(
     intake_repository: IntakeRepository,
     company: Company,
+    isolated_intake_queue: None,
 ) -> None:
     case_directory, raw_message = _raw_email("case_002")
     extraction = IntakeExtraction.model_validate(
@@ -160,6 +175,7 @@ async def test_queue_processes_durably_stored_email(
 async def test_queue_retries_then_marks_item_failed(
     intake_repository: IntakeRepository,
     company: Company,
+    isolated_intake_queue: None,
 ) -> None:
     _, raw_message = _raw_email("case_003")
     ingestion_service = IntakeService(intake_repository)

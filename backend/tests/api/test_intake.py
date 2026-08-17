@@ -92,6 +92,7 @@ def test_reviews_downloads_and_exports_intake_item(
     dev_client: TestClient,
     auth_headers: dict[str, str],
     company,
+    db_session,
     intake_repository: IntakeRepository,
 ) -> None:
     item = _create_intake_item(
@@ -145,6 +146,7 @@ def test_reviews_downloads_and_exports_intake_item(
     assert export_response.status_code == 200
     assert export_response.content.startswith(b"\xef\xbb\xbf")
     assert "Komplette Badsanierung" in export_response.content.decode("utf-8-sig")
+    db_session.expire_all()
     assert (
         intake_repository.get_by_id(item.id, company_id=company.id).status
         == "exported"
