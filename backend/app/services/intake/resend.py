@@ -25,18 +25,18 @@ class ResendWebhookVerifier:
 
     def verify(self, payload: bytes, headers: Mapping[str, str]) -> dict[str, Any]:
         try:
-            event = self._webhook.verify(payload, headers)
+            self._webhook.verify(payload, headers)
         except (WebhookVerificationError, ValueError, binascii.Error) as exc:
             raise ResendWebhookVerificationError(
                 "Invalid Resend webhook signature."
             ) from exc
-        if isinstance(event, (str, bytes, bytearray)):
-            try:
-                event = json.loads(event)
-            except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
-                raise ResendWebhookVerificationError(
-                    "Invalid Resend webhook payload."
-                ) from exc
+
+        try:
+            event = json.loads(payload)
+        except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
+            raise ResendWebhookVerificationError(
+                "Invalid Resend webhook payload."
+            ) from exc
         if not isinstance(event, dict):
             raise ResendWebhookVerificationError("Invalid Resend webhook payload.")
         return event
