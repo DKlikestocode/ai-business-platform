@@ -1,4 +1,5 @@
 import binascii
+import json
 from collections.abc import Mapping
 from email.utils import parseaddr
 from typing import Any
@@ -24,10 +25,17 @@ class ResendWebhookVerifier:
 
     def verify(self, payload: bytes, headers: Mapping[str, str]) -> dict[str, Any]:
         try:
-            event = self._webhook.verify(payload, headers)
+            self._webhook.verify(payload, headers)
         except (WebhookVerificationError, ValueError, binascii.Error) as exc:
             raise ResendWebhookVerificationError(
                 "Invalid Resend webhook signature."
+            ) from exc
+
+        try:
+            event = json.loads(payload)
+        except (json.JSONDecodeError, UnicodeDecodeError, TypeError) as exc:
+            raise ResendWebhookVerificationError(
+                "Invalid Resend webhook payload."
             ) from exc
         if not isinstance(event, dict):
             raise ResendWebhookVerificationError("Invalid Resend webhook payload.")
