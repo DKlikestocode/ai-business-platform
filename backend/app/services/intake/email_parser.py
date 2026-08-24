@@ -64,7 +64,16 @@ def source_sha256(raw_message: bytes) -> str:
 
 def _parse_attachments(message: EmailMessage) -> list[ParsedAttachment]:
     parsed: list[ParsedAttachment] = []
-    for part in message.iter_attachments():
+    # iter_attachments() does not descend into nested multipart/related
+    # sections. Gmail commonly stores user-attached images there as named
+    # inline parts, so walk the full MIME tree and accept either an explicit
+    # attachment disposition or a safe, user-visible filename.
+    for part in message.walk():
+        if part.is_multipart():
+            continue
+        if part.get_content_disposition() != "attachment" and not part.get_filename():
+            continue
+
         if len(parsed) >= MAX_ATTACHMENTS:
             raise EmailParseError(
                 f"Email contains more than {MAX_ATTACHMENTS} attachments."
