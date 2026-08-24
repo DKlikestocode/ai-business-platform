@@ -57,6 +57,33 @@ def test_parses_html_only_email() -> None:
     assert parsed.body_text == "Heizung\nausgefallen\n."
 
 
+def test_parses_named_inline_image_from_nested_related_part() -> None:
+    message = EmailMessage()
+    message["From"] = "Maria Beispiel <maria@example.com>"
+    message["Subject"] = "Foto der Heizungsanlage"
+    message.set_content("Das Foto ist beigefügt.")
+    message.add_alternative(
+        '<p>Das Foto ist beigefügt.</p><img src="cid:heating-image">',
+        subtype="html",
+    )
+    html_part = message.get_payload()[1]
+    html_part.add_related(
+        b"synthetic-png-content",
+        maintype="image",
+        subtype="png",
+        cid="<heating-image>",
+        filename="heizungsanlage.png",
+        disposition="inline",
+    )
+
+    parsed = parse_email(message.as_bytes())
+
+    assert len(parsed.attachments) == 1
+    assert parsed.attachments[0].filename == "heizungsanlage.png"
+    assert parsed.attachments[0].content_type == "image/png"
+    assert parsed.attachments[0].content == b"synthetic-png-content"
+
+
 def test_rejects_empty_email() -> None:
     with pytest.raises(EmailParseError, match="empty"):
         parse_email(b"")
